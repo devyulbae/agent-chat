@@ -47,3 +47,16 @@
   - `pytest` ✅ (9 passed)
 - Commit: pending
 - Next action: add backend audit log event entries for credential update/delete/rotate actions and cover them with service-level tests.
+
+## 2026-03-05 03:41 KST — Agent Chat cycle
+- Delta: Added backend credential audit event wiring for token lifecycle operations.
+  - Introduced `audit_service` with `AuditEvent` model, logger protocol, and DI-safe `NoOpAuditLogger`.
+  - Wired `CredentialService` to emit structured audit events for `credential.updated`, `credential.rotated`, and `credential.deleted`.
+  - Included changed-field metadata for update and key-version transition metadata for rotation.
+  - Added service tests asserting audit emission and metadata correctness.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (10 passed)
+- Commit: `e073018` (pushed to `main`)
+- Next action: expose credential audit trail in API (`GET /audit-events` scoped to credential/entity) so frontend can display provider/token change history.
