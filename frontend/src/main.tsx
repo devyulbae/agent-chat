@@ -39,6 +39,14 @@ type Credential = {
   token_expires_at: string | null
 }
 
+type AuditEvent = {
+  event_type: string
+  entity_type: string
+  entity_id: string
+  occurred_at: string
+  metadata: Record<string, unknown>
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 
 function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'expiring_soon' {
@@ -79,6 +87,10 @@ function App() {
   const [expiringWithinHours, setExpiringWithinHours] = useState(24)
   const [credentialLoading, setCredentialLoading] = useState(false)
   const [credentialError, setCredentialError] = useState<string | null>(null)
+  const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
+  const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
+  const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
+  const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -211,6 +223,43 @@ function App() {
     [credentialFilter, expiringWithinHours]
   )
 
+  const loadCredentialAuditEvents = useCallback(
+    async (credentialId: string, signal?: AbortSignal) => {
+      if (!credentialId) {
+        setCredentialAuditEvents([])
+        setCredentialAuditError(null)
+        return
+      }
+
+      setCredentialAuditLoading(true)
+      setCredentialAuditError(null)
+
+      const params = new URLSearchParams({
+        entity_type: 'credential',
+        entity_id: credentialId,
+        limit: '20',
+      })
+
+      try {
+        const response = await fetch(`${API_BASE}/audit-events?${params.toString()}`, { signal })
+        if (!response.ok) {
+          throw new Error(`Failed to load audit trail (${response.status})`)
+        }
+        const payload = (await response.json()) as AuditEvent[]
+        setCredentialAuditEvents(payload)
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+        setCredentialAuditError(err instanceof Error ? err.message : 'Unknown error')
+        setCredentialAuditEvents([])
+      } finally {
+        setCredentialAuditLoading(false)
+      }
+    },
+    []
+  )
+
   useEffect(() => {
     const controller = new AbortController()
     void loadThreads(controller.signal)
@@ -229,6 +278,21 @@ function App() {
     void loadCredentials(controller.signal)
     return () => controller.abort()
   }, [loadCredentials])
+
+  useEffect(() => {
+    const nextSelection = credentials.some((item) => item.id === selectedCredentialId)
+      ? selectedCredentialId
+      : credentials[0]?.id ?? ''
+    if (nextSelection !== selectedCredentialId) {
+      setSelectedCredentialId(nextSelection)
+    }
+  }, [credentials, selectedCredentialId])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadCredentialAuditEvents(selectedCredentialId, controller.signal)
+    return () => controller.abort()
+  }, [loadCredentialAuditEvents, selectedCredentialId])
 
   useEffect(() => {
     if (!channelId.trim()) {
@@ -435,6 +499,27 @@ function App() {
         </button>
       </div>
 
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+        <label htmlFor="credential-audit-select">Audit trail credential:</label>
+        <select
+          id="credential-audit-select"
+          value={selectedCredentialId}
+          onChange={(event) => setSelectedCredentialId(event.target.value)}
+          disabled={!credentials.length}
+        >
+          {!credentials.length && <option value="">No credentials</option>}
+          {credentials.map((credential) => (
+            <option key={credential.id} value={credential.id}>
+              {credential.label} ({credential.provider})
+            </option>
+          ))}
+        </select>
+
+        <button type="button" onClick={() => void loadCredentialAuditEvents(selectedCredentialId)}>
+          Refresh audit trail
+        </button>
+      </div>
+
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
       {credentialLoading && <p>Loading credentials…</p>}
 
@@ -463,6 +548,26 @@ function App() {
           </ul>
         ) : (
           <p>No credentials in selected lifecycle view.</p>
+        ))}
+
+      <h4>Credential Audit Trail</h4>
+      {credentialAuditError && <p style={{ color: 'crimson' }}>Error: {credentialAuditError}</p>}
+      {credentialAuditLoading && <p>Loading audit trail…</p>}
+      {!credentialAuditLoading && !credentialAuditError &&
+        (selectedCredentialId ? (
+          credentialAuditEvents.length ? (
+            <ul>
+              {credentialAuditEvents.map((event, index) => (
+                <li key={`${event.event_type}-${event.occurred_at}-${index}`}>
+                  <strong>{event.event_type}</strong> — {new Date(event.occurred_at).toLocaleString()}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No audit events for selected credential.</p>
+          )
+        ) : (
+          <p>Select a credential to view audit events.</p>
         ))}
     </div>
   )

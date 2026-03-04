@@ -60,3 +60,15 @@
   - `pytest` ✅ (10 passed)
 - Commit: `e073018` (pushed to `main`)
 - Next action: expose credential audit trail in API (`GET /audit-events` scoped to credential/entity) so frontend can display provider/token change history.
+
+## 2026-03-05 04:42 KST — Agent Chat cycle
+- Delta: Wired credential audit trail UX in frontend using existing audit API.
+  - Added credential selector + manual refresh for audit history in `frontend/src/main.tsx`.
+  - Added auto-load of latest 20 events from `GET /audit-events?entity_type=credential&entity_id=...`.
+  - Rendered chronological audit event list (event type + timestamp) with loading/empty/error states.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (11 passed)
+- Commit: pending
+- Next action: add provider/label/action filters to audit trail endpoint/UI and include actor/context fields in event metadata for better investigation.
