@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 type OrgType = 'freeform' | 'department' | 'squad'
@@ -42,6 +42,7 @@ function App() {
   const [threadLoading, setThreadLoading] = useState(false)
   const [messageLoading, setMessageLoading] = useState(false)
   const [chatError, setChatError] = useState<string | null>(null)
+  const [isLive, setIsLive] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -72,10 +73,8 @@ function App() {
     return () => controller.abort()
   }, [])
 
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadThreads() {
+  const loadThreads = useCallback(
+    async (signal?: AbortSignal) => {
       if (!channelId.trim()) {
         setThreads([])
         return
@@ -85,7 +84,7 @@ function App() {
       try {
         const response = await fetch(
           `${API_BASE}/channels/${encodeURIComponent(channelId)}/threads`,
-          { signal: controller.signal }
+          { signal }
         )
         if (!response.ok) {
           throw new Error(`Failed to load threads (${response.status})`)
@@ -101,18 +100,12 @@ function App() {
       } finally {
         setThreadLoading(false)
       }
-    }
+    },
+    [channelId]
+  )
 
-    void loadThreads()
-    setSelectedThreadId(null)
-
-    return () => controller.abort()
-  }, [channelId])
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadMessages() {
+  const loadMessages = useCallback(
+    async (signal?: AbortSignal) => {
       if (!channelId.trim()) {
         setMessages([])
         return
@@ -129,7 +122,7 @@ function App() {
       const url = `${API_BASE}/channels/${encodeURIComponent(channelId)}/messages${query ? `?${query}` : ''}`
 
       try {
-        const response = await fetch(url, { signal: controller.signal })
+        const response = await fetch(url, { signal })
         if (!response.ok) {
           throw new Error(`Failed to load messages (${response.status})`)
         }
@@ -144,12 +137,75 @@ function App() {
       } finally {
         setMessageLoading(false)
       }
+    },
+    [channelId, selectedThreadId]
+  )
+
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadThreads(controller.signal)
+    setSelectedThreadId(null)
+    return () => controller.abort()
+  }, [channelId, loadThreads])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadMessages(controller.signal)
+    return () => controller.abort()
+  }, [loadMessages])
+
+  useEffect(() => {
+    if (!channelId.trim()) {
+      setIsLive(false)
+      return
     }
 
-    void loadMessages()
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const wsBase = `${wsProtocol}//${window.location.host}`
+    const wsUrl = `${wsBase}/api/v1/ws/channels/${encodeURIComponent(channelId)}`
+    const socket = new WebSocket(wsUrl)
 
-    return () => controller.abort()
-  }, [channelId, selectedThreadId])
+    socket.onopen = () => {
+      setIsLive(true)
+    }
+
+    socket.onclose = () => {
+      setIsLive(false)
+    }
+
+    socket.onerror = () => {
+      setIsLive(false)
+    }
+
+    socket.onmessage = (event) => {
+      try {
+        const payload = JSON.parse(event.data) as {
+          event?: string
+          message?: Message
+        }
+        if (payload.event !== 'new_message' || !payload.message) {
+          return
+        }
+
+        if (payload.message.thread_id === selectedThreadId) {
+          setMessages((current) => {
+            if (current.some((item) => item.id === payload.message?.id)) {
+              return current
+            }
+            return [...current, payload.message as Message]
+          })
+        }
+
+        void loadThreads()
+      } catch {
+        // ignore malformed websocket payloads
+      }
+    }
+
+    return () => {
+      socket.close()
+    }
+  }, [channelId, loadThreads, selectedThreadId])
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -205,7 +261,16 @@ function App() {
         value={channelId}
         onChange={(event) => setChannelId(event.target.value)}
         placeholder="chan-1"
-      />
+      />{' '}
+      <span
+        style={{
+          fontSize: 12,
+          color: isLive ? 'seagreen' : 'dimgray',
+          fontWeight: 600,
+        }}
+      >
+        {isLive ? 'LIVE' : 'OFFLINE'}
+      </span>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
 
@@ -248,17 +313,18 @@ function App() {
         <div>
           <h4>{selectedThreadId ? `Messages in ${selectedThreadId}` : 'Root messages'}</h4>
           {messageLoading && <p>Loading messages…</p>}
-          {!messageLoading && (messages.length ? (
-            <ul>
-              {messages.map((message) => (
-                <li key={message.id}>
-                  <code>{message.sender_agent_id}</code>: {message.body}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No messages.</p>
-          ))}
+          {!messageLoading &&
+            (messages.length ? (
+              <ul>
+                {messages.map((message) => (
+                  <li key={message.id}>
+                    <code>{message.sender_agent_id}</code>: {message.body}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No messages.</p>
+            ))}
         </div>
       </div>
     </div>
