@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 08:42 KST — Agent Chat cycle
+- Delta: Added root-thread summary count wiring so unread reconciliation can use count-based logic for root messages too.
+  - Backend `GET /channels/{channel_id}/threads` now returns a root summary row (`thread_id: null`) with root message count.
+  - Updated thread summary schema to allow nullable `thread_id`.
+  - Extended message service test double + assertions to include root summary output.
+  - Frontend now reads root summary count, shows it in Root messages label, filters child thread list, and applies count reconciliation uniformly across root + child threads.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (14 passed)
+- Commit: `98b2149` (pushed to `main`)
+- Next action: tighten websocket unread precision by incrementing local seen/unseen counts from incoming events (without full thread reload) and add a focused frontend test for root badge state transitions.
+
 ## 2026-03-05 08:04 KST — Agent Chat cycle
 - Delta: Reduced false positives in chat thread unread UX by persisting per-thread seen message counts and reconciling against thread summary `message_count` on reload.
   - Added versioned thread-seen localStorage payload (`lastSeenByThread` + `lastSeenCountByThread`) with backward compatibility for legacy marker-only data.
