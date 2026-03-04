@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -27,6 +29,7 @@ class MessageRead(BaseModel):
     sender_agent_id: str
     thread_id: str | None
     body: str
+    created_at: datetime
 
     @classmethod
     def from_entity(cls, entity: object) -> "MessageRead":
@@ -36,4 +39,5 @@ class MessageRead(BaseModel):
             sender_agent_id=getattr(entity, "sender_agent_id"),
             thread_id=getattr(entity, "thread_id"),
             body=getattr(entity, "body"),
+            created_at=getattr(entity, "created_at"),
         )

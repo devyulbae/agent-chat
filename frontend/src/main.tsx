@@ -27,6 +27,7 @@ type Message = {
   sender_agent_id: string
   thread_id: string | null
   body: string
+  created_at: string
 }
 
 type Credential = {
@@ -95,6 +96,14 @@ function renderAuditMetadata(event: AuditEvent): string[] {
   }
 
   return []
+}
+
+function formatTimestamp(value: string): string {
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return value
+  }
+  return parsed.toLocaleString()
 }
 
 function App() {
@@ -572,7 +581,8 @@ function App() {
               <ul>
                 {messages.map((message) => (
                   <li key={message.id}>
-                    <code>{message.sender_agent_id}</code>: {message.body}
+                    <code>{message.sender_agent_id}</code> ·{' '}
+                    <small>{formatTimestamp(message.created_at)}</small>: {message.body}
                   </li>
                 ))}
               </ul>

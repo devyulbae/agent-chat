@@ -58,6 +58,7 @@ class SQLMessageRepository(MessageRepository):
             stmt = stmt.where(Message.thread_id.is_(None))
         else:
             stmt = stmt.where(Message.thread_id == thread_id)
+        stmt = stmt.order_by(Message.created_at.asc(), Message.id.asc())
         return self._session.execute(stmt).scalars().all()
 
     def list_threads_by_channel(self, channel_id: str) -> Sequence[ThreadSummary]:
