@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-05 06:00 KST — Agent Chat cycle
+- Delta: Improved chat thread UX by wiring an in-UI message composer in `frontend/src/main.tsx`.
+  - Added sender/message compose controls directly in **Chat Thread Explorer**.
+  - Added `submitMessage` flow posting to `POST /messages` with root/thread-aware `thread_id` handling.
+  - Added client-side message id generation via `crypto.randomUUID()` fallback.
+  - On successful send, clears composer body and refreshes thread + message lists for immediate feedback.
+  - Added validation/loading/error handling for compose submission.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (11 passed)
+- Commit: pending
+- Next action: add thread-level unread/new-message indicator and message timestamp support to make thread triage faster.
+
 ## 2026-03-05 05:40 KST — Agent Chat cycle
 - Delta: Enriched credential audit trail rendering with metadata chips in `frontend/src/main.tsx`.
   - Added audit metadata parsing helpers for structured event details.

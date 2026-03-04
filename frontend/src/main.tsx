@@ -110,6 +110,9 @@ function App() {
   const [messageLoading, setMessageLoading] = useState(false)
   const [chatError, setChatError] = useState<string | null>(null)
   const [isLive, setIsLive] = useState(false)
+  const [composerSenderId, setComposerSenderId] = useState('agent-ui')
+  const [composerBody, setComposerBody] = useState('')
+  const [composerSubmitting, setComposerSubmitting] = useState(false)
 
   const [credentials, setCredentials] = useState<Credential[]>([])
   const [credentialFilter, setCredentialFilter] = useState<TokenStatusFilter>('all')
@@ -219,6 +222,50 @@ function App() {
     },
     [channelId, selectedThreadId]
   )
+
+  const submitMessage = useCallback(async () => {
+    const trimmedChannelId = channelId.trim()
+    const trimmedSenderId = composerSenderId.trim()
+    const trimmedBody = composerBody.trim()
+
+    if (!trimmedChannelId || !trimmedSenderId || !trimmedBody) {
+      setChatError('Channel ID, sender agent ID, and message body are required.')
+      return
+    }
+
+    setComposerSubmitting(true)
+    setChatError(null)
+
+    const messageId =
+      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `msg-${Date.now()}`
+
+    try {
+      const response = await fetch(`${API_BASE}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: messageId,
+          channel_id: trimmedChannelId,
+          sender_agent_id: trimmedSenderId,
+          thread_id: selectedThreadId,
+          body: trimmedBody,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to send message (${response.status})`)
+      }
+
+      setComposerBody('')
+      await Promise.all([loadThreads(), loadMessages()])
+    } catch (err) {
+      setChatError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setComposerSubmitting(false)
+    }
+  }, [channelId, composerBody, composerSenderId, loadMessages, loadThreads, selectedThreadId])
 
   const loadCredentials = useCallback(
     async (signal?: AbortSignal) => {
@@ -457,6 +504,27 @@ function App() {
       >
         {isLive ? 'LIVE' : 'OFFLINE'}
       </span>
+
+      <div style={{ marginTop: 12, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+        <label htmlFor="composer-sender">Sender:</label>
+        <input
+          id="composer-sender"
+          value={composerSenderId}
+          onChange={(event) => setComposerSenderId(event.target.value)}
+          placeholder="agent-1"
+        />
+        <label htmlFor="composer-body">Message:</label>
+        <input
+          id="composer-body"
+          value={composerBody}
+          onChange={(event) => setComposerBody(event.target.value)}
+          placeholder={selectedThreadId ? `Reply in ${selectedThreadId}` : 'Root message'}
+          style={{ minWidth: 260 }}
+        />
+        <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
+          {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
+        </button>
+      </div>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
 
