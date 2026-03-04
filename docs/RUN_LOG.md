@@ -11,7 +11,7 @@
   - `black backend` ✅
   - `pre-commit run --all-files` ✅
   - `pytest` ✅ (11 passed)
-- Commit: pending
+- Commit: `88fa1d8` (pushed to `main`)
 - Next action: add thread-level unread/new-message indicator and message timestamp support to make thread triage faster.
 
 ## 2026-03-05 05:40 KST — Agent Chat cycle
