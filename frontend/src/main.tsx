@@ -17,7 +17,7 @@ type OrganizationsGraph = {
 }
 
 type ThreadSummary = {
-  thread_id: string
+  thread_id: string | null
   message_count: number
 }
 
@@ -430,11 +430,14 @@ function App() {
 
   useEffect(() => {
     setUnseenThreadKeys((current) => {
-      const next = new Set(current.filter((key) => key === ROOT_THREAD_KEY))
+      const next = new Set<string>()
       threads.forEach((thread) => {
         const key = toThreadKey(thread.thread_id)
         const seenCount = lastSeenCountByThread[key]
         if (typeof seenCount !== 'number') {
+          if (current.includes(key)) {
+            next.add(key)
+          }
           return
         }
         if (selectedThreadId !== thread.thread_id && thread.message_count > seenCount) {
@@ -547,6 +550,13 @@ function App() {
     }
   }, [channelId, loadThreads, markThreadSeen, markThreadUnseen, selectedThreadId])
 
+  const rootThreadSummary = useMemo(
+    () => threads.find((item) => item.thread_id === null) ?? null,
+    [threads]
+  )
+
+  const childThreads = useMemo(() => threads.filter((item) => item.thread_id !== null), [threads])
+
   const typeCounts = useMemo(() => {
     if (!graph) {
       return { freeform: 0, department: 0, squad: 0 }
@@ -650,10 +660,11 @@ function App() {
                     cursor: 'pointer',
                   }}
                 >
-                  Root messages{unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
+                  Root messages ({rootThreadSummary?.message_count ?? 0})
+                  {unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
                 </button>
               </li>
-              {threads.map((thread) => (
+              {childThreads.map((thread) => (
                 <li key={thread.thread_id}>
                   <button
                     type="button"

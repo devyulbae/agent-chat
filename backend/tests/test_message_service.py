@@ -17,14 +17,22 @@ class FakeMessageRepo:
         return [item for item in result if item.thread_id == thread_id]
 
     def list_threads_by_channel(self, channel_id: str):
+        root_count = 0
         counts: dict[str, int] = {}
         for item in self.items:
-            if item.channel_id != channel_id or item.thread_id is None:
+            if item.channel_id != channel_id:
+                continue
+            if item.thread_id is None:
+                root_count += 1
                 continue
             counts[item.thread_id] = counts.get(item.thread_id, 0) + 1
-        return [
+        summaries = [
             type("ThreadSummary", (), {"thread_id": thread_id, "message_count": count})
             for thread_id, count in sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+        ]
+        return [
+            type("ThreadSummary", (), {"thread_id": None, "message_count": root_count}),
+            *summaries,
         ]
 
 
@@ -119,6 +127,7 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
     listed = service.list_threads("chan-1")
 
     assert [(item.thread_id, item.message_count) for item in listed] == [
+        (None, 0),
         ("thread-a", 2),
         ("thread-b", 1),
     ]

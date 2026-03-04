@@ -12,7 +12,7 @@ class MessageCreate(BaseModel):
 
 
 class ThreadSummaryRead(BaseModel):
-    thread_id: str
+    thread_id: str | None
     message_count: int
 
     @classmethod

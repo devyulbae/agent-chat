@@ -13,7 +13,7 @@ from app.schemas.message import MessageCreate
 
 @dataclass(frozen=True)
 class ThreadSummary:
-    thread_id: str
+    thread_id: str | None
     message_count: int
 
 
@@ -62,15 +62,24 @@ class SQLMessageRepository(MessageRepository):
         return self._session.execute(stmt).scalars().all()
 
     def list_threads_by_channel(self, channel_id: str) -> Sequence[ThreadSummary]:
-        stmt = (
+        root_count_stmt = select(func.count(Message.id)).where(
+            Message.channel_id == channel_id,
+            Message.thread_id.is_(None),
+        )
+        root_count = int(self._session.execute(root_count_stmt).scalar_one())
+
+        thread_stmt = (
             select(Message.thread_id, func.count(Message.id))
             .where(Message.channel_id == channel_id, Message.thread_id.is_not(None))
             .group_by(Message.thread_id)
             .order_by(func.count(Message.id).desc(), Message.thread_id.asc())
         )
-        rows = self._session.execute(stmt).all()
-        return [
+        rows = self._session.execute(thread_stmt).all()
+
+        summaries = [
             ThreadSummary(thread_id=thread_id, message_count=message_count)
             for thread_id, message_count in rows
             if thread_id is not None
         ]
+
+        return [ThreadSummary(thread_id=None, message_count=root_count), *summaries]
