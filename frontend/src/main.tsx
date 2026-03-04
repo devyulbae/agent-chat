@@ -68,6 +68,35 @@ function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'ex
   return 'active'
 }
 
+function toStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return []
+  }
+  return value.filter((item): item is string => typeof item === 'string')
+}
+
+function toStringValue(value: unknown): string | null {
+  return typeof value === 'string' ? value : null
+}
+
+function renderAuditMetadata(event: AuditEvent): string[] {
+  const metadata = event.metadata ?? {}
+  if (event.event_type === 'credential.updated') {
+    const changedFields = toStringList(metadata.changed_fields)
+    return changedFields.map((field) => `changed:${field}`)
+  }
+
+  if (event.event_type === 'credential.rotated') {
+    const previousVersion = toStringValue(metadata.previous_key_version)
+    const newVersion = toStringValue(metadata.new_key_version)
+    if (previousVersion && newVersion) {
+      return [`key:${previousVersion}→${newVersion}`]
+    }
+  }
+
+  return []
+}
+
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
@@ -603,11 +632,31 @@ function App() {
         (selectedCredentialId ? (
           credentialAuditEvents.length ? (
             <ul>
-              {credentialAuditEvents.map((event, index) => (
-                <li key={`${event.event_type}-${event.occurred_at}-${index}`}>
-                  <strong>{event.event_type}</strong> — {new Date(event.occurred_at).toLocaleString()}
-                </li>
-              ))}
+              {credentialAuditEvents.map((event, index) => {
+                const metadataChips = renderAuditMetadata(event)
+                return (
+                  <li key={`${event.event_type}-${event.occurred_at}-${index}`}>
+                    <strong>{event.event_type}</strong> — {new Date(event.occurred_at).toLocaleString()}
+                    {metadataChips.length ? (
+                      <span style={{ marginLeft: 8, display: 'inline-flex', gap: 6, flexWrap: 'wrap' }}>
+                        {metadataChips.map((chip) => (
+                          <code
+                            key={chip}
+                            style={{
+                              fontSize: 12,
+                              background: '#f5f5f5',
+                              borderRadius: 4,
+                              padding: '1px 6px',
+                            }}
+                          >
+                            {chip}
+                          </code>
+                        ))}
+                      </span>
+                    ) : null}
+                  </li>
+                )
+              })}
             </ul>
           ) : (
             <p>No audit events for selected credential.</p>
