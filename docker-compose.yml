@@ -1,0 +1,52 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-agentchat}
+      POSTGRES_USER: ${POSTGRES_USER:-agentchat}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agentchat_dev_pw}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agentchat} -d ${POSTGRES_DB:-agentchat}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://agentchat:agentchat_dev_pw@postgres:5432/agentchat
+      REDIS_URL: redis://redis:6379/0
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:-change_me_base64_32bytes}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "50004:80"
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pg_data:
+  redis_data:
