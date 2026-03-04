@@ -162,9 +162,13 @@ async def create_message(
 @inject
 def list_messages(
     channel_id: str,
+    thread_id: str | None = None,
     service: MessageService = Depends(Provide[AppContainer.message_service]),
 ):
-    return [MessageRead.from_entity(item) for item in service.list_messages(channel_id)]
+    return [
+        MessageRead.from_entity(item)
+        for item in service.list_messages(channel_id, thread_id)
+    ]
 
 
 @router.websocket("/ws/channels/{channel_id}")

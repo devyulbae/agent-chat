@@ -16,7 +16,9 @@ class MessageRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def list_by_channel(self, channel_id: str) -> Sequence[Message]:
+    def list_by_channel(
+        self, channel_id: str, thread_id: str | None = None
+    ) -> Sequence[Message]:
         raise NotImplementedError
 
 
@@ -37,6 +39,12 @@ class SQLMessageRepository(MessageRepository):
         self._session.refresh(row)
         return row
 
-    def list_by_channel(self, channel_id: str) -> Sequence[Message]:
+    def list_by_channel(
+        self, channel_id: str, thread_id: str | None = None
+    ) -> Sequence[Message]:
         stmt = select(Message).where(Message.channel_id == channel_id)
+        if thread_id is None:
+            stmt = stmt.where(Message.thread_id.is_(None))
+        else:
+            stmt = stmt.where(Message.thread_id == thread_id)
         return self._session.execute(stmt).scalars().all()

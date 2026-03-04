@@ -11,5 +11,7 @@ class MessageService:
     def create_message(self, payload: MessageCreate):
         return self._repository.create(payload)
 
-    def list_messages(self, channel_id: str) -> Sequence[object]:
-        return self._repository.list_by_channel(channel_id)
+    def list_messages(
+        self, channel_id: str, thread_id: str | None = None
+    ) -> Sequence[object]:
+        return self._repository.list_by_channel(channel_id, thread_id)
