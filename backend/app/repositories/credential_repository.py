@@ -24,7 +24,12 @@ class CredentialRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def list(self) -> Sequence[Credential]:
+    def list(
+        self,
+        *,
+        provider: str | None = None,
+        owner_agent_id: str | None = None,
+    ) -> Sequence[Credential]:
         raise NotImplementedError
 
     @abstractmethod
@@ -67,8 +72,18 @@ class SQLCredentialRepository(CredentialRepository):
         self._session.refresh(row)
         return row
 
-    def list(self) -> Sequence[Credential]:
-        return self._session.execute(select(Credential)).scalars().all()
+    def list(
+        self,
+        *,
+        provider: str | None = None,
+        owner_agent_id: str | None = None,
+    ) -> Sequence[Credential]:
+        stmt = select(Credential)
+        if provider is not None:
+            stmt = stmt.where(Credential.provider == provider)
+        if owner_agent_id is not None:
+            stmt = stmt.where(Credential.owner_agent_id == owner_agent_id)
+        return self._session.execute(stmt).scalars().all()
 
     def get(self, row_id: str) -> Credential | None:
         return self._session.get(Credential, row_id)

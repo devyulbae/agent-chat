@@ -25,8 +25,15 @@ class CredentialService:
             key_version="v1",
         )
 
-    def list_credentials(self) -> Sequence[object]:
-        return self._repository.list()
+    def list_credentials(
+        self,
+        provider: str | None = None,
+        owner_agent_id: str | None = None,
+    ) -> Sequence[object]:
+        return self._repository.list(
+            provider=provider,
+            owner_agent_id=owner_agent_id,
+        )
 
     def update_credential(self, credential_id: str, payload: CredentialUpdate):
         row = self._repository.get(credential_id)

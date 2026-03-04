@@ -81,9 +81,17 @@ def create_credential(
 @router.get("/credentials", response_model=list[CredentialRead])
 @inject
 def list_credentials(
+    provider: str | None = None,
+    owner_agent_id: str | None = None,
     service: CredentialService = Depends(Provide[AppContainer.credential_service]),
 ):
-    return [CredentialRead.from_entity(item) for item in service.list_credentials()]
+    return [
+        CredentialRead.from_entity(item)
+        for item in service.list_credentials(
+            provider=provider,
+            owner_agent_id=owner_agent_id,
+        )
+    ]
 
 
 @router.patch("/credentials/{credential_id}", response_model=CredentialRead)
