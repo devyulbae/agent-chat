@@ -59,6 +59,11 @@ function threadStateStorageKey(channelId: string): string {
   return `agent-chat:last-seen:${channelId}`
 }
 
+type ThreadSeenStorage = {
+  lastSeenByThread: Record<string, string>
+  lastSeenCountByThread: Record<string, number>
+}
+
 function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'expiring_soon' {
   if (!credential.token_expires_at) {
     return 'active'
@@ -125,6 +130,7 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([])
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
   const [lastSeenByThread, setLastSeenByThread] = useState<Record<string, string>>({})
+  const [lastSeenCountByThread, setLastSeenCountByThread] = useState<Record<string, number>>({})
   const [unseenThreadKeys, setUnseenThreadKeys] = useState<string[]>([])
   const [threadLoading, setThreadLoading] = useState(false)
   const [messageLoading, setMessageLoading] = useState(false)
@@ -175,9 +181,12 @@ function App() {
     return () => controller.abort()
   }, [])
 
-  const markThreadSeen = useCallback((threadId: string | null, marker: string) => {
+  const markThreadSeen = useCallback((threadId: string | null, marker: string, messageCount?: number) => {
     const key = toThreadKey(threadId)
     setLastSeenByThread((current) => ({ ...current, [key]: marker }))
+    if (typeof messageCount === 'number') {
+      setLastSeenCountByThread((current) => ({ ...current, [key]: messageCount }))
+    }
     setUnseenThreadKeys((current) => current.filter((item) => item !== key))
   }, [])
 
@@ -242,7 +251,11 @@ function App() {
         const payload = (await response.json()) as Message[]
         setMessages(payload)
         const latestMessage = payload[payload.length - 1]
-        markThreadSeen(selectedThreadId, latestMessage ? latestMessage.id : `visited:${Date.now()}`)
+        markThreadSeen(
+          selectedThreadId,
+          latestMessage ? latestMessage.id : `visited:${Date.now()}`,
+          payload.length
+        )
       } catch (err) {
         if (err instanceof DOMException && err.name === 'AbortError') {
           return
@@ -386,22 +399,51 @@ function App() {
     const raw = window.localStorage.getItem(threadStateStorageKey(channelId))
     if (!raw) {
       setLastSeenByThread({})
+      setLastSeenCountByThread({})
       setUnseenThreadKeys([])
       return
     }
 
     try {
-      const parsed = JSON.parse(raw) as Record<string, string>
-      setLastSeenByThread(parsed)
+      const parsed = JSON.parse(raw) as ThreadSeenStorage | Record<string, string>
+      if ('lastSeenByThread' in parsed) {
+        setLastSeenByThread(parsed.lastSeenByThread ?? {})
+        setLastSeenCountByThread(parsed.lastSeenCountByThread ?? {})
+      } else {
+        setLastSeenByThread(parsed)
+        setLastSeenCountByThread({})
+      }
     } catch {
       setLastSeenByThread({})
+      setLastSeenCountByThread({})
     }
     setUnseenThreadKeys([])
   }, [channelId])
 
   useEffect(() => {
-    window.localStorage.setItem(threadStateStorageKey(channelId), JSON.stringify(lastSeenByThread))
-  }, [channelId, lastSeenByThread])
+    const payload: ThreadSeenStorage = {
+      lastSeenByThread,
+      lastSeenCountByThread,
+    }
+    window.localStorage.setItem(threadStateStorageKey(channelId), JSON.stringify(payload))
+  }, [channelId, lastSeenByThread, lastSeenCountByThread])
+
+  useEffect(() => {
+    setUnseenThreadKeys((current) => {
+      const next = new Set(current.filter((key) => key === ROOT_THREAD_KEY))
+      threads.forEach((thread) => {
+        const key = toThreadKey(thread.thread_id)
+        const seenCount = lastSeenCountByThread[key]
+        if (typeof seenCount !== 'number') {
+          return
+        }
+        if (selectedThreadId !== thread.thread_id && thread.message_count > seenCount) {
+          next.add(key)
+        }
+      })
+      return Array.from(next)
+    })
+  }, [lastSeenCountByThread, selectedThreadId, threads])
 
   useEffect(() => {
     const controller = new AbortController()

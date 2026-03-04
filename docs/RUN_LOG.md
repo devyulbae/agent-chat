@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 08:04 KST — Agent Chat cycle
+- Delta: Reduced false positives in chat thread unread UX by persisting per-thread seen message counts and reconciling against thread summary `message_count` on reload.
+  - Added versioned thread-seen localStorage payload (`lastSeenByThread` + `lastSeenCountByThread`) with backward compatibility for legacy marker-only data.
+  - `loadMessages` now records seen count (`payload.length`) for the active thread when a thread is visited.
+  - Added reconciliation effect that marks a thread as `• new` only when `message_count > lastSeenCount` and thread is not currently selected.
+  - Keeps root-thread websocket indicator behavior intact while preventing stale `• new` badges after reconnect/reload.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (14 passed)
+- Commit: pending
+- Next action: extend unread precision to root-thread summary by exposing root message count from backend thread summary API and feeding it into the same count-based reconciliation.
+
 ## 2026-03-05 07:40 KST — Agent Chat cycle
 - Delta: Added thread-level unread/new-message indicator UX in `frontend/src/main.tsx`.
   - Added per-channel thread state persistence via `localStorage` (`agent-chat:last-seen:{channelId}`).
