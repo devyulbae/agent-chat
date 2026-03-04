@@ -1,5 +1,5 @@
-from datetime import datetime, timezone
-from typing import Sequence
+from datetime import datetime, timedelta, timezone
+from typing import Any, Sequence
 
 from app.core.encryption import EncryptionService
 from app.repositories.credential_repository import CredentialRepository
@@ -31,11 +31,47 @@ class CredentialService:
         self,
         provider: str | None = None,
         owner_agent_id: str | None = None,
+        token_status: str | None = None,
+        expiring_within_hours: int = 24,
+        now: datetime | None = None,
     ) -> Sequence[object]:
-        return self._repository.list(
+        rows = self._repository.list(
             provider=provider,
             owner_agent_id=owner_agent_id,
         )
+        if token_status is None:
+            return rows
+
+        current = now or datetime.now(timezone.utc)
+        if current.tzinfo is None:
+            current = current.replace(tzinfo=timezone.utc)
+
+        if token_status == "expired":
+            return [
+                row
+                for row in rows
+                if (expires_at := self._token_expires_at(row)) is not None
+                and expires_at <= current
+            ]
+
+        if token_status == "active":
+            return [
+                row
+                for row in rows
+                if (expires_at := self._token_expires_at(row)) is None
+                or expires_at > current
+            ]
+
+        if token_status == "expiring_soon":
+            threshold = current + timedelta(hours=expiring_within_hours)
+            return [
+                row
+                for row in rows
+                if (expires_at := self._token_expires_at(row)) is not None
+                and current < expires_at <= threshold
+            ]
+
+        raise ValueError("Unsupported token_status filter")
 
     def update_credential(self, credential_id: str, payload: CredentialUpdate):
         row = self._repository.get(credential_id)
@@ -62,3 +98,16 @@ class CredentialService:
         row.key_version = new_key_version
         row.last_rotated_at = datetime.now(timezone.utc)
         return self._repository.save(row)
+
+    @staticmethod
+    def _token_expires_at(row: Any) -> datetime | None:
+        expires_at = (
+            row.get("token_expires_at")
+            if isinstance(row, dict)
+            else row.token_expires_at
+        )
+        if expires_at is None:
+            return None
+        if expires_at.tzinfo is None:
+            return expires_at.replace(tzinfo=timezone.utc)
+        return expires_at

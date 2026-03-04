@@ -83,15 +83,20 @@ def create_credential(
 def list_credentials(
     provider: str | None = None,
     owner_agent_id: str | None = None,
+    token_status: str | None = None,
+    expiring_within_hours: int = 24,
     service: CredentialService = Depends(Provide[AppContainer.credential_service]),
 ):
-    return [
-        CredentialRead.from_entity(item)
-        for item in service.list_credentials(
+    try:
+        items = service.list_credentials(
             provider=provider,
             owner_agent_id=owner_agent_id,
+            token_status=token_status,
+            expiring_within_hours=expiring_within_hours,
         )
-    ]
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return [CredentialRead.from_entity(item) for item in items]
 
 
 @router.patch("/credentials/{credential_id}", response_model=CredentialRead)

@@ -120,3 +120,51 @@ def test_update_secret_sets_rotation_timestamp() -> None:
     assert updated.last_rotated_at is not None
     assert updated.token_expires_at == datetime(2026, 4, 30, tzinfo=UTC)
     assert encryption.decrypt(updated.secret_encrypted) == "new-secret"
+
+
+def test_list_credentials_token_status_filters() -> None:
+    repo = FakeCredentialRepo()
+    encryption = EncryptionService(Fernet.generate_key().decode())
+    service = CredentialService(repository=repo, encryption_service=encryption)
+
+    now = datetime(2026, 3, 5, 0, 0, tzinfo=UTC)
+    service.create_credential(
+        CredentialCreate(
+            id="cred-expired",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="expired",
+            secret="secret-expired",
+            token_expires_at=datetime(2026, 3, 4, 23, 30, tzinfo=UTC),
+        )
+    )
+    service.create_credential(
+        CredentialCreate(
+            id="cred-soon",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="soon",
+            secret="secret-soon",
+            token_expires_at=datetime(2026, 3, 5, 4, 0, tzinfo=UTC),
+        )
+    )
+    service.create_credential(
+        CredentialCreate(
+            id="cred-active",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="active",
+            secret="secret-active",
+            token_expires_at=datetime(2026, 3, 7, 0, 0, tzinfo=UTC),
+        )
+    )
+
+    expired = service.list_credentials(token_status="expired", now=now)
+    expiring_soon = service.list_credentials(
+        token_status="expiring_soon", expiring_within_hours=6, now=now
+    )
+    active = service.list_credentials(token_status="active", now=now)
+
+    assert [item["row_id"] for item in expired] == ["cred-expired"]
+    assert [item["row_id"] for item in expiring_soon] == ["cred-soon"]
+    assert [item["row_id"] for item in active] == ["cred-soon", "cred-active"]
