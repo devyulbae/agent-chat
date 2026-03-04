@@ -3,6 +3,8 @@ from datetime import UTC, datetime
 from cryptography.fernet import Fernet
 
 from app.core.encryption import EncryptionService
+import pytest
+
 from app.schemas.credential import CredentialCreate, CredentialUpdate
 from app.services.credential_service import CredentialService
 
@@ -128,6 +130,38 @@ def test_update_secret_sets_rotation_timestamp() -> None:
     assert updated.last_rotated_at is not None
     assert updated.token_expires_at == datetime(2026, 4, 30, tzinfo=UTC)
     assert encryption.decrypt(updated.secret_encrypted) == "new-secret"
+
+
+def test_update_credential_can_clear_token_expiry() -> None:
+    repo = FakeCredentialRepo()
+    encryption = EncryptionService(Fernet.generate_key().decode())
+    service = CredentialService(repository=repo, encryption_service=encryption)
+
+    service.create_credential(
+        CredentialCreate(
+            id="cred-1",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="default",
+            secret="secret-1",
+            token_expires_at=datetime(2026, 3, 31, tzinfo=UTC),
+        )
+    )
+
+    updated = service.update_credential(
+        "cred-1", CredentialUpdate(clear_token_expires_at=True)
+    )
+
+    assert updated is not None
+    assert updated.token_expires_at is None
+
+
+def test_credential_update_rejects_clear_and_set_expiry_together() -> None:
+    with pytest.raises(ValueError):
+        CredentialUpdate(
+            token_expires_at=datetime(2026, 3, 31, tzinfo=UTC),
+            clear_token_expires_at=True,
+        )
 
 
 def test_list_credentials_token_status_filters() -> None:

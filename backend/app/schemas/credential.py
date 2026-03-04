@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 
 class CredentialCreate(BaseModel):
@@ -16,6 +16,15 @@ class CredentialUpdate(BaseModel):
     label: str | None = None
     secret: str | None = None
     token_expires_at: datetime | None = None
+    clear_token_expires_at: bool = False
+
+    @model_validator(mode="after")
+    def validate_token_expiry_fields(self):
+        if self.clear_token_expires_at and self.token_expires_at is not None:
+            raise ValueError(
+                "token_expires_at cannot be provided when clear_token_expires_at is true"
+            )
+        return self
 
 
 class CredentialRead(BaseModel):

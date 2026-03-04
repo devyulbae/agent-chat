@@ -85,7 +85,10 @@ class CredentialService:
         if payload.label is not None:
             row.label = payload.label
             changed_fields.append("label")
-        if payload.token_expires_at is not None:
+        if payload.clear_token_expires_at:
+            row.token_expires_at = None
+            changed_fields.append("token_expires_at")
+        elif payload.token_expires_at is not None:
             row.token_expires_at = payload.token_expires_at
             changed_fields.append("token_expires_at")
         if payload.secret is not None:
