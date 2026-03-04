@@ -88,6 +88,8 @@ function App() {
   const [credentialLoading, setCredentialLoading] = useState(false)
   const [credentialError, setCredentialError] = useState<string | null>(null)
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
+  const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
+  const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('all')
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
@@ -224,7 +226,7 @@ function App() {
   )
 
   const loadCredentialAuditEvents = useCallback(
-    async (credentialId: string, signal?: AbortSignal) => {
+    async (credentialId: string, eventType: string, signal?: AbortSignal) => {
       if (!credentialId) {
         setCredentialAuditEvents([])
         setCredentialAuditError(null)
@@ -239,6 +241,9 @@ function App() {
         entity_id: credentialId,
         limit: '20',
       })
+      if (eventType !== 'all') {
+        params.set('event_type', eventType)
+      }
 
       try {
         const response = await fetch(`${API_BASE}/audit-events?${params.toString()}`, { signal })
@@ -279,20 +284,32 @@ function App() {
     return () => controller.abort()
   }, [loadCredentials])
 
+  const credentialProviders = useMemo(
+    () => Array.from(new Set(credentials.map((item) => item.provider))).sort(),
+    [credentials]
+  )
+
+  const filteredCredentialsForAudit = useMemo(() => {
+    if (auditProviderFilter === 'all') {
+      return credentials
+    }
+    return credentials.filter((item) => item.provider === auditProviderFilter)
+  }, [auditProviderFilter, credentials])
+
   useEffect(() => {
-    const nextSelection = credentials.some((item) => item.id === selectedCredentialId)
+    const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
       ? selectedCredentialId
-      : credentials[0]?.id ?? ''
+      : filteredCredentialsForAudit[0]?.id ?? ''
     if (nextSelection !== selectedCredentialId) {
       setSelectedCredentialId(nextSelection)
     }
-  }, [credentials, selectedCredentialId])
+  }, [filteredCredentialsForAudit, selectedCredentialId])
 
   useEffect(() => {
     const controller = new AbortController()
-    void loadCredentialAuditEvents(selectedCredentialId, controller.signal)
+    void loadCredentialAuditEvents(selectedCredentialId, auditEventTypeFilter, controller.signal)
     return () => controller.abort()
-  }, [loadCredentialAuditEvents, selectedCredentialId])
+  }, [auditEventTypeFilter, loadCredentialAuditEvents, selectedCredentialId])
 
   useEffect(() => {
     if (!channelId.trim()) {
@@ -500,22 +517,51 @@ function App() {
       </div>
 
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+        <label htmlFor="credential-audit-provider">Provider:</label>
+        <select
+          id="credential-audit-provider"
+          value={auditProviderFilter}
+          onChange={(event) => setAuditProviderFilter(event.target.value)}
+        >
+          <option value="all">all</option>
+          {credentialProviders.map((provider) => (
+            <option key={provider} value={provider}>
+              {provider}
+            </option>
+          ))}
+        </select>
+
+        <label htmlFor="credential-audit-action">Action:</label>
+        <select
+          id="credential-audit-action"
+          value={auditEventTypeFilter}
+          onChange={(event) => setAuditEventTypeFilter(event.target.value)}
+        >
+          <option value="all">all</option>
+          <option value="credential.updated">updated</option>
+          <option value="credential.rotated">rotated</option>
+          <option value="credential.deleted">deleted</option>
+        </select>
+
         <label htmlFor="credential-audit-select">Audit trail credential:</label>
         <select
           id="credential-audit-select"
           value={selectedCredentialId}
           onChange={(event) => setSelectedCredentialId(event.target.value)}
-          disabled={!credentials.length}
+          disabled={!filteredCredentialsForAudit.length}
         >
-          {!credentials.length && <option value="">No credentials</option>}
-          {credentials.map((credential) => (
+          {!filteredCredentialsForAudit.length && <option value="">No credentials</option>}
+          {filteredCredentialsForAudit.map((credential) => (
             <option key={credential.id} value={credential.id}>
               {credential.label} ({credential.provider})
             </option>
           ))}
         </select>
 
-        <button type="button" onClick={() => void loadCredentialAuditEvents(selectedCredentialId)}>
+        <button
+          type="button"
+          onClick={() => void loadCredentialAuditEvents(selectedCredentialId, auditEventTypeFilter)}
+        >
           Refresh audit trail
         </button>
       </div>

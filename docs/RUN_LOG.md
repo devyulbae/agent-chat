@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 05:02 KST — Agent Chat cycle
+- Delta: Improved credential audit trail UX with investigation filters in `frontend/src/main.tsx`.
+  - Added provider filter to scope credential dropdown by provider.
+  - Added action filter wired to backend `event_type` query (`credential.updated` / `credential.rotated` / `credential.deleted`).
+  - Updated audit fetch + auto-refresh effects to include selected action filter.
+  - Added filtered credential selection fallback to keep audit panel stable when filters change.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (11 passed)
+- Commit: pending
+- Next action: enrich audit event rendering with key metadata diffs (changed fields/key version) and add quick chips in UI.
+
 ## 2026-03-05 01:42 KST — Agent Chat cycle
 - Delta: Added frontend real-time chat thread wiring via channel WebSocket (`/api/v1/ws/channels/{channel_id}`) in `frontend/src/main.tsx`.
   - Added LIVE/OFFLINE connection badge.
