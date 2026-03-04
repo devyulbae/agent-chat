@@ -15,12 +15,33 @@ type OrganizationsGraph = {
   by_type: Record<string, Organization[]>
 }
 
+type ThreadSummary = {
+  thread_id: string
+  message_count: number
+}
+
+type Message = {
+  id: string
+  channel_id: string
+  sender_agent_id: string
+  thread_id: string | null
+  body: string
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const [channelId, setChannelId] = useState('chan-1')
+  const [threads, setThreads] = useState<ThreadSummary[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+  const [threadLoading, setThreadLoading] = useState(false)
+  const [messageLoading, setMessageLoading] = useState(false)
+  const [chatError, setChatError] = useState<string | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -50,6 +71,85 @@ function App() {
     void loadGraph()
     return () => controller.abort()
   }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadThreads() {
+      if (!channelId.trim()) {
+        setThreads([])
+        return
+      }
+      setThreadLoading(true)
+      setChatError(null)
+      try {
+        const response = await fetch(
+          `${API_BASE}/channels/${encodeURIComponent(channelId)}/threads`,
+          { signal: controller.signal }
+        )
+        if (!response.ok) {
+          throw new Error(`Failed to load threads (${response.status})`)
+        }
+        const payload = (await response.json()) as ThreadSummary[]
+        setThreads(payload)
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+        setChatError(err instanceof Error ? err.message : 'Unknown error')
+        setThreads([])
+      } finally {
+        setThreadLoading(false)
+      }
+    }
+
+    void loadThreads()
+    setSelectedThreadId(null)
+
+    return () => controller.abort()
+  }, [channelId])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadMessages() {
+      if (!channelId.trim()) {
+        setMessages([])
+        return
+      }
+      setMessageLoading(true)
+      setChatError(null)
+
+      const params = new URLSearchParams()
+      if (selectedThreadId) {
+        params.set('thread_id', selectedThreadId)
+      }
+
+      const query = params.toString()
+      const url = `${API_BASE}/channels/${encodeURIComponent(channelId)}/messages${query ? `?${query}` : ''}`
+
+      try {
+        const response = await fetch(url, { signal: controller.signal })
+        if (!response.ok) {
+          throw new Error(`Failed to load messages (${response.status})`)
+        }
+        const payload = (await response.json()) as Message[]
+        setMessages(payload)
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+        setChatError(err instanceof Error ? err.message : 'Unknown error')
+        setMessages([])
+      } finally {
+        setMessageLoading(false)
+      }
+    }
+
+    void loadMessages()
+
+    return () => controller.abort()
+  }, [channelId, selectedThreadId])
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -95,6 +195,72 @@ function App() {
           )}
         </>
       )}
+
+      <hr style={{ margin: '24px 0' }} />
+
+      <h3>Chat Thread Explorer</h3>
+      <label htmlFor="channel-id">Channel ID:</label>{' '}
+      <input
+        id="channel-id"
+        value={channelId}
+        onChange={(event) => setChannelId(event.target.value)}
+        placeholder="chan-1"
+      />
+
+      {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
+
+      <div style={{ display: 'flex', gap: 16, marginTop: 12, alignItems: 'flex-start' }}>
+        <div>
+          <h4>Threads</h4>
+          {threadLoading && <p>Loading threads…</p>}
+          {!threadLoading && (
+            <ul>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setSelectedThreadId(null)}
+                  style={{
+                    fontWeight: selectedThreadId === null ? 700 : 400,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Root messages
+                </button>
+              </li>
+              {threads.map((thread) => (
+                <li key={thread.thread_id}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedThreadId(thread.thread_id)}
+                    style={{
+                      fontWeight: selectedThreadId === thread.thread_id ? 700 : 400,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {thread.thread_id} ({thread.message_count})
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div>
+          <h4>{selectedThreadId ? `Messages in ${selectedThreadId}` : 'Root messages'}</h4>
+          {messageLoading && <p>Loading messages…</p>}
+          {!messageLoading && (messages.length ? (
+            <ul>
+              {messages.map((message) => (
+                <li key={message.id}>
+                  <code>{message.sender_agent_id}</code>: {message.body}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No messages.</p>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
