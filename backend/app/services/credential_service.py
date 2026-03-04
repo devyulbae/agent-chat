@@ -4,6 +4,7 @@ from typing import Any, Sequence
 from app.core.encryption import EncryptionService
 from app.repositories.credential_repository import CredentialRepository
 from app.schemas.credential import CredentialCreate, CredentialUpdate
+from app.services.audit_service import AuditLogger, NoOpAuditLogger, build_audit_event
 
 
 class CredentialService:
@@ -11,9 +12,11 @@ class CredentialService:
         self,
         repository: CredentialRepository,
         encryption_service: EncryptionService,
+        audit_logger: AuditLogger | None = None,
     ) -> None:
         self._repository = repository
         self._encryption_service = encryption_service
+        self._audit_logger = audit_logger or NoOpAuditLogger()
 
     def create_credential(self, payload: CredentialCreate):
         encrypted = self._encryption_service.encrypt(payload.secret)
@@ -77,27 +80,66 @@ class CredentialService:
         row = self._repository.get(credential_id)
         if row is None:
             return None
+
+        changed_fields: list[str] = []
         if payload.label is not None:
             row.label = payload.label
+            changed_fields.append("label")
         if payload.token_expires_at is not None:
             row.token_expires_at = payload.token_expires_at
+            changed_fields.append("token_expires_at")
         if payload.secret is not None:
             row.secret_encrypted = self._encryption_service.encrypt(payload.secret)
             row.last_rotated_at = datetime.now(timezone.utc)
-        return self._repository.save(row)
+            changed_fields.append("secret")
+
+        saved = self._repository.save(row)
+        if changed_fields:
+            self._audit_logger.log(
+                build_audit_event(
+                    event_type="credential.updated",
+                    entity_type="credential",
+                    entity_id=credential_id,
+                    metadata={"changed_fields": changed_fields},
+                )
+            )
+        return saved
 
     def delete_credential(self, credential_id: str) -> bool:
-        return self._repository.delete(credential_id)
+        deleted = self._repository.delete(credential_id)
+        if deleted:
+            self._audit_logger.log(
+                build_audit_event(
+                    event_type="credential.deleted",
+                    entity_type="credential",
+                    entity_id=credential_id,
+                )
+            )
+        return deleted
 
     def rotate_key(self, credential_id: str, new_key_version: str):
         row = self._repository.get(credential_id)
         if row is None:
             return None
+        previous_key_version = row.key_version
         plaintext = self._encryption_service.decrypt(row.secret_encrypted)
         row.secret_encrypted = self._encryption_service.encrypt(plaintext)
         row.key_version = new_key_version
         row.last_rotated_at = datetime.now(timezone.utc)
-        return self._repository.save(row)
+
+        saved = self._repository.save(row)
+        self._audit_logger.log(
+            build_audit_event(
+                event_type="credential.rotated",
+                entity_type="credential",
+                entity_id=credential_id,
+                metadata={
+                    "previous_key_version": previous_key_version,
+                    "new_key_version": new_key_version,
+                },
+            )
+        )
+        return saved
 
     @staticmethod
     def _token_expires_at(row: Any) -> datetime | None:

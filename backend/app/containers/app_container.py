@@ -9,6 +9,7 @@ from app.repositories.credential_repository import SQLCredentialRepository
 from app.repositories.message_repository import SQLMessageRepository
 from app.repositories.organization_repository import SQLOrganizationRepository
 from app.services.agent_service import AgentService
+from app.services.audit_service import NoOpAuditLogger
 from app.services.channel_service import ChannelService
 from app.services.credential_service import CredentialService
 from app.services.message_service import MessageService
@@ -31,6 +32,7 @@ class AppContainer(containers.DeclarativeContainer):
         key=config.app_encryption_key,
     )
     ws_hub = providers.Singleton(WebSocketHub)
+    audit_logger = providers.Singleton(NoOpAuditLogger)
 
     agent_repository = providers.Factory(SQLAgentRepository, session=db_session)
     organization_repository = providers.Factory(
@@ -51,6 +53,7 @@ class AppContainer(containers.DeclarativeContainer):
         CredentialService,
         repository=credential_repository,
         encryption_service=encryption_service,
+        audit_logger=audit_logger,
     )
     channel_service = providers.Factory(ChannelService, repository=channel_repository)
     message_service = providers.Factory(MessageService, repository=message_repository)

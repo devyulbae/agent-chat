@@ -7,6 +7,14 @@ from app.schemas.credential import CredentialCreate, CredentialUpdate
 from app.services.credential_service import CredentialService
 
 
+class FakeAuditLogger:
+    def __init__(self) -> None:
+        self.events = []
+
+    def log(self, event) -> None:
+        self.events.append(event)
+
+
 class FakeCredentialRepo:
     def __init__(self) -> None:
         self.items = []
@@ -168,3 +176,40 @@ def test_list_credentials_token_status_filters() -> None:
     assert [item["row_id"] for item in expired] == ["cred-expired"]
     assert [item["row_id"] for item in expiring_soon] == ["cred-soon"]
     assert [item["row_id"] for item in active] == ["cred-soon", "cred-active"]
+
+
+def test_credential_audit_events_for_update_delete_rotate() -> None:
+    repo = FakeCredentialRepo()
+    encryption = EncryptionService(Fernet.generate_key().decode())
+    audit_logger = FakeAuditLogger()
+    service = CredentialService(
+        repository=repo,
+        encryption_service=encryption,
+        audit_logger=audit_logger,
+    )
+
+    service.create_credential(
+        CredentialCreate(
+            id="cred-1",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="default",
+            secret="secret-1",
+        )
+    )
+
+    service.update_credential("cred-1", CredentialUpdate(label="renamed"))
+    service.rotate_key("cred-1", "v2")
+    deleted = service.delete_credential("cred-1")
+
+    assert deleted is True
+    assert [event.event_type for event in audit_logger.events] == [
+        "credential.updated",
+        "credential.rotated",
+        "credential.deleted",
+    ]
+    assert audit_logger.events[0].metadata["changed_fields"] == ["label"]
+    assert audit_logger.events[1].metadata == {
+        "previous_key_version": "v1",
+        "new_key_version": "v2",
+    }
