@@ -7,9 +7,9 @@ repos:
     rev: 1.7.9
     hooks:
       - id: bandit
-        args: ["-c", "pyproject.toml", "-r", "app"]
+        pass_filenames: false
+        args: ["-r", "backend/app", "-x", "backend/tests"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.5
     hooks:
       - id: ruff
-        args: ["--fix"]

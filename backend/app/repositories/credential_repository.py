@@ -19,11 +19,24 @@ class CredentialRepository(ABC):
         provider: str,
         label: str,
         secret_encrypted: str,
+        key_version: str,
     ) -> Credential:
         raise NotImplementedError
 
     @abstractmethod
     def list(self) -> Sequence[Credential]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get(self, row_id: str) -> Credential | None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def save(self, row: Credential) -> Credential:
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete(self, row_id: str) -> bool:
         raise NotImplementedError
 
 
@@ -39,6 +52,7 @@ class SQLCredentialRepository(CredentialRepository):
         provider: str,
         label: str,
         secret_encrypted: str,
+        key_version: str,
     ) -> Credential:
         row = Credential(
             id=row_id,
@@ -46,6 +60,7 @@ class SQLCredentialRepository(CredentialRepository):
             provider=provider,
             label=label,
             secret_encrypted=secret_encrypted,
+            key_version=key_version,
         )
         self._session.add(row)
         self._session.commit()
@@ -54,3 +69,20 @@ class SQLCredentialRepository(CredentialRepository):
 
     def list(self) -> Sequence[Credential]:
         return self._session.execute(select(Credential)).scalars().all()
+
+    def get(self, row_id: str) -> Credential | None:
+        return self._session.get(Credential, row_id)
+
+    def save(self, row: Credential) -> Credential:
+        self._session.add(row)
+        self._session.commit()
+        self._session.refresh(row)
+        return row
+
+    def delete(self, row_id: str) -> bool:
+        row = self._session.get(Credential, row_id)
+        if row is None:
+            return False
+        self._session.delete(row)
+        self._session.commit()
+        return True
