@@ -4,11 +4,13 @@ from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisco
 from app.containers.app_container import AppContainer
 from app.core.ws_hub import WebSocketHub
 from app.schemas.agent import AgentCreate, AgentRead
+from app.schemas.audit import AuditEventRead
 from app.schemas.channel import ChannelCreate, ChannelRead
 from app.schemas.credential import CredentialCreate, CredentialRead, CredentialUpdate
 from app.schemas.message import MessageCreate, MessageRead, ThreadSummaryRead
 from app.schemas.organization import OrganizationCreate, OrganizationRead
 from app.services.agent_service import AgentService
+from app.services.audit_service import AuditService
 from app.services.channel_service import ChannelService
 from app.services.credential_service import CredentialService
 from app.services.message_service import MessageService
@@ -135,6 +137,24 @@ def rotate_credential(
     if entity is None:
         raise HTTPException(status_code=404, detail="Credential not found")
     return CredentialRead.from_entity(entity)
+
+
+@router.get("/audit-events", response_model=list[AuditEventRead])
+@inject
+def list_audit_events(
+    entity_type: str | None = None,
+    entity_id: str | None = None,
+    event_type: str | None = None,
+    limit: int = 100,
+    service: AuditService = Depends(Provide[AppContainer.audit_service]),
+):
+    items = service.list_events(
+        entity_type=entity_type,
+        entity_id=entity_id,
+        event_type=event_type,
+        limit=limit,
+    )
+    return [AuditEventRead.from_entity(item) for item in items]
 
 
 @router.post("/channels", response_model=ChannelRead)

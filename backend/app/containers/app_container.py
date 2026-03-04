@@ -4,12 +4,13 @@ from app.core.db import create_session_factory
 from app.core.encryption import EncryptionService
 from app.core.ws_hub import WebSocketHub
 from app.repositories.agent_repository import SQLAgentRepository
+from app.repositories.audit_repository import InMemoryAuditRepository
 from app.repositories.channel_repository import SQLChannelRepository
 from app.repositories.credential_repository import SQLCredentialRepository
 from app.repositories.message_repository import SQLMessageRepository
 from app.repositories.organization_repository import SQLOrganizationRepository
 from app.services.agent_service import AgentService
-from app.services.audit_service import NoOpAuditLogger
+from app.services.audit_service import AuditService, RepositoryAuditLogger
 from app.services.channel_service import ChannelService
 from app.services.credential_service import CredentialService
 from app.services.message_service import MessageService
@@ -32,7 +33,11 @@ class AppContainer(containers.DeclarativeContainer):
         key=config.app_encryption_key,
     )
     ws_hub = providers.Singleton(WebSocketHub)
-    audit_logger = providers.Singleton(NoOpAuditLogger)
+    audit_repository = providers.Singleton(InMemoryAuditRepository)
+    audit_logger = providers.Singleton(
+        RepositoryAuditLogger,
+        repository=audit_repository,
+    )
 
     agent_repository = providers.Factory(SQLAgentRepository, session=db_session)
     organization_repository = providers.Factory(
@@ -48,6 +53,10 @@ class AppContainer(containers.DeclarativeContainer):
     organization_service = providers.Factory(
         OrganizationService,
         repository=organization_repository,
+    )
+    audit_service = providers.Factory(
+        AuditService,
+        repository=audit_repository,
     )
     credential_service = providers.Factory(
         CredentialService,
