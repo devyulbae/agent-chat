@@ -1,7 +1,9 @@
+from datetime import UTC, datetime
+
 from cryptography.fernet import Fernet
 
 from app.core.encryption import EncryptionService
-from app.schemas.credential import CredentialCreate
+from app.schemas.credential import CredentialCreate, CredentialUpdate
 from app.services.credential_service import CredentialService
 
 
@@ -20,6 +22,25 @@ class FakeCredentialRepo:
         if owner_agent_id is not None:
             rows = [item for item in rows if item["owner_agent_id"] == owner_agent_id]
         return rows
+
+    def get(self, row_id):
+        for item in self.items:
+            if item["row_id"] == row_id:
+                return type("Row", (), item)
+        return None
+
+    def save(self, row):
+        row_dict = row.__dict__.copy()
+        self.items = [
+            row_dict if item["row_id"] == row_dict["row_id"] else item
+            for item in self.items
+        ]
+        return type("Row", (), row_dict)
+
+    def delete(self, row_id):
+        before = len(self.items)
+        self.items = [item for item in self.items if item["row_id"] != row_id]
+        return len(self.items) < before
 
 
 def test_credential_service_encrypts_secret() -> None:
@@ -70,3 +91,32 @@ def test_credential_service_filters_by_provider_and_owner() -> None:
 
     assert [item["row_id"] for item in by_provider] == ["cred-1"]
     assert [item["row_id"] for item in by_owner] == ["cred-2"]
+
+
+def test_update_secret_sets_rotation_timestamp() -> None:
+    repo = FakeCredentialRepo()
+    encryption = EncryptionService(Fernet.generate_key().decode())
+    service = CredentialService(repository=repo, encryption_service=encryption)
+
+    service.create_credential(
+        CredentialCreate(
+            id="cred-1",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="default",
+            secret="secret-1",
+            token_expires_at=datetime(2026, 3, 31, tzinfo=UTC),
+        )
+    )
+
+    updated = service.update_credential(
+        "cred-1",
+        CredentialUpdate(
+            secret="new-secret", token_expires_at=datetime(2026, 4, 30, tzinfo=UTC)
+        ),
+    )
+
+    assert updated is not None
+    assert updated.last_rotated_at is not None
+    assert updated.token_expires_at == datetime(2026, 4, 30, tzinfo=UTC)
+    assert encryption.decrypt(updated.secret_encrypted) == "new-secret"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Sequence
 
 from sqlalchemy import select
@@ -20,6 +21,7 @@ class CredentialRepository(ABC):
         label: str,
         secret_encrypted: str,
         key_version: str,
+        token_expires_at: datetime | None,
     ) -> Credential:
         raise NotImplementedError
 
@@ -58,6 +60,7 @@ class SQLCredentialRepository(CredentialRepository):
         label: str,
         secret_encrypted: str,
         key_version: str,
+        token_expires_at: datetime | None,
     ) -> Credential:
         row = Credential(
             id=row_id,
@@ -66,6 +69,7 @@ class SQLCredentialRepository(CredentialRepository):
             label=label,
             secret_encrypted=secret_encrypted,
             key_version=key_version,
+            token_expires_at=token_expires_at,
         )
         self._session.add(row)
         self._session.commit()

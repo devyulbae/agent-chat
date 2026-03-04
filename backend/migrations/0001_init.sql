@@ -25,6 +25,9 @@ create table if not exists credentials (
   label text not null,
   secret_encrypted text not null,
   key_version text not null default 'v1',
+  token_expires_at timestamptz,
+  last_used_at timestamptz,
+  last_rotated_at timestamptz,
   created_at timestamptz not null default now()
 );
 

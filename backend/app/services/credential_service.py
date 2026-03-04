@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Sequence
 
 from app.core.encryption import EncryptionService
@@ -23,6 +24,7 @@ class CredentialService:
             label=payload.label,
             secret_encrypted=encrypted,
             key_version="v1",
+            token_expires_at=payload.token_expires_at,
         )
 
     def list_credentials(
@@ -41,8 +43,11 @@ class CredentialService:
             return None
         if payload.label is not None:
             row.label = payload.label
+        if payload.token_expires_at is not None:
+            row.token_expires_at = payload.token_expires_at
         if payload.secret is not None:
             row.secret_encrypted = self._encryption_service.encrypt(payload.secret)
+            row.last_rotated_at = datetime.now(timezone.utc)
         return self._repository.save(row)
 
     def delete_credential(self, credential_id: str) -> bool:
@@ -55,4 +60,5 @@ class CredentialService:
         plaintext = self._encryption_service.decrypt(row.secret_encrypted)
         row.secret_encrypted = self._encryption_service.encrypt(plaintext)
         row.key_version = new_key_version
+        row.last_rotated_at = datetime.now(timezone.utc)
         return self._repository.save(row)
