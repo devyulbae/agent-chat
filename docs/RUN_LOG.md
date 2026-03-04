@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 06:40 KST — Agent Chat cycle
+- Delta: Added message timestamp support end-to-end for chat thread UX.
+  - Backend: added `Message.created_at` ORM mapping with DB default and exposed `created_at` in `MessageRead` API schema.
+  - Backend: made channel/thread message listing deterministic with `ORDER BY created_at, id`.
+  - Frontend: updated chat message model and rendered localized per-message timestamps in **Chat Thread Explorer**.
+  - Tests: added `backend/tests/test_message_schema.py` to verify `MessageRead.from_entity` includes `created_at`.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (12 passed)
+- Commit: `3493e4e` (pushed to `main`)
+- Next action: implement thread-level unread/new-message indicator badge logic (persist last-seen per thread in UI state and highlight threads with unseen websocket events).
+
 ## 2026-03-05 06:00 KST — Agent Chat cycle
 - Delta: Improved chat thread UX by wiring an in-UI message composer in `frontend/src/main.tsx`.
   - Added sender/message compose controls directly in **Chat Thread Explorer**.
