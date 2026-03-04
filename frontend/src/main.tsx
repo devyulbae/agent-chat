@@ -49,6 +49,15 @@ type AuditEvent = {
 }
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
+const ROOT_THREAD_KEY = '__root__'
+
+function toThreadKey(threadId: string | null): string {
+  return threadId ?? ROOT_THREAD_KEY
+}
+
+function threadStateStorageKey(channelId: string): string {
+  return `agent-chat:last-seen:${channelId}`
+}
 
 function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'expiring_soon' {
   if (!credential.token_expires_at) {
@@ -115,6 +124,8 @@ function App() {
   const [threads, setThreads] = useState<ThreadSummary[]>([])
   const [messages, setMessages] = useState<Message[]>([])
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null)
+  const [lastSeenByThread, setLastSeenByThread] = useState<Record<string, string>>({})
+  const [unseenThreadKeys, setUnseenThreadKeys] = useState<string[]>([])
   const [threadLoading, setThreadLoading] = useState(false)
   const [messageLoading, setMessageLoading] = useState(false)
   const [chatError, setChatError] = useState<string | null>(null)
@@ -162,6 +173,17 @@ function App() {
 
     void loadGraph()
     return () => controller.abort()
+  }, [])
+
+  const markThreadSeen = useCallback((threadId: string | null, marker: string) => {
+    const key = toThreadKey(threadId)
+    setLastSeenByThread((current) => ({ ...current, [key]: marker }))
+    setUnseenThreadKeys((current) => current.filter((item) => item !== key))
+  }, [])
+
+  const markThreadUnseen = useCallback((threadId: string | null) => {
+    const key = toThreadKey(threadId)
+    setUnseenThreadKeys((current) => (current.includes(key) ? current : [...current, key]))
   }, [])
 
   const loadThreads = useCallback(
@@ -219,6 +241,8 @@ function App() {
         }
         const payload = (await response.json()) as Message[]
         setMessages(payload)
+        const latestMessage = payload[payload.length - 1]
+        markThreadSeen(selectedThreadId, latestMessage ? latestMessage.id : `visited:${Date.now()}`)
       } catch (err) {
         if (err instanceof DOMException && err.name === 'AbortError') {
           return
@@ -229,7 +253,15 @@ function App() {
         setMessageLoading(false)
       }
     },
-    [channelId, selectedThreadId]
+    [channelId, markThreadSeen, selectedThreadId]
+  )
+
+  const selectThread = useCallback(
+    (threadId: string | null) => {
+      setSelectedThreadId(threadId)
+      markThreadSeen(threadId, `selected:${Date.now()}`)
+    },
+    [markThreadSeen]
   )
 
   const submitMessage = useCallback(async () => {
@@ -351,6 +383,27 @@ function App() {
   )
 
   useEffect(() => {
+    const raw = window.localStorage.getItem(threadStateStorageKey(channelId))
+    if (!raw) {
+      setLastSeenByThread({})
+      setUnseenThreadKeys([])
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as Record<string, string>
+      setLastSeenByThread(parsed)
+    } catch {
+      setLastSeenByThread({})
+    }
+    setUnseenThreadKeys([])
+  }, [channelId])
+
+  useEffect(() => {
+    window.localStorage.setItem(threadStateStorageKey(channelId), JSON.stringify(lastSeenByThread))
+  }, [channelId, lastSeenByThread])
+
+  useEffect(() => {
     const controller = new AbortController()
     void loadThreads(controller.signal)
     setSelectedThreadId(null)
@@ -436,6 +489,9 @@ function App() {
             }
             return [...current, payload.message as Message]
           })
+          markThreadSeen(payload.message.thread_id, payload.message.id)
+        } else {
+          markThreadUnseen(payload.message.thread_id)
         }
 
         void loadThreads()
@@ -447,7 +503,7 @@ function App() {
     return () => {
       socket.close()
     }
-  }, [channelId, loadThreads, selectedThreadId])
+  }, [channelId, loadThreads, markThreadSeen, markThreadUnseen, selectedThreadId])
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -546,26 +602,27 @@ function App() {
               <li>
                 <button
                   type="button"
-                  onClick={() => setSelectedThreadId(null)}
+                  onClick={() => selectThread(null)}
                   style={{
                     fontWeight: selectedThreadId === null ? 700 : 400,
                     cursor: 'pointer',
                   }}
                 >
-                  Root messages
+                  Root messages{unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
                 </button>
               </li>
               {threads.map((thread) => (
                 <li key={thread.thread_id}>
                   <button
                     type="button"
-                    onClick={() => setSelectedThreadId(thread.thread_id)}
+                    onClick={() => selectThread(thread.thread_id)}
                     style={{
                       fontWeight: selectedThreadId === thread.thread_id ? 700 : 400,
                       cursor: 'pointer',
                     }}
                   >
                     {thread.thread_id} ({thread.message_count})
+                    {unseenThreadKeys.includes(toThreadKey(thread.thread_id)) ? ' • new' : ''}
                   </button>
                 </li>
               ))}

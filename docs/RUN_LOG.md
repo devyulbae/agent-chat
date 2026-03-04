@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 07:40 KST — Agent Chat cycle
+- Delta: Added thread-level unread/new-message indicator UX in `frontend/src/main.tsx`.
+  - Added per-channel thread state persistence via `localStorage` (`agent-chat:last-seen:{channelId}`).
+  - Tracks `lastSeenByThread` in UI state and marks threads as seen on selection and message list load.
+  - Tracks unseen websocket activity per thread (`unseenThreadKeys`) and clears indicators when viewed.
+  - Added visible `• new` badges for root and child thread buttons in **Chat Thread Explorer**.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (14 passed)
+- Commit: `0292e23` (pushed to `main`)
+- Next action: strengthen unread precision by persisting per-thread last-seen timestamp/message marker and comparing against thread summary `message_count` deltas on reload (avoid false positives after reconnect).
+
 ## 2026-03-05 06:40 KST — Agent Chat cycle
 - Delta: Added message timestamp support end-to-end for chat thread UX.
   - Backend: added `Message.created_at` ORM mapping with DB default and exposed `created_at` in `MessageRead` API schema.
