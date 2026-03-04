@@ -22,3 +22,15 @@
   - `pre-commit run --all-files` ✅
   - `pytest` ✅ (8 passed)
 - Next action: commit and push the WebSocket thread UI + pre-commit baseline, then move to OAuth/provider token lifecycle increment.
+
+## 2026-03-05 02:40 KST — Agent Chat cycle
+- Delta: Added provider token lifecycle filtering to credential listing API.
+  - `GET /credentials` now supports `token_status` (`active` | `expired` | `expiring_soon`) and `expiring_within_hours` query params.
+  - Implemented lifecycle filtering logic in `CredentialService` with timezone-safe expiry handling.
+  - Added tests covering expired/expiring-soon/active credential selection.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (9 passed)
+- Commit: `49fcea4` (pushed to `main`)
+- Next action: expose token lifecycle badges/filters in frontend credentials view and add audit log event entries for credential rotate/update/delete.
