@@ -20,3 +20,8 @@ docker compose up -d --build
 - Organization map + control page
 
 See `docs/ARCHITECTURE.md`.
+
+## Access control (required)
+- Port 50004 is protected by nginx Basic Auth.
+- Set `AGENTCHAT_BASIC_AUTH_USER` and `AGENTCHAT_BASIC_AUTH_PASS` in `.env` before `docker compose up`.
+- Without credentials, requests are denied (401).

@@ -38,9 +38,10 @@ services:
       - backend
 
   nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    build: ./nginx
+    environment:
+      AGENTCHAT_BASIC_AUTH_USER: ${AGENTCHAT_BASIC_AUTH_USER:?set_in_env}
+      AGENTCHAT_BASIC_AUTH_PASS: ${AGENTCHAT_BASIC_AUTH_PASS:?set_in_env}
     ports:
       - "50004:80"
     depends_on:
