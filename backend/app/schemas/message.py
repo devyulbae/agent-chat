@@ -9,6 +9,18 @@ class MessageCreate(BaseModel):
     body: str
 
 
+class ThreadSummaryRead(BaseModel):
+    thread_id: str
+    message_count: int
+
+    @classmethod
+    def from_entity(cls, entity: object) -> "ThreadSummaryRead":
+        return cls(
+            thread_id=getattr(entity, "thread_id"),
+            message_count=getattr(entity, "message_count"),
+        )
+
+
 class MessageRead(BaseModel):
     id: str
     channel_id: str

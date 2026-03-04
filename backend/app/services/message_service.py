@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from app.repositories.message_repository import MessageRepository
+from app.repositories.message_repository import MessageRepository, ThreadSummary
 from app.schemas.message import MessageCreate
 
 
@@ -15,3 +15,6 @@ class MessageService:
         self, channel_id: str, thread_id: str | None = None
     ) -> Sequence[object]:
         return self._repository.list_by_channel(channel_id, thread_id)
+
+    def list_threads(self, channel_id: str) -> Sequence[ThreadSummary]:
+        return self._repository.list_threads_by_channel(channel_id)

@@ -1,13 +1,20 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.domain.models import Message
 from app.schemas.message import MessageCreate
+
+
+@dataclass(frozen=True)
+class ThreadSummary:
+    thread_id: str
+    message_count: int
 
 
 class MessageRepository(ABC):
@@ -19,6 +26,10 @@ class MessageRepository(ABC):
     def list_by_channel(
         self, channel_id: str, thread_id: str | None = None
     ) -> Sequence[Message]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_threads_by_channel(self, channel_id: str) -> Sequence[ThreadSummary]:
         raise NotImplementedError
 
 
@@ -48,3 +59,17 @@ class SQLMessageRepository(MessageRepository):
         else:
             stmt = stmt.where(Message.thread_id == thread_id)
         return self._session.execute(stmt).scalars().all()
+
+    def list_threads_by_channel(self, channel_id: str) -> Sequence[ThreadSummary]:
+        stmt = (
+            select(Message.thread_id, func.count(Message.id))
+            .where(Message.channel_id == channel_id, Message.thread_id.is_not(None))
+            .group_by(Message.thread_id)
+            .order_by(func.count(Message.id).desc(), Message.thread_id.asc())
+        )
+        rows = self._session.execute(stmt).all()
+        return [
+            ThreadSummary(thread_id=thread_id, message_count=message_count)
+            for thread_id, message_count in rows
+            if thread_id is not None
+        ]

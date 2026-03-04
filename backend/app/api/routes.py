@@ -6,7 +6,7 @@ from app.core.ws_hub import WebSocketHub
 from app.schemas.agent import AgentCreate, AgentRead
 from app.schemas.channel import ChannelCreate, ChannelRead
 from app.schemas.credential import CredentialCreate, CredentialRead, CredentialUpdate
-from app.schemas.message import MessageCreate, MessageRead
+from app.schemas.message import MessageCreate, MessageRead, ThreadSummaryRead
 from app.schemas.organization import OrganizationCreate, OrganizationRead
 from app.services.agent_service import AgentService
 from app.services.channel_service import ChannelService
@@ -156,6 +156,17 @@ async def create_message(
         {"event": "new_message", "message": dto.model_dump()},
     )
     return dto
+
+
+@router.get("/channels/{channel_id}/threads", response_model=list[ThreadSummaryRead])
+@inject
+def list_threads(
+    channel_id: str,
+    service: MessageService = Depends(Provide[AppContainer.message_service]),
+):
+    return [
+        ThreadSummaryRead.from_entity(item) for item in service.list_threads(channel_id)
+    ]
 
 
 @router.get("/channels/{channel_id}/messages", response_model=list[MessageRead])
