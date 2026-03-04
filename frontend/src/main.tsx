@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 type OrgType = 'freeform' | 'department' | 'squad'
+type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
 
 type Organization = {
   id: string
@@ -28,7 +29,36 @@ type Message = {
   body: string
 }
 
+type Credential = {
+  id: string
+  owner_agent_id: string
+  provider: string
+  label: string
+  key_version: string
+  last_rotated_at: string
+  token_expires_at: string | null
+}
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
+
+function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'expiring_soon' {
+  if (!credential.token_expires_at) {
+    return 'active'
+  }
+
+  const now = new Date()
+  const expiresAt = new Date(credential.token_expires_at)
+  if (expiresAt <= now) {
+    return 'expired'
+  }
+
+  const dayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+  if (expiresAt <= dayFromNow) {
+    return 'expiring_soon'
+  }
+
+  return 'active'
+}
 
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
@@ -43,6 +73,12 @@ function App() {
   const [messageLoading, setMessageLoading] = useState(false)
   const [chatError, setChatError] = useState<string | null>(null)
   const [isLive, setIsLive] = useState(false)
+
+  const [credentials, setCredentials] = useState<Credential[]>([])
+  const [credentialFilter, setCredentialFilter] = useState<TokenStatusFilter>('all')
+  const [expiringWithinHours, setExpiringWithinHours] = useState(24)
+  const [credentialLoading, setCredentialLoading] = useState(false)
+  const [credentialError, setCredentialError] = useState<string | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -141,6 +177,40 @@ function App() {
     [channelId, selectedThreadId]
   )
 
+  const loadCredentials = useCallback(
+    async (signal?: AbortSignal) => {
+      setCredentialLoading(true)
+      setCredentialError(null)
+
+      const params = new URLSearchParams()
+      if (credentialFilter !== 'all') {
+        params.set('token_status', credentialFilter)
+      }
+      params.set('expiring_within_hours', String(expiringWithinHours))
+
+      const query = params.toString()
+      const url = `${API_BASE}/credentials${query ? `?${query}` : ''}`
+
+      try {
+        const response = await fetch(url, { signal })
+        if (!response.ok) {
+          throw new Error(`Failed to load credentials (${response.status})`)
+        }
+        const payload = (await response.json()) as Credential[]
+        setCredentials(payload)
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+        setCredentialError(err instanceof Error ? err.message : 'Unknown error')
+        setCredentials([])
+      } finally {
+        setCredentialLoading(false)
+      }
+    },
+    [credentialFilter, expiringWithinHours]
+  )
+
   useEffect(() => {
     const controller = new AbortController()
     void loadThreads(controller.signal)
@@ -153,6 +223,12 @@ function App() {
     void loadMessages(controller.signal)
     return () => controller.abort()
   }, [loadMessages])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadCredentials(controller.signal)
+    return () => controller.abort()
+  }, [loadCredentials])
 
   useEffect(() => {
     if (!channelId.trim()) {
@@ -327,6 +403,67 @@ function App() {
             ))}
         </div>
       </div>
+
+      <hr style={{ margin: '24px 0' }} />
+
+      <h3>Credential Token Lifecycle</h3>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <label htmlFor="credential-status">Status:</label>
+        <select
+          id="credential-status"
+          value={credentialFilter}
+          onChange={(event) => setCredentialFilter(event.target.value as TokenStatusFilter)}
+        >
+          <option value="all">all</option>
+          <option value="active">active</option>
+          <option value="expired">expired</option>
+          <option value="expiring_soon">expiring_soon</option>
+        </select>
+
+        <label htmlFor="expiring-hours">Expiring window (hours):</label>
+        <input
+          id="expiring-hours"
+          type="number"
+          min={1}
+          max={24 * 30}
+          value={expiringWithinHours}
+          onChange={(event) => setExpiringWithinHours(Number(event.target.value) || 24)}
+        />
+
+        <button type="button" onClick={() => void loadCredentials()}>
+          Refresh
+        </button>
+      </div>
+
+      {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
+      {credentialLoading && <p>Loading credentials…</p>}
+
+      {!credentialLoading &&
+        (credentials.length ? (
+          <ul>
+            {credentials.map((credential) => {
+              const status = getCredentialStatus(credential)
+              const statusColor =
+                status === 'expired'
+                  ? 'crimson'
+                  : status === 'expiring_soon'
+                    ? 'darkorange'
+                    : 'seagreen'
+              return (
+                <li key={credential.id}>
+                  <strong>{credential.label}</strong> [{credential.provider}] — owner:{' '}
+                  <code>{credential.owner_agent_id}</code>{' '}
+                  <span style={{ color: statusColor, fontWeight: 700 }}>{status}</span>
+                  {credential.token_expires_at
+                    ? ` (expires ${new Date(credential.token_expires_at).toLocaleString()})`
+                    : ' (no expiry)'}
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <p>No credentials in selected lifecycle view.</p>
+        ))}
     </div>
   )
 }

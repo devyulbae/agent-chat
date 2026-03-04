@@ -34,3 +34,16 @@
   - `pytest` ✅ (9 passed)
 - Commit: `49fcea4` (pushed to `main`)
 - Next action: expose token lifecycle badges/filters in frontend credentials view and add audit log event entries for credential rotate/update/delete.
+
+## 2026-03-05 03:01 KST — Agent Chat cycle
+- Delta: Wired credential token lifecycle UI in frontend control tower.
+  - Added new **Credential Token Lifecycle** section in `frontend/src/main.tsx`.
+  - Added status filter control (`all` | `active` | `expired` | `expiring_soon`) and configurable `expiring_within_hours` input.
+  - Connected filter controls to backend `GET /credentials` query params.
+  - Added per-credential lifecycle badge rendering (`active`, `expiring_soon`, `expired`) with color-coded status and expiry timestamp display.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (9 passed)
+- Commit: pending
+- Next action: add backend audit log event entries for credential update/delete/rotate actions and cover them with service-level tests.
