@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 05:40 KST — Agent Chat cycle
+- Delta: Enriched credential audit trail rendering with metadata chips in `frontend/src/main.tsx`.
+  - Added audit metadata parsing helpers for structured event details.
+  - `credential.updated` now displays changed field chips (`changed:label`, `changed:token_expires_at`, etc.).
+  - `credential.rotated` now displays key version transition chip (`key:v1→v2`).
+  - Kept rendering resilient when metadata is absent or malformed.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (11 passed)
+- Commit: `937e26e` (pushed to `main`)
+- Next action: add RBAC/audit UX hardening by surfacing actor/context metadata and supporting server-side time-range filter for investigation workflows.
+
 ## 2026-03-05 05:02 KST — Agent Chat cycle
 - Delta: Improved credential audit trail UX with investigation filters in `frontend/src/main.tsx`.
   - Added provider filter to scope credential dropdown by provider.
