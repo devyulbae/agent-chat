@@ -213,6 +213,7 @@ function App() {
   const [threadFilterText, setThreadFilterText] = useState('')
   const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
   const [includeRootInUnreadOnly, setIncludeRootInUnreadOnly] = useState(true)
+  const [threadFilterJumpHint, setThreadFilterJumpHint] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
 
@@ -471,6 +472,7 @@ function App() {
         }
         event.preventDefault()
         setThreadFilterText('')
+        setThreadFilterJumpHint(null)
         return
       }
 
@@ -482,13 +484,20 @@ function App() {
         !event.altKey
       ) {
         if (!visibleThreadIds.length) {
+          setThreadFilterJumpHint(null)
           return
         }
         event.preventDefault()
-        selectThread(visibleThreadIds[0])
+        const topResult = visibleThreadIds[0]
+        selectThread(topResult)
+        if (topResult === null && filteredChildThreads.length > 0) {
+          setThreadFilterJumpHint('Jumped to Root first (include root is enabled). Press J/K for child results.')
+          return
+        }
+        setThreadFilterJumpHint(null)
       }
     },
-    [selectThread, threadFilterText, visibleThreadIds]
+    [filteredChildThreads.length, selectThread, threadFilterText, visibleThreadIds]
   )
 
   const loadCredentials = useCallback(
@@ -1302,7 +1311,12 @@ function App() {
     setThreadFilterText('')
     setShowUnreadOnlyThreads(false)
     setIncludeRootInUnreadOnly(true)
+    setThreadFilterJumpHint(null)
   }, [])
+
+  useEffect(() => {
+    setThreadFilterJumpHint(null)
+  }, [includeRootInUnreadOnly, showUnreadOnlyThreads, threadFilterText])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -1699,6 +1713,7 @@ function App() {
               {visibleThreadIds.length}
             </small>
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
+            {threadFilterJumpHint && <small style={{ color: '#666' }}>{threadFilterJumpHint}</small>}
           </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (

@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 21:04 KST — Agent Chat implementation cycle
+- Delta: Added root-jump clarification hint for thread filter Enter navigation in `frontend/src/main.tsx`.
+  - Added `threadFilterJumpHint` state to surface why Enter selected **Root messages** when root is included at the top.
+  - Updated `handleThreadFilterKeyDown` Enter behavior to show hint only when top result is root while child matches still exist.
+  - Hint copy: `Jumped to Root first (include root is enabled). Press J/K for child results.`
+  - Added hint reset hooks on filter/reset state changes to avoid stale guidance.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a tiny inline action near the hint to temporarily jump to first child result directly when operators want to skip root context.
+
 ## 2026-03-05 20:50 KST — Agent Chat offset lane cycle
 - Delta: Hardened audit pagination control state in `frontend/src/main.tsx` to prevent duplicate older-page fetches while keeping API contract usage unchanged.
   - Added dedicated `credentialAuditPaging` state to track append-mode pagination requests independently from initial/refresh audit loading.
