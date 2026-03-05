@@ -285,8 +285,18 @@ def test_credential_audit_events_for_update_delete_rotate() -> None:
         "credential.rotated",
         "credential.deleted",
     ]
-    assert audit_logger.events[0].metadata["changed_fields"] == ["label"]
+    assert audit_logger.events[0].metadata == {
+        "provider": "openai_api",
+        "label": "renamed",
+        "changed_fields": ["label"],
+    }
     assert audit_logger.events[1].metadata == {
+        "provider": "openai_api",
+        "label": "renamed",
         "previous_key_version": "v1",
         "new_key_version": "v2",
+    }
+    assert audit_logger.events[2].metadata == {
+        "provider": "openai_api",
+        "label": "renamed",
     }

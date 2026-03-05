@@ -19,6 +19,8 @@ class InMemoryAuditRepository:
         entity_id: str | None = None,
         event_type: str | None = None,
         action: str | None = None,
+        provider: str | None = None,
+        label: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]:
         items = self._events
@@ -34,6 +36,12 @@ class InMemoryAuditRepository:
                 for item in items
                 if item.event_type.rsplit(".", maxsplit=1)[-1] == action
             ]
+        if provider is not None:
+            items = [
+                item for item in items if item.metadata.get("provider") == provider
+            ]
+        if label is not None:
+            items = [item for item in items if item.metadata.get("label") == label]
 
         ordered = sorted(items, key=lambda item: item.occurred_at, reverse=True)
         return ordered[:limit]

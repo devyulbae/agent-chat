@@ -106,12 +106,17 @@ class CredentialService:
                     event_type="credential.updated",
                     entity_type="credential",
                     entity_id=credential_id,
-                    metadata={"changed_fields": changed_fields},
+                    metadata={
+                        "provider": row.provider,
+                        "label": row.label,
+                        "changed_fields": changed_fields,
+                    },
                 )
             )
         return saved
 
     def delete_credential(self, credential_id: str) -> bool:
+        row = self._repository.get(credential_id)
         deleted = self._repository.delete(credential_id)
         if deleted:
             self._audit_logger.log(
@@ -119,6 +124,10 @@ class CredentialService:
                     event_type="credential.deleted",
                     entity_type="credential",
                     entity_id=credential_id,
+                    metadata={
+                        "provider": row.provider if row is not None else None,
+                        "label": row.label if row is not None else None,
+                    },
                 )
             )
         return deleted
@@ -140,6 +149,8 @@ class CredentialService:
                 entity_type="credential",
                 entity_id=credential_id,
                 metadata={
+                    "provider": row.provider,
+                    "label": row.label,
                     "previous_key_version": previous_key_version,
                     "new_key_version": new_key_version,
                 },

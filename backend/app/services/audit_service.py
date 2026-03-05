@@ -34,6 +34,8 @@ class AuditEventRepository(Protocol):
         entity_id: str | None = None,
         event_type: str | None = None,
         action: str | None = None,
+        provider: str | None = None,
+        label: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]: ...
 
@@ -57,6 +59,8 @@ class AuditService:
         entity_id: str | None = None,
         event_type: str | None = None,
         action: str | None = None,
+        provider: str | None = None,
+        label: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]:
         return self._repository.list(
@@ -64,6 +68,8 @@ class AuditService:
             entity_id=entity_id,
             event_type=event_type,
             action=action,
+            provider=provider,
+            label=label,
             limit=limit,
         )
 

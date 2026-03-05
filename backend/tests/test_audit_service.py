@@ -12,16 +12,19 @@ def test_audit_service_filters_and_orders_events() -> None:
         event_type="credential.updated",
         entity_type="credential",
         entity_id="cred-1",
+        metadata={"provider": "openai_api", "label": "default"},
     )
     second = build_audit_event(
         event_type="credential.rotated",
         entity_type="credential",
         entity_id="cred-1",
+        metadata={"provider": "openai_api", "label": "default"},
     )
     third = build_audit_event(
         event_type="credential.deleted",
         entity_type="credential",
         entity_id="cred-2",
+        metadata={"provider": "slack", "label": "alerts"},
     )
 
     repository.add(first)
@@ -48,3 +51,12 @@ def test_audit_service_filters_and_orders_events() -> None:
 
     updated_only = service.list_events(entity_type="credential", action="updated")
     assert [item.event_type for item in updated_only] == ["credential.updated"]
+
+    provider_only = service.list_events(entity_type="credential", provider="openai_api")
+    assert [item.event_type for item in provider_only] == [
+        "credential.rotated",
+        "credential.updated",
+    ]
+
+    label_only = service.list_events(entity_type="credential", label="alerts")
+    assert [item.event_type for item in label_only] == ["credential.deleted"]
