@@ -1672,7 +1672,10 @@ function App() {
   )
 
   const jumpToVisibleThreadBoundary = useCallback(
-    (boundary: 'first' | 'last', sourceKey: 'Home' | 'End' | 'PageUp' | 'PageDown') => {
+    (
+      boundary: 'first' | 'last',
+      sourceKey: 'Home' | 'End' | 'PageUp' | 'PageDown' | 'Shift+End'
+    ) => {
       if (!visibleThreadIds.length) {
         return
       }
@@ -1759,7 +1762,7 @@ function App() {
         return
       }
       event.preventDefault()
-      jumpToVisibleThreadBoundary('last', 'End')
+      jumpToVisibleThreadBoundary('last', 'Shift+End')
     }
 
     window.addEventListener('keydown', onKeyDown)

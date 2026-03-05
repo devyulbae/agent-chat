@@ -1118,3 +1118,14 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
 - Commit: pending
 - Next action: add keyboard shortcut (`Shift+Home`) to jump directly to root thread without leaving current filter context.
+
+## 2026-03-06 02:22 KST — Agent Chat implementation cycle
+- Delta: Added explicit Shift+End boundary feedback in thread explorer keyboard UX.
+  - Frontend: widened boundary jump source labels to include `Shift+End` and plumbed that source through the dedicated `Shift+End` handler.
+  - Result: transient boundary hint now explicitly states `Shift+End` when jumping to last visible thread, instead of generic `End`.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add complementary `Shift+PageDown` support that mirrors `Shift+End` for last-visible jump discoverability.
