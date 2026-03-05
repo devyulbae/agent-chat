@@ -873,6 +873,11 @@ function App() {
       .map((thread) => thread.thread_id)
   }, [threads, unseenThreadKeys])
 
+  const unreadNavigationHint =
+    unreadThreadIds.length > 0
+      ? `Unread threads: ${unreadThreadIds.length} • Press U to jump`
+      : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
+
   const jumpToNextUnread = useCallback(() => {
     if (!unreadThreadIds.length) {
       return
@@ -1064,7 +1069,7 @@ function App() {
             </button>
           </small>
         )}
-        <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length} • Press U to jump</small>
+        <small style={{ color: unreadThreadIds.length > 0 ? '#555' : '#777' }}>{unreadNavigationHint}</small>
       </div>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}

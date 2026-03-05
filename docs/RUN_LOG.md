@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 12:41 KST — Agent Chat implementation cycle
+- Delta: Added disabled-state guidance for unread triage controls in `frontend/src/main.tsx`.
+  - Introduced derived `unreadNavigationHint` copy tied to current unread count.
+  - When unread exists, keeps current affordance (`Unread threads: N • Press U to jump`).
+  - When unread is zero, now shows explicit helper text (`No unread threads right now...`) so disabled **Jump/Clear** buttons are self-explanatory.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add unread-only mode count chip (e.g., `showing X of Y unread`) beside thread filter controls to improve triage situational awareness.
+
 ## 2026-03-05 12:30 KST — Agent Chat offset lane cycle
 - Delta: Added keyboard shortcut support for unread triage in `frontend/src/main.tsx` (frontend integration, API contract unchanged).
   - Added global `keydown` listener for **U** to trigger `jumpToNextUnread` when focus is outside editable controls.
