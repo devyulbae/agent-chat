@@ -9,12 +9,18 @@ from app.schemas.channel import ChannelCreate, ChannelRead
 from app.schemas.credential import CredentialCreate, CredentialRead, CredentialUpdate
 from app.schemas.message import MessageCreate, MessageRead, ThreadSummaryRead
 from app.schemas.organization import OrganizationCreate, OrganizationRead
+from app.schemas.project_control import (
+    ProjectControlCreate,
+    ProjectControlRead,
+    ProjectControlUpdate,
+)
 from app.services.agent_service import AgentService
 from app.services.audit_service import AuditService
 from app.services.channel_service import ChannelService
 from app.services.credential_service import CredentialService
 from app.services.message_service import MessageService
 from app.services.organization_service import OrganizationService
+from app.services.project_control_service import ProjectControlService
 
 router = APIRouter()
 
@@ -239,3 +245,47 @@ async def ws_channel(
             await websocket.receive_text()
     except WebSocketDisconnect:
         ws_hub.disconnect(channel_id, websocket)
+
+
+@router.post("/project-controls", response_model=ProjectControlRead)
+@inject
+def create_project_control(
+    payload: ProjectControlCreate,
+    service: ProjectControlService = Depends(
+        Provide[AppContainer.project_control_service]
+    ),
+):
+    entity = service.create(payload)
+    return ProjectControlRead.from_entity(
+        entity, service.recommended_cron(entity.level)
+    )
+
+
+@router.get("/project-controls", response_model=list[ProjectControlRead])
+@inject
+def list_project_controls(
+    service: ProjectControlService = Depends(
+        Provide[AppContainer.project_control_service]
+    ),
+):
+    return [
+        ProjectControlRead.from_entity(item, service.recommended_cron(item.level))
+        for item in service.list()
+    ]
+
+
+@router.patch("/project-controls/{control_id}", response_model=ProjectControlRead)
+@inject
+def update_project_control(
+    control_id: str,
+    payload: ProjectControlUpdate,
+    service: ProjectControlService = Depends(
+        Provide[AppContainer.project_control_service]
+    ),
+):
+    entity = service.update(control_id, payload)
+    if entity is None:
+        raise HTTPException(status_code=404, detail="Project control not found")
+    return ProjectControlRead.from_entity(
+        entity, service.recommended_cron(entity.level)
+    )

@@ -72,3 +72,13 @@ class Message(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+
+class ProjectControl(Base):
+    __tablename__ = "project_controls"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    project_key: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
+    level: Mapped[str] = mapped_column(String(8), nullable=False)
+    owner: Mapped[str] = mapped_column(String(128), nullable=False)
+    burst_until: Mapped[str | None] = mapped_column(String(64), nullable=True)

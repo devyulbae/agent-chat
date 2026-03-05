@@ -49,7 +49,7 @@ class CredentialService:
         if current.tzinfo is None:
             current = current.replace(tzinfo=timezone.utc)
 
-        if token_status == "expired":
+        if token_status == "expired":  # nosec B105
             return [
                 row
                 for row in rows
@@ -57,7 +57,7 @@ class CredentialService:
                 and expires_at <= current
             ]
 
-        if token_status == "active":
+        if token_status == "active":  # nosec B105
             return [
                 row
                 for row in rows
@@ -65,7 +65,7 @@ class CredentialService:
                 or expires_at > current
             ]
 
-        if token_status == "expiring_soon":
+        if token_status == "expiring_soon":  # nosec B105
             threshold = current + timedelta(hours=expiring_within_hours)
             return [
                 row

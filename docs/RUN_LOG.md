@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 17:08 KST — Agent Chat implementation cycle
+- Delta: Added lightweight recency suffix for credential form success notices in `frontend/src/main.tsx`.
+  - Added `credentialFormNoticeAt` state and `formatNoticeAge(...)` helper to render relative age (`just now`, `Xm ago`, `Xh ago`).
+  - Success notices for create/update/delete now stamp current time and render as e.g. `Credential created successfully. (just now)`.
+  - Added cleanup effect so notice timestamp resets when notice text is cleared, avoiding stale suffixes.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Commit: `02f288a` (pushed to `main`)
+- Next action: auto-refresh the notice age label (minute-level tick) while the success message remains visible so stale `(just now)` text advances without requiring another form action.
+
 ## 2026-03-05 16:51 KST — Agent Chat offset lane cycle
 - Delta: Added credential operation success notice region in `frontend/src/main.tsx` so create/update/delete outcomes are announced without changing API payload contracts.
   - Added `credentialFormNotice` state and reset semantics on validation failures/new submissions to avoid stale success copy.

@@ -9,12 +9,14 @@ from app.repositories.channel_repository import SQLChannelRepository
 from app.repositories.credential_repository import SQLCredentialRepository
 from app.repositories.message_repository import SQLMessageRepository
 from app.repositories.organization_repository import SQLOrganizationRepository
+from app.repositories.project_control_repository import SQLProjectControlRepository
 from app.services.agent_service import AgentService
 from app.services.audit_service import AuditService, RepositoryAuditLogger
 from app.services.channel_service import ChannelService
 from app.services.credential_service import CredentialService
 from app.services.message_service import MessageService
 from app.services.organization_service import OrganizationService
+from app.services.project_control_service import ProjectControlService
 
 
 class AppContainer(containers.DeclarativeContainer):
@@ -48,6 +50,9 @@ class AppContainer(containers.DeclarativeContainer):
     )
     channel_repository = providers.Factory(SQLChannelRepository, session=db_session)
     message_repository = providers.Factory(SQLMessageRepository, session=db_session)
+    project_control_repository = providers.Factory(
+        SQLProjectControlRepository, session=db_session
+    )
 
     agent_service = providers.Factory(AgentService, repository=agent_repository)
     organization_service = providers.Factory(
@@ -66,3 +71,6 @@ class AppContainer(containers.DeclarativeContainer):
     )
     channel_service = providers.Factory(ChannelService, repository=channel_repository)
     message_service = providers.Factory(MessageService, repository=message_repository)
+    project_control_service = providers.Factory(
+        ProjectControlService, repository=project_control_repository
+    )
