@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 02:50 KST — Agent Chat offset lane cycle
+- Delta: Added boundary-jump position context to thread keyboard feedback in `frontend/src/main.tsx`.
+  - Extended `jumpToVisibleThreadBoundary(...)` hint copy to append compact position suffix (`X/Y`) for both jump and no-op confirmations.
+  - Boundary shortcuts (`Home/End/PageUp/PageDown/Shift+PgUp/Shift+PgDn`) now align with one-step navigation hints that already expose index context.
+  - API contract unchanged (frontend-only keyboard/status copy refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add source-specific copy for `Shift+Home` root jump hint so keyboard confirmations explicitly distinguish root jump vs first-visible boundary move semantics.
+
 ## 2026-03-06 02:30 KST — Agent Chat offset lane cycle
 - Delta: Added `Shift+PageDown` parity for filtered last-visible thread jumps in `frontend/src/main.tsx`.
   - Extended boundary jump source typing to include `Shift+PageDown` so transient jump hints can report exact shortcut source.

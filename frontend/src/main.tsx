@@ -1691,10 +1691,11 @@ function App() {
       const alreadyAtBoundary = selectedThreadId === targetThreadId
       selectThread(targetThreadId)
       const boundaryLabel = boundary === 'first' ? 'first' : 'last'
+      const positionHint = `${targetIndex + 1}/${visibleThreadIds.length}`
       setThreadBoundaryJumpHint(
         alreadyAtBoundary
-          ? `Already at ${boundaryLabel} visible thread (${sourceKey} confirmed).`
-          : `Jumped to ${boundaryLabel} visible thread (${sourceKey}).`
+          ? `Already at ${boundaryLabel} visible thread (${sourceKey} confirmed) · ${positionHint}.`
+          : `Jumped to ${boundaryLabel} visible thread (${sourceKey}) · ${positionHint}.`
       )
     },
     [selectThread, selectedThreadId, visibleThreadIds]
