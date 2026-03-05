@@ -1,5 +1,28 @@
 # Run Log
 
+## 2026-03-05 15:11 KST — Agent Chat offset lane cycle
+- Delta: Added compact token-expiry PATCH preview copy in selected credential editor (`frontend/src/main.tsx`) to reduce accidental expiry mis-saves before update.
+  - Added derived `tokenExpiryPreview` state from existing edit-diff logic.
+  - Shows `Expiry preview: Expiry unchanged.` when no expiry PATCH change is pending.
+  - Shows explicit change intent when expiry PATCH will apply (`Will clear expiry.` / `Will set expiry to <local datetime>.`).
+  - Kept API contract unchanged (`clear_token_expires_at` vs `token_expires_at`) and aligned preview with existing PATCH chips.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: normalize expiry preview wording to avoid locale-dependent `Invalid Date` edge cases when datetime input is partially edited.
+
+## 2026-03-05 15:02 KST — Agent Chat implementation cycle
+- Delta: Added inline PATCH-behavior help for credential edit change chips in `frontend/src/main.tsx` (chat thread/OAuth lane-adjacent UX hardening, frontend-only).
+  - Added per-field chip hints via `title`/`aria-label` so operators can inspect exact PATCH semantics before submit.
+  - `changed:token_expires_at` hint now explicitly distinguishes clear-vs-set behavior based on `clear expiry` toggle state.
+  - Added lightweight helper copy: `Hover chips for PATCH behavior.` when pending edit fields exist.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Commit: `219674e` (pushed to `main`)
+- Next action: add a compact token-expiry preview line in the selected credential editor (e.g., `Will clear expiry` vs `Will set expiry to ...`) to reduce mis-saves before PATCH submission.
+
 ## 2026-03-05 14:51 KST — Agent Chat offset lane cycle
 - Delta: Added explicit pending PATCH field chips to selected credential edit UX in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
   - Added derived `pendingCredentialEditFields` projection from existing edit-diff booleans (`label`, `secret`, `token_expires_at`).

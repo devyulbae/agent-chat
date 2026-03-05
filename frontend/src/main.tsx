@@ -657,6 +657,15 @@ function App() {
       ? 'PATCH clears token_expires_at (expiry removed).'
       : 'PATCH sets token_expires_at to the selected datetime.',
   }
+  const tokenExpiryPreview = !selectedCredential
+    ? null
+    : !isEditExpiryChanged
+      ? 'Expiry unchanged.'
+      : editCredentialClearExpiry
+        ? 'Will clear expiry.'
+        : editCredentialExpiresAt
+          ? `Will set expiry to ${new Date(editCredentialExpiresAt).toLocaleString()}.`
+          : 'Will clear expiry (empty datetime).'
 
   useEffect(() => {
     if (!selectedCredential) {
@@ -1495,6 +1504,9 @@ function App() {
           {pendingCredentialEditFields.length > 0 && (
             <span style={{ fontSize: 12, color: '#777' }}>Hover chips for PATCH behavior.</span>
           )}
+          <span style={{ fontSize: 12, color: '#555' }} aria-live="polite">
+            Expiry preview: {tokenExpiryPreview}
+          </span>
         </div>
       )}
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
