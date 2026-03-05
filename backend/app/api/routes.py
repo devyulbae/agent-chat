@@ -99,7 +99,7 @@ def list_credentials(
     provider: str | None = None,
     owner_agent_id: str | None = None,
     token_status: str | None = None,
-    expiring_within_hours: int = 24,
+    expiring_within_hours: int = Query(default=24, ge=1, le=24 * 30),
     service: CredentialService = Depends(Provide[AppContainer.credential_service]),
 ):
     try:
