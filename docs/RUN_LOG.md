@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 02:30 KST — Agent Chat offset lane cycle
+- Delta: Added `Shift+PageDown` parity for filtered last-visible thread jumps in `frontend/src/main.tsx`.
+  - Extended boundary jump source typing to include `Shift+PageDown` so transient jump hints can report exact shortcut source.
+  - Updated shift-modified last-visible shortcut handler to accept both `Shift+End` and `Shift+PageDown` while keeping editable-field safeguards and existing filter-preserving behavior.
+  - Updated inline keyboard helper copy (composer + thread controls) to advertise `Shift+End/Shift+PgDn` discoverability.
+  - API contract unchanged (frontend-only keyboard UX wiring).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add complementary `Shift+PageUp` shortcut for first-visible jump parity with existing `Shift+Home` behavior while preserving current filter context.
+
 ## 2026-03-06 01:41 KST — Agent Chat implementation cycle
 - Delta: Added keyboard thread-label copy shortcut wiring in `frontend/src/main.tsx` for faster triage handoff.
   - Extended `copySelectedThreadLabel(...)` with source-aware feedback copy so keyboard-triggered copy confirms via `Copied thread via Y: ...`.
