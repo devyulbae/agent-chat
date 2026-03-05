@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 22:22 KST — Agent Chat implementation cycle
+- Delta: Added keyboard-accessible Escape dismissal for retained older-page audit pagination errors in `frontend/src/main.tsx`.
+  - Made the audit hint row focusable only while an older-page error banner is active (`tabIndex` toggle) with an explicit aria-label cue.
+  - Added `onKeyDown` handling so pressing `Escape` in the hint area clears only `credentialAuditError` and keeps loaded audit timeline context intact.
+  - Existing pointer controls (`Retry older page`, `Dismiss`) remain unchanged.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a small live-region announcement when older-page retry starts/completes so screen-reader users get pagination progress feedback.
+
 ## 2026-03-05 22:12 KST — Agent Chat offset lane cycle
 - Delta: Added compact `Dismiss` control for retained older-page audit pagination failures in `frontend/src/main.tsx`.
   - Added `hasOlderAuditPageError` guard for append-mode failures while previously loaded pages remain visible.

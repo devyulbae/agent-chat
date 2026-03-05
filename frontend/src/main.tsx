@@ -2227,7 +2227,29 @@ function App() {
           </button>
         )}
       </div>
-      <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
+      <p
+        style={{ fontSize: 12, color: '#666', marginTop: 6 }}
+        tabIndex={hasOlderAuditPageError ? 0 : -1}
+        aria-label={
+          hasOlderAuditPageError
+            ? 'Audit pagination hint area. Press Escape to dismiss older-page error.'
+            : undefined
+        }
+        onKeyDown={(event) => {
+          if (
+            hasOlderAuditPageError &&
+            event.key === 'Escape' &&
+            !event.shiftKey &&
+            !event.metaKey &&
+            !event.ctrlKey &&
+            !event.altKey
+          ) {
+            event.preventDefault()
+            event.stopPropagation()
+            setCredentialAuditError(null)
+          }
+        }}
+      >
         {auditScopeHint} {auditResultHint}{' '}
         {isAuditResultCapped && (
           <span
