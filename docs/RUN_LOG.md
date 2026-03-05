@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 19:23 KST — Agent Chat implementation cycle
+- Delta: Added capped-audit quick expansion UX in `frontend/src/main.tsx` so investigators can pull older events without manual limit hunting.
+  - Added derived `nextAuditLimit` step logic (`20 → 50 → 100`) when current result window appears capped.
+  - Added conditional `Load older (latest N)` action beside refresh; it updates `Limit` and reloads audit events in one click with existing query contract.
+  - Fixed capped badge copy to reflect active limit dynamically (`capped to latest {auditLimit}`) instead of hardcoded `20`.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add lightweight offset/cursor params to backend `GET /audit-events` and wire frontend paging controls so "Load older" appends historical slices instead of replacing latest-window results.
+
 ## 2026-03-05 19:12 KST — Agent Chat offset lane cycle
 - Delta: Added configurable credential audit fetch limit control in `frontend/src/main.tsx` and synced query contract usage with `GET /audit-events`.
   - Added `Limit` dropdown in audit controls (`20`, `50`, `100`) for timeline depth without changing endpoint shape.
@@ -735,3 +747,15 @@
   - `pytest` ✅ (16 passed)
 - Commit: `57d7180` (pushed to `main`)
 - Next action: wire frontend credential audit panel to send `provider`/`label` filters directly (and load label options from credentials for selected provider).
+
+## 2026-03-05 19:06 KST — Agent Chat implementation cycle
+- Delta: Added global keyboard reset shortcut for thread-view filters in `frontend/src/main.tsx`.
+  - Wired `Shift+Esc` handler (when focus is outside editable controls) to trigger existing `resetThreadViewFilters()`.
+  - Added safety guards for modifier combos/repeat/defaultPrevented states to avoid accidental clears.
+  - Updated **Reset view** tooltip to advertise shortcut discoverability (`Shift+Esc`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
+- Commit: `b60b9ff` (pushed to `main`)
+- Next action: add inline helper text near thread controls (`Shift+Esc to reset view`) so the shortcut is visible without hover/tooltips.

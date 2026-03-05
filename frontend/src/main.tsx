@@ -735,6 +735,19 @@ function App() {
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditEvents.length === auditLimit
 
+  const nextAuditLimit = useMemo<number | null>(() => {
+    if (!isAuditResultCapped) {
+      return null
+    }
+    if (auditLimit < 50) {
+      return 50
+    }
+    if (auditLimit < 100) {
+      return 100
+    }
+    return null
+  }, [auditLimit, isAuditResultCapped])
+
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
     [credentials, selectedCredentialId]
@@ -1964,6 +1977,26 @@ function App() {
         >
           Refresh audit trail
         </button>
+
+        {nextAuditLimit && (
+          <button
+            type="button"
+            onClick={() => {
+              setAuditLimit(nextAuditLimit)
+              void loadCredentialAuditEvents(
+                selectedCredentialId,
+                auditActionFilter,
+                auditEventTypeFilter,
+                auditProviderFilter,
+                auditLabelFilter,
+                nextAuditLimit
+              )
+            }}
+            title={`Expand fetch window to latest ${nextAuditLimit} events`}
+          >
+            Load older (latest {nextAuditLimit})
+          </button>
+        )}
       </div>
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
         {auditScopeHint} {auditResultHint}{' '}
@@ -1980,7 +2013,7 @@ function App() {
               fontWeight: 600,
             }}
           >
-            capped to latest 20
+            capped to latest {auditLimit}
           </span>
         )}
       </p>
