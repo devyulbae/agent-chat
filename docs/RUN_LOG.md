@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 11:18 KST — Agent Chat offset lane cycle
+- Delta: Replaced prompt-based credential quick edit with inline update controls in `frontend/src/main.tsx` (frontend/API contract sync).
+  - Added editable fields for selected credential: label, optional secret rotation input, and expiry datetime.
+  - Added `clear expiry` toggle wired to backend PATCH contract (`clear_token_expires_at`) to avoid ambiguous null handling.
+  - Replaced `window.prompt` update flow with explicit `Update selected credential` action that sends structured PATCH payload (`label`, optional `secret`, and expiry/clear flag).
+  - Synced edit form state from currently selected credential so UI always reflects server values when selection changes.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add lightweight frontend validation/UX copy clarifying that secret field is optional and left blank to keep existing secret unchanged.
+
 ## 2026-03-05 10:51 KST — Agent Chat offset lane cycle
 - Delta: Added owner-scope provider guidance/fallback UX in `frontend/src/main.tsx` to tighten frontend/API contract clarity.
   - Added scope hint text under credential form (`Showing provider suggestions for owner ...` vs global scope).

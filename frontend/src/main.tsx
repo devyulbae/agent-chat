@@ -180,6 +180,10 @@ function App() {
   const [newCredentialLabel, setNewCredentialLabel] = useState('')
   const [newCredentialSecret, setNewCredentialSecret] = useState('')
   const [newCredentialExpiresAt, setNewCredentialExpiresAt] = useState('')
+  const [editCredentialLabel, setEditCredentialLabel] = useState('')
+  const [editCredentialSecret, setEditCredentialSecret] = useState('')
+  const [editCredentialExpiresAt, setEditCredentialExpiresAt] = useState('')
+  const [editCredentialClearExpiry, setEditCredentialClearExpiry] = useState(false)
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
   const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
   const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('all')
@@ -592,6 +596,21 @@ function App() {
     [credentials, selectedCredentialId]
   )
 
+  useEffect(() => {
+    if (!selectedCredential) {
+      setEditCredentialLabel('')
+      setEditCredentialSecret('')
+      setEditCredentialExpiresAt('')
+      setEditCredentialClearExpiry(false)
+      return
+    }
+
+    setEditCredentialLabel(selectedCredential.label)
+    setEditCredentialSecret('')
+    setEditCredentialExpiresAt(toDatetimeLocalValue(selectedCredential.token_expires_at))
+    setEditCredentialClearExpiry(false)
+  }, [selectedCredential])
+
   const submitCreateCredential = useCallback(async () => {
     const provider = newCredentialProvider.trim()
     const ownerAgentId = newCredentialOwnerAgentId.trim()
@@ -645,15 +664,27 @@ function App() {
     newCredentialSecret,
   ])
 
-  const submitUpdateCredentialLabel = useCallback(async () => {
+  const submitUpdateCredential = useCallback(async () => {
     if (!selectedCredential) {
       setCredentialFormError('Select a credential to update.')
       return
     }
 
-    const nextLabel = window.prompt('New label', selectedCredential.label)?.trim()
+    const nextLabel = editCredentialLabel.trim()
     if (!nextLabel) {
+      setCredentialFormError('Label is required to update a credential.')
       return
+    }
+
+    const payload: Record<string, unknown> = { label: nextLabel }
+    const trimmedSecret = editCredentialSecret.trim()
+    if (trimmedSecret.length > 0) {
+      payload.secret = trimmedSecret
+    }
+    if (editCredentialClearExpiry) {
+      payload.clear_token_expires_at = true
+    } else {
+      payload.token_expires_at = toIsoFromDatetimeLocal(editCredentialExpiresAt)
     }
 
     setCredentialFormSubmitting(true)
@@ -662,18 +693,26 @@ function App() {
       const response = await fetch(`${API_BASE}/credentials/${encodeURIComponent(selectedCredential.id)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ label: nextLabel }),
+        body: JSON.stringify(payload),
       })
       if (!response.ok) {
         throw new Error(`Failed to update credential (${response.status})`)
       }
+      setEditCredentialSecret('')
       await loadCredentials()
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
       setCredentialFormSubmitting(false)
     }
-  }, [loadCredentials, selectedCredential])
+  }, [
+    editCredentialClearExpiry,
+    editCredentialExpiresAt,
+    editCredentialLabel,
+    editCredentialSecret,
+    loadCredentials,
+    selectedCredential,
+  ])
 
   useEffect(() => {
     const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
@@ -1027,12 +1066,40 @@ function App() {
           {credentialFormSubmitting ? 'Saving…' : 'Create credential'}
         </button>
 
-        <button
-          type="button"
-          onClick={() => void submitUpdateCredentialLabel()}
-          disabled={!selectedCredential || credentialFormSubmitting}
-        >
-          Quick edit label
+      </div>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 8, flexWrap: 'wrap' }}>
+        <strong>Selected credential edit:</strong>
+        <input
+          value={editCredentialLabel}
+          onChange={(event) => setEditCredentialLabel(event.target.value)}
+          placeholder="Updated label"
+          disabled={!selectedCredential}
+        />
+        <input
+          type="password"
+          value={editCredentialSecret}
+          onChange={(event) => setEditCredentialSecret(event.target.value)}
+          placeholder="New secret (optional)"
+          disabled={!selectedCredential}
+        />
+        <input
+          type="datetime-local"
+          value={editCredentialExpiresAt}
+          onChange={(event) => setEditCredentialExpiresAt(event.target.value)}
+          disabled={!selectedCredential || editCredentialClearExpiry}
+        />
+        <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
+          <input
+            type="checkbox"
+            checked={editCredentialClearExpiry}
+            onChange={(event) => setEditCredentialClearExpiry(event.target.checked)}
+            disabled={!selectedCredential}
+          />
+          clear expiry
+        </label>
+        <button type="button" onClick={() => void submitUpdateCredential()} disabled={!selectedCredential || credentialFormSubmitting}>
+          {credentialFormSubmitting ? 'Saving…' : 'Update selected credential'}
         </button>
       </div>
 
