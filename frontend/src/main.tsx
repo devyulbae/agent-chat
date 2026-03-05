@@ -867,6 +867,27 @@ function App() {
     })
   }, [showUnreadOnlyThreads, sortedChildThreads, threadFilterText, unseenThreadKeys])
 
+  const unreadChildThreadCount = useMemo(
+    () =>
+      sortedChildThreads.filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id))).length,
+    [sortedChildThreads, unseenThreadKeys]
+  )
+
+  const threadFilterSummary = useMemo(() => {
+    const visibleCount = filteredChildThreads.length
+    const totalChildCount = sortedChildThreads.length
+
+    if (showUnreadOnlyThreads) {
+      return `Showing ${visibleCount} of ${unreadChildThreadCount} unread thread${unreadChildThreadCount === 1 ? '' : 's'}`
+    }
+
+    if (threadFilterText.trim()) {
+      return `Showing ${visibleCount} of ${totalChildCount} thread${totalChildCount === 1 ? '' : 's'}`
+    }
+
+    return `Total child threads: ${totalChildCount}`
+  }, [filteredChildThreads.length, showUnreadOnlyThreads, sortedChildThreads.length, threadFilterText, unreadChildThreadCount])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -1091,6 +1112,7 @@ function App() {
               />
               unread only
             </label>
+            <small style={{ color: '#666' }}>{threadFilterSummary}</small>
           </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (
