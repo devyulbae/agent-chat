@@ -1,5 +1,30 @@
 # Run Log
 
+## 2026-03-06 00:12 KST — Agent Chat offset lane cycle
+- Delta: Added compact inline failure-age status for retained older-page audit pagination errors in `frontend/src/main.tsx`.
+  - Added minute-refresh tick state (`credentialAuditPagingAnnouncementTick`) so relative age text can stay current while the older-page error banner remains visible.
+  - Added derived `olderAuditPageFailureAgeLabel` memo, rendering concise copy like `failed just now` beside retained error controls.
+  - Reused existing older-page failure completion timestamp source (`credentialAuditPagingAnnouncementAt`); API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: pin older-page failure completion timestamp separately from transient live-announcement text so `Copy failure time` and failure-age context stay available until dismiss/retry.
+
+## 2026-03-06 00:03 KST — Agent Chat implementation cycle
+- Delta: Mirrored completion-time copy UX into retained older-page failure controls in `frontend/src/main.tsx`.
+  - Added `canCopyOlderAuditPageFailureTime` guard so copy action appears only for retained older-page errors with a settled completion timestamp.
+  - Added inline `Copy failure time` button beside `Retry older page`/`Dismiss` controls, reusing existing clipboard flow (`copyCredentialAuditAnnouncementTime`) for incident-ready timestamp capture.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Blocker: first `pre-commit --all-files` run failed `end-of-file-fixer` due to missing trailing newline in `docker-compose.yml`.
+- Fix action: accepted hook rewrite, reran pre-commit to green; retained newline fix in commit.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+  - `cd frontend && npx vite build` ✅
+- Commit: `61d448b` (pushed to `main`)
+- Next action: add compact inline failure-age text (`failed just now`) in retained older-page error row so operators can prioritize stale vs fresh pagination failures at a glance.
+
 ## 2026-03-05 23:51 KST — Agent Chat offset lane cycle
 - Delta: Added one-click completion-time copy affordance for credential audit older-page announcements in `frontend/src/main.tsx`.
   - Added `Copy time` button that appears after older-page pagination announcements settle, reusing the existing completion timestamp source (`credentialAuditPagingAnnouncementAt`).

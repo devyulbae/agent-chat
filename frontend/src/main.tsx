@@ -264,6 +264,7 @@ function App() {
   >(null)
   const [credentialAuditPagingAnnouncementAt, setCredentialAuditPagingAnnouncementAt] =
     useState<number | null>(null)
+  const [credentialAuditPagingAnnouncementTick, setCredentialAuditPagingAnnouncementTick] = useState(0)
   const [credentialAuditPagingCopyHint, setCredentialAuditPagingCopyHint] = useState<string | null>(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
@@ -1034,12 +1035,35 @@ function App() {
     return ` (${formatNoticeAge(credentialFormNoticeAt)})`
   }, [credentialFormNoticeAt, credentialFormNoticeTick])
 
+  useEffect(() => {
+    if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+      return
+    }
+    const intervalId = window.setInterval(() => {
+      setCredentialAuditPagingAnnouncementTick((current) => current + 1)
+    }, 60_000)
+
+    return () => window.clearInterval(intervalId)
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
+
   const credentialAuditPagingAnnouncementAgeLabel = useMemo(() => {
     if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
       return ''
     }
     return ` (${formatNoticeAge(credentialAuditPagingAnnouncementAt)})`
-  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt, credentialAuditPagingAnnouncementTick])
+
+  const olderAuditPageFailureAgeLabel = useMemo(() => {
+    if (!hasOlderAuditPageError || !credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+      return null
+    }
+    return `failed ${formatNoticeAge(credentialAuditPagingAnnouncementAt)}`
+  }, [
+    credentialAuditPaging,
+    credentialAuditPagingAnnouncementAt,
+    credentialAuditPagingAnnouncementTick,
+    hasOlderAuditPageError,
+  ])
 
   const credentialAuditPagingAnnouncementTitle = useMemo(() => {
     if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
@@ -2495,6 +2519,9 @@ function App() {
           >
             Copy failure time
           </button>
+        )}{' '}
+        {olderAuditPageFailureAgeLabel && (
+          <span style={{ fontSize: 12, color: '#666' }}>{olderAuditPageFailureAgeLabel}</span>
         )}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, minHeight: 18 }}>
