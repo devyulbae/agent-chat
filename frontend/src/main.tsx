@@ -1679,6 +1679,7 @@ function App() {
         | 'End'
         | 'PageUp'
         | 'PageDown'
+        | 'Shift+Home'
         | 'Shift+PageUp'
         | 'Shift+End'
         | 'Shift+PageDown'
@@ -1773,7 +1774,7 @@ function App() {
       }
       event.preventDefault()
       if (event.key === 'Home' || event.key === 'PageUp') {
-        jumpToVisibleThreadBoundary('first', event.key === 'PageUp' ? 'Shift+PageUp' : 'Home')
+        jumpToVisibleThreadBoundary('first', event.key === 'PageUp' ? 'Shift+PageUp' : 'Shift+Home')
         return
       }
       jumpToVisibleThreadBoundary('last', event.key === 'PageDown' ? 'Shift+PageDown' : 'Shift+End')
