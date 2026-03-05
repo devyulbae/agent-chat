@@ -1794,6 +1794,8 @@ function App() {
         | 'Shift+PageUp'
         | 'Shift+End'
         | 'Shift+PageDown'
+        | 'G'
+        | 'Shift+G'
     ) => {
       if (!visibleThreadIds.length) {
         return
@@ -1894,6 +1896,40 @@ function App() {
         return
       }
       jumpToVisibleThreadBoundary('last', event.key === 'PageDown' ? 'Shift+PageDown' : 'Shift+End')
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [jumpToVisibleThreadBoundary, visibleThreadIds.length])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!visibleThreadIds.length) {
+        return
+      }
+
+      const lowered = event.key.toLowerCase()
+      const isShiftG = event.shiftKey && lowered === 'g'
+      const isPlainG = !event.shiftKey && lowered === 'g'
+      if (!isShiftG && !isPlainG) {
+        return
+      }
+
+      event.preventDefault()
+      if (isShiftG) {
+        jumpToVisibleThreadBoundary('last', 'Shift+G')
+        return
+      }
+      jumpToVisibleThreadBoundary('first', 'G')
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -2190,7 +2226,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection (recovers hidden selection to first/last visible) · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
+              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection (recovers hidden selection to first/last visible) · Home/End (or PgUp/PgDn) to jump first/last · G/Shift+G to jump first/last visible fast · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
