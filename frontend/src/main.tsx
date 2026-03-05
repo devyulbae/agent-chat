@@ -474,23 +474,26 @@ function App() {
     (source: 'Shift+Home' | 'Shift+R' | 'button' = 'button') => {
       const alreadyAtRoot = selectedThreadId === null
       const targetLabel = 'Root'
+      const rootPositionHint = showRootThreadInList ? ` · 1/${visibleThreadIds.length}` : ''
       selectThread(null)
       if (alreadyAtRoot) {
         setThreadRootJumpHint(
           source === 'button'
-            ? `Already at root thread · ${targetLabel}.`
-            : `Already at root thread (${source} confirmed) · ${targetLabel}.`
+            ? `Already at root thread · ${targetLabel}${rootPositionHint}.`
+            : `Already at root thread (${source} confirmed) · ${targetLabel}${rootPositionHint}.`
         )
       } else {
         setThreadRootJumpHint(
-          source === 'button' ? `Jumped to root thread · ${targetLabel}.` : `Jumped to root thread (${source}) · ${targetLabel}.`
+          source === 'button'
+            ? `Jumped to root thread · ${targetLabel}${rootPositionHint}.`
+            : `Jumped to root thread (${source}) · ${targetLabel}${rootPositionHint}.`
         )
       }
       requestAnimationFrame(() => {
         composerBodyRef.current?.focus()
       })
     },
-    [selectThread, selectedThreadId]
+    [selectThread, selectedThreadId, showRootThreadInList, visibleThreadIds.length]
   )
 
   const copySelectedThreadLabel = useCallback(
