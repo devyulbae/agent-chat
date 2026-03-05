@@ -1176,6 +1176,14 @@ function App() {
               onChange={(event) => setThreadFilterText(event.target.value)}
               placeholder="Filter thread IDs"
             />
+            <button
+              type="button"
+              onClick={() => setThreadFilterText('')}
+              disabled={!threadFilterText.trim()}
+              title="Clear thread filter"
+            >
+              Clear filter
+            </button>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
                 type="checkbox"

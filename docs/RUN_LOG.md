@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 13:42 KST — Agent Chat implementation cycle
+- Delta: Added a compact **Clear filter** action to Chat Thread Explorer thread-ID filtering in `frontend/src/main.tsx`.
+  - Added inline `Clear filter` button next to the thread filter input.
+  - Button clears `threadFilterText` in one click for faster unread triage recovery after narrow searches.
+  - Button auto-disables when filter text is empty to avoid no-op interaction noise.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add keyboard `Escape` handling on the thread filter input to clear filter text quickly without mouse interaction.
+
 ## 2026-03-05 13:31 KST — Agent Chat offset lane cycle
 - Delta: Added unread-only root-only helper copy in `frontend/src/main.tsx` to clarify triage intent when no child unread threads are visible.
   - Added derived `unreadRootOnlyHint` state for unread-only mode when root is the only visible row.
