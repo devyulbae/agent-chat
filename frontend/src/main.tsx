@@ -630,9 +630,14 @@ function App() {
         if (err instanceof DOMException && err.name === 'AbortError') {
           return
         }
-        setCredentialAuditError(err instanceof Error ? err.message : 'Unknown error')
-        setCredentialAuditHasMore(false)
-        setCredentialAuditEvents([])
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+        setCredentialAuditError(
+          append ? `Failed to load older page. ${errorMessage}` : errorMessage
+        )
+        if (!append) {
+          setCredentialAuditHasMore(false)
+          setCredentialAuditEvents([])
+        }
       } finally {
         setCredentialAuditLoading(false)
         setCredentialAuditPaging(false)
@@ -791,13 +796,23 @@ function App() {
     if (credentialAuditLoading) {
       return 'Loading audit events…'
     }
+
+    const countLabel = `${credentialAuditEvents.length} event${credentialAuditEvents.length === 1 ? '' : 's'}`
     if (credentialAuditError) {
+      if (credentialAuditEvents.length > 0) {
+        return `Showing ${countLabel} (latest loaded pages retained).`
+      }
       return 'Unable to summarize audit results while loading failed.'
     }
 
-    const countLabel = `${credentialAuditEvents.length} event${credentialAuditEvents.length === 1 ? '' : 's'}`
     return `Showing ${countLabel} (page size ${auditLimit}, offset ${auditOffset}).`
-  }, [auditLimit, auditOffset, credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
+  }, [
+    auditLimit,
+    auditOffset,
+    credentialAuditError,
+    credentialAuditEvents.length,
+    credentialAuditLoading,
+  ])
 
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
@@ -2245,7 +2260,7 @@ function App() {
       <h4>Credential Audit Trail</h4>
       {credentialAuditError && <p style={{ color: 'crimson' }}>Error: {credentialAuditError}</p>}
       {credentialAuditLoading && <p>Loading audit trail…</p>}
-      {!credentialAuditLoading && !credentialAuditError &&
+      {!credentialAuditLoading &&
         (credentialAuditEvents.length ? (
           <ul>
             {credentialAuditEvents.map((event, index) => {

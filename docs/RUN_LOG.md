@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 21:32 KST — Agent Chat offset lane cycle
+- Delta: Preserved previously loaded credential audit pages when an older-page pagination request fails in `frontend/src/main.tsx`.
+  - Updated `loadCredentialAuditEvents(...)` error handling to keep existing `credentialAuditEvents`/`credentialAuditHasMore` state intact on `append=true` failures.
+  - Added pagination-specific error copy (`Failed to load older page...`) while leaving refresh/full-load failure behavior unchanged.
+  - Adjusted audit timeline rendering to continue showing retained events even when `credentialAuditError` is set.
+  - Updated `auditResultHint` to report retained-page context when an error occurs after prior pages are already loaded.
+  - API contract remains unchanged (`GET /audit-events` still uses `entity_type`, filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a compact inline `Retry older page` affordance that reuses the current offset after pagination failure without clearing existing timeline context.
+
 ## 2026-03-05 21:24 KST — Agent Chat implementation cycle
 - Delta: Added selected-thread identity cue next to keyboard navigation index in `frontend/src/main.tsx`.
   - Kept existing positional cue (`Selection: X/Y`) and appended active target label (`Root`, concrete thread ID, or `none`).
