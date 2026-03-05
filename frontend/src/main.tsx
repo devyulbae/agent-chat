@@ -230,6 +230,7 @@ function App() {
   const [auditLabelFilter, setAuditLabelFilter] = useState<string>('all')
   const [auditActionFilter, setAuditActionFilter] = useState<string>('all')
   const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('')
+  const [auditLimit, setAuditLimit] = useState<number>(20)
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
@@ -526,6 +527,7 @@ function App() {
       eventType: string,
       provider: string,
       label: string,
+      limit: number,
       signal?: AbortSignal
     ) => {
       setCredentialAuditLoading(true)
@@ -533,7 +535,7 @@ function App() {
 
       const params = new URLSearchParams({
         entity_type: 'credential',
-        limit: '20',
+        limit: String(limit),
       })
       if (credentialId) {
         params.set('entity_id', credentialId)
@@ -727,11 +729,11 @@ function App() {
     }
 
     const countLabel = `${credentialAuditEvents.length} event${credentialAuditEvents.length === 1 ? '' : 's'}`
-    return `Showing ${countLabel} (latest 20 max).`
-  }, [credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
+    return `Showing ${countLabel} (latest ${auditLimit} max).`
+  }, [auditLimit, credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
 
   const isAuditResultCapped =
-    !credentialAuditLoading && !credentialAuditError && credentialAuditEvents.length === 20
+    !credentialAuditLoading && !credentialAuditError && credentialAuditEvents.length === auditLimit
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -1040,6 +1042,7 @@ function App() {
       auditEventTypeFilter,
       auditProviderFilter,
       auditLabelFilter,
+      auditLimit,
       controller.signal
     )
     return () => controller.abort()
@@ -1047,6 +1050,7 @@ function App() {
     auditActionFilter,
     auditEventTypeFilter,
     auditLabelFilter,
+    auditLimit,
     auditProviderFilter,
     loadCredentialAuditEvents,
     selectedCredentialId,
@@ -1912,6 +1916,18 @@ function App() {
           style={{ minWidth: 180 }}
         />
 
+        <label htmlFor="credential-audit-limit">Limit:</label>
+        <select
+          id="credential-audit-limit"
+          value={String(auditLimit)}
+          onChange={(event) => setAuditLimit(Number(event.target.value))}
+          title="Maximum number of latest events to fetch"
+        >
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+
         <label htmlFor="credential-audit-select">Audit trail credential:</label>
         <select
           id="credential-audit-select"
@@ -1941,7 +1957,8 @@ function App() {
               auditActionFilter,
               auditEventTypeFilter,
               auditProviderFilter,
-              auditLabelFilter
+              auditLabelFilter,
+              auditLimit
             )
           }
         >
@@ -1952,7 +1969,7 @@ function App() {
         {auditScopeHint} {auditResultHint}{' '}
         {isAuditResultCapped && (
           <span
-            title="Audit API returns up to 20 latest events per request."
+            title={`Audit API returns up to ${auditLimit} latest events per request.`}
             style={{
               display: 'inline-block',
               padding: '1px 6px',

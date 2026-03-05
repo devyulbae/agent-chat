@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 19:12 KST — Agent Chat offset lane cycle
+- Delta: Added configurable credential audit fetch limit control in `frontend/src/main.tsx` and synced query contract usage with `GET /audit-events`.
+  - Added `Limit` dropdown in audit controls (`20`, `50`, `100`) for timeline depth without changing endpoint shape.
+  - Updated audit loader to send selected `limit` query value instead of fixed `20`.
+  - Updated result hint/capped badge logic to reflect active limit (`latest N max`) so truncation cues stay accurate.
+  - Updated audit cap tooltip text to match selected fetch limit.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add lightweight "Load older" affordance by introducing backend-compatible cursor/offset params (or explicit "increase limit" quick action) so investigators can page beyond the latest window intentionally.
+
 ## 2026-03-05 18:41 KST — Agent Chat implementation cycle
 - Delta: Added one-click thread-view reset control in `frontend/src/main.tsx` to speed recovery after narrow triage filters.
   - Added derived `hasThreadViewFiltersActive` state to detect when thread list view is constrained by text/unread toggles.
