@@ -491,7 +491,7 @@ function App() {
         const topResult = visibleThreadIds[0]
         selectThread(topResult)
         if (topResult === null && filteredChildThreads.length > 0) {
-          setThreadFilterJumpHint('Jumped to Root first (include root is enabled). Press J/K for child results.')
+          setThreadFilterJumpHint('Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.')
           return
         }
         setThreadFilterJumpHint(null)
@@ -1421,6 +1421,17 @@ function App() {
     [selectThread, selectedVisibleThreadIndex, visibleThreadIds]
   )
 
+  const jumpToVisibleThreadBoundary = useCallback(
+    (boundary: 'first' | 'last') => {
+      if (!visibleThreadIds.length) {
+        return
+      }
+      const targetIndex = boundary === 'first' ? 0 : visibleThreadIds.length - 1
+      selectThread(visibleThreadIds[targetIndex])
+    },
+    [selectThread, visibleThreadIds]
+  )
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat) {
@@ -1462,20 +1473,29 @@ function App() {
       }
       const lowered = event.key.toLowerCase()
       const isArrowKey = event.key === 'ArrowDown' || event.key === 'ArrowUp'
-      if (lowered !== 'j' && lowered !== 'k' && !isArrowKey) {
+      const isBoundaryKey = event.key === 'Home' || event.key === 'End'
+      if (lowered !== 'j' && lowered !== 'k' && !isArrowKey && !isBoundaryKey) {
         return
       }
       if (!visibleThreadIds.length) {
         return
       }
       event.preventDefault()
+      if (event.key === 'Home') {
+        jumpToVisibleThreadBoundary('first')
+        return
+      }
+      if (event.key === 'End') {
+        jumpToVisibleThreadBoundary('last')
+        return
+      }
       const step = lowered === 'j' || event.key === 'ArrowDown' ? 1 : -1
       moveVisibleThreadSelection(step)
     }
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [moveVisibleThreadSelection, visibleThreadIds.length])
+  }, [jumpToVisibleThreadBoundary, moveVisibleThreadSelection, visibleThreadIds.length])
 
   const clearAllUnreadMarkers = useCallback(() => {
     if (!threads.length || unreadThreadIds.length === 0) {
@@ -1711,7 +1731,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End to jump first/last
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
