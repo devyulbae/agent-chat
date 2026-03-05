@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 06:53 KST — Agent Chat offset lane cycle
+- Delta: Added compact server-side source-filter badge for credential audit results in `frontend/src/main.tsx`.
+  - Added derived `auditApiSourceFilterBadge` state to surface active API-level source filters when `provider` and/or `label` are set.
+  - Rendered inline badge near audit result hints (`API filters: provider=... + label=...`) with tooltip clarifying these filters are applied by `GET /audit-events` server-side.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: extend source-filter badge parity to include explicit `action`/`event_type` API-filter chips only when those filters are active, while keeping copy compact.
+
 ## 2026-03-06 06:12 KST — Agent Chat offset lane cycle
 - Delta: Added compact legend coverage for standard boundary jump confirmations in `frontend/src/main.tsx`.
   - Extended `firstVisibleJumpHintHelp` derivation to decode normal boundary transitions:

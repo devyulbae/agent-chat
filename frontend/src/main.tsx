@@ -1001,6 +1001,22 @@ function App() {
     credentialAuditLoading,
   ])
 
+  const auditApiSourceFilterBadge = useMemo(() => {
+    const sourceParts: string[] = []
+    if (auditProviderFilter !== 'all') {
+      sourceParts.push(`provider=${auditProviderFilter}`)
+    }
+    if (auditLabelFilter !== 'all') {
+      sourceParts.push(`label=${auditLabelFilter}`)
+    }
+
+    if (sourceParts.length === 0) {
+      return null
+    }
+
+    return `API filters: ${sourceParts.join(' + ')}`
+  }, [auditLabelFilter, auditProviderFilter])
+
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
 
@@ -2804,6 +2820,22 @@ function App() {
         }}
       >
         {auditScopeHint} {auditResultHint}{' '}
+        {auditApiSourceFilterBadge && (
+          <span
+            title="Provider/label filters are applied server-side by GET /audit-events."
+            style={{
+              display: 'inline-block',
+              padding: '1px 6px',
+              borderRadius: 999,
+              border: '1px solid #9ec5ff',
+              color: '#0b3d91',
+              backgroundColor: '#eaf2ff',
+              fontWeight: 600,
+            }}
+          >
+            {auditApiSourceFilterBadge}
+          </span>
+        )}{' '}
         {isAuditResultCapped && (
           <span
             title={`Audit API returns up to ${auditLimit} events per request; load older pages to continue.`}
