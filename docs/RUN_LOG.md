@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 12:21 KST — Agent Chat implementation cycle
+- Delta: Tightened chat unread-reset UX lifecycle in `frontend/src/main.tsx`.
+  - Added channel-scope safety reset by clearing unread undo snapshot whenever `channelId` changes.
+  - Added 10-second auto-dismiss timer for the unread-clear undo notice to keep composer controls compact during sustained triage.
+  - Kept manual **Undo** path unchanged while banner is visible.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add keyboard shortcut (`u`) for jump-to-next-unread when focus is outside input fields to speed thread triage.
+
 ## 2026-03-05 12:13 KST — Agent Chat offset lane cycle
 - Delta: Added lightweight confirmation/undo affordance for unread reset in `frontend/src/main.tsx` (frontend integration + API-contract-safe local state only).
   - Added `UnreadClearUndoSnapshot` state to capture prior seen/unseen thread markers before bulk clear.

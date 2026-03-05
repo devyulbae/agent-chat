@@ -502,6 +502,7 @@ function App() {
 
   useEffect(() => {
     const raw = window.localStorage.getItem(threadStateStorageKey(channelId))
+    setUnreadClearUndoSnapshot(null)
     if (!raw) {
       setLastSeenByThread({})
       setLastSeenCountByThread({})
@@ -911,6 +912,17 @@ function App() {
     setLastSeenCountByThread(unreadClearUndoSnapshot.lastSeenCountByThread)
     setUnseenThreadKeys(unreadClearUndoSnapshot.unseenThreadKeys)
     setUnreadClearUndoSnapshot(null)
+  }, [unreadClearUndoSnapshot])
+
+  useEffect(() => {
+    if (!unreadClearUndoSnapshot) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setUnreadClearUndoSnapshot(null)
+    }, 10_000)
+
+    return () => window.clearTimeout(timeoutId)
   }, [unreadClearUndoSnapshot])
 
   const typeCounts = useMemo(() => {
