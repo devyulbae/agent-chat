@@ -122,20 +122,32 @@ function toStringValue(value: unknown): string | null {
 
 function renderAuditMetadata(event: AuditEvent): string[] {
   const metadata = event.metadata ?? {}
+  const chips: string[] = []
+
+  const provider = toStringValue(metadata.provider)
+  if (provider) {
+    chips.push(`provider:${provider}`)
+  }
+
+  const label = toStringValue(metadata.label)
+  if (label) {
+    chips.push(`label:${label}`)
+  }
+
   if (event.event_type === 'credential.updated') {
     const changedFields = toStringList(metadata.changed_fields)
-    return changedFields.map((field) => `changed:${field}`)
+    chips.push(...changedFields.map((field) => `changed:${field}`))
   }
 
   if (event.event_type === 'credential.rotated') {
     const previousVersion = toStringValue(metadata.previous_key_version)
     const newVersion = toStringValue(metadata.new_key_version)
     if (previousVersion && newVersion) {
-      return [`key:${previousVersion}→${newVersion}`]
+      chips.push(`key:${previousVersion}→${newVersion}`)
     }
   }
 
-  return []
+  return chips
 }
 
 function formatTimestamp(value: string): string {
