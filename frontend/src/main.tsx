@@ -1636,7 +1636,8 @@ function App() {
       if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
         return
       }
-      if (event.key.toLowerCase() !== 'r') {
+      const isShiftRootShortcut = event.key.toLowerCase() === 'r' || event.key === 'Home'
+      if (!isShiftRootShortcut) {
         return
       }
       if (isEditableElement(event.target)) {
@@ -1860,7 +1861,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+R jump root
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
@@ -1870,7 +1871,7 @@ function App() {
             Return to root context
           </button>
         )}
-        <button type="button" onClick={jumpToRootThreadContext} title="Shift+R">
+        <button type="button" onClick={jumpToRootThreadContext} title="Shift+Home (or Shift+R)">
           Jump root
         </button>
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>

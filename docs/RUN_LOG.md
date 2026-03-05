@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 00:41 KST — Agent Chat implementation cycle
+- Delta: Added direct root-jump keyboard wiring for thread triage in `frontend/src/main.tsx`.
+  - Expanded existing root-context shortcut handler to accept `Shift+Home` (while preserving `Shift+R`) outside editable inputs.
+  - Updated composer helper copy and `Jump root` button tooltip to advertise `Shift+Home (or Shift+R)` for discoverability.
+  - Scope kept frontend-only (no API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a compact transient hint (1–2s) after `Shift+Home`/`Jump root` that confirms root context switch without stealing focus.
+
 ## 2026-03-06 00:30 KST — Agent Chat offset lane cycle
 - Delta: Added absolute failure timestamp tooltip for retained older-page audit pagination errors in `frontend/src/main.tsx`.
   - Added `olderAuditPageFailureTitle` memo that resolves to `Failure completed at <local datetime>` while retained older-page error state is active.
