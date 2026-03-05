@@ -979,7 +979,7 @@ function App() {
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • Press U to jump`
+      ? `Unread threads: ${unreadThreadIds.length} • Press U to jump • Shift+U to clear`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const jumpToNextUnread = useCallback(() => {
@@ -997,6 +997,9 @@ function App() {
         return
       }
       if (event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+      if (event.shiftKey) {
         return
       }
       if (event.key.toLowerCase() !== 'u') {
@@ -1048,6 +1051,31 @@ function App() {
     unreadThreadIds.length,
     unseenThreadKeys,
   ])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'u') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!unreadThreadIds.length) {
+        return
+      }
+      event.preventDefault()
+      clearAllUnreadMarkers()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [clearAllUnreadMarkers, unreadThreadIds.length])
 
   const undoClearAllUnreadMarkers = useCallback(() => {
     if (!unreadClearUndoSnapshot) {
@@ -1161,7 +1189,12 @@ function App() {
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
           Jump to next unread
         </button>
-        <button type="button" onClick={clearAllUnreadMarkers} disabled={unreadThreadIds.length === 0}>
+        <button
+          type="button"
+          onClick={clearAllUnreadMarkers}
+          disabled={unreadThreadIds.length === 0}
+          title="Shift+U"
+        >
           Clear all unread markers
         </button>
         {unreadClearUndoSnapshot && (
