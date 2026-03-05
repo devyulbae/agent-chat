@@ -596,6 +596,21 @@ function App() {
     [credentials, selectedCredentialId]
   )
 
+  const normalizedSelectedCredentialExpiresAt = selectedCredential
+    ? toDatetimeLocalValue(selectedCredential.token_expires_at)
+    : ''
+  const isEditLabelChanged = selectedCredential
+    ? editCredentialLabel.trim() !== selectedCredential.label
+    : false
+  const isEditSecretProvided = editCredentialSecret.trim().length > 0
+  const isEditExpiryChanged = selectedCredential
+    ? editCredentialClearExpiry
+      ? selectedCredential.token_expires_at !== null
+      : editCredentialExpiresAt !== normalizedSelectedCredentialExpiresAt
+    : false
+  const hasPendingCredentialEditChange =
+    isEditLabelChanged || isEditSecretProvided || isEditExpiryChanged
+
   useEffect(() => {
     if (!selectedCredential) {
       setEditCredentialLabel('')
@@ -678,7 +693,6 @@ function App() {
 
     const payload: Record<string, unknown> = { label: nextLabel }
     const trimmedSecret = editCredentialSecret.trim()
-    const normalizedCurrentExpiresAt = toDatetimeLocalValue(selectedCredential.token_expires_at)
     if (trimmedSecret.length > 0) {
       payload.secret = trimmedSecret
     }
@@ -688,13 +702,7 @@ function App() {
       payload.token_expires_at = toIsoFromDatetimeLocal(editCredentialExpiresAt)
     }
 
-    const isLabelChanged = nextLabel !== selectedCredential.label
-    const isSecretProvided = trimmedSecret.length > 0
-    const isExpiryChanged = editCredentialClearExpiry
-      ? selectedCredential.token_expires_at !== null
-      : editCredentialExpiresAt !== normalizedCurrentExpiresAt
-
-    if (!isLabelChanged && !isSecretProvided && !isExpiryChanged) {
+    if (!hasPendingCredentialEditChange) {
       setCredentialFormError('No update to apply. Change label, provide a new secret, or update expiry.')
       return
     }
@@ -722,6 +730,7 @@ function App() {
     editCredentialExpiresAt,
     editCredentialLabel,
     editCredentialSecret,
+    hasPendingCredentialEditChange,
     loadCredentials,
     selectedCredential,
   ])
@@ -1110,12 +1119,19 @@ function App() {
           />
           clear expiry
         </label>
-        <button type="button" onClick={() => void submitUpdateCredential()} disabled={!selectedCredential || credentialFormSubmitting}>
+        <button
+          type="button"
+          onClick={() => void submitUpdateCredential()}
+          disabled={!selectedCredential || credentialFormSubmitting || !hasPendingCredentialEditChange}
+        >
           {credentialFormSubmitting ? 'Saving…' : 'Update selected credential'}
         </button>
       </div>
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
         Secret is optional when updating. If left blank, the existing secret remains unchanged.
+        {selectedCredential && !hasPendingCredentialEditChange
+          ? ' Edit a field to enable update.'
+          : ''}
       </p>
 
       <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>{providerScopeHint}</p>
