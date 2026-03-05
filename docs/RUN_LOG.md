@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 16:51 KST — Agent Chat offset lane cycle
+- Delta: Added credential operation success notice region in `frontend/src/main.tsx` so create/update/delete outcomes are announced without changing API payload contracts.
+  - Added `credentialFormNotice` state and reset semantics on validation failures/new submissions to avoid stale success copy.
+  - On successful create/update/delete, set explicit confirmation messages (`Credential created successfully.`, `Selected credential updated successfully.`, `Selected credential deleted successfully.`).
+  - Rendered a polite live status message (`role="status"`, `aria-live="polite"`) beneath form errors for keyboard/screen-reader feedback parity.
+  - Kept credential API contract unchanged (`POST /credentials`, `PATCH /credentials/{id}`, `DELETE /credentials/{id}` request shapes untouched).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a lightweight timestamp suffix (e.g., `just now`) to the success notice so operators can tell whether the confirmation is from the latest submit.
+
 ## 2026-03-05 16:41 KST — Agent Chat implementation cycle
 - Delta: Added visible edit-expiry label wiring in `frontend/src/main.tsx` for selected credential editor accessibility/name symmetry.
   - Added `<label htmlFor="selected-credential-expires">Expires at:</label>` directly before the selected-credential `datetime-local` input.

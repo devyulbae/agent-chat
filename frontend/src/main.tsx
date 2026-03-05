@@ -196,6 +196,7 @@ function App() {
   const [providerLoading, setProviderLoading] = useState(false)
   const [providerError, setProviderError] = useState<string | null>(null)
   const [credentialFormError, setCredentialFormError] = useState<string | null>(null)
+  const [credentialFormNotice, setCredentialFormNotice] = useState<string | null>(null)
   const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
   const [credentialDeleteSubmitting, setCredentialDeleteSubmitting] = useState(false)
   const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
@@ -713,11 +714,13 @@ function App() {
 
     if (!provider || !ownerAgentId || !label || !secret) {
       setCredentialFormError('Owner, provider, label, and secret are required to create a credential.')
+      setCredentialFormNotice(null)
       return
     }
 
     setCredentialFormSubmitting(true)
     setCredentialFormError(null)
+    setCredentialFormNotice(null)
 
     try {
       const response = await fetch(`${API_BASE}/credentials`, {
@@ -743,8 +746,10 @@ function App() {
       setNewCredentialSecret('')
       setNewCredentialExpiresAt('')
       await Promise.all([loadCredentials(), loadCredentialProviders(ownerAgentId)])
+      setCredentialFormNotice('Credential created successfully.')
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+      setCredentialFormNotice(null)
     } finally {
       setCredentialFormSubmitting(false)
     }
@@ -761,12 +766,14 @@ function App() {
   const submitUpdateCredential = useCallback(async () => {
     if (!selectedCredential) {
       setCredentialFormError('Select a credential to update.')
+      setCredentialFormNotice(null)
       return
     }
 
     const nextLabel = editCredentialLabel.trim()
     if (!nextLabel) {
       setCredentialFormError('Label is required to update a credential.')
+      setCredentialFormNotice(null)
       return
     }
 
@@ -783,11 +790,13 @@ function App() {
 
     if (!hasPendingCredentialEditChange) {
       setCredentialFormError('No update to apply. Change label, provide a new secret, or update expiry.')
+      setCredentialFormNotice(null)
       return
     }
 
     setCredentialFormSubmitting(true)
     setCredentialFormError(null)
+    setCredentialFormNotice(null)
     try {
       const response = await fetch(`${API_BASE}/credentials/${encodeURIComponent(selectedCredential.id)}`, {
         method: 'PATCH',
@@ -799,8 +808,10 @@ function App() {
       }
       setEditCredentialSecret('')
       await loadCredentials()
+      setCredentialFormNotice('Selected credential updated successfully.')
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+      setCredentialFormNotice(null)
     } finally {
       setCredentialFormSubmitting(false)
     }
@@ -817,6 +828,7 @@ function App() {
   const submitDeleteCredential = useCallback(async () => {
     if (!selectedCredential) {
       setCredentialFormError('Select a credential to delete.')
+      setCredentialFormNotice(null)
       return
     }
 
@@ -829,6 +841,7 @@ function App() {
 
     setCredentialDeleteSubmitting(true)
     setCredentialFormError(null)
+    setCredentialFormNotice(null)
     try {
       const response = await fetch(`${API_BASE}/credentials/${encodeURIComponent(selectedCredential.id)}`, {
         method: 'DELETE',
@@ -842,8 +855,10 @@ function App() {
         loadCredentials(),
         loadCredentialProviders(selectedCredential.owner_agent_id),
       ])
+      setCredentialFormNotice('Selected credential deleted successfully.')
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+      setCredentialFormNotice(null)
     } finally {
       setCredentialDeleteSubmitting(false)
     }
@@ -1603,6 +1618,11 @@ function App() {
         </p>
       )}
       {credentialFormError && <p style={{ color: 'crimson' }}>Form error: {credentialFormError}</p>}
+      {credentialFormNotice && (
+        <p role="status" aria-live="polite" style={{ color: '#1f6f3e' }}>
+          {credentialFormNotice}
+        </p>
+      )}
 
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
         <label htmlFor="credential-audit-provider">Provider:</label>
