@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 05:50 KST — Agent Chat offset lane cycle
+- Delta: Added last-visible recovery parity for thread filter quick jumps in `frontend/src/main.tsx`.
+  - Introduced shared `recoverToVisibleBoundaryThread(source, boundary)` helper so filter-jump flows can target first/last visible threads with consistent recovery/no-op confirmations.
+  - Wired `Shift+Enter` on thread filter input to jump to last visible result and emit boundary-aware hint copy (`Recovered/Already at last visible thread ...`).
+  - Added `Jump to last visible` companion action when current selection is hidden by filters, complementing existing first-visible recovery button.
+  - Updated inline thread filter shortcut hint text to document `Enter/Shift+Enter` first/last visible behavior.
+  - API contract unchanged (frontend-only navigation UX wiring/state copy).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add compact help legend coverage for standard boundary jump confirmations (`Jumped to first/last visible...`) so all boundary hint variants remain self-describing.
+
 ## 2026-03-06 05:43 KST — Agent Chat implementation cycle
 - Delta: Extended boundary-jump recovery/no-op semantics in `frontend/src/main.tsx` so first/last visible jumps now mirror first-visible legend behavior.
   - Updated `jumpToVisibleThreadBoundary(...)` to emit `Recovered to first/last visible thread (...)` when current selection is hidden by active filters.

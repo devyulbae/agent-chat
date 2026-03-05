@@ -553,44 +553,59 @@ function App() {
     [composerBody, composerSubmitting, exitThreadContext, selectedThreadId, submitMessage]
   )
 
-  const recoverToFirstVisibleThread = useCallback(
-    (source: 'Enter' | 'button') => {
+  const recoverToVisibleBoundaryThread = useCallback(
+    (source: 'Enter' | 'Shift+Enter' | 'button', boundary: 'first' | 'last') => {
       if (!visibleThreadIds.length) {
         setThreadFilterJumpHint(null)
         return
       }
 
-      const firstVisibleThreadId = visibleThreadIds[0] ?? null
-      const targetLabel = firstVisibleThreadId === null ? 'Root' : firstVisibleThreadId
+      const boundaryIndex = boundary === 'first' ? 0 : visibleThreadIds.length - 1
+      const boundaryVisibleThreadId = visibleThreadIds[boundaryIndex] ?? null
+      const boundaryLabel = boundary === 'first' ? 'first' : 'last'
+      const positionHint = `${boundaryIndex + 1}/${visibleThreadIds.length}`
+      const targetLabel = boundaryVisibleThreadId === null ? 'Root' : boundaryVisibleThreadId
       const selectedWasHiddenByFilter = !visibleThreadIds.some((threadId) => threadId === selectedThreadId)
-      const alreadyAtFirstVisible = selectedThreadId === firstVisibleThreadId
+      const alreadyAtBoundaryVisible = selectedThreadId === boundaryVisibleThreadId
 
-      selectThread(firstVisibleThreadId)
+      selectThread(boundaryVisibleThreadId)
 
       if (selectedWasHiddenByFilter) {
         setThreadBoundaryJumpHint(
-          `Recovered to first visible thread (${source}) · ${targetLabel} · 1/${visibleThreadIds.length}.`
+          `Recovered to ${boundaryLabel} visible thread (${source}) · ${targetLabel} · ${positionHint}.`
         )
         setThreadFilterJumpHint(null)
         return
       }
 
-      if (alreadyAtFirstVisible) {
+      if (alreadyAtBoundaryVisible) {
         setThreadBoundaryJumpHint(
-          `Already at first visible thread (${source}) · ${targetLabel} · 1/${visibleThreadIds.length}.`
+          `Already at ${boundaryLabel} visible thread (${source}) · ${targetLabel} · ${positionHint}.`
         )
         setThreadFilterJumpHint(null)
         return
       }
 
-      if (firstVisibleThreadId === null && filteredChildThreads.length > 0) {
-        setThreadFilterJumpHint('Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.')
+      if (boundaryVisibleThreadId === null && filteredChildThreads.length > 0) {
+        setThreadFilterJumpHint(
+          'Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.'
+        )
         return
       }
 
       setThreadFilterJumpHint(null)
     },
     [filteredChildThreads.length, selectThread, selectedThreadId, visibleThreadIds]
+  )
+
+  const recoverToFirstVisibleThread = useCallback(
+    (source: 'Enter' | 'button') => recoverToVisibleBoundaryThread(source, 'first'),
+    [recoverToVisibleBoundaryThread]
+  )
+
+  const recoverToLastVisibleThread = useCallback(
+    (source: 'Shift+Enter' | 'button') => recoverToVisibleBoundaryThread(source, 'last'),
+    [recoverToVisibleBoundaryThread]
   )
 
   const handleThreadFilterKeyDown = useCallback(
@@ -607,16 +622,19 @@ function App() {
 
       if (
         event.key === 'Enter' &&
-        !event.shiftKey &&
         !event.metaKey &&
         !event.ctrlKey &&
         !event.altKey
       ) {
         event.preventDefault()
+        if (event.shiftKey) {
+          recoverToLastVisibleThread('Shift+Enter')
+          return
+        }
         recoverToFirstVisibleThread('Enter')
       }
     },
-    [recoverToFirstVisibleThread, threadFilterText]
+    [recoverToFirstVisibleThread, recoverToLastVisibleThread, threadFilterText]
   )
 
   const loadCredentials = useCallback(
@@ -2151,7 +2169,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
+              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
@@ -2182,6 +2200,13 @@ function App() {
                   title="Selected thread is hidden by filters. Jump to first visible result."
                 >
                   Jump to first visible
+                </button>
+                <button
+                  type="button"
+                  onClick={() => recoverToLastVisibleThread('button')}
+                  title="Selected thread is hidden by filters. Jump to last visible result."
+                >
+                  Jump to last visible
                 </button>
                 {selectedVisibleThreadRecoveryHint && (
                   <small style={{ color: '#666' }}>{selectedVisibleThreadRecoveryHint}</small>
