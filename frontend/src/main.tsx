@@ -1512,8 +1512,14 @@ function App() {
     if (threadBoundaryJumpHint.startsWith('Recovered to first visible thread')) {
       return 'Recovered = hidden selection was restored to the first visible result.'
     }
+    if (threadBoundaryJumpHint.startsWith('Recovered to last visible thread')) {
+      return 'Recovered = hidden selection was restored to the last visible result.'
+    }
     if (threadBoundaryJumpHint.startsWith('Already at first visible thread')) {
       return 'Already at first = no-op confirmation (selection did not move).'
+    }
+    if (threadBoundaryJumpHint.startsWith('Already at last visible thread')) {
+      return 'Already at last = no-op confirmation (selection did not move).'
     }
     return null
   }, [threadBoundaryJumpHint])
@@ -1756,6 +1762,7 @@ function App() {
       const targetIndex = boundary === 'first' ? 0 : visibleThreadIds.length - 1
       const targetThreadId = visibleThreadIds[targetIndex]
       const alreadyAtBoundary = selectedThreadId === targetThreadId
+      const recoveredFromHiddenSelection = selectedVisibleThreadIndex < 0
       selectThread(targetThreadId)
       const boundaryLabel = boundary === 'first' ? 'first' : 'last'
       const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
@@ -1763,10 +1770,12 @@ function App() {
       setThreadBoundaryJumpHint(
         alreadyAtBoundary
           ? `Already at ${boundaryLabel} visible thread (${sourceKey} confirmed) · ${targetLabel} · ${positionHint}.`
-          : `Jumped to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+          : recoveredFromHiddenSelection
+            ? `Recovered to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+            : `Jumped to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
       )
     },
-    [selectThread, selectedThreadId, visibleThreadIds]
+    [selectThread, selectedThreadId, selectedVisibleThreadIndex, visibleThreadIds]
   )
 
   useEffect(() => {

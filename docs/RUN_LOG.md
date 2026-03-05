@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 05:43 KST — Agent Chat implementation cycle
+- Delta: Extended boundary-jump recovery/no-op semantics in `frontend/src/main.tsx` so first/last visible jumps now mirror first-visible legend behavior.
+  - Updated `jumpToVisibleThreadBoundary(...)` to emit `Recovered to first/last visible thread (...)` when current selection is hidden by active filters.
+  - Kept existing explicit no-op confirmations (`Already at first/last visible thread ... confirmed`) and standard jump confirmations unchanged for visible-selection paths.
+  - Expanded legend helper copy under boundary hints to cover both first/last variants for recovery + no-op states.
+  - Scope kept frontend-only (chat thread UX wiring; no API/backend contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add compact legend coverage for standard boundary jumps (`Jumped to first/last visible...`) so operators can decode all boundary hint states from one inline helper.
+
 ## 2026-03-06 05:34 KST — Agent Chat offset lane cycle
 - Delta: Added first-visible jump hint legend copy in `frontend/src/main.tsx` to disambiguate no-op vs recovery confirmations during filter triage.
   - Added derived `firstVisibleJumpHintHelp` memo keyed off `threadBoundaryJumpHint` content.
