@@ -1678,10 +1678,13 @@ function App() {
       }
       const currentIndex = selectedVisibleThreadIndex
       const fallbackIndex = step > 0 ? 0 : visibleThreadIds.length - 1
-      const startIndex = currentIndex >= 0 ? currentIndex : fallbackIndex
-      const nextIndex = (startIndex + step + visibleThreadIds.length) % visibleThreadIds.length
+      const nextIndex =
+        currentIndex >= 0
+          ? (currentIndex + step + visibleThreadIds.length) % visibleThreadIds.length
+          : fallbackIndex
       const targetThreadId = visibleThreadIds[nextIndex]
       const alreadyAtTarget = selectedThreadId === targetThreadId
+      const recoveredFromHiddenSelection = currentIndex < 0
       selectThread(targetThreadId)
       const directionLabel = step > 0 ? 'next' : 'previous'
       const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
@@ -1689,7 +1692,9 @@ function App() {
       setThreadBoundaryJumpHint(
         alreadyAtTarget
           ? `Already at only visible thread (${sourceKey} confirmed) · ${targetLabel} · ${positionHint}.`
-          : `Moved to ${directionLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+          : recoveredFromHiddenSelection
+            ? `Recovered hidden selection (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+            : `Moved to ${directionLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
       )
     },
     [selectThread, selectedThreadId, selectedVisibleThreadIndex, visibleThreadIds]
