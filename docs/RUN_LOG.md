@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 07:56 KST — Agent Chat parallel offset cycle
+- Delta: Added a compact visual boundary-hint cue for shift-page thread jumps in `frontend/src/main.tsx`.
+  - Added derived boundary source parsing (`boundaryJumpSourceShortcut`) so boundary hint rendering can detect shortcut origin.
+  - Added `boundaryJumpUsesShiftPageShortcut` marker and reused it in helper-copy derivation to keep source-aware semantics centralized.
+  - Updated boundary hint status row to prepend a subtle `⇧Pg` pill when jump source is `Shift+PageUp`/`Shift+PageDown`, improving discoverability directly on the live hint line.
+  - Scope kept frontend-only; no backend/API contract changes.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add matching compact visual cue treatment for root-jump hints when source is `Shift+Home`/`Shift+R` so shortcut-specific hint affordances are consistent.
+
 ## 2026-03-06 07:31 KST — Agent Chat parallel offset cycle
 - Delta: Added explicit truncation-disclosure tooltip copy for long credential-audit `event_type` API filter chips in `frontend/src/main.tsx`.
   - Extended `auditApiSourceFilterParts` metadata with `isTruncated` so rendering can distinguish compact chips from full-value chips.

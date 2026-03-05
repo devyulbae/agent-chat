@@ -1566,16 +1566,24 @@ function App() {
     ? 'Hidden selection recovery: J/K or ↑/↓ → first/last visible.'
     : null
 
+  const boundaryJumpSourceShortcut = useMemo(() => {
+    if (!threadBoundaryJumpHint) {
+      return null
+    }
+    return threadBoundaryJumpHint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
+  }, [threadBoundaryJumpHint])
+
+  const boundaryJumpUsesShiftPageShortcut =
+    boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
+
   const firstVisibleJumpHintHelp = useMemo(() => {
     if (!threadBoundaryJumpHint) {
       return null
     }
 
-    const sourceMatch = threadBoundaryJumpHint.match(/\(([^)]+)\)/)
-    const sourceShortcut = sourceMatch?.[1]?.trim()
     const sourceShortcutHelp =
-      sourceShortcut === 'Shift+PageUp' || sourceShortcut === 'Shift+PageDown'
-        ? `${sourceShortcut} keeps active filters while jumping to boundary.`
+      boundaryJumpUsesShiftPageShortcut && boundaryJumpSourceShortcut
+        ? `${boundaryJumpSourceShortcut} keeps active filters while jumping to boundary.`
         : null
 
     if (threadBoundaryJumpHint.startsWith('Recovered to first visible thread')) {
@@ -1609,7 +1617,7 @@ function App() {
       }`
     }
     return null
-  }, [threadBoundaryJumpHint])
+  }, [boundaryJumpSourceShortcut, boundaryJumpUsesShiftPageShortcut, threadBoundaryJumpHint])
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -2349,6 +2357,22 @@ function App() {
             )}
             {threadBoundaryJumpHint && (
               <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
+                {boundaryJumpUsesShiftPageShortcut && (
+                  <span
+                    title="Shift+PgUp/PgDn boundary jump"
+                    style={{
+                      display: 'inline-block',
+                      marginRight: 6,
+                      padding: '0 4px',
+                      border: '1px solid #97b6f4',
+                      borderRadius: 6,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    ⇧Pg
+                  </span>
+                )}
                 {threadBoundaryJumpHint}
               </small>
             )}
