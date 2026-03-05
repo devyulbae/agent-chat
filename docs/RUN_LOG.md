@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 15:21 KST — Agent Chat implementation cycle
+- Delta: Hardened selected credential expiry preview rendering in `frontend/src/main.tsx` to avoid locale `Invalid Date` leakage during partial datetime edits.
+  - Added parsed datetime guard for edit preview state (`parsedEditExpiryPreview`).
+  - `Expiry preview` now shows `Enter a valid datetime to set expiry.` when input is non-empty but not yet valid.
+  - Preserved existing clear/unchanged semantics (`Will clear expiry.` / `Expiry unchanged.`) and PATCH payload behavior.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add inline validity hint styling on the expiry editor (e.g., subtle warning tone) while keeping update-button enablement tied to actual PATCH diff.
+
 ## 2026-03-05 15:11 KST — Agent Chat offset lane cycle
 - Delta: Added compact token-expiry PATCH preview copy in selected credential editor (`frontend/src/main.tsx`) to reduce accidental expiry mis-saves before update.
   - Added derived `tokenExpiryPreview` state from existing edit-diff logic.

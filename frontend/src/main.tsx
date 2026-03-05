@@ -657,15 +657,20 @@ function App() {
       ? 'PATCH clears token_expires_at (expiry removed).'
       : 'PATCH sets token_expires_at to the selected datetime.',
   }
+  const parsedEditExpiryPreview = editCredentialExpiresAt
+    ? new Date(editCredentialExpiresAt)
+    : null
   const tokenExpiryPreview = !selectedCredential
     ? null
     : !isEditExpiryChanged
       ? 'Expiry unchanged.'
       : editCredentialClearExpiry
         ? 'Will clear expiry.'
-        : editCredentialExpiresAt
-          ? `Will set expiry to ${new Date(editCredentialExpiresAt).toLocaleString()}.`
-          : 'Will clear expiry (empty datetime).'
+        : !editCredentialExpiresAt
+          ? 'Will clear expiry (empty datetime).'
+          : parsedEditExpiryPreview && !Number.isNaN(parsedEditExpiryPreview.getTime())
+            ? `Will set expiry to ${parsedEditExpiryPreview.toLocaleString()}.`
+            : 'Enter a valid datetime to set expiry.'
 
   useEffect(() => {
     if (!selectedCredential) {
