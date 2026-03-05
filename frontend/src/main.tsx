@@ -1433,7 +1433,10 @@ function App() {
           type="datetime-local"
           value={newCredentialExpiresAt}
           onChange={(event) => setNewCredentialExpiresAt(event.target.value)}
+          title="Use local date/time picker format (YYYY-MM-DDTHH:mm)."
+          aria-label="New credential expiry datetime (local format YYYY-MM-DDTHH:mm)"
         />
+        <small style={{ fontSize: 12, color: '#666' }}>Optional • format: YYYY-MM-DDTHH:mm</small>
 
         <button type="button" onClick={() => void submitCreateCredential()} disabled={credentialFormSubmitting}>
           {credentialFormSubmitting ? 'Saving…' : 'Create credential'}
