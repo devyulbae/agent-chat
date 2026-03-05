@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 11:43 KST — Agent Chat implementation cycle
+- Delta: Added unread-focused thread triage control in `frontend/src/main.tsx` for faster chat inbox handling.
+  - Added `unread only` toggle beside thread ID filter in **Chat Thread Explorer**.
+  - Wired child-thread list filtering to combine text query + unread state (`• new` / unseen keys).
+  - Added explicit empty-state copy when unread-only mode has no matches (`No unread thread matches current filter.`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a one-click `clear all unread markers` action scoped to current channel to support post-triage reset workflows.
+
 ## 2026-03-05 11:35 KST — Agent Chat offset lane cycle
 - Delta: Added edit-state validation UX for credential updates in `frontend/src/main.tsx` (frontend integration + API contract-safe PATCH behavior).
   - Added derived edit-diff checks (`label`, optional `secret`, expiry/clear toggle) so UI can detect whether a PATCH would change server state.

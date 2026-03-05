@@ -164,6 +164,7 @@ function App() {
   const [composerBody, setComposerBody] = useState('')
   const [composerSubmitting, setComposerSubmitting] = useState(false)
   const [threadFilterText, setThreadFilterText] = useState('')
+  const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
 
   const [credentials, setCredentials] = useState<Credential[]>([])
   const [credentialFilter, setCredentialFilter] = useState<TokenStatusFilter>('all')
@@ -815,11 +816,21 @@ function App() {
 
   const filteredChildThreads = useMemo(() => {
     const query = threadFilterText.trim().toLowerCase()
-    if (!query) {
-      return childThreads
-    }
-    return childThreads.filter((thread) => (thread.thread_id ?? '').toLowerCase().includes(query))
-  }, [childThreads, threadFilterText])
+
+    return childThreads.filter((thread) => {
+      const matchesQuery =
+        query.length === 0 || (thread.thread_id ?? '').toLowerCase().includes(query)
+      if (!matchesQuery) {
+        return false
+      }
+
+      if (!showUnreadOnlyThreads) {
+        return true
+      }
+
+      return unseenThreadKeys.includes(toThreadKey(thread.thread_id))
+    })
+  }, [childThreads, showUnreadOnlyThreads, threadFilterText, unseenThreadKeys])
 
   const unreadThreadIds = useMemo(() => {
     return threads
@@ -935,12 +946,21 @@ function App() {
       <div style={{ display: 'flex', gap: 16, marginTop: 12, alignItems: 'flex-start' }}>
         <div>
           <h4>Threads</h4>
-          <input
-            value={threadFilterText}
-            onChange={(event) => setThreadFilterText(event.target.value)}
-            placeholder="Filter thread IDs"
-            style={{ marginBottom: 8 }}
-          />
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+            <input
+              value={threadFilterText}
+              onChange={(event) => setThreadFilterText(event.target.value)}
+              placeholder="Filter thread IDs"
+            />
+            <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
+              <input
+                type="checkbox"
+                checked={showUnreadOnlyThreads}
+                onChange={(event) => setShowUnreadOnlyThreads(event.target.checked)}
+              />
+              unread only
+            </label>
+          </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (
             <ul>
@@ -976,8 +996,10 @@ function App() {
                   </button>
                 </li>
               ))}
-              {!!threadFilterText.trim() && filteredChildThreads.length === 0 && (
-                <li style={{ color: '#666' }}>No thread matches.</li>
+              {(!!threadFilterText.trim() || showUnreadOnlyThreads) && filteredChildThreads.length === 0 && (
+                <li style={{ color: '#666' }}>
+                  {showUnreadOnlyThreads ? 'No unread thread matches current filter.' : 'No thread matches.'}
+                </li>
               )}
             </ul>
           )}
