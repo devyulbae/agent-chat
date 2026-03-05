@@ -1635,7 +1635,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Esc to clear · J/K to move selection
+              / to focus · Esc to clear · Shift+Esc to reset view · J/K to move selection
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input

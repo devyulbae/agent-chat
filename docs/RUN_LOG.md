@@ -785,3 +785,14 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
 - Commit: `b60b9ff` (pushed to `main`)
 - Next action: add inline helper text near thread controls (`Shift+Esc to reset view`) so the shortcut is visible without hover/tooltips.
+
+## 2026-03-05 20:21 KST — Agent Chat implementation cycle
+- Delta: Improved thread filter keyboard-help copy so reset shortcut is visible inline.
+  - Updated thread control helper text in `frontend/src/main.tsx` to include `Shift+Esc to reset view`.
+  - Keeps shortcut discoverable without relying on Reset button tooltip hover.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Commit: `08c97ce` (pushed to `main`)
+- Next action: add arrow-key (`↑/↓`) thread navigation parity with existing `J/K` shortcuts in thread explorer.
