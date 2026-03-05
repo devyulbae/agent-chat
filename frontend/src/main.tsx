@@ -1737,6 +1737,31 @@ function App() {
       if (event.defaultPrevented || event.repeat) {
         return
       }
+      if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
+        return
+      }
+      if (event.key !== 'End') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!visibleThreadIds.length) {
+        return
+      }
+      event.preventDefault()
+      jumpToVisibleThreadBoundary('last', 'End')
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [jumpToVisibleThreadBoundary, visibleThreadIds.length])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
         return
       }
@@ -1945,7 +1970,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root • Shift+End jump last visible
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
@@ -2022,7 +2047,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Y to copy selected
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+End to jump last while keeping filters · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input

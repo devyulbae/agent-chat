@@ -1037,6 +1037,18 @@
 - Commit: pending
 - Next action: add provider/label/action filters to audit trail endpoint/UI and include actor/context fields in event metadata for better investigation.
 
+## 2026-03-06 02:02 KST — Agent Chat implementation cycle
+- Delta: Added `Shift+End` shortcut for filtered thread navigation without changing thread-view filters.
+  - Frontend: wired global `Shift+End` handler in `frontend/src/main.tsx` to jump to the last currently visible thread via existing boundary navigation flow.
+  - Updated inline UX hints (composer + thread filter helper text) to advertise the new shortcut.
+  - Scope kept to chat thread explorer keyboard UX.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add a short transient status hint specifically for `Shift+End` jumps (mirroring root jump hint style) so shortcut feedback is explicit.
+
 ## 2026-03-05 14:22 KST — Agent Chat cycle
 - Delta: Added audit action filtering for credential trail with backend + frontend wiring.
   - Backend: `GET /audit-events` now supports `action` query param (suffix match on event type, e.g. `updated`, `rotated`, `deleted`).
