@@ -462,15 +462,24 @@ function App() {
 
   const jumpToRootThreadContext = useCallback(
     (source: 'shortcut' | 'button' = 'button') => {
+      const alreadyAtRoot = selectedThreadId === null
       selectThread(null)
-      setThreadRootJumpHint(
-        source === 'shortcut' ? 'Jumped to root thread (Shift+Home / Shift+R).' : 'Jumped to root thread.'
-      )
+      if (alreadyAtRoot) {
+        setThreadRootJumpHint(
+          source === 'shortcut'
+            ? 'Already at root thread (Shift+Home / Shift+R confirmed).'
+            : 'Already at root thread.'
+        )
+      } else {
+        setThreadRootJumpHint(
+          source === 'shortcut' ? 'Jumped to root thread (Shift+Home / Shift+R).' : 'Jumped to root thread.'
+        )
+      }
       requestAnimationFrame(() => {
         composerBodyRef.current?.focus()
       })
     },
-    [selectThread]
+    [selectThread, selectedThreadId]
   )
 
   const copySelectedThreadLabel = useCallback(async () => {
