@@ -839,3 +839,13 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
 - Commit: `08c97ce` (pushed to `main`)
 - Next action: add arrow-key (`↑/↓`) thread navigation parity with existing `J/K` shortcuts in thread explorer.
+
+## 2026-03-05 21:13 KST — Agent Chat parallel offset cycle
+- Delta: Added arrow-key navigation parity for thread explorer keyboard controls in frontend.
+  - Updated global thread-navigation shortcut handler to accept `ArrowDown`/`ArrowUp` in addition to existing `J/K` bindings.
+  - Mapped arrows to the same cyclic selection behavior used by `J/K`, preserving current root/filtered thread ordering.
+  - Updated inline thread-filter help copy to advertise `J/K or ↑/↓` so the new controls are discoverable.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: pending
+- Next action: add visible selected-thread index cue (e.g., `3/12`) near thread controls to improve keyboard navigation orientation.

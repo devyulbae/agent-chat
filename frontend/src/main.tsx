@@ -1440,14 +1440,16 @@ function App() {
         return
       }
       const lowered = event.key.toLowerCase()
-      if (lowered !== 'j' && lowered !== 'k') {
+      const isArrowKey = event.key === 'ArrowDown' || event.key === 'ArrowUp'
+      if (lowered !== 'j' && lowered !== 'k' && !isArrowKey) {
         return
       }
       if (!visibleThreadIds.length) {
         return
       }
       event.preventDefault()
-      moveVisibleThreadSelection(lowered === 'j' ? 1 : -1)
+      const step = lowered === 'j' || event.key === 'ArrowDown' ? 1 : -1
+      moveVisibleThreadSelection(step)
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -1688,7 +1690,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K to move selection
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
