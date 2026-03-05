@@ -471,19 +471,15 @@ function App() {
   }, [])
 
   const jumpToRootThreadContext = useCallback(
-    (source: 'shortcut' | 'button' = 'button') => {
+    (source: 'Shift+Home' | 'Shift+R' | 'button' = 'button') => {
       const alreadyAtRoot = selectedThreadId === null
       selectThread(null)
       if (alreadyAtRoot) {
         setThreadRootJumpHint(
-          source === 'shortcut'
-            ? 'Already at root thread (Shift+Home / Shift+R confirmed).'
-            : 'Already at root thread.'
+          source === 'button' ? 'Already at root thread.' : `Already at root thread (${source} confirmed).`
         )
       } else {
-        setThreadRootJumpHint(
-          source === 'shortcut' ? 'Jumped to root thread (Shift+Home / Shift+R).' : 'Jumped to root thread.'
-        )
+        setThreadRootJumpHint(source === 'button' ? 'Jumped to root thread.' : `Jumped to root thread (${source}).`)
       }
       requestAnimationFrame(() => {
         composerBodyRef.current?.focus()
@@ -1738,15 +1734,16 @@ function App() {
       if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
         return
       }
-      const isShiftRootShortcut = event.key.toLowerCase() === 'r' || event.key === 'Home'
-      if (!isShiftRootShortcut) {
+      const rootShortcutSource =
+        event.key === 'Home' ? 'Shift+Home' : event.key.toLowerCase() === 'r' ? 'Shift+R' : null
+      if (!rootShortcutSource) {
         return
       }
       if (isEditableElement(event.target)) {
         return
       }
       event.preventDefault()
-      jumpToRootThreadContext('shortcut')
+      jumpToRootThreadContext(rootShortcutSource)
     }
 
     window.addEventListener('keydown', onKeyDown)

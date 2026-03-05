@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 03:10 KST — Agent Chat offset lane cycle
+- Delta: Added source-specific root-jump confirmation copy in `frontend/src/main.tsx`.
+  - Refined `jumpToRootThreadContext(...)` source typing to distinguish `Shift+Home` vs `Shift+R` (instead of generic shortcut source).
+  - Updated global shift-root key handler to pass exact source label so transient root hints now reflect the actual shortcut used.
+  - Root hint copy now emits per-source confirmations (`Jumped to root thread (Shift+Home).` / `... (Shift+R).`) with unchanged button copy.
+  - API contract unchanged (frontend-only keyboard/status copy refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add compact selected-thread identity (`Root` or thread id) into boundary jump confirmation copy so first/last jump hints mirror one-step navigation identity context.
+
 ## 2026-03-06 03:02 KST — Agent Chat implementation cycle
 - Delta: Clarified shift-modified first-boundary source labeling in `frontend/src/main.tsx`.
   - Extended `jumpToVisibleThreadBoundary(...)` source-key union to include `Shift+Home`.
