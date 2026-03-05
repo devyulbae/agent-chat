@@ -1474,7 +1474,8 @@ function App() {
       const lowered = event.key.toLowerCase()
       const isArrowKey = event.key === 'ArrowDown' || event.key === 'ArrowUp'
       const isBoundaryKey = event.key === 'Home' || event.key === 'End'
-      if (lowered !== 'j' && lowered !== 'k' && !isArrowKey && !isBoundaryKey) {
+      const isPagingKey = event.key === 'PageDown' || event.key === 'PageUp'
+      if (lowered !== 'j' && lowered !== 'k' && !isArrowKey && !isBoundaryKey && !isPagingKey) {
         return
       }
       if (!visibleThreadIds.length) {
@@ -1487,6 +1488,14 @@ function App() {
       }
       if (event.key === 'End') {
         jumpToVisibleThreadBoundary('last')
+        return
+      }
+      if (event.key === 'PageDown') {
+        jumpToVisibleThreadBoundary('last')
+        return
+      }
+      if (event.key === 'PageUp') {
+        jumpToVisibleThreadBoundary('first')
         return
       }
       const step = lowered === 'j' || event.key === 'ArrowDown' ? 1 : -1
@@ -1731,7 +1740,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End to jump first/last
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
