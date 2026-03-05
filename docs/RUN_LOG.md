@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 15:30 KST — Agent Chat offset lane cycle
+- Delta: Added inline warning-tone styling for invalid selected-credential expiry preview in `frontend/src/main.tsx` while preserving PATCH diff gating behavior.
+  - Added derived `hasInvalidEditExpiryPreview` state keyed to expiry-diff + non-clear + non-empty invalid datetime input.
+  - Styled `Expiry preview` with subtle amber text/background/border only when the preview message is `Enter a valid datetime to set expiry.`.
+  - Kept `Update selected credential` enablement logic unchanged (`hasPendingCredentialEditChange`) so API contract + submit gating remain tied to PATCH diff semantics.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a small `title` hint on the expiry datetime input explaining accepted format/behavior when local parsing is invalid.
+
 ## 2026-03-05 15:21 KST — Agent Chat implementation cycle
 - Delta: Hardened selected credential expiry preview rendering in `frontend/src/main.tsx` to avoid locale `Invalid Date` leakage during partial datetime edits.
   - Added parsed datetime guard for edit preview state (`parsedEditExpiryPreview`).

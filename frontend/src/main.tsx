@@ -671,6 +671,12 @@ function App() {
           : parsedEditExpiryPreview && !Number.isNaN(parsedEditExpiryPreview.getTime())
             ? `Will set expiry to ${parsedEditExpiryPreview.toLocaleString()}.`
             : 'Enter a valid datetime to set expiry.'
+  const hasInvalidEditExpiryPreview =
+    Boolean(selectedCredential) &&
+    isEditExpiryChanged &&
+    !editCredentialClearExpiry &&
+    editCredentialExpiresAt.length > 0 &&
+    tokenExpiryPreview === 'Enter a valid datetime to set expiry.'
 
   useEffect(() => {
     if (!selectedCredential) {
@@ -1509,7 +1515,17 @@ function App() {
           {pendingCredentialEditFields.length > 0 && (
             <span style={{ fontSize: 12, color: '#777' }}>Hover chips for PATCH behavior.</span>
           )}
-          <span style={{ fontSize: 12, color: '#555' }} aria-live="polite">
+          <span
+            style={{
+              fontSize: 12,
+              color: hasInvalidEditExpiryPreview ? '#8a4b00' : '#555',
+              background: hasInvalidEditExpiryPreview ? '#fff4e5' : 'transparent',
+              border: hasInvalidEditExpiryPreview ? '1px solid #ffd8a8' : 'none',
+              borderRadius: hasInvalidEditExpiryPreview ? 6 : 0,
+              padding: hasInvalidEditExpiryPreview ? '2px 6px' : 0,
+            }}
+            aria-live="polite"
+          >
             Expiry preview: {tokenExpiryPreview}
           </span>
         </div>
