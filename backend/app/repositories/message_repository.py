@@ -80,7 +80,7 @@ class SQLMessageRepository(MessageRepository):
             )
             .where(Message.channel_id == channel_id, Message.thread_id.is_not(None))
             .group_by(Message.thread_id)
-            .order_by(func.count(Message.id).desc(), Message.thread_id.asc())
+            .order_by(func.max(Message.created_at).desc(), Message.thread_id.asc())
         )
         rows = self._session.execute(thread_stmt).all()
 

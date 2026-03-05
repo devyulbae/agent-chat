@@ -44,11 +44,17 @@ class FakeMessageRepo:
                 (),
                 {
                     "thread_id": thread_id,
-                    "message_count": count,
+                    "message_count": counts[thread_id],
                     "latest_message_at": latest_by_thread[thread_id],
                 },
             )
-            for thread_id, count in sorted(counts.items(), key=lambda x: (-x[1], x[0]))
+            for thread_id in sorted(
+                counts,
+                key=lambda thread_id: (
+                    -latest_by_thread[thread_id].timestamp(),
+                    thread_id,
+                ),
+            )
         ]
         return [
             type(
@@ -120,7 +126,7 @@ def test_message_service_list_by_thread_id() -> None:
     assert [item.id for item in listed] == ["msg-2"]
 
 
-def test_message_service_list_threads_returns_ranked_counts() -> None:
+def test_message_service_list_threads_returns_recently_active_first() -> None:
     repo = FakeMessageRepo()
     service = MessageService(repository=repo)
 
@@ -128,8 +134,8 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
         MessageCreate(
             id="msg-1",
             channel_id="chan-1",
-            sender_agent_id="agent-1",
-            thread_id="thread-b",
+            sender_agent_id="agent-2",
+            thread_id="thread-a",
             body="one",
         )
     )
@@ -137,7 +143,7 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
         MessageCreate(
             id="msg-2",
             channel_id="chan-1",
-            sender_agent_id="agent-2",
+            sender_agent_id="agent-1",
             thread_id="thread-a",
             body="two",
         )
@@ -147,7 +153,7 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
             id="msg-3",
             channel_id="chan-1",
             sender_agent_id="agent-1",
-            thread_id="thread-a",
+            thread_id="thread-b",
             body="three",
         )
     )
@@ -156,8 +162,8 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
 
     assert [(item.thread_id, item.message_count) for item in listed] == [
         (None, 0),
-        ("thread-a", 2),
         ("thread-b", 1),
+        ("thread-a", 2),
     ]
     assert listed[1].latest_message_at is not None
     assert listed[2].latest_message_at is not None
