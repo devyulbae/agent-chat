@@ -1447,9 +1447,13 @@ function App() {
           onChange={(event) => setNewCredentialExpiresAt(event.target.value)}
           title="Use local date/time picker format (YYYY-MM-DDTHH:mm)."
           aria-label="New credential expiry datetime (local format YYYY-MM-DDTHH:mm)"
+          aria-describedby="credential-expires-hint credential-expires-preview"
         />
-        <small style={{ fontSize: 12, color: '#666' }}>Optional • format: YYYY-MM-DDTHH:mm</small>
+        <small id="credential-expires-hint" style={{ fontSize: 12, color: '#666' }}>
+          Optional • format: YYYY-MM-DDTHH:mm
+        </small>
         <small
+          id="credential-expires-preview"
           aria-live="polite"
           style={{
             fontSize: 12,

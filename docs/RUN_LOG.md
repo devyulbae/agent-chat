@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 16:21 KST — Agent Chat implementation cycle
+- Delta: Wired create-credential expiry accessibility descriptors in `frontend/src/main.tsx` (chat thread/OAuth lane-adjacent UX hardening, frontend-only).
+  - Added `aria-describedby` on create expiry `datetime-local` input to reference both format helper and live preview text.
+  - Added stable ids (`credential-expires-hint`, `credential-expires-preview`) so assistive tech announces expected format + current validity preview together.
+  - Kept create payload/API behavior unchanged (`token_expires_at` conversion semantics untouched).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add matching `aria-describedby` wiring for selected-credential expiry edit input so edit flow gets the same helper+preview accessibility contract.
+
 ## 2026-03-05 16:15 KST — Agent Chat offset lane cycle
 - Delta: Added create-credential expiry preview/validation feedback in `frontend/src/main.tsx` to mirror selected-credential edit behavior without altering create API semantics.
   - Added derived create expiry preview state (`createExpiryPreview`) for optional/valid/invalid datetime-local input paths.
