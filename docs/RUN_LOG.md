@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 04:50 KST — Agent Chat offset lane cycle
+- Delta: Added source-aware recovery confirmation hints for hidden thread selection recovery in `frontend/src/main.tsx`.
+  - Updated thread-filter `Enter` top-result jump flow to detect hidden-selection recovery and emit transient confirmation copy (`Recovered to first visible thread (Enter) · ... · 1/N.`).
+  - Updated `Jump to first visible` button handler to emit matching source-specific transient confirmation copy (`... (button) ...`) with target identity + position context.
+  - Preserved existing root-first filter hint behavior when Enter is used without hidden-selection recovery.
+  - API contract unchanged (frontend-only interaction feedback copy/state refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add a no-op recovery confirmation variant for edge cases where first visible is already selected (for future reuse if recovery affordance expands beyond hidden-only state).
+
 ## 2026-03-06 04:42 KST — Agent Chat implementation cycle
 - Delta: Added non-hover recovery microcopy for hidden thread selections in `frontend/src/main.tsx`.
   - Added derived `selectedVisibleThreadRecoveryHint` text when current selection is hidden by active thread filters.

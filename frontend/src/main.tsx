@@ -578,7 +578,16 @@ function App() {
         }
         event.preventDefault()
         const topResult = visibleThreadIds[0]
+        const selectedWasHiddenByFilter = !visibleThreadIds.some((threadId) => threadId === selectedThreadId)
         selectThread(topResult)
+        if (selectedWasHiddenByFilter) {
+          const targetLabel = topResult === null ? 'Root' : topResult
+          setThreadBoundaryJumpHint(
+            `Recovered to first visible thread (Enter) · ${targetLabel} · 1/${visibleThreadIds.length}.`
+          )
+          setThreadFilterJumpHint(null)
+          return
+        }
         if (topResult === null && filteredChildThreads.length > 0) {
           setThreadFilterJumpHint('Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.')
           return
@@ -586,7 +595,7 @@ function App() {
         setThreadFilterJumpHint(null)
       }
     },
-    [filteredChildThreads.length, selectThread, threadFilterText, visibleThreadIds]
+    [filteredChildThreads.length, selectThread, selectedThreadId, threadFilterText, visibleThreadIds]
   )
 
   const loadCredentials = useCallback(
@@ -2118,7 +2127,14 @@ function App() {
               <>
                 <button
                   type="button"
-                  onClick={() => selectThread(visibleThreadIds[0] ?? null)}
+                  onClick={() => {
+                    const firstVisibleThreadId = visibleThreadIds[0] ?? null
+                    const targetLabel = firstVisibleThreadId === null ? 'Root' : firstVisibleThreadId
+                    selectThread(firstVisibleThreadId)
+                    setThreadBoundaryJumpHint(
+                      `Recovered to first visible thread (button) · ${targetLabel} · 1/${visibleThreadIds.length}.`
+                    )
+                  }}
                   title="Selected thread is hidden by filters. Jump to first visible result."
                 >
                   Jump to first visible
