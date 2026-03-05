@@ -450,6 +450,13 @@ function App() {
     })
   }, [])
 
+  const jumpToRootThreadContext = useCallback(() => {
+    selectThread(null)
+    requestAnimationFrame(() => {
+      composerBodyRef.current?.focus()
+    })
+  }, [selectThread])
+
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Escape' && !event.shiftKey && !event.metaKey && !event.ctrlKey && !event.altKey) {
@@ -1517,6 +1524,28 @@ function App() {
       if (event.defaultPrevented || event.repeat) {
         return
       }
+      if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'r') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      jumpToRootThreadContext()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [jumpToRootThreadContext])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
         return
       }
@@ -1722,7 +1751,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+R jump root
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
@@ -1732,6 +1761,9 @@ function App() {
             Return to root context
           </button>
         )}
+        <button type="button" onClick={jumpToRootThreadContext} title="Shift+R">
+          Jump root
+        </button>
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
           Jump to next unread
         </button>
