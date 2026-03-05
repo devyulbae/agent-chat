@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 12:13 KST — Agent Chat offset lane cycle
+- Delta: Added lightweight confirmation/undo affordance for unread reset in `frontend/src/main.tsx` (frontend integration + API-contract-safe local state only).
+  - Added `UnreadClearUndoSnapshot` state to capture prior seen/unseen thread markers before bulk clear.
+  - Updated **Clear all unread markers** action to snapshot prior state and display a post-action inline status message (`Cleared N unread markers`).
+  - Added one-click **Undo** action to restore previous unread markers without reloading threads or manually reopening each thread.
+  - Reset undo snapshot when channel context changes to avoid cross-channel restoration mistakes.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Commit: `907898b` (pushed to `main`)
+- Next action: add short-lived auto-dismiss behavior (e.g., 8-10s) for the undo banner so the composer row stays compact during sustained triage.
+
 ## 2026-03-05 12:06 KST — Agent Chat implementation cycle
 - Delta: Added one-click unread reset action in Chat Thread Explorer (`frontend/src/main.tsx`) for post-triage cleanup.
   - Added **Clear all unread markers** button beside unread navigation controls.
