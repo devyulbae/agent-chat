@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 00:54 KST — Agent Chat offset lane cycle
+- Delta: Added transient root-jump confirmation hint for keyboard/button root navigation in `frontend/src/main.tsx`.
+  - Added compact `threadRootJumpHint` status text shown after `Shift+Home`/`Shift+R` shortcut or `Jump root` button activation.
+  - Added source-aware copy (`Jumped to root thread ...`) and polite live-region rendering in thread controls.
+  - Added 1.5s auto-dismiss so confirmation is visible but non-sticky; focus handoff to composer remains unchanged.
+  - API contract unchanged (frontend-only interaction feedback).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a tiny no-op hint when root-jump is triggered while root is already selected (to confirm shortcut fired without implying context change).
+
 ## 2026-03-06 00:41 KST — Agent Chat implementation cycle
 - Delta: Added direct root-jump keyboard wiring for thread triage in `frontend/src/main.tsx`.
   - Expanded existing root-context shortcut handler to accept `Shift+Home` (while preserving `Shift+R`) outside editable inputs.

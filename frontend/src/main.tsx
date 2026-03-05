@@ -218,6 +218,7 @@ function App() {
   const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
   const [includeRootInUnreadOnly, setIncludeRootInUnreadOnly] = useState(true)
   const [threadFilterJumpHint, setThreadFilterJumpHint] = useState<string | null>(null)
+  const [threadRootJumpHint, setThreadRootJumpHint] = useState<string | null>(null)
   const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
@@ -459,12 +460,18 @@ function App() {
     })
   }, [])
 
-  const jumpToRootThreadContext = useCallback(() => {
-    selectThread(null)
-    requestAnimationFrame(() => {
-      composerBodyRef.current?.focus()
-    })
-  }, [selectThread])
+  const jumpToRootThreadContext = useCallback(
+    (source: 'shortcut' | 'button' = 'button') => {
+      selectThread(null)
+      setThreadRootJumpHint(
+        source === 'shortcut' ? 'Jumped to root thread (Shift+Home / Shift+R).' : 'Jumped to root thread.'
+      )
+      requestAnimationFrame(() => {
+        composerBodyRef.current?.focus()
+      })
+    },
+    [selectThread]
+  )
 
   const copySelectedThreadLabel = useCallback(async () => {
     const threadLabel = selectedThreadId ?? 'root'
@@ -1488,6 +1495,16 @@ function App() {
   }, [includeRootInUnreadOnly, showUnreadOnlyThreads, threadFilterText])
 
   useEffect(() => {
+    if (!threadRootJumpHint) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setThreadRootJumpHint(null)
+    }, 1500)
+    return () => window.clearTimeout(timeoutId)
+  }, [threadRootJumpHint])
+
+  useEffect(() => {
     if (!threadCopyHint) {
       return
     }
@@ -1644,7 +1661,7 @@ function App() {
         return
       }
       event.preventDefault()
-      jumpToRootThreadContext()
+      jumpToRootThreadContext('shortcut')
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -1871,7 +1888,11 @@ function App() {
             Return to root context
           </button>
         )}
-        <button type="button" onClick={jumpToRootThreadContext} title="Shift+Home (or Shift+R)">
+        <button
+          type="button"
+          onClick={() => jumpToRootThreadContext('button')}
+          title="Shift+Home (or Shift+R)"
+        >
           Jump root
         </button>
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
@@ -1974,6 +1995,11 @@ function App() {
             >
               Copy selected
             </button>
+            {threadRootJumpHint && (
+              <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
+                {threadRootJumpHint}
+              </small>
+            )}
             {threadCopyHint && (
               <small aria-live="polite" role="status" style={{ color: '#666' }}>
                 {threadCopyHint}
