@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 19:48 KST — Agent Chat implementation cycle
+- Delta: Added a global thread-filter focus shortcut in `frontend/src/main.tsx` to speed thread triage navigation.
+  - Added `threadFilterInputRef` and wired the thread filter input to it.
+  - Added `/` keyboard shortcut (outside editable fields) to focus + select the thread filter input.
+  - Updated thread filter hint copy to show shortcut affordance (`/ to focus · Esc to clear`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+  - `cd frontend && npx vite build` ✅
+- Notes: `black backend` reformatted existing backend files (`backend/app/api/routes.py`, `backend/tests/test_audit_api_contract.py`) as part of repo-wide style conformance gate.
+- Next action: add an optional `Enter` action in the thread filter field to jump directly to the top visible thread result (root or first matching child).
+
 ## 2026-03-05 19:23 KST — Agent Chat implementation cycle
 - Delta: Added capped-audit quick expansion UX in `frontend/src/main.tsx` so investigators can pull older events without manual limit hunting.
   - Added derived `nextAuditLimit` step logic (`20 → 50 → 100`) when current result window appears capped.

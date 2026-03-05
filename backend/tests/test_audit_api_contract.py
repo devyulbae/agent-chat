@@ -7,7 +7,9 @@ def test_audit_events_limit_contract_bounds() -> None:
 
     get_operation = schema["paths"]["/api/audit-events"]["get"]
     limit_param = next(
-        parameter for parameter in get_operation["parameters"] if parameter["name"] == "limit"
+        parameter
+        for parameter in get_operation["parameters"]
+        if parameter["name"] == "limit"
     )
 
     assert limit_param["in"] == "query"

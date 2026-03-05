@@ -237,6 +237,7 @@ function App() {
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
   const composerBodyRef = useRef<HTMLTextAreaElement | null>(null)
+  const threadFilterInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -1254,6 +1255,29 @@ function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [hasThreadViewFiltersActive, resetThreadViewFilters])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (event.key !== '/') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      threadFilterInputRef.current?.focus()
+      threadFilterInputRef.current?.select()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -1510,6 +1534,7 @@ function App() {
             </label>
             <input
               id="thread-filter-input"
+              ref={threadFilterInputRef}
               aria-label="Filter threads by thread ID"
               aria-describedby="thread-filter-hint"
               value={threadFilterText}
@@ -1534,7 +1559,7 @@ function App() {
             >
               Reset view
             </button>
-            <small id="thread-filter-hint" style={{ color: '#666' }}>Esc to clear</small>
+            <small id="thread-filter-hint" style={{ color: '#666' }}>/ to focus · Esc to clear</small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
                 type="checkbox"
