@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 09:06 KST — Agent Chat cycle
+- Delta: Added credential provider discovery API wiring to support OAuth/provider CRUD flows in UI forms.
+  - Extended `CredentialRepository` with `list_providers(owner_agent_id?)` and SQL distinct/sorted implementation.
+  - Added `CredentialService.list_providers(...)` pass-through for DI-safe access.
+  - Added new endpoint `GET /credentials/providers` with optional `owner_agent_id` filter.
+  - Added service test coverage for distinct/sorted provider results and owner-scoped filtering.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (15 passed)
+- Commit: `dd0987b` (pushed to `main`)
+- Next action: wire frontend credential create/edit forms to consume `/credentials/providers` for provider dropdown/autocomplete and reduce manual provider key entry errors.
+
 ## 2026-03-05 08:42 KST — Agent Chat cycle
 - Delta: Added root-thread summary count wiring so unread reconciliation can use count-based logic for root messages too.
   - Backend `GET /channels/{channel_id}/threads` now returns a root summary row (`thread_id: null`) with root message count.
