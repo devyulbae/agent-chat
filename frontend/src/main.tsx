@@ -412,15 +412,30 @@ function App() {
     }
   }, [channelId, composerBody, composerSenderId, loadMessages, loadThreads, selectedThreadId])
 
+  const exitThreadContext = useCallback(() => {
+    setSelectedThreadId(null)
+    requestAnimationFrame(() => {
+      composerBodyRef.current?.focus()
+    })
+  }, [])
+
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Escape' && !event.shiftKey && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        if (!composerBody.trim() && selectedThreadId) {
+          event.preventDefault()
+          exitThreadContext()
+        }
+        return
+      }
+
       if (event.key !== 'Enter' || event.shiftKey || composerSubmitting) {
         return
       }
       event.preventDefault()
       void submitMessage()
     },
-    [composerSubmitting, submitMessage]
+    [composerBody, composerSubmitting, exitThreadContext, selectedThreadId, submitMessage]
   )
 
   const handleThreadFilterKeyDown = useCallback(
@@ -1283,10 +1298,17 @@ function App() {
           rows={2}
           style={{ minWidth: 260, resize: 'vertical' }}
         />
-        <small style={{ color: 'dimgray' }}>Enter to send • Shift+Enter newline</small>
+        <small style={{ color: 'dimgray' }}>
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root
+        </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
         </button>
+        {selectedThreadId && (
+          <button type="button" onClick={exitThreadContext} title="Return composer context to root thread">
+            Return to root context
+          </button>
+        )}
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
           Jump to next unread
         </button>
