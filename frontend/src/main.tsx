@@ -214,6 +214,7 @@ function App() {
   const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
   const [includeRootInUnreadOnly, setIncludeRootInUnreadOnly] = useState(true)
   const [threadFilterJumpHint, setThreadFilterJumpHint] = useState<string | null>(null)
+  const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
 
@@ -456,6 +457,21 @@ function App() {
       composerBodyRef.current?.focus()
     })
   }, [selectThread])
+
+  const copySelectedThreadLabel = useCallback(async () => {
+    const threadLabel = selectedThreadId ?? 'root'
+    if (!navigator.clipboard?.writeText) {
+      setThreadCopyHint('Clipboard API unavailable in this browser context.')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(threadLabel)
+      setThreadCopyHint(`Copied thread: ${threadLabel}`)
+    } catch {
+      setThreadCopyHint('Failed to copy thread label.')
+    }
+  }, [selectedThreadId])
 
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -1406,6 +1422,16 @@ function App() {
   }, [includeRootInUnreadOnly, showUnreadOnlyThreads, threadFilterText])
 
   useEffect(() => {
+    if (!threadCopyHint) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setThreadCopyHint(null)
+    }, 4000)
+    return () => window.clearTimeout(timeoutId)
+  }, [threadCopyHint])
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat) {
         return
@@ -1855,6 +1881,18 @@ function App() {
               Selection: {selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/
               {visibleThreadIds.length} ({selectedVisibleThreadLabel})
             </small>
+            <button
+              type="button"
+              onClick={() => void copySelectedThreadLabel()}
+              title="Copy selected thread label"
+            >
+              Copy selected
+            </button>
+            {threadCopyHint && (
+              <small aria-live="polite" role="status" style={{ color: '#666' }}>
+                {threadCopyHint}
+              </small>
+            )}
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && <small style={{ color: '#666' }}>{threadFilterJumpHint}</small>}
           </div>
