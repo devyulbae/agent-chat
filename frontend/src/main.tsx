@@ -219,6 +219,7 @@ function App() {
   const [includeRootInUnreadOnly, setIncludeRootInUnreadOnly] = useState(true)
   const [threadFilterJumpHint, setThreadFilterJumpHint] = useState<string | null>(null)
   const [threadRootJumpHint, setThreadRootJumpHint] = useState<string | null>(null)
+  const [threadBoundaryJumpHint, setThreadBoundaryJumpHint] = useState<string | null>(null)
   const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
@@ -1514,6 +1515,16 @@ function App() {
   }, [threadRootJumpHint])
 
   useEffect(() => {
+    if (!threadBoundaryJumpHint) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setThreadBoundaryJumpHint(null)
+    }, 1500)
+    return () => window.clearTimeout(timeoutId)
+  }, [threadBoundaryJumpHint])
+
+  useEffect(() => {
     if (!threadCopyHint) {
       return
     }
@@ -1616,14 +1627,22 @@ function App() {
   )
 
   const jumpToVisibleThreadBoundary = useCallback(
-    (boundary: 'first' | 'last') => {
+    (boundary: 'first' | 'last', sourceKey: 'Home' | 'End' | 'PageUp' | 'PageDown') => {
       if (!visibleThreadIds.length) {
         return
       }
       const targetIndex = boundary === 'first' ? 0 : visibleThreadIds.length - 1
-      selectThread(visibleThreadIds[targetIndex])
+      const targetThreadId = visibleThreadIds[targetIndex]
+      const alreadyAtBoundary = selectedThreadId === targetThreadId
+      selectThread(targetThreadId)
+      const boundaryLabel = boundary === 'first' ? 'first' : 'last'
+      setThreadBoundaryJumpHint(
+        alreadyAtBoundary
+          ? `Already at ${boundaryLabel} visible thread (${sourceKey} confirmed).`
+          : `Jumped to ${boundaryLabel} visible thread (${sourceKey}).`
+      )
     },
-    [selectThread, visibleThreadIds]
+    [selectThread, selectedThreadId, visibleThreadIds]
   )
 
   useEffect(() => {
@@ -1700,19 +1719,19 @@ function App() {
       }
       event.preventDefault()
       if (event.key === 'Home') {
-        jumpToVisibleThreadBoundary('first')
+        jumpToVisibleThreadBoundary('first', 'Home')
         return
       }
       if (event.key === 'End') {
-        jumpToVisibleThreadBoundary('last')
+        jumpToVisibleThreadBoundary('last', 'End')
         return
       }
       if (event.key === 'PageDown') {
-        jumpToVisibleThreadBoundary('last')
+        jumpToVisibleThreadBoundary('last', 'PageDown')
         return
       }
       if (event.key === 'PageUp') {
-        jumpToVisibleThreadBoundary('first')
+        jumpToVisibleThreadBoundary('first', 'PageUp')
         return
       }
       const step = lowered === 'j' || event.key === 'ArrowDown' ? 1 : -1
@@ -2007,6 +2026,11 @@ function App() {
             {threadRootJumpHint && (
               <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
                 {threadRootJumpHint}
+              </small>
+            )}
+            {threadBoundaryJumpHint && (
+              <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
+                {threadBoundaryJumpHint}
               </small>
             )}
             {threadCopyHint && (

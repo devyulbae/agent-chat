@@ -1,5 +1,28 @@
 # Run Log
 
+## 2026-03-06 01:10 KST — Agent Chat offset lane cycle
+- Delta: Added explicit boundary-jump confirmation hints for thread-list keyboard navigation in `frontend/src/main.tsx`.
+  - Extended `jumpToVisibleThreadBoundary(...)` to emit source-aware confirmation copy for `Home` / `End` / `PageUp` / `PageDown` jumps.
+  - Added no-op confirmation when already at boundary (`Already at first/last visible thread (...) confirmed`) so keyboard users get positive feedback without implied context change.
+  - Added transient live status rendering (`threadBoundaryJumpHint`) with 1.5s auto-dismiss near existing thread controls.
+  - API contract unchanged (frontend-only navigation feedback).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add compact jump feedback for one-step keyboard moves (`J/K` / `↑/↓`) so non-boundary navigation has parity with boundary/root confirmation hints.
+
+## 2026-03-06 01:08 KST — Agent Chat implementation cycle
+- Delta: Added explicit no-op root-jump confirmation when root context is already active in `frontend/src/main.tsx`.
+  - Updated `jumpToRootThreadContext(...)` to detect `selectedThreadId === null` before applying jump hint copy.
+  - Shortcut path now confirms keypress without implying context switch (`Already at root thread (Shift+Home / Shift+R confirmed).`).
+  - Button path now mirrors same semantics (`Already at root thread.`) while preserving existing focus handoff and root selection behavior.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Commit: `980d6a6` (pushed to `main`)
+- Next action: add a compact thread-jump hint variant for `Home/End` keyboard boundary moves so first/last selection jumps are explicitly confirmed in-thread controls.
+
 ## 2026-03-06 00:54 KST — Agent Chat offset lane cycle
 - Delta: Added transient root-jump confirmation hint for keyboard/button root navigation in `frontend/src/main.tsx`.
   - Added compact `threadRootJumpHint` status text shown after `Shift+Home`/`Shift+R` shortcut or `Jump root` button activation.
