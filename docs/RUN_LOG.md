@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 14:34 KST — Agent Chat offset lane cycle
+- Delta: Added visible semantic label for thread filter control in `frontend/src/main.tsx` to align screen-reader and sighted-user affordances.
+  - Added `<label htmlFor="thread-filter-input">Thread filter</label>` directly before the thread ID filter input.
+  - Preserved existing `aria-label` + `aria-describedby` wiring so assistive hints (`Esc to clear`) continue to announce correctly.
+  - Scope kept frontend-only (no API contract/backend changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add inline “changed” chips for credential edit fields so users can see pending PATCH field set before submitting updates.
+
 ## 2026-03-05 14:13 KST — Agent Chat offset lane cycle
 - Delta: Added explicit accessibility labels for thread filter controls in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
   - Added `aria-label="Filter threads by thread ID"` and `aria-describedby="thread-filter-hint"` on thread filter input.
@@ -439,3 +449,16 @@
   - `pytest` ✅ (11 passed)
 - Commit: pending
 - Next action: add provider/label/action filters to audit trail endpoint/UI and include actor/context fields in event metadata for better investigation.
+
+## 2026-03-05 14:22 KST — Agent Chat cycle
+- Delta: Added audit action filtering for credential trail with backend + frontend wiring.
+  - Backend: `GET /audit-events` now supports `action` query param (suffix match on event type, e.g. `updated`, `rotated`, `deleted`).
+  - Service/repository: plumbed `action` filter through `AuditService` and `InMemoryAuditRepository`.
+  - Frontend: credential audit action dropdown now sends compact action values and queries `action=...` instead of full `event_type`.
+  - Tests: extended audit service test to verify action-based filtering.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (15 passed)
+- Commit: `9aa975c` (pushed to `main`)
+- Next action: add provider/label server-side filters to `GET /audit-events` so audit queries don’t require client-side credential pre-filtering.

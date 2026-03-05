@@ -1182,6 +1182,9 @@ function App() {
         <div>
           <h4>Threads</h4>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+            <label htmlFor="thread-filter-input" style={{ fontSize: 13, color: '#444' }}>
+              Thread filter
+            </label>
             <input
               id="thread-filter-input"
               aria-label="Filter threads by thread ID"
