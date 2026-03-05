@@ -650,6 +650,13 @@ function App() {
     isEditSecretProvided ? 'secret' : null,
     isEditExpiryChanged ? 'token_expires_at' : null,
   ].filter((field): field is string => Boolean(field))
+  const pendingCredentialFieldHints: Record<string, string> = {
+    label: 'PATCH updates credential label.',
+    secret: 'PATCH rotates credential secret when non-blank.',
+    token_expires_at: editCredentialClearExpiry
+      ? 'PATCH clears token_expires_at (expiry removed).'
+      : 'PATCH sets token_expires_at to the selected datetime.',
+  }
 
   useEffect(() => {
     if (!selectedCredential) {
@@ -1467,6 +1474,8 @@ function App() {
             pendingCredentialEditFields.map((field) => (
               <span
                 key={field}
+                title={pendingCredentialFieldHints[field]}
+                aria-label={`${`changed:${field}`}. ${pendingCredentialFieldHints[field]}`}
                 style={{
                   fontSize: 12,
                   background: '#edf5ff',
@@ -1474,6 +1483,7 @@ function App() {
                   border: '1px solid #cfe0ff',
                   borderRadius: 999,
                   padding: '2px 8px',
+                  cursor: 'help',
                 }}
               >
                 changed:{field}
@@ -1481,6 +1491,9 @@ function App() {
             ))
           ) : (
             <span style={{ fontSize: 12, color: '#888' }}>none</span>
+          )}
+          {pendingCredentialEditFields.length > 0 && (
+            <span style={{ fontSize: 12, color: '#777' }}>Hover chips for PATCH behavior.</span>
           )}
         </div>
       )}
