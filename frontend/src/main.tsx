@@ -473,13 +473,18 @@ function App() {
   const jumpToRootThreadContext = useCallback(
     (source: 'Shift+Home' | 'Shift+R' | 'button' = 'button') => {
       const alreadyAtRoot = selectedThreadId === null
+      const targetLabel = 'Root'
       selectThread(null)
       if (alreadyAtRoot) {
         setThreadRootJumpHint(
-          source === 'button' ? 'Already at root thread.' : `Already at root thread (${source} confirmed).`
+          source === 'button'
+            ? `Already at root thread · ${targetLabel}.`
+            : `Already at root thread (${source} confirmed) · ${targetLabel}.`
         )
       } else {
-        setThreadRootJumpHint(source === 'button' ? 'Jumped to root thread.' : `Jumped to root thread (${source}).`)
+        setThreadRootJumpHint(
+          source === 'button' ? `Jumped to root thread · ${targetLabel}.` : `Jumped to root thread (${source}) · ${targetLabel}.`
+        )
       }
       requestAnimationFrame(() => {
         composerBodyRef.current?.focus()
