@@ -1,5 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
 
 from app.containers.app_container import AppContainer
 from app.core.ws_hub import WebSocketHub
@@ -163,7 +163,7 @@ def list_audit_events(
     action: str | None = None,
     provider: str | None = None,
     label: str | None = None,
-    limit: int = 100,
+    limit: int = Query(default=100, ge=1, le=100),
     service: AuditService = Depends(Provide[AppContainer.audit_service]),
 ):
     items = service.list_events(
