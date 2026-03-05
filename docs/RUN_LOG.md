@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 05:11 KST — Agent Chat offset lane cycle
+- Delta: Added first-visible recovery no-op confirmation parity and centralized recovery routing in `frontend/src/main.tsx`.
+  - Extracted `recoverToFirstVisibleThread(source)` helper so Enter-key and button flows share identical first-visible targeting semantics.
+  - Added explicit no-op confirmation copy when recovery is triggered while already on first visible result (`Already at first visible thread (...) · 1/N.`).
+  - Preserved hidden-selection recovery confirmations and existing root-first helper behavior (`Jumped to Root first...`) without API/request changes.
+  - API contract unchanged (frontend-only keyboard/button feedback-state sync).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add tooltip/help copy for first-visible no-op confirmation so operators can quickly distinguish no-op confirmation from hidden-selection recovery in dense triage loops.
+
 ## 2026-03-06 04:50 KST — Agent Chat offset lane cycle
 - Delta: Added source-aware recovery confirmation hints for hidden thread selection recovery in `frontend/src/main.tsx`.
   - Updated thread-filter `Enter` top-result jump flow to detect hidden-selection recovery and emit transient confirmation copy (`Recovered to first visible thread (Enter) · ... · 1/N.`).
