@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 18:41 KST — Agent Chat implementation cycle
+- Delta: Added one-click thread-view reset control in `frontend/src/main.tsx` to speed recovery after narrow triage filters.
+  - Added derived `hasThreadViewFiltersActive` state to detect when thread list view is constrained by text/unread toggles.
+  - Added `resetThreadViewFilters()` action to clear thread ID text filter, disable unread-only mode, and restore root-inclusion default.
+  - Added `Reset view` button beside thread filter controls with disabled-state guidance when view is already at defaults.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add keyboard shortcut (`Shift+Esc`) to trigger thread-view reset when focus is outside editable inputs.
+
 ## 2026-03-05 18:30 KST — Agent Chat offset lane cycle
 - Delta: Added a compact truncation badge for credential audit summaries in `frontend/src/main.tsx` so operators can quickly spot potential timeline capping.
   - Added derived `isAuditResultCapped` state (`true` only when audit load is successful and returned exactly 20 events).

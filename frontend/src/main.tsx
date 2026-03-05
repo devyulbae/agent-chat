@@ -1191,6 +1191,15 @@ function App() {
     showUnreadOnlyThreads,
   ])
 
+  const hasThreadViewFiltersActive =
+    threadFilterText.trim().length > 0 || showUnreadOnlyThreads || !includeRootInUnreadOnly
+
+  const resetThreadViewFilters = useCallback(() => {
+    setThreadFilterText('')
+    setShowUnreadOnlyThreads(false)
+    setIncludeRootInUnreadOnly(true)
+  }, [])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -1462,6 +1471,14 @@ function App() {
               title="Clear thread filter (Esc)"
             >
               Clear filter
+            </button>
+            <button
+              type="button"
+              onClick={resetThreadViewFilters}
+              disabled={!hasThreadViewFiltersActive}
+              title="Reset thread filter + unread toggles"
+            >
+              Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>Esc to clear</small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
