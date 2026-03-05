@@ -157,6 +157,10 @@ function formatNoticeAge(timestampMs: number): string {
   return `${elapsedHours}h ago`
 }
 
+function formatEpochTimestamp(timestampMs: number): string {
+  return new Date(timestampMs).toLocaleString()
+}
+
 function toDatetimeLocalValue(value: string | null): string {
   if (!value) {
     return ''
@@ -1020,7 +1024,7 @@ function App() {
     if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
       return undefined
     }
-    return `Completed at ${credentialAuditPagingAnnouncementAt.toLocaleString()}`
+    return `Completed at ${formatEpochTimestamp(credentialAuditPagingAnnouncementAt)}`
   }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
 
   useEffect(() => {
