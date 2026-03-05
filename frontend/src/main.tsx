@@ -264,6 +264,7 @@ function App() {
   >(null)
   const [credentialAuditPagingAnnouncementAt, setCredentialAuditPagingAnnouncementAt] =
     useState<number | null>(null)
+  const [credentialAuditPagingCopyHint, setCredentialAuditPagingCopyHint] = useState<string | null>(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
   const composerBodyRef = useRef<HTMLTextAreaElement | null>(null)
@@ -476,6 +477,24 @@ function App() {
       setThreadCopyHint('Failed to copy thread label.')
     }
   }, [selectedThreadId])
+
+  const copyCredentialAuditAnnouncementTime = useCallback(async () => {
+    if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+      return
+    }
+    if (!navigator.clipboard?.writeText) {
+      setCredentialAuditPagingCopyHint('Clipboard API unavailable in this browser context.')
+      return
+    }
+
+    const completionLabel = formatEpochTimestamp(credentialAuditPagingAnnouncementAt)
+    try {
+      await navigator.clipboard.writeText(completionLabel)
+      setCredentialAuditPagingCopyHint(`Copied completion time: ${completionLabel}`)
+    } catch {
+      setCredentialAuditPagingCopyHint('Failed to copy completion time.')
+    }
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
 
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -1438,6 +1457,16 @@ function App() {
     }, 4000)
     return () => window.clearTimeout(timeoutId)
   }, [threadCopyHint])
+
+  useEffect(() => {
+    if (!credentialAuditPagingCopyHint) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setCredentialAuditPagingCopyHint(null)
+    }, 4000)
+    return () => window.clearTimeout(timeoutId)
+  }, [credentialAuditPagingCopyHint])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -2454,16 +2483,33 @@ function App() {
           </button>
         )}
       </p>
-      <p
-        aria-live="polite"
-        role="status"
-        title={credentialAuditPagingAnnouncementTitle}
-        style={{ fontSize: 12, color: '#666', minHeight: 18, marginTop: 4 }}
-      >
-        {credentialAuditPagingAnnouncement
-          ? `${credentialAuditPagingAnnouncement}${credentialAuditPagingAnnouncementAgeLabel}`
-          : ''}
-      </p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, minHeight: 18 }}>
+        <p
+          aria-live="polite"
+          role="status"
+          title={credentialAuditPagingAnnouncementTitle}
+          style={{ fontSize: 12, color: '#666', margin: 0 }}
+        >
+          {credentialAuditPagingAnnouncement
+            ? `${credentialAuditPagingAnnouncement}${credentialAuditPagingAnnouncementAgeLabel}`
+            : ''}
+        </p>
+        {credentialAuditPagingAnnouncement && credentialAuditPagingAnnouncementAt && !credentialAuditPaging && (
+          <button
+            type="button"
+            style={{ fontSize: 11, padding: '1px 8px' }}
+            title="Copy completion timestamp"
+            onClick={() => {
+              void copyCredentialAuditAnnouncementTime()
+            }}
+          >
+            Copy time
+          </button>
+        )}
+      </div>
+      {credentialAuditPagingCopyHint && (
+        <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>{credentialAuditPagingCopyHint}</p>
+      )}
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
       {credentialLoading && <p>Loading credentials…</p>}

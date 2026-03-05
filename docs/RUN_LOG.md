@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 23:51 KST — Agent Chat offset lane cycle
+- Delta: Added one-click completion-time copy affordance for credential audit older-page announcements in `frontend/src/main.tsx`.
+  - Added `Copy time` button that appears after older-page pagination announcements settle, reusing the existing completion timestamp source (`credentialAuditPagingAnnouncementAt`).
+  - Implemented clipboard write flow + transient inline feedback (`Copied completion time ...` / failure states) so bug reports can include exact times without opening dev tools.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: mirror this timestamp-copy affordance for older-page failure announcements in the retained-error row so incident reports can capture both status text and completion time in one place.
+
 ## 2026-03-05 23:10 KST — Agent Chat offset lane cycle
 - Delta: Added absolute completion timestamp tooltip for credential audit older-page live announcements in `frontend/src/main.tsx`.
   - Added derived `credentialAuditPagingAnnouncementTitle` memo that resolves to `Completed at <local datetime>` once append pagination settles.
