@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 14:03 KST — Agent Chat implementation cycle
+- Delta: Added discoverable keyboard affordance for thread filter reset in `frontend/src/main.tsx`.
+  - Updated **Clear filter** button tooltip to `Clear thread filter (Esc)`.
+  - Added inline helper copy `Esc to clear` beside filter controls so keyboard users can discover the shortcut quickly.
+  - Scope kept strictly frontend UX-only (no API or state-contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add `aria-label`/assistive text on thread filter controls (input + clear action) to improve accessibility for keyboard/screen-reader triage flows.
+
 ## 2026-03-05 13:50 KST — Agent Chat offset lane cycle
 - Delta: Added keyboard **Escape** support to clear thread ID text filter in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
   - Added `handleThreadFilterKeyDown` callback on the thread filter input.

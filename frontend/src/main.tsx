@@ -1192,10 +1192,11 @@ function App() {
               type="button"
               onClick={() => setThreadFilterText('')}
               disabled={!threadFilterText.trim()}
-              title="Clear thread filter"
+              title="Clear thread filter (Esc)"
             >
               Clear filter
             </button>
+            <small style={{ color: '#666' }}>Esc to clear</small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
                 type="checkbox"
