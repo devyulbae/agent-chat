@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 18:13 KST — Agent Chat offset lane cycle
+- Delta: Added compact credential audit scope hint line under audit controls in `frontend/src/main.tsx` for clearer global-vs-specific timeline context.
+  - Added derived `auditScopeHint` memo that summarizes active server-side filters (`provider`, `label`, `action`).
+  - Shows `Viewing all filtered credentials ...` when no specific audit credential is selected.
+  - Shows selected credential label/provider context when a drill-down credential is selected.
+  - Keeps API contract usage unchanged (`GET /audit-events` query params remain `entity_id` + optional `provider`/`label`/`action`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add compact result-count context next to the scope hint (e.g., `Showing 20 events`) so operators can quickly distinguish empty filters from truncated timelines.
+
 ## 2026-03-05 18:04 KST — Agent Chat implementation cycle
 - Delta: Decoupled credential audit timeline loading from required credential selection in `frontend/src/main.tsx`.
   - Updated `loadCredentialAuditEvents(...)` to allow optional `entity_id`; when no credential is selected, fetches filtered credential audit events by `entity_type=credential` plus active action/provider/label filters.

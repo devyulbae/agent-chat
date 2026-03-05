@@ -677,6 +677,37 @@ function App() {
     })
   }, [auditLabelFilter, auditProviderFilter, credentials])
 
+  const auditScopeHint = useMemo(() => {
+    const scopeParts: string[] = []
+    if (auditProviderFilter !== 'all') {
+      scopeParts.push(`provider=${auditProviderFilter}`)
+    }
+    if (auditLabelFilter !== 'all') {
+      scopeParts.push(`label=${auditLabelFilter}`)
+    }
+    if (auditActionFilter !== 'all') {
+      scopeParts.push(`action=${auditActionFilter}`)
+    }
+
+    const scopeSuffix = scopeParts.length ? ` (${scopeParts.join(', ')})` : ''
+    if (!selectedCredentialId) {
+      return `Viewing all filtered credentials${scopeSuffix}.`
+    }
+
+    const selected = filteredCredentialsForAudit.find((item) => item.id === selectedCredentialId)
+    if (!selected) {
+      return `Viewing selected credential${scopeSuffix}.`
+    }
+
+    return `Viewing selected credential: ${selected.label} (${selected.provider})${scopeSuffix}.`
+  }, [
+    auditActionFilter,
+    auditLabelFilter,
+    auditProviderFilter,
+    filteredCredentialsForAudit,
+    selectedCredentialId,
+  ])
+
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
     [credentials, selectedCredentialId]
@@ -1838,6 +1869,7 @@ function App() {
           Refresh audit trail
         </button>
       </div>
+      <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>{auditScopeHint}</p>
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
       {credentialLoading && <p>Loading credentials…</p>}
