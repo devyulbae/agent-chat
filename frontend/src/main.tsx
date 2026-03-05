@@ -814,10 +814,24 @@ function App() {
 
   const childThreads = useMemo(() => threads.filter((item) => item.thread_id !== null), [threads])
 
+  const sortedChildThreads = useMemo(() => {
+    return [...childThreads].sort((left, right) => {
+      const leftLatest = left.latest_message_at ? new Date(left.latest_message_at).getTime() : 0
+      const rightLatest = right.latest_message_at ? new Date(right.latest_message_at).getTime() : 0
+      if (leftLatest !== rightLatest) {
+        return rightLatest - leftLatest
+      }
+      if (left.message_count !== right.message_count) {
+        return right.message_count - left.message_count
+      }
+      return (left.thread_id ?? '').localeCompare(right.thread_id ?? '')
+    })
+  }, [childThreads])
+
   const filteredChildThreads = useMemo(() => {
     const query = threadFilterText.trim().toLowerCase()
 
-    return childThreads.filter((thread) => {
+    return sortedChildThreads.filter((thread) => {
       const matchesQuery =
         query.length === 0 || (thread.thread_id ?? '').toLowerCase().includes(query)
       if (!matchesQuery) {
@@ -830,7 +844,7 @@ function App() {
 
       return unseenThreadKeys.includes(toThreadKey(thread.thread_id))
     })
-  }, [childThreads, showUnreadOnlyThreads, threadFilterText, unseenThreadKeys])
+  }, [showUnreadOnlyThreads, sortedChildThreads, threadFilterText, unseenThreadKeys])
 
   const unreadThreadIds = useMemo(() => {
     return threads
