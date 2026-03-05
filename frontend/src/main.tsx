@@ -251,6 +251,7 @@ function App() {
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditHasMore, setCredentialAuditHasMore] = useState(false)
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
+  const [credentialAuditPaging, setCredentialAuditPaging] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
@@ -569,6 +570,7 @@ function App() {
       signal?: AbortSignal
     ) => {
       setCredentialAuditLoading(true)
+      setCredentialAuditPaging(append)
       setCredentialAuditError(null)
 
       const params = new URLSearchParams({
@@ -624,6 +626,7 @@ function App() {
         setCredentialAuditEvents([])
       } finally {
         setCredentialAuditLoading(false)
+        setCredentialAuditPaging(false)
       }
     },
     []
@@ -2123,9 +2126,10 @@ function App() {
           Refresh audit trail
         </button>
 
-        {credentialAuditHasMore && !credentialAuditLoading && (
+        {(credentialAuditHasMore || credentialAuditPaging) && (
           <button
             type="button"
+            disabled={credentialAuditPaging}
             onClick={() => {
               const nextOffset = credentialAuditEvents.length
               setAuditOffset(nextOffset)
@@ -2140,9 +2144,13 @@ function App() {
                 true
               )
             }}
-            title={`Load older audit events (offset ${credentialAuditEvents.length})`}
+            title={
+              credentialAuditPaging
+                ? 'Loading older audit events…'
+                : `Load older audit events (offset ${credentialAuditEvents.length})`
+            }
           >
-            Load older page
+            {credentialAuditPaging ? 'Loading older page…' : 'Load older page'}
           </button>
         )}
       </div>

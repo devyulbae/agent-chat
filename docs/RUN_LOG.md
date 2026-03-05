@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 20:50 KST — Agent Chat offset lane cycle
+- Delta: Hardened audit pagination control state in `frontend/src/main.tsx` to prevent duplicate older-page fetches while keeping API contract usage unchanged.
+  - Added dedicated `credentialAuditPaging` state to track append-mode pagination requests independently from initial/refresh audit loading.
+  - `loadCredentialAuditEvents(...)` now toggles paging state based on `append` so UI can distinguish refresh loads from older-page fetches.
+  - Updated **Load older page** control to remain visible during paging, disable itself while request is in-flight, and show inline `Loading older page…` label.
+  - Kept audit request contract unchanged (`GET /audit-events` still uses `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add subtle per-page fetch error retention so previously loaded audit pages remain visible when only the newest pagination request fails.
+
 ## 2026-03-05 20:42 KST — Agent Chat implementation cycle
 - Delta: Added thread-filter `Enter` quick-jump wiring in `frontend/src/main.tsx` for faster keyboard triage in chat thread explorer.
   - Extended `handleThreadFilterKeyDown` to support `Enter` (no modifiers) and jump selection to the top visible result (`root` when shown, otherwise first filtered child thread).
