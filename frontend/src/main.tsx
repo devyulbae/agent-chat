@@ -162,6 +162,7 @@ function App() {
   const [composerSenderId, setComposerSenderId] = useState('agent-ui')
   const [composerBody, setComposerBody] = useState('')
   const [composerSubmitting, setComposerSubmitting] = useState(false)
+  const [threadFilterText, setThreadFilterText] = useState('')
 
   const [credentials, setCredentials] = useState<Credential[]>([])
   const [credentialFilter, setCredentialFilter] = useState<TokenStatusFilter>('all')
@@ -711,6 +712,14 @@ function App() {
 
   const childThreads = useMemo(() => threads.filter((item) => item.thread_id !== null), [threads])
 
+  const filteredChildThreads = useMemo(() => {
+    const query = threadFilterText.trim().toLowerCase()
+    if (!query) {
+      return childThreads
+    }
+    return childThreads.filter((thread) => (thread.thread_id ?? '').toLowerCase().includes(query))
+  }, [childThreads, threadFilterText])
+
   const typeCounts = useMemo(() => {
     if (!graph) {
       return { freeform: 0, department: 0, squad: 0 }
@@ -802,6 +811,12 @@ function App() {
       <div style={{ display: 'flex', gap: 16, marginTop: 12, alignItems: 'flex-start' }}>
         <div>
           <h4>Threads</h4>
+          <input
+            value={threadFilterText}
+            onChange={(event) => setThreadFilterText(event.target.value)}
+            placeholder="Filter thread IDs"
+            style={{ marginBottom: 8 }}
+          />
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (
             <ul>
@@ -818,7 +833,7 @@ function App() {
                   {unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
                 </button>
               </li>
-              {childThreads.map((thread) => (
+              {filteredChildThreads.map((thread) => (
                 <li key={thread.thread_id}>
                   <button
                     type="button"
@@ -833,6 +848,9 @@ function App() {
                   </button>
                 </li>
               ))}
+              {!!threadFilterText.trim() && filteredChildThreads.length === 0 && (
+                <li style={{ color: '#666' }}>No thread matches.</li>
+              )}
             </ul>
           )}
         </div>

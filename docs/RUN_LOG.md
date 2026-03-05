@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 10:08 KST — Agent Chat cycle
+- Delta: Added thread ID filter UX in Chat Thread Explorer (`frontend/src/main.tsx`) for faster triage in high-thread channels.
+  - Added local `threadFilterText` state with case-insensitive filtering against child thread IDs.
+  - Added inline thread filter input above thread list.
+  - Added explicit empty-state row (`No thread matches.`) when filter removes all child threads.
+- Quality gates:
+  - `./venv/bin/black backend` ✅
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `./venv/bin/pytest` ✅ (15 passed)
+- Next action: add keyboard submit UX (Enter to send, Shift+Enter newline) in Chat Thread Explorer composer.
+
 ## 2026-03-05 09:35 KST — Agent Chat offset lane cycle
 - Delta: Wired frontend credential create/edit flows to consume backend provider contract (`GET /credentials/providers`) and reduce provider key typo risk.
   - Added provider suggestion loader in `frontend/src/main.tsx` backed by `/credentials/providers`.
