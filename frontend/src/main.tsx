@@ -1189,6 +1189,16 @@ function App() {
   const showRootThreadInList = !showUnreadOnlyThreads || includeRootInUnreadOnly || hasUnreadRootThread
   const visibleThreadCount = filteredChildThreads.length + (showRootThreadInList ? 1 : 0)
 
+  const visibleThreadIds = useMemo<(string | null)[]>(() => {
+    const ids: (string | null)[] = []
+    if (showRootThreadInList) {
+      ids.push(null)
+    }
+    return ids.concat(filteredChildThreads.map((thread) => thread.thread_id))
+  }, [filteredChildThreads, showRootThreadInList])
+
+  const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
+
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
 
@@ -1312,6 +1322,20 @@ function App() {
     selectThread(unreadThreadIds[nextIndex])
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
+  const moveVisibleThreadSelection = useCallback(
+    (step: 1 | -1) => {
+      if (!visibleThreadIds.length) {
+        return
+      }
+      const currentIndex = selectedVisibleThreadIndex
+      const fallbackIndex = step > 0 ? 0 : visibleThreadIds.length - 1
+      const startIndex = currentIndex >= 0 ? currentIndex : fallbackIndex
+      const nextIndex = (startIndex + step + visibleThreadIds.length) % visibleThreadIds.length
+      selectThread(visibleThreadIds[nextIndex])
+    },
+    [selectThread, selectedVisibleThreadIndex, visibleThreadIds]
+  )
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat) {
@@ -1339,6 +1363,32 @@ function App() {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [jumpToNextUnread, unreadThreadIds.length])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      const lowered = event.key.toLowerCase()
+      if (lowered !== 'j' && lowered !== 'k') {
+        return
+      }
+      if (!visibleThreadIds.length) {
+        return
+      }
+      event.preventDefault()
+      moveVisibleThreadSelection(lowered === 'j' ? 1 : -1)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [moveVisibleThreadSelection, visibleThreadIds.length])
 
   const clearAllUnreadMarkers = useCallback(() => {
     if (!threads.length || unreadThreadIds.length === 0) {
@@ -1573,7 +1623,9 @@ function App() {
             >
               Reset view
             </button>
-            <small id="thread-filter-hint" style={{ color: '#666' }}>/ to focus · Esc to clear</small>
+            <small id="thread-filter-hint" style={{ color: '#666' }}>
+              / to focus · Esc to clear · J/K to move selection
+            </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
                 type="checkbox"
@@ -1592,6 +1644,10 @@ function App() {
               include root
             </label>
             <small style={{ color: '#666' }}>{threadFilterSummary}</small>
+            <small style={{ color: '#666' }}>
+              Selection: {selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/
+              {visibleThreadIds.length}
+            </small>
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
           </div>
           {threadLoading && <p>Loading threads…</p>}
