@@ -1342,5 +1342,5 @@
   - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
-- Commit: pending
+- Commit: `cbf4e0f` (pushed to `main`)
 - Next action: mirror the same hidden-selection recovery hint semantics inside the filter helper text so keyboard behavior stays discoverable even before selection becomes hidden.
