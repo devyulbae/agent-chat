@@ -2169,7 +2169,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
+              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection (recovers hidden selection to first/last visible) · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
