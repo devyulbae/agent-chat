@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 18:21 KST — Agent Chat implementation cycle
+- Delta: Added compact audit result-count context next to credential scope hint in `frontend/src/main.tsx`.
+  - Added derived `auditResultHint` memo to summarize current credential audit load state.
+  - Shows `Loading audit events…` during in-flight fetches and a failure-safe summary message on load errors.
+  - Shows `Showing N event(s) (latest 20 max).` after load so operators can quickly distinguish empty filters from returned timelines.
+  - Rendered result hint inline with existing scope line (`Viewing all filtered credentials...`) without changing audit API request contract.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add a small “capped to latest 20” visual tone (e.g., subdued badge only when count is exactly 20) so operators can quickly spot potential truncation.
+
 ## 2026-03-05 18:13 KST — Agent Chat offset lane cycle
 - Delta: Added compact credential audit scope hint line under audit controls in `frontend/src/main.tsx` for clearer global-vs-specific timeline context.
   - Added derived `auditScopeHint` memo that summarizes active server-side filters (`provider`, `label`, `action`).

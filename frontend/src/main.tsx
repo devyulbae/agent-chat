@@ -708,6 +708,18 @@ function App() {
     selectedCredentialId,
   ])
 
+  const auditResultHint = useMemo(() => {
+    if (credentialAuditLoading) {
+      return 'Loading audit events…'
+    }
+    if (credentialAuditError) {
+      return 'Unable to summarize audit results while loading failed.'
+    }
+
+    const countLabel = `${credentialAuditEvents.length} event${credentialAuditEvents.length === 1 ? '' : 's'}`
+    return `Showing ${countLabel} (latest 20 max).`
+  }, [credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
+
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
     [credentials, selectedCredentialId]
@@ -1869,7 +1881,9 @@ function App() {
           Refresh audit trail
         </button>
       </div>
-      <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>{auditScopeHint}</p>
+      <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
+        {auditScopeHint} {auditResultHint}
+      </p>
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
       {credentialLoading && <p>Loading credentials…</p>}
