@@ -229,6 +229,7 @@ function App() {
   const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
   const [auditLabelFilter, setAuditLabelFilter] = useState<string>('all')
   const [auditActionFilter, setAuditActionFilter] = useState<string>('all')
+  const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('')
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
@@ -522,6 +523,7 @@ function App() {
     async (
       credentialId: string | null,
       action: string,
+      eventType: string,
       provider: string,
       label: string,
       signal?: AbortSignal
@@ -538,6 +540,10 @@ function App() {
       }
       if (action !== 'all') {
         params.set('action', action)
+      }
+      const trimmedEventType = eventType.trim()
+      if (trimmedEventType) {
+        params.set('event_type', trimmedEventType)
       }
       if (provider !== 'all') {
         params.set('provider', provider)
@@ -688,6 +694,9 @@ function App() {
     if (auditActionFilter !== 'all') {
       scopeParts.push(`action=${auditActionFilter}`)
     }
+    if (auditEventTypeFilter.trim()) {
+      scopeParts.push(`event_type=${auditEventTypeFilter.trim()}`)
+    }
 
     const scopeSuffix = scopeParts.length ? ` (${scopeParts.join(', ')})` : ''
     if (!selectedCredentialId) {
@@ -702,6 +711,7 @@ function App() {
     return `Viewing selected credential: ${selected.label} (${selected.provider})${scopeSuffix}.`
   }, [
     auditActionFilter,
+    auditEventTypeFilter,
     auditLabelFilter,
     auditProviderFilter,
     filteredCredentialsForAudit,
@@ -1027,6 +1037,7 @@ function App() {
     void loadCredentialAuditEvents(
       selectedCredentialId,
       auditActionFilter,
+      auditEventTypeFilter,
       auditProviderFilter,
       auditLabelFilter,
       controller.signal
@@ -1034,6 +1045,7 @@ function App() {
     return () => controller.abort()
   }, [
     auditActionFilter,
+    auditEventTypeFilter,
     auditLabelFilter,
     auditProviderFilter,
     loadCredentialAuditEvents,
@@ -1866,6 +1878,15 @@ function App() {
           <option value="deleted">deleted</option>
         </select>
 
+        <label htmlFor="credential-audit-event-type">Event type:</label>
+        <input
+          id="credential-audit-event-type"
+          value={auditEventTypeFilter}
+          onChange={(event) => setAuditEventTypeFilter(event.target.value)}
+          placeholder="credential.updated"
+          style={{ minWidth: 180 }}
+        />
+
         <label htmlFor="credential-audit-select">Audit trail credential:</label>
         <select
           id="credential-audit-select"
@@ -1893,6 +1914,7 @@ function App() {
             void loadCredentialAuditEvents(
               selectedCredentialId,
               auditActionFilter,
+              auditEventTypeFilter,
               auditProviderFilter,
               auditLabelFilter
             )
