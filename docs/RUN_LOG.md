@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 22:52 KST — Agent Chat offset lane cycle
+- Delta: Added recency suffix for credential audit older-page completion announcements in `frontend/src/main.tsx`.
+  - Added `credentialAuditPagingAnnouncementAt` timestamp state and wired it on append-mode completion/failure announcements.
+  - Added derived age label (`(just now)`) beside append completion text so operators can correlate rapid repeated pagination attempts.
+  - Kept in-flight announcement text unchanged (`Loading older audit events…`) and reset timestamp when announcements clear.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: include absolute completion time tooltip/title on the audit announcement line for precise timestamp verification during accessibility audits.
+
 ## 2026-03-05 22:42 KST — Agent Chat implementation cycle
 - Delta: Added auto-expiring live-region copy for credential-audit older-page announcements in `frontend/src/main.tsx`.
   - Added a focused `useEffect` that clears `credentialAuditPagingAnnouncement` 4 seconds after append-mode pagination settles.

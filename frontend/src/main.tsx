@@ -257,6 +257,8 @@ function App() {
   const [credentialAuditPagingAnnouncement, setCredentialAuditPagingAnnouncement] = useState<
     string | null
   >(null)
+  const [credentialAuditPagingAnnouncementAt, setCredentialAuditPagingAnnouncementAt] =
+    useState<number | null>(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
   const composerBodyRef = useRef<HTMLTextAreaElement | null>(null)
@@ -586,8 +588,10 @@ function App() {
       setCredentialAuditError(null)
       if (append) {
         setCredentialAuditPagingAnnouncement('Loading older audit events…')
+        setCredentialAuditPagingAnnouncementAt(null)
       } else {
         setCredentialAuditPagingAnnouncement(null)
+        setCredentialAuditPagingAnnouncementAt(null)
       }
 
       const params = new URLSearchParams({
@@ -625,6 +629,7 @@ function App() {
               ? `Loaded ${payload.length} older audit event${payload.length === 1 ? '' : 's'}.`
               : 'No additional older audit events found.'
           )
+          setCredentialAuditPagingAnnouncementAt(Date.now())
         }
         setCredentialAuditEvents((current) => {
           if (!append) {
@@ -651,6 +656,7 @@ function App() {
         )
         if (append) {
           setCredentialAuditPagingAnnouncement(`Older-page load failed. ${errorMessage}`)
+          setCredentialAuditPagingAnnouncementAt(Date.now())
         }
         if (!append) {
           setCredentialAuditHasMore(false)
@@ -671,6 +677,7 @@ function App() {
 
     const timeoutId = window.setTimeout(() => {
       setCredentialAuditPagingAnnouncement(null)
+      setCredentialAuditPagingAnnouncementAt(null)
     }, 4000)
 
     return () => {
@@ -978,6 +985,13 @@ function App() {
     }
     return ` (${formatNoticeAge(credentialFormNoticeAt)})`
   }, [credentialFormNoticeAt, credentialFormNoticeTick])
+
+  const credentialAuditPagingAnnouncementAgeLabel = useMemo(() => {
+    if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+      return ''
+    }
+    return ` (${formatNoticeAge(credentialAuditPagingAnnouncementAt)})`
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
 
   useEffect(() => {
     if (!credentialFormNotice || credentialFormNoticePinned || credentialFormNoticeHovering) {
@@ -2351,7 +2365,9 @@ function App() {
         role="status"
         style={{ fontSize: 12, color: '#666', minHeight: 18, marginTop: 4 }}
       >
-        {credentialAuditPagingAnnouncement ?? ''}
+        {credentialAuditPagingAnnouncement
+          ? `${credentialAuditPagingAnnouncement}${credentialAuditPagingAnnouncementAgeLabel}`
+          : ''}
       </p>
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
