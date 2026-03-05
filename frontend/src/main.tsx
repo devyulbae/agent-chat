@@ -926,6 +926,8 @@ function App() {
     credentialAuditEvents.length > 0
 
   const canRetryOlderAuditPage = hasOlderAuditPageError && !credentialAuditPaging
+  const canCopyOlderAuditPageFailureTime =
+    hasOlderAuditPageError && Boolean(credentialAuditPagingAnnouncementAt) && !credentialAuditPaging
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -2480,6 +2482,18 @@ function App() {
             onClick={() => setCredentialAuditError(null)}
           >
             Dismiss
+          </button>
+        )}{' '}
+        {canCopyOlderAuditPageFailureTime && (
+          <button
+            type="button"
+            style={{ fontSize: 12, padding: '1px 8px' }}
+            title="Copy older-page failure completion timestamp"
+            onClick={() => {
+              void copyCredentialAuditAnnouncementTime()
+            }}
+          >
+            Copy failure time
           </button>
         )}
       </p>
