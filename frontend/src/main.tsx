@@ -912,28 +912,30 @@ function App() {
 
   const hasUnreadRootThread = unseenThreadKeys.includes(ROOT_THREAD_KEY)
   const showRootThreadInList = !showUnreadOnlyThreads || includeRootInUnreadOnly || hasUnreadRootThread
+  const visibleThreadCount = filteredChildThreads.length + (showRootThreadInList ? 1 : 0)
 
   const threadFilterSummary = useMemo(() => {
-    const visibleCount = filteredChildThreads.length
     const totalChildCount = sortedChildThreads.length
 
     if (showUnreadOnlyThreads) {
-      const rootMode = includeRootInUnreadOnly ? 'including root' : 'excluding root'
-      return `Showing ${visibleCount} of ${unreadChildThreadCount} unread thread${unreadChildThreadCount === 1 ? '' : 's'} (${rootMode})`
+      const unreadTotalCount = unreadChildThreadCount + (hasUnreadRootThread ? 1 : 0)
+      const rootMode = includeRootInUnreadOnly ? 'including root' : 'excluding root unless unread'
+      return `Showing ${visibleThreadCount} of ${unreadTotalCount} unread thread${unreadTotalCount === 1 ? '' : 's'} (${rootMode})`
     }
 
     if (threadFilterText.trim()) {
-      return `Showing ${visibleCount} of ${totalChildCount} thread${totalChildCount === 1 ? '' : 's'}`
+      return `Showing ${visibleThreadCount} thread${visibleThreadCount === 1 ? '' : 's'} (${totalChildCount} child total)`
     }
 
-    return `Total child threads: ${totalChildCount}`
+    return `Total threads visible: ${visibleThreadCount} (${totalChildCount} child)`
   }, [
-    filteredChildThreads.length,
+    hasUnreadRootThread,
     includeRootInUnreadOnly,
     showUnreadOnlyThreads,
     sortedChildThreads.length,
     threadFilterText,
     unreadChildThreadCount,
+    visibleThreadCount,
   ])
 
   const unreadThreadIds = useMemo(() => {
@@ -1208,7 +1210,7 @@ function App() {
                   </button>
                 </li>
               ))}
-              {(!!threadFilterText.trim() || showUnreadOnlyThreads) && filteredChildThreads.length === 0 && (
+              {(!!threadFilterText.trim() || showUnreadOnlyThreads) && visibleThreadCount === 0 && (
                 <li style={{ color: '#666' }}>
                   {showUnreadOnlyThreads ? 'No unread thread matches current filter.' : 'No thread matches.'}
                 </li>

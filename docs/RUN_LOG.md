@@ -1,5 +1,20 @@
 # Run Log
 
+## 2026-03-05 13:23 KST — Agent Chat implementation cycle
+- Delta: Tightened unread-only thread list UX accounting in `frontend/src/main.tsx` so root-thread visibility and empty-state messaging stay consistent during triage.
+  - Added `visibleThreadCount` derived state that counts child rows plus root row when displayed.
+  - Updated unread/filter summary copy to use visible totals and include root-unread contribution in unread-only mode.
+  - Fixed empty-state condition to check `visibleThreadCount === 0` so “No unread thread matches…” no longer appears when only root thread is visible.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Blocker:
+  - `cd frontend && npm run build` failed because `build` script is not defined in `frontend/package.json`.
+  - Next fix action: use `npx vite build` for frontend build gate (or add explicit npm script in a future chores pass).
+- Next action: add unread-only “root-only result” helper copy (when root unread is the sole visible item) to make triage intent explicit.
+
 ## 2026-03-05 12:50 KST — Agent Chat offset lane cycle
 - Delta: Added thread filter visibility summary chip in `frontend/src/main.tsx` to tighten unread triage situational awareness (frontend integration, API contract unchanged).
   - Added derived `unreadChildThreadCount` and `threadFilterSummary` state projections.
