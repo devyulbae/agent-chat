@@ -1488,6 +1488,7 @@ function App() {
           placeholder="Leave blank to keep existing secret"
           disabled={!selectedCredential}
         />
+        <label htmlFor="selected-credential-expires">Expires at:</label>
         <input
           id="selected-credential-expires"
           type="datetime-local"

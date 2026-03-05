@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 16:41 KST — Agent Chat implementation cycle
+- Delta: Added visible edit-expiry label wiring in `frontend/src/main.tsx` for selected credential editor accessibility/name symmetry.
+  - Added `<label htmlFor="selected-credential-expires">Expires at:</label>` directly before the selected-credential `datetime-local` input.
+  - Preserved existing assistive wiring (`aria-label` + `aria-describedby`) and PATCH semantics unchanged.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a compact `aria-live` confirmation hint after credential update success (selected editor lane) so keyboard/screen-reader users get explicit save completion feedback.
+
 ## 2026-03-05 16:30 KST — Agent Chat offset lane cycle
 - Delta: Synced selected-credential expiry edit accessibility descriptors in `frontend/src/main.tsx` so edit flow matches create flow helper/preview announcements.
   - Added stable edit expiry input id (`selected-credential-expires`) and `aria-describedby` wiring to helper + live preview elements.
