@@ -1002,18 +1002,27 @@ function App() {
   ])
 
   const auditApiSourceFilterParts = useMemo(() => {
-    const sourceParts: string[] = []
+    const sourceParts: Array<{ id: string; label: string; fullLabel: string }> = []
     if (auditProviderFilter !== 'all') {
-      sourceParts.push(`provider=${auditProviderFilter}`)
+      const fullLabel = `provider=${auditProviderFilter}`
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
     }
     if (auditLabelFilter !== 'all') {
-      sourceParts.push(`label=${auditLabelFilter}`)
+      const fullLabel = `label=${auditLabelFilter}`
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
     }
     if (auditActionFilter !== 'all') {
-      sourceParts.push(`action=${auditActionFilter}`)
+      const fullLabel = `action=${auditActionFilter}`
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
     }
     if (auditEventTypeFilter.trim()) {
-      sourceParts.push(`event_type=${auditEventTypeFilter.trim()}`)
+      const fullLabel = `event_type=${auditEventTypeFilter.trim()}`
+      const maxEventTypeChipLength = 44
+      const label =
+        fullLabel.length > maxEventTypeChipLength
+          ? `${fullLabel.slice(0, maxEventTypeChipLength - 1)}…`
+          : fullLabel
+      sourceParts.push({ id: fullLabel, label, fullLabel })
     }
 
     return sourceParts
@@ -2840,7 +2849,8 @@ function App() {
             <span>API filters:</span>
             {auditApiSourceFilterParts.map((part) => (
               <span
-                key={part}
+                key={part.id}
+                title={part.label !== part.fullLabel ? part.fullLabel : undefined}
                 style={{
                   display: 'inline-block',
                   padding: '0 4px',
@@ -2853,7 +2863,7 @@ function App() {
                   fontSize: 11,
                 }}
               >
-                {part}
+                {part.label}
               </span>
             ))}
           </span>

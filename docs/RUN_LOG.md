@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 07:20 KST — Agent Chat implementation cycle
+- Delta: Added truncation-safe API filter chip rendering for long credential audit `event_type` values in `frontend/src/main.tsx`.
+  - Refactored `auditApiSourceFilterParts` from plain strings into chip objects (`id`, `label`, `fullLabel`) so display text and canonical filter value are tracked separately.
+  - Added length cap for `event_type` chip labels (44 chars) with ellipsis to keep compact audit hint row layout stable.
+  - Added conditional hover title on truncated chips so full server-side filter value remains inspectable without expanding UI.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add tooltip copy that explicitly marks truncated `event_type` chips (e.g., “truncated; hover for full value”) for clearer operator discoverability.
+
 ## 2026-03-06 07:11 KST — Agent Chat offset lane cycle
 - Delta: Added compact monospace chip emphasis for credential-audit API filter badge segments in `frontend/src/main.tsx`.
   - Replaced single-string `auditApiSourceFilterBadge` derivation with `auditApiSourceFilterParts` array state so each active server-side filter can render independently.
