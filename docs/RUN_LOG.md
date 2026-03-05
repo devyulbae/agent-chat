@@ -1,5 +1,29 @@
 # Run Log
 
+## 2026-03-06 08:15 KST — Agent Chat parallel offset cycle
+- Delta: Added compact helper legend coverage for root-jump confirmation hints in `frontend/src/main.tsx`.
+  - Added derived `rootJumpHintHelp` memo to decode root-jump status text into explicit semantics.
+  - Root status hints now include helper legend copy for both core variants:
+    - `Jumped to root = switched focus to Root thread context.`
+    - `Already at root = no-op confirmation (selection did not move).`
+  - Scope kept frontend-only (chat thread UX hint semantics; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add source-aware root legend suffix for `Shift+Home`/`Shift+R` (parallel to boundary shift-source helper semantics).
+
+## 2026-03-06 08:12 KST — Agent Chat implementation cycle
+- Delta: Added source-aware visual badges for root-jump status hints in `frontend/src/main.tsx`.
+  - Added `rootJumpSourceShortcut` parsing from root hint copy so root hint rendering can detect exact shortcut origin.
+  - Added compact `rootJumpShiftShortcutBadge` mapping (`⇧Home` / `⇧R`) for shortcut-triggered root jumps.
+  - Updated root status hint row to prepend the same compact shortcut pill style used by boundary hints, improving discoverability for `Shift+Home` / `Shift+R` root jumps.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `903f23b` (pushed to `main`)
+- Next action: add a compact helper legend line for root-jump hints (jump vs no-op confirmation semantics) to mirror boundary hint self-describing behavior.
+
 ## 2026-03-06 07:56 KST — Agent Chat parallel offset cycle
 - Delta: Added a compact visual boundary-hint cue for shift-page thread jumps in `frontend/src/main.tsx`.
   - Added derived boundary source parsing (`boundaryJumpSourceShortcut`) so boundary hint rendering can detect shortcut origin.

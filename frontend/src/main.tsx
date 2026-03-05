@@ -1590,6 +1590,22 @@ function App() {
         ? '⇧R'
         : null
 
+  const rootJumpHintHelp = useMemo(() => {
+    if (!threadRootJumpHint) {
+      return null
+    }
+
+    if (threadRootJumpHint.startsWith('Jumped to root thread')) {
+      return 'Jumped to root = switched focus to Root thread context.'
+    }
+
+    if (threadRootJumpHint.startsWith('Already at root thread')) {
+      return 'Already at root = no-op confirmation (selection did not move).'
+    }
+
+    return null
+  }, [threadRootJumpHint])
+
   const firstVisibleJumpHintHelp = useMemo(() => {
     if (!threadBoundaryJumpHint) {
       return null
@@ -2383,6 +2399,11 @@ function App() {
                   </span>
                 )}
                 {threadRootJumpHint}
+              </small>
+            )}
+            {rootJumpHintHelp && (
+              <small style={{ color: '#666' }} title="Helps distinguish root jump vs no-op confirmation.">
+                {rootJumpHintHelp}
               </small>
             )}
             {threadBoundaryJumpHint && (
