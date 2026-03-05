@@ -1000,6 +1000,13 @@ function App() {
     return ` (${formatNoticeAge(credentialAuditPagingAnnouncementAt)})`
   }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
 
+  const credentialAuditPagingAnnouncementTitle = useMemo(() => {
+    if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+      return undefined
+    }
+    return `Completed at ${credentialAuditPagingAnnouncementAt.toLocaleString()}`
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
+
   useEffect(() => {
     if (!credentialFormNotice || credentialFormNoticePinned || credentialFormNoticeHovering) {
       return
@@ -2395,6 +2402,7 @@ function App() {
       <p
         aria-live="polite"
         role="status"
+        title={credentialAuditPagingAnnouncementTitle}
         style={{ fontSize: 12, color: '#666', minHeight: 18, marginTop: 4 }}
       >
         {credentialAuditPagingAnnouncement

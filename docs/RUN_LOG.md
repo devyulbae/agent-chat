@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 23:10 KST — Agent Chat offset lane cycle
+- Delta: Added absolute completion timestamp tooltip for credential audit older-page live announcements in `frontend/src/main.tsx`.
+  - Added derived `credentialAuditPagingAnnouncementTitle` memo that resolves to `Completed at <local datetime>` once append pagination settles.
+  - Wired `title` on the existing audit live-status row so hovering completion text reveals exact completion time while preserving current loading text behavior.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a compact “copy completion time” button next to the announcement line for quick bug-report attachment without opening dev tools.
+
 ## 2026-03-05 22:52 KST — Agent Chat offset lane cycle
 - Delta: Added recency suffix for credential audit older-page completion announcements in `frontend/src/main.tsx`.
   - Added `credentialAuditPagingAnnouncementAt` timestamp state and wired it on append-mode completion/failure announcements.
