@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 07:31 KST — Agent Chat parallel offset cycle
+- Delta: Added explicit truncation-disclosure tooltip copy for long credential-audit `event_type` API filter chips in `frontend/src/main.tsx`.
+  - Extended `auditApiSourceFilterParts` metadata with `isTruncated` so rendering can distinguish compact chips from full-value chips.
+  - Kept provider/label/action chips unchanged while marking only truncated `event_type` chips with tooltip copy: `(... truncated in badge; hover to inspect full value)`.
+  - Scope kept frontend-only; no backend/API contract changes.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add an inline visual affordance (e.g., subtle dotted underline/icon) on truncated chips so discoverability does not depend on hover.
+
 ## 2026-03-06 07:20 KST — Agent Chat implementation cycle
 - Delta: Added truncation-safe API filter chip rendering for long credential audit `event_type` values in `frontend/src/main.tsx`.
   - Refactored `auditApiSourceFilterParts` from plain strings into chip objects (`id`, `label`, `fullLabel`) so display text and canonical filter value are tracked separately.

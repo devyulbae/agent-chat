@@ -1002,27 +1002,28 @@ function App() {
   ])
 
   const auditApiSourceFilterParts = useMemo(() => {
-    const sourceParts: Array<{ id: string; label: string; fullLabel: string }> = []
+    const sourceParts: Array<{ id: string; label: string; fullLabel: string; isTruncated: boolean }> =
+      []
     if (auditProviderFilter !== 'all') {
       const fullLabel = `provider=${auditProviderFilter}`
-      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel, isTruncated: false })
     }
     if (auditLabelFilter !== 'all') {
       const fullLabel = `label=${auditLabelFilter}`
-      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel, isTruncated: false })
     }
     if (auditActionFilter !== 'all') {
       const fullLabel = `action=${auditActionFilter}`
-      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel })
+      sourceParts.push({ id: fullLabel, label: fullLabel, fullLabel, isTruncated: false })
     }
     if (auditEventTypeFilter.trim()) {
       const fullLabel = `event_type=${auditEventTypeFilter.trim()}`
       const maxEventTypeChipLength = 44
-      const label =
-        fullLabel.length > maxEventTypeChipLength
-          ? `${fullLabel.slice(0, maxEventTypeChipLength - 1)}…`
-          : fullLabel
-      sourceParts.push({ id: fullLabel, label, fullLabel })
+      const isTruncated = fullLabel.length > maxEventTypeChipLength
+      const label = isTruncated
+        ? `${fullLabel.slice(0, maxEventTypeChipLength - 1)}…`
+        : fullLabel
+      sourceParts.push({ id: fullLabel, label, fullLabel, isTruncated })
     }
 
     return sourceParts
@@ -2850,7 +2851,11 @@ function App() {
             {auditApiSourceFilterParts.map((part) => (
               <span
                 key={part.id}
-                title={part.label !== part.fullLabel ? part.fullLabel : undefined}
+                title={
+                  part.isTruncated
+                    ? `${part.fullLabel} (truncated in badge; hover to inspect full value)`
+                    : undefined
+                }
                 style={{
                   display: 'inline-block',
                   padding: '0 4px',
