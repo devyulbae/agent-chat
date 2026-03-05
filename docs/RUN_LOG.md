@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 18:04 KST — Agent Chat implementation cycle
+- Delta: Decoupled credential audit timeline loading from required credential selection in `frontend/src/main.tsx`.
+  - Updated `loadCredentialAuditEvents(...)` to allow optional `entity_id`; when no credential is selected, fetches filtered credential audit events by `entity_type=credential` plus active action/provider/label filters.
+  - Stopped auto-selecting the first credential after filter changes; selection now clears only when current choice no longer matches active provider/label filters.
+  - Added `All filtered credentials` option in the audit credential dropdown.
+  - Updated empty-state copy to `No audit events for current filters.` to reflect credential-optional timeline queries.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (16 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add a compact scope hint line under audit controls ("Viewing all filtered credentials" vs selected label/provider) so operators can immediately see whether audit results are global-filtered or credential-specific.
+
 ## 2026-03-05 17:50 KST — Agent Chat offset lane cycle
 - Delta: Wired frontend credential audit panel to send server-side provider/label filters and kept filter contracts synchronized with `GET /audit-events`.
   - Added audit label filter state in `frontend/src/main.tsx` and included `provider` + `label` query params in audit requests when set.

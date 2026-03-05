@@ -520,26 +520,22 @@ function App() {
 
   const loadCredentialAuditEvents = useCallback(
     async (
-      credentialId: string,
+      credentialId: string | null,
       action: string,
       provider: string,
       label: string,
       signal?: AbortSignal
     ) => {
-      if (!credentialId) {
-        setCredentialAuditEvents([])
-        setCredentialAuditError(null)
-        return
-      }
-
       setCredentialAuditLoading(true)
       setCredentialAuditError(null)
 
       const params = new URLSearchParams({
         entity_type: 'credential',
-        entity_id: credentialId,
         limit: '20',
       })
+      if (credentialId) {
+        params.set('entity_id', credentialId)
+      }
       if (action !== 'all') {
         params.set('action', action)
       }
@@ -972,11 +968,11 @@ function App() {
   }, [auditLabelFilter, auditLabelOptions])
 
   useEffect(() => {
-    const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
-      ? selectedCredentialId
-      : filteredCredentialsForAudit[0]?.id ?? ''
-    if (nextSelection !== selectedCredentialId) {
-      setSelectedCredentialId(nextSelection)
+    if (!selectedCredentialId) {
+      return
+    }
+    if (!filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)) {
+      setSelectedCredentialId('')
     }
   }, [filteredCredentialsForAudit, selectedCredentialId])
 
@@ -1814,12 +1810,18 @@ function App() {
           onChange={(event) => setSelectedCredentialId(event.target.value)}
           disabled={!filteredCredentialsForAudit.length}
         >
-          {!filteredCredentialsForAudit.length && <option value="">No credentials</option>}
-          {filteredCredentialsForAudit.map((credential) => (
-            <option key={credential.id} value={credential.id}>
-              {credential.label} ({credential.provider})
-            </option>
-          ))}
+          {!filteredCredentialsForAudit.length ? (
+            <option value="">No credentials</option>
+          ) : (
+            <>
+              <option value="">All filtered credentials</option>
+              {filteredCredentialsForAudit.map((credential) => (
+                <option key={credential.id} value={credential.id}>
+                  {credential.label} ({credential.provider})
+                </option>
+              ))}
+            </>
+          )}
         </select>
 
         <button
@@ -1871,40 +1873,36 @@ function App() {
       {credentialAuditError && <p style={{ color: 'crimson' }}>Error: {credentialAuditError}</p>}
       {credentialAuditLoading && <p>Loading audit trail…</p>}
       {!credentialAuditLoading && !credentialAuditError &&
-        (selectedCredentialId ? (
-          credentialAuditEvents.length ? (
-            <ul>
-              {credentialAuditEvents.map((event, index) => {
-                const metadataChips = renderAuditMetadata(event)
-                return (
-                  <li key={`${event.event_type}-${event.occurred_at}-${index}`}>
-                    <strong>{event.event_type}</strong> — {new Date(event.occurred_at).toLocaleString()}
-                    {metadataChips.length ? (
-                      <span style={{ marginLeft: 8, display: 'inline-flex', gap: 6, flexWrap: 'wrap' }}>
-                        {metadataChips.map((chip) => (
-                          <code
-                            key={chip}
-                            style={{
-                              fontSize: 12,
-                              background: '#f5f5f5',
-                              borderRadius: 4,
-                              padding: '1px 6px',
-                            }}
-                          >
-                            {chip}
-                          </code>
-                        ))}
-                      </span>
-                    ) : null}
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <p>No audit events for selected credential.</p>
-          )
+        (credentialAuditEvents.length ? (
+          <ul>
+            {credentialAuditEvents.map((event, index) => {
+              const metadataChips = renderAuditMetadata(event)
+              return (
+                <li key={`${event.event_type}-${event.occurred_at}-${index}`}>
+                  <strong>{event.event_type}</strong> — {new Date(event.occurred_at).toLocaleString()}
+                  {metadataChips.length ? (
+                    <span style={{ marginLeft: 8, display: 'inline-flex', gap: 6, flexWrap: 'wrap' }}>
+                      {metadataChips.map((chip) => (
+                        <code
+                          key={chip}
+                          style={{
+                            fontSize: 12,
+                            background: '#f5f5f5',
+                            borderRadius: 4,
+                            padding: '1px 6px',
+                          }}
+                        >
+                          {chip}
+                        </code>
+                      ))}
+                    </span>
+                  ) : null}
+                </li>
+              )
+            })}
+          </ul>
         ) : (
-          <p>Select a credential to view audit events.</p>
+          <p>No audit events for current filters.</p>
         ))}
     </div>
   )
