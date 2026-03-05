@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 20:42 KST — Agent Chat implementation cycle
+- Delta: Added thread-filter `Enter` quick-jump wiring in `frontend/src/main.tsx` for faster keyboard triage in chat thread explorer.
+  - Extended `handleThreadFilterKeyDown` to support `Enter` (no modifiers) and jump selection to the top visible result (`root` when shown, otherwise first filtered child thread).
+  - Preserved existing `Esc` behavior for quick filter clear.
+  - Updated thread filter helper hint text to advertise the new shortcut (`Enter to jump top result`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a tiny live hint near the thread list when `Enter` jump lands on root due to root inclusion, so operators understand why child results were skipped.
+
 ## 2026-03-05 20:31 KST — Agent Chat offset lane cycle
 - Delta: Added compact audit pagination progress cue in `frontend/src/main.tsx` so investigators can see loaded-page progress and endpoint exhaustion at a glance.
   - Added derived `auditPaginationHint` memo to summarize pagination state from current `limit` + `offset` query window.

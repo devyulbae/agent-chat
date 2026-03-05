@@ -464,13 +464,30 @@ function App() {
 
   const handleThreadFilterKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key !== 'Escape' || !threadFilterText) {
+      if (event.key === 'Escape') {
+        if (!threadFilterText) {
+          return
+        }
+        event.preventDefault()
+        setThreadFilterText('')
         return
       }
-      event.preventDefault()
-      setThreadFilterText('')
+
+      if (
+        event.key === 'Enter' &&
+        !event.shiftKey &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.altKey
+      ) {
+        if (!visibleThreadIds.length) {
+          return
+        }
+        event.preventDefault()
+        selectThread(visibleThreadIds[0])
+      }
     },
-    [threadFilterText]
+    [selectThread, threadFilterText, visibleThreadIds]
   )
 
   const loadCredentials = useCallback(
@@ -1654,7 +1671,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Esc to clear · Shift+Esc to reset view · J/K to move selection
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K to move selection
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
