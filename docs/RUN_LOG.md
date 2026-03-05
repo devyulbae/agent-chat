@@ -1140,3 +1140,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add complementary `Shift+PageDown` support that mirrors `Shift+End` for last-visible jump discoverability.
+
+## 2026-03-06 02:42 KST — Agent Chat implementation cycle
+- Delta: Added complementary `Shift+PageUp` thread boundary shortcut for first-visible navigation.
+  - Frontend: expanded shift-boundary keyboard handler so `Shift+PageUp` jumps to first visible thread (matching `Shift+PageDown` for last visible).
+  - UX copy: updated thread keyboard helper and composer hint to advertise `Shift+PgUp/Shift+PgDn` first/last behavior.
+  - Scope: thread explorer keyboard UX only (no backend/API impact).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `c637099` (pushed to `main`)
+- Next action: add `Shift+PageUp` source-specific boundary toast text (currently reports generic `Home` label when triggered via shift+first-visible path).
