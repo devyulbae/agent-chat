@@ -645,6 +645,11 @@ function App() {
     : false
   const hasPendingCredentialEditChange =
     isEditLabelChanged || isEditSecretProvided || isEditExpiryChanged
+  const pendingCredentialEditFields = [
+    isEditLabelChanged ? 'label' : null,
+    isEditSecretProvided ? 'secret' : null,
+    isEditExpiryChanged ? 'token_expires_at' : null,
+  ].filter((field): field is string => Boolean(field))
 
   useEffect(() => {
     if (!selectedCredential) {
@@ -1455,6 +1460,30 @@ function App() {
           {credentialDeleteSubmitting ? 'Deleting…' : 'Delete selected credential'}
         </button>
       </div>
+      {selectedCredential && (
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
+          <span style={{ fontSize: 12, color: '#666' }}>PATCH fields:</span>
+          {pendingCredentialEditFields.length > 0 ? (
+            pendingCredentialEditFields.map((field) => (
+              <span
+                key={field}
+                style={{
+                  fontSize: 12,
+                  background: '#edf5ff',
+                  color: '#1f4b99',
+                  border: '1px solid #cfe0ff',
+                  borderRadius: 999,
+                  padding: '2px 8px',
+                }}
+              >
+                changed:{field}
+              </span>
+            ))
+          ) : (
+            <span style={{ fontSize: 12, color: '#888' }}>none</span>
+          )}
+        </div>
+      )}
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
         Secret is optional when updating. If left blank, the existing secret remains unchanged.
         {selectedCredential && !hasPendingCredentialEditChange
