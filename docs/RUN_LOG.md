@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 17:30 KST — Agent Chat offset lane cycle
+- Delta: Added auto-dismiss + pin/hover exception behavior for credential success notices in `frontend/src/main.tsx` to reduce stale confirmation clutter while preserving operator control.
+  - Added 10s auto-dismiss timeout for active success notices.
+  - Auto-dismiss pauses while the notice is hovered.
+  - Added `Pin notice` / `Unpin notice` toggle so operators can keep an important confirmation visible.
+  - Reset pin/hover state when notice clears or when a fresh success notice is emitted.
+  - Kept API contracts untouched (frontend-only UX state behavior; no request/schema changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add keyboard-accessible dismiss control (`Dismiss` button with focus management) so notice lifecycle is fully controllable without pointer hover.
+
 ## 2026-03-05 17:12 KST — Agent Chat offset lane cycle
 - Delta: Added minute-level auto-refresh for credential success notice age label in `frontend/src/main.tsx` so recency suffix advances while the notice remains visible.
   - Added `credentialFormNoticeTick` state and interval effect (60s) gated to active success notices.

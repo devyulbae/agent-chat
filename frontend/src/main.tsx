@@ -212,6 +212,8 @@ function App() {
   const [credentialFormNotice, setCredentialFormNotice] = useState<string | null>(null)
   const [credentialFormNoticeAt, setCredentialFormNoticeAt] = useState<number | null>(null)
   const [credentialFormNoticeTick, setCredentialFormNoticeTick] = useState(0)
+  const [credentialFormNoticePinned, setCredentialFormNoticePinned] = useState(false)
+  const [credentialFormNoticeHovering, setCredentialFormNoticeHovering] = useState(false)
   const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
   const [credentialDeleteSubmitting, setCredentialDeleteSubmitting] = useState(false)
   const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
@@ -739,6 +741,8 @@ function App() {
   useEffect(() => {
     if (!credentialFormNotice) {
       setCredentialFormNoticeAt(null)
+      setCredentialFormNoticePinned(false)
+      setCredentialFormNoticeHovering(false)
     }
   }, [credentialFormNotice])
 
@@ -759,6 +763,18 @@ function App() {
     }
     return ` (${formatNoticeAge(credentialFormNoticeAt)})`
   }, [credentialFormNoticeAt, credentialFormNoticeTick])
+
+  useEffect(() => {
+    if (!credentialFormNotice || credentialFormNoticePinned || credentialFormNoticeHovering) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCredentialFormNotice(null)
+    }, 10_000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [credentialFormNotice, credentialFormNoticeHovering, credentialFormNoticePinned])
 
   const submitCreateCredential = useCallback(async () => {
     const provider = newCredentialProvider.trim()
@@ -802,6 +818,7 @@ function App() {
       await Promise.all([loadCredentials(), loadCredentialProviders(ownerAgentId)])
       setCredentialFormNotice('Credential created successfully.')
       setCredentialFormNoticeAt(Date.now())
+      setCredentialFormNoticePinned(false)
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -865,6 +882,7 @@ function App() {
       await loadCredentials()
       setCredentialFormNotice('Selected credential updated successfully.')
       setCredentialFormNoticeAt(Date.now())
+      setCredentialFormNoticePinned(false)
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -913,6 +931,7 @@ function App() {
       ])
       setCredentialFormNotice('Selected credential deleted successfully.')
       setCredentialFormNoticeAt(Date.now())
+      setCredentialFormNoticePinned(false)
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -1683,9 +1702,24 @@ function App() {
       )}
       {credentialFormError && <p style={{ color: 'crimson' }}>Form error: {credentialFormError}</p>}
       {credentialFormNotice && (
-        <p role="status" aria-live="polite" style={{ color: '#1f6f3e' }}>
-          {credentialFormNotice}
-          {credentialFormNoticeAgeLabel}
+        <p
+          role="status"
+          aria-live="polite"
+          onMouseEnter={() => setCredentialFormNoticeHovering(true)}
+          onMouseLeave={() => setCredentialFormNoticeHovering(false)}
+          style={{ color: '#1f6f3e', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}
+        >
+          <span>
+            {credentialFormNotice}
+            {credentialFormNoticeAgeLabel}
+          </span>
+          <button
+            type="button"
+            onClick={() => setCredentialFormNoticePinned((current) => !current)}
+            style={{ fontSize: 12, padding: '2px 8px' }}
+          >
+            {credentialFormNoticePinned ? 'Unpin notice' : 'Pin notice'}
+          </button>
         </p>
       )}
 
