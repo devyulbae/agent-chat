@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 03:30 KST — Agent Chat offset lane cycle
+- Delta: Added selected-thread identity to one-step keyboard navigation confirmation copy in `frontend/src/main.tsx`.
+  - Extended `moveVisibleThreadSelection(...)` transient hint text to include compact target identity (`Root` or thread id) alongside existing `X/Y` position context.
+  - Applied identity context to both move and no-op confirmations so one-step `J/K` / `↑/↓` hints now mirror first/last boundary jump confirmations.
+  - API contract unchanged (frontend-only keyboard/status copy refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: include the same target-identity suffix in root-jump confirmations so `Shift+Home`/`Shift+R` hints align with one-step and boundary hint detail.
+
 ## 2026-03-06 03:10 KST — Agent Chat offset lane cycle
 - Delta: Added source-specific root-jump confirmation copy in `frontend/src/main.tsx`.
   - Refined `jumpToRootThreadContext(...)` source typing to distinguish `Shift+Home` vs `Shift+R` (instead of generic shortcut source).

@@ -1657,11 +1657,12 @@ function App() {
       const alreadyAtTarget = selectedThreadId === targetThreadId
       selectThread(targetThreadId)
       const directionLabel = step > 0 ? 'next' : 'previous'
+      const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
       const positionHint = `${nextIndex + 1}/${visibleThreadIds.length}`
       setThreadBoundaryJumpHint(
         alreadyAtTarget
-          ? `Already at only visible thread (${sourceKey} confirmed) · ${positionHint}.`
-          : `Moved to ${directionLabel} visible thread (${sourceKey}) · ${positionHint}.`
+          ? `Already at only visible thread (${sourceKey} confirmed) · ${targetLabel} · ${positionHint}.`
+          : `Moved to ${directionLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
       )
     },
     [selectThread, selectedThreadId, selectedVisibleThreadIndex, visibleThreadIds]
