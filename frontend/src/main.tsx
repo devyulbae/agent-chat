@@ -254,6 +254,9 @@ function App() {
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditPaging, setCredentialAuditPaging] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
+  const [credentialAuditPagingAnnouncement, setCredentialAuditPagingAnnouncement] = useState<
+    string | null
+  >(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
   const composerBodyRef = useRef<HTMLTextAreaElement | null>(null)
@@ -581,6 +584,11 @@ function App() {
       setCredentialAuditLoading(true)
       setCredentialAuditPaging(append)
       setCredentialAuditError(null)
+      if (append) {
+        setCredentialAuditPagingAnnouncement('Loading older audit events…')
+      } else {
+        setCredentialAuditPagingAnnouncement(null)
+      }
 
       const params = new URLSearchParams({
         entity_type: 'credential',
@@ -611,6 +619,13 @@ function App() {
         }
         const payload = (await response.json()) as AuditEvent[]
         setCredentialAuditHasMore(payload.length === limit)
+        if (append) {
+          setCredentialAuditPagingAnnouncement(
+            payload.length > 0
+              ? `Loaded ${payload.length} older audit event${payload.length === 1 ? '' : 's'}.`
+              : 'No additional older audit events found.'
+          )
+        }
         setCredentialAuditEvents((current) => {
           if (!append) {
             return payload
@@ -634,6 +649,9 @@ function App() {
         setCredentialAuditError(
           append ? `Failed to load older page. ${errorMessage}` : errorMessage
         )
+        if (append) {
+          setCredentialAuditPagingAnnouncement(`Older-page load failed. ${errorMessage}`)
+        }
         if (!append) {
           setCredentialAuditHasMore(false)
           setCredentialAuditEvents([])
@@ -2313,6 +2331,13 @@ function App() {
             Dismiss
           </button>
         )}
+      </p>
+      <p
+        aria-live="polite"
+        role="status"
+        style={{ fontSize: 12, color: '#666', minHeight: 18, marginTop: 4 }}
+      >
+        {credentialAuditPagingAnnouncement ?? ''}
       </p>
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}

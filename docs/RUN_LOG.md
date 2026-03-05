@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 22:31 KST — Agent Chat offset lane cycle
+- Delta: Added polite live-region progress announcements for credential audit older-page pagination in `frontend/src/main.tsx`.
+  - Added `credentialAuditPagingAnnouncement` state to surface append-mode pagination status for assistive tech.
+  - On older-page fetch start, announces `Loading older audit events…`.
+  - On append success, announces either loaded event count (`Loaded N older audit events.`) or empty-page exhaustion (`No additional older audit events found.`).
+  - On append failure, announces `Older-page load failed...` while preserving existing retained-timeline + retry/dismiss UX.
+  - Added inline `role="status"` / `aria-live="polite"` status row beneath audit hint text.
+  - API contract unchanged (`GET /audit-events` query shape still `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: auto-clear older-page live announcement text after a short timeout so stale status copy doesn’t linger once operators move to other filters.
+
 ## 2026-03-05 22:22 KST — Agent Chat implementation cycle
 - Delta: Added keyboard-accessible Escape dismissal for retained older-page audit pagination errors in `frontend/src/main.tsx`.
   - Made the audit hint row focusable only while an older-page error banner is active (`tabIndex` toggle) with an explicit aria-label cue.
