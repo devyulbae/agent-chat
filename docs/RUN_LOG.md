@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 00:23 KST — Agent Chat implementation cycle
+- Delta: Pinned older-page audit failure completion timestamps independently from transient live announcements in `frontend/src/main.tsx`.
+  - Added dedicated `credentialAuditOlderPageFailureAt` state set on append pagination failures and cleared on retry/dismiss/full reload.
+  - Switched retained older-page failure affordances (`Copy failure time`, `failed …` age label) to use the dedicated failure timestamp so they persist after the 4s live-announcement auto-clear.
+  - Generalized clipboard helper to `copyCredentialAuditTimestamp(timestamp, label)` so failure/completion copy actions share one path with context-specific feedback text.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add absolute failure timestamp tooltip on retained older-page error state (parallel to completion tooltip) for exact incident-time hover verification.
+
 ## 2026-03-06 00:12 KST — Agent Chat offset lane cycle
 - Delta: Added compact inline failure-age status for retained older-page audit pagination errors in `frontend/src/main.tsx`.
   - Added minute-refresh tick state (`credentialAuditPagingAnnouncementTick`) so relative age text can stay current while the older-page error banner remains visible.

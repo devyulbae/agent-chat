@@ -264,6 +264,8 @@ function App() {
   >(null)
   const [credentialAuditPagingAnnouncementAt, setCredentialAuditPagingAnnouncementAt] =
     useState<number | null>(null)
+  const [credentialAuditOlderPageFailureAt, setCredentialAuditOlderPageFailureAt] =
+    useState<number | null>(null)
   const [credentialAuditPagingAnnouncementTick, setCredentialAuditPagingAnnouncementTick] = useState(0)
   const [credentialAuditPagingCopyHint, setCredentialAuditPagingCopyHint] = useState<string | null>(null)
 
@@ -479,8 +481,8 @@ function App() {
     }
   }, [selectedThreadId])
 
-  const copyCredentialAuditAnnouncementTime = useCallback(async () => {
-    if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+  const copyCredentialAuditTimestamp = useCallback(async (timestamp: number | null, copyLabel: string) => {
+    if (!timestamp || credentialAuditPaging) {
       return
     }
     if (!navigator.clipboard?.writeText) {
@@ -488,14 +490,14 @@ function App() {
       return
     }
 
-    const completionLabel = formatEpochTimestamp(credentialAuditPagingAnnouncementAt)
+    const completionLabel = formatEpochTimestamp(timestamp)
     try {
       await navigator.clipboard.writeText(completionLabel)
-      setCredentialAuditPagingCopyHint(`Copied completion time: ${completionLabel}`)
+      setCredentialAuditPagingCopyHint(`Copied ${copyLabel}: ${completionLabel}`)
     } catch {
-      setCredentialAuditPagingCopyHint('Failed to copy completion time.')
+      setCredentialAuditPagingCopyHint(`Failed to copy ${copyLabel}.`)
     }
-  }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt])
+  }, [credentialAuditPaging])
 
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -636,9 +638,11 @@ function App() {
       if (append) {
         setCredentialAuditPagingAnnouncement('Loading older audit events…')
         setCredentialAuditPagingAnnouncementAt(null)
+        setCredentialAuditOlderPageFailureAt(null)
       } else {
         setCredentialAuditPagingAnnouncement(null)
         setCredentialAuditPagingAnnouncementAt(null)
+        setCredentialAuditOlderPageFailureAt(null)
       }
 
       const params = new URLSearchParams({
@@ -702,8 +706,10 @@ function App() {
           append ? `Failed to load older page. ${errorMessage}` : errorMessage
         )
         if (append) {
+          const failureAt = Date.now()
           setCredentialAuditPagingAnnouncement(`Older-page load failed. ${errorMessage}`)
-          setCredentialAuditPagingAnnouncementAt(Date.now())
+          setCredentialAuditPagingAnnouncementAt(failureAt)
+          setCredentialAuditOlderPageFailureAt(failureAt)
         }
         if (!append) {
           setCredentialAuditHasMore(false)
@@ -928,7 +934,7 @@ function App() {
 
   const canRetryOlderAuditPage = hasOlderAuditPageError && !credentialAuditPaging
   const canCopyOlderAuditPageFailureTime =
-    hasOlderAuditPageError && Boolean(credentialAuditPagingAnnouncementAt) && !credentialAuditPaging
+    hasOlderAuditPageError && Boolean(credentialAuditOlderPageFailureAt) && !credentialAuditPaging
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -1054,13 +1060,13 @@ function App() {
   }, [credentialAuditPaging, credentialAuditPagingAnnouncementAt, credentialAuditPagingAnnouncementTick])
 
   const olderAuditPageFailureAgeLabel = useMemo(() => {
-    if (!hasOlderAuditPageError || !credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
+    if (!hasOlderAuditPageError || !credentialAuditOlderPageFailureAt || credentialAuditPaging) {
       return null
     }
-    return `failed ${formatNoticeAge(credentialAuditPagingAnnouncementAt)}`
+    return `failed ${formatNoticeAge(credentialAuditOlderPageFailureAt)}`
   }, [
+    credentialAuditOlderPageFailureAt,
     credentialAuditPaging,
-    credentialAuditPagingAnnouncementAt,
     credentialAuditPagingAnnouncementTick,
     hasOlderAuditPageError,
   ])
@@ -2442,6 +2448,7 @@ function App() {
             event.preventDefault()
             event.stopPropagation()
             setCredentialAuditError(null)
+            setCredentialAuditOlderPageFailureAt(null)
           }
         }}
       >
@@ -2503,7 +2510,10 @@ function App() {
             type="button"
             style={{ fontSize: 12, padding: '1px 8px' }}
             title="Dismiss older-page load error"
-            onClick={() => setCredentialAuditError(null)}
+            onClick={() => {
+              setCredentialAuditError(null)
+              setCredentialAuditOlderPageFailureAt(null)
+            }}
           >
             Dismiss
           </button>
@@ -2514,7 +2524,7 @@ function App() {
             style={{ fontSize: 12, padding: '1px 8px' }}
             title="Copy older-page failure completion timestamp"
             onClick={() => {
-              void copyCredentialAuditAnnouncementTime()
+              void copyCredentialAuditTimestamp(credentialAuditOlderPageFailureAt, 'failure time')
             }}
           >
             Copy failure time
@@ -2541,7 +2551,7 @@ function App() {
             style={{ fontSize: 11, padding: '1px 8px' }}
             title="Copy completion timestamp"
             onClick={() => {
-              void copyCredentialAuditAnnouncementTime()
+              void copyCredentialAuditTimestamp(credentialAuditPagingAnnouncementAt, 'completion time')
             }}
           >
             Copy time
