@@ -1461,6 +1461,8 @@ function App() {
           value={editCredentialExpiresAt}
           onChange={(event) => setEditCredentialExpiresAt(event.target.value)}
           disabled={!selectedCredential || editCredentialClearExpiry}
+          title="Use local date/time picker format (YYYY-MM-DDTHH:mm). Invalid partial values are ignored until complete."
+          aria-label="Credential expiry datetime (local format YYYY-MM-DDTHH:mm)"
         />
         <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
           <input

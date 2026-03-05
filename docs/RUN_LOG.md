@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 15:41 KST — Agent Chat implementation cycle
+- Delta: Added explicit datetime format guidance on selected credential expiry editor in `frontend/src/main.tsx` to reduce invalid partial-input confusion.
+  - Added `title` hint on selected credential `datetime-local` input (`YYYY-MM-DDTHH:mm`) with behavior note that incomplete/invalid partial values are ignored until complete.
+  - Added matching `aria-label` for assistive clarity on expected local datetime format.
+  - Kept PATCH gating unchanged (`hasPendingCredentialEditChange`) and preserved existing invalid-preview warning flow.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add a tiny inline helper text next to expiry editor when `clear expiry` is checked to clarify it overrides any typed datetime.
+
 ## 2026-03-05 15:30 KST — Agent Chat offset lane cycle
 - Delta: Added inline warning-tone styling for invalid selected-credential expiry preview in `frontend/src/main.tsx` while preserving PATCH diff gating behavior.
   - Added derived `hasInvalidEditExpiryPreview` state keyed to expiry-diff + non-clear + non-empty invalid datetime input.
