@@ -773,6 +773,25 @@ function App() {
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
 
+  const auditPaginationHint = useMemo(() => {
+    if (credentialAuditLoading || credentialAuditError || credentialAuditEvents.length === 0) {
+      return null
+    }
+
+    const loadedPages = Math.max(1, Math.floor(auditOffset / auditLimit) + 1)
+    if (credentialAuditHasMore) {
+      return `Loaded ${loadedPages} page${loadedPages === 1 ? '' : 's'}.`
+    }
+    return `Loaded ${loadedPages} page${loadedPages === 1 ? '' : 's'} · end reached.`
+  }, [
+    auditLimit,
+    auditOffset,
+    credentialAuditError,
+    credentialAuditEvents.length,
+    credentialAuditHasMore,
+    credentialAuditLoading,
+  ])
+
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
     [credentials, selectedCredentialId]
@@ -2126,6 +2145,21 @@ function App() {
             }}
           >
             capped to latest {auditLimit}
+          </span>
+        )}{' '}
+        {auditPaginationHint && (
+          <span
+            style={{
+              display: 'inline-block',
+              padding: '1px 6px',
+              borderRadius: 999,
+              border: '1px solid #d0d7de',
+              color: '#444',
+              backgroundColor: '#f6f8fa',
+              fontWeight: 600,
+            }}
+          >
+            {auditPaginationHint}
           </span>
         )}
       </p>

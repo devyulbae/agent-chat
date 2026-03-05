@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 20:31 KST — Agent Chat offset lane cycle
+- Delta: Added compact audit pagination progress cue in `frontend/src/main.tsx` so investigators can see loaded-page progress and endpoint exhaustion at a glance.
+  - Added derived `auditPaginationHint` memo to summarize pagination state from current `limit` + `offset` query window.
+  - Added compact neutral status badge near scope/result hint showing `Loaded N page(s).` while more history remains.
+  - Badge now switches to `Loaded N page(s) · end reached.` when a page returns fewer than `limit` events (`credentialAuditHasMore=false`).
+  - Kept API contract unchanged (`GET /audit-events` query shape remains `entity_type`, `limit`, `offset`, optional filters).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: disable `Load older page` while request is in-flight and surface an inline `Loading older page…` label to prevent duplicate pagination clicks.
+
 ## 2026-03-05 20:14 KST — Agent Chat offset lane cycle
 - Delta: Added audit pagination contract (`offset`) and wired frontend "Load older" to append older pages instead of replacing the current timeline.
   - Backend: `GET /audit-events` now accepts optional `offset` query param (`>= 0`) in addition to `limit`.
