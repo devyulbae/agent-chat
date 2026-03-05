@@ -938,6 +938,28 @@ function App() {
     visibleThreadCount,
   ])
 
+  const unreadRootOnlyHint = useMemo(() => {
+    if (!showUnreadOnlyThreads || filteredChildThreads.length > 0 || !showRootThreadInList) {
+      return null
+    }
+
+    if (hasUnreadRootThread) {
+      return 'Root thread is the only unread result right now.'
+    }
+
+    if (includeRootInUnreadOnly) {
+      return 'No unread child threads match. Root is shown as context.'
+    }
+
+    return null
+  }, [
+    filteredChildThreads.length,
+    hasUnreadRootThread,
+    includeRootInUnreadOnly,
+    showRootThreadInList,
+    showUnreadOnlyThreads,
+  ])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -1172,6 +1194,7 @@ function App() {
               include root
             </label>
             <small style={{ color: '#666' }}>{threadFilterSummary}</small>
+            {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
           </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (

@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 13:31 KST — Agent Chat offset lane cycle
+- Delta: Added unread-only root-only helper copy in `frontend/src/main.tsx` to clarify triage intent when no child unread threads are visible.
+  - Added derived `unreadRootOnlyHint` state for unread-only mode when root is the only visible row.
+  - Shows `Root thread is the only unread result right now.` when root has unread activity and no unread child threads remain.
+  - Shows `No unread child threads match. Root is shown as context.` when **include root** is enabled but root itself is not unread.
+  - Kept API contract unchanged (frontend-only copy/state refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a compact “clear text filter” control beside thread filter input to reduce friction after narrow triage drills.
+
 ## 2026-03-05 13:23 KST — Agent Chat implementation cycle
 - Delta: Tightened unread-only thread list UX accounting in `frontend/src/main.tsx` so root-thread visibility and empty-state messaging stay consistent during triage.
   - Added `visibleThreadCount` derived state that counts child rows plus root row when displayed.
