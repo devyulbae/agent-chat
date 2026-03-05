@@ -1505,6 +1505,19 @@ function App() {
     ? 'Tip: J/K or ↑/↓ will also recover to first/last visible thread.'
     : null
 
+  const firstVisibleJumpHintHelp = useMemo(() => {
+    if (!threadBoundaryJumpHint) {
+      return null
+    }
+    if (threadBoundaryJumpHint.startsWith('Recovered to first visible thread')) {
+      return 'Recovered = hidden selection was restored to the first visible result.'
+    }
+    if (threadBoundaryJumpHint.startsWith('Already at first visible thread')) {
+      return 'Already at first = no-op confirmation (selection did not move).'
+    }
+    return null
+  }, [threadBoundaryJumpHint])
+
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
 
@@ -2193,6 +2206,11 @@ function App() {
             {threadBoundaryJumpHint && (
               <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
                 {threadBoundaryJumpHint}
+              </small>
+            )}
+            {firstVisibleJumpHintHelp && (
+              <small style={{ color: '#666' }} title="Helps distinguish no-op confirmation vs hidden-selection recovery.">
+                {firstVisibleJumpHintHelp}
               </small>
             )}
             {threadCopyHint && (

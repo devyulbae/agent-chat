@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 05:34 KST — Agent Chat offset lane cycle
+- Delta: Added first-visible jump hint legend copy in `frontend/src/main.tsx` to disambiguate no-op vs recovery confirmations during filter triage.
+  - Added derived `firstVisibleJumpHintHelp` memo keyed off `threadBoundaryJumpHint` content.
+  - When hint text reports hidden-selection recovery, UI now shows: `Recovered = hidden selection was restored to the first visible result.`
+  - When hint text reports first-visible no-op confirmation, UI now shows: `Already at first = no-op confirmation (selection did not move).`
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: mirror the same no-op vs recovery legend behavior into boundary jump hint paths (`first/last visible`) so operators get consistent semantics across all jump confirmations.
+
 ## 2026-03-06 05:11 KST — Agent Chat offset lane cycle
 - Delta: Added first-visible recovery no-op confirmation parity and centralized recovery routing in `frontend/src/main.tsx`.
   - Extracted `recoverToFirstVisibleThread(source)` helper so Enter-key and button flows share identical first-visible targeting semantics.
