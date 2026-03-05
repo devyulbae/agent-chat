@@ -1835,6 +1835,29 @@ function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'c') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      composerBodyRef.current?.focus()
+      composerBodyRef.current?.setSelectionRange(composerBody.length, composerBody.length)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [composerBody.length])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -2251,7 +2274,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root • Shift+PgUp/Shift+PgDn jump first/last visible
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • C to focus composer • Shift+Home (or Shift+R) jump root • Shift+PgUp/Shift+PgDn jump first/last visible
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
