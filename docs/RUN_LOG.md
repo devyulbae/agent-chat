@@ -1344,3 +1344,13 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `cbf4e0f` (pushed to `main`)
 - Next action: mirror the same hidden-selection recovery hint semantics inside the filter helper text so keyboard behavior stays discoverable even before selection becomes hidden.
+
+## 2026-03-06 06:32 KST — Agent Chat parallel offset cycle
+- Delta: Synced credential audit frontend display with backend metadata contract for provider/label filters.
+  - Frontend: updated `renderAuditMetadata` in `frontend/src/main.tsx` to render `provider:<value>` and `label:<value>` chips when present on audit event metadata.
+  - Preserved existing event-specific chips (`changed:*` for updates and key-version transition for rotations) and now composes them with provider/label chips.
+  - Scope: frontend credential audit trail visibility only (no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: `e981ce9` (pushed to `main`)
+- Next action: add a compact “source filters applied by API” badge near the credential audit results hint to make server-side provider/label filtering explicit in the UI.
