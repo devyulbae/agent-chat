@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 03:41 KST — Agent Chat implementation cycle
+- Delta: Added root target identity suffix to root-jump confirmations in `frontend/src/main.tsx`.
+  - Updated `jumpToRootThreadContext(...)` hint copy to append `· Root` for both jump and no-op confirmations.
+  - Kept source-specific shortcut confirmations (`Shift+Home` / `Shift+R`) while aligning root hint detail with one-step and boundary thread hints.
+  - API contract unchanged (frontend-only chat thread UX copy wiring).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `82099e2` (pushed to `main`)
+- Next action: add compact `1/N` position context to root-jump confirmations when root is currently visible in the filtered thread list.
+
 ## 2026-03-06 03:30 KST — Agent Chat offset lane cycle
 - Delta: Added selected-thread identity to one-step keyboard navigation confirmation copy in `frontend/src/main.tsx`.
   - Extended `moveVisibleThreadSelection(...)` transient hint text to include compact target identity (`Root` or thread id) alongside existing `X/Y` position context.
@@ -1192,3 +1204,13 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `c637099` (pushed to `main`)
 - Next action: add `Shift+PageUp` source-specific boundary toast text (currently reports generic `Home` label when triggered via shift+first-visible path).
+
+## 2026-03-06 03:51 KST — Agent Chat parallel offset cycle
+- Delta: Clarified thread selection position summary when current selection is filtered out.
+  - Frontend: added `selectedVisibleThreadPositionLabel` to distinguish hidden selection state from index state.
+  - UI: thread controls now show `Selection: hidden/N (...)` instead of ambiguous `0/N` when selected thread is hidden by active filters.
+  - Scope: frontend thread explorer status text only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: pending
+- Next action: add an inline tooltip explaining `hidden/N` state and pointing to the `Jump to first visible` recovery button.
