@@ -101,6 +101,15 @@ def list_credentials(
     return [CredentialRead.from_entity(item) for item in items]
 
 
+@router.get("/credentials/providers", response_model=list[str])
+@inject
+def list_credential_providers(
+    owner_agent_id: str | None = None,
+    service: CredentialService = Depends(Provide[AppContainer.credential_service]),
+):
+    return list(service.list_providers(owner_agent_id=owner_agent_id))
+
+
 @router.patch("/credentials/{credential_id}", response_model=CredentialRead)
 @inject
 def update_credential(

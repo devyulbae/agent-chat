@@ -76,6 +76,9 @@ class CredentialService:
 
         raise ValueError("Unsupported token_status filter")
 
+    def list_providers(self, owner_agent_id: str | None = None) -> Sequence[str]:
+        return self._repository.list_providers(owner_agent_id=owner_agent_id)
+
     def update_credential(self, credential_id: str, payload: CredentialUpdate):
         row = self._repository.get(credential_id)
         if row is None:

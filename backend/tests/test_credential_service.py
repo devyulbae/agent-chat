@@ -39,6 +39,12 @@ class FakeCredentialRepo:
                 return type("Row", (), item)
         return None
 
+    def list_providers(self, *, owner_agent_id=None):
+        rows = self.items
+        if owner_agent_id is not None:
+            rows = [item for item in rows if item["owner_agent_id"] == owner_agent_id]
+        return sorted({item["provider"] for item in rows})
+
     def save(self, row):
         row_dict = row.__dict__.copy()
         self.items = [
@@ -101,6 +107,43 @@ def test_credential_service_filters_by_provider_and_owner() -> None:
 
     assert [item["row_id"] for item in by_provider] == ["cred-1"]
     assert [item["row_id"] for item in by_owner] == ["cred-2"]
+
+
+def test_list_providers_returns_distinct_sorted_values() -> None:
+    repo = FakeCredentialRepo()
+    encryption = EncryptionService(Fernet.generate_key().decode())
+    service = CredentialService(repository=repo, encryption_service=encryption)
+
+    service.create_credential(
+        CredentialCreate(
+            id="cred-1",
+            owner_agent_id="agent-1",
+            provider="slack_bot",
+            label="ops",
+            secret="secret-1",
+        )
+    )
+    service.create_credential(
+        CredentialCreate(
+            id="cred-2",
+            owner_agent_id="agent-1",
+            provider="openai_api",
+            label="default",
+            secret="secret-2",
+        )
+    )
+    service.create_credential(
+        CredentialCreate(
+            id="cred-3",
+            owner_agent_id="agent-2",
+            provider="openai_api",
+            label="backup",
+            secret="secret-3",
+        )
+    )
+
+    assert service.list_providers() == ["openai_api", "slack_bot"]
+    assert service.list_providers(owner_agent_id="agent-2") == ["openai_api"]
 
 
 def test_update_secret_sets_rotation_timestamp() -> None:

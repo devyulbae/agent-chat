@@ -39,6 +39,10 @@ class CredentialRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def list_providers(self, *, owner_agent_id: str | None = None) -> Sequence[str]:
+        raise NotImplementedError
+
+    @abstractmethod
     def save(self, row: Credential) -> Credential:
         raise NotImplementedError
 
@@ -91,6 +95,14 @@ class SQLCredentialRepository(CredentialRepository):
 
     def get(self, row_id: str) -> Credential | None:
         return self._session.get(Credential, row_id)
+
+    def list_providers(self, *, owner_agent_id: str | None = None) -> Sequence[str]:
+        stmt = (
+            select(Credential.provider).distinct().order_by(Credential.provider.asc())
+        )
+        if owner_agent_id is not None:
+            stmt = stmt.where(Credential.owner_agent_id == owner_agent_id)
+        return self._session.execute(stmt).scalars().all()
 
     def save(self, row: Credential) -> Credential:
         self._session.add(row)
