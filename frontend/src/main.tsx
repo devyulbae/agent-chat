@@ -836,10 +836,11 @@ function App() {
     credentialAuditLoading,
   ])
 
-  const canRetryOlderAuditPage =
+  const hasOlderAuditPageError =
     credentialAuditError?.startsWith('Failed to load older page.') &&
-    credentialAuditEvents.length > 0 &&
-    !credentialAuditPaging
+    credentialAuditEvents.length > 0
+
+  const canRetryOlderAuditPage = hasOlderAuditPageError && !credentialAuditPaging
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -2278,6 +2279,16 @@ function App() {
             }}
           >
             Retry older page
+          </button>
+        )}{' '}
+        {hasOlderAuditPageError && (
+          <button
+            type="button"
+            style={{ fontSize: 12, padding: '1px 8px' }}
+            title="Dismiss older-page load error"
+            onClick={() => setCredentialAuditError(null)}
+          >
+            Dismiss
           </button>
         )}
       </p>

@@ -1,5 +1,27 @@
 # Run Log
 
+## 2026-03-05 22:12 KST — Agent Chat offset lane cycle
+- Delta: Added compact `Dismiss` control for retained older-page audit pagination failures in `frontend/src/main.tsx`.
+  - Added `hasOlderAuditPageError` guard for append-mode failures while previously loaded pages remain visible.
+  - Kept existing `Retry older page` affordance and paired it with inline `Dismiss` button to clear stale older-page failure banner text without reloading audit data.
+  - Dismiss action only clears error state (`setCredentialAuditError(null)`) and preserves current audit page window/context (`auditOffset`, loaded events).
+  - API contract unchanged (`GET /audit-events` still uses `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add keyboard-accessible `Escape` handling in audit hint area to dismiss older-page error text without pointer interaction.
+
+## 2026-03-05 22:04 KST — Agent Chat implementation cycle
+- Delta: Added compact inline retry affordance for failed credential-audit pagination in `frontend/src/main.tsx`.
+  - Added `canRetryOlderAuditPage` guard for append-mode failures with retained events.
+  - Added inline `Retry older page` button near audit hints.
+  - Retry action reuses current `auditOffset` and existing filters/selection to rerun append fetch without clearing timeline context.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Commit: `35ceccc` (pushed to `main`)
+- Next action: add a tiny inline `Dismiss` control for pagination error text so operators can clear stale older-page failure banners after successful retry.
+
 ## 2026-03-05 21:32 KST — Agent Chat offset lane cycle
 - Delta: Preserved previously loaded credential audit pages when an older-page pagination request fails in `frontend/src/main.tsx`.
   - Updated `loadCredentialAuditEvents(...)` error handling to keep existing `credentialAuditEvents`/`credentialAuditHasMore` state intact on `append=true` failures.
