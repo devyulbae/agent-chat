@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 14:51 KST — Agent Chat offset lane cycle
+- Delta: Added explicit pending PATCH field chips to selected credential edit UX in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
+  - Added derived `pendingCredentialEditFields` projection from existing edit-diff booleans (`label`, `secret`, `token_expires_at`).
+  - Added inline `PATCH fields:` row under selected credential editor.
+  - Displays chips (`changed:label`, `changed:secret`, `changed:token_expires_at`) only for fields that will be included in the next PATCH semantics.
+  - Shows `none` when no pending edits exist, matching disabled update-button state.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Commit: `baf2493` (pushed to `main`)
+- Next action: add lightweight tooltip/help text on each changed chip to clarify when `token_expires_at` means clear-vs-set behavior.
+
 ## 2026-03-05 14:34 KST — Agent Chat offset lane cycle
 - Delta: Added visible semantic label for thread filter control in `frontend/src/main.tsx` to align screen-reader and sighted-user affordances.
   - Added `<label htmlFor="thread-filter-input">Thread filter</label>` directly before the thread ID filter input.
