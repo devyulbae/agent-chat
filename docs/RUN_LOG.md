@@ -1,5 +1,29 @@
 # Run Log
 
+## 2026-03-05 16:15 KST — Agent Chat offset lane cycle
+- Delta: Added create-credential expiry preview/validation feedback in `frontend/src/main.tsx` to mirror selected-credential edit behavior without altering create API semantics.
+  - Added derived create expiry preview state (`createExpiryPreview`) for optional/valid/invalid datetime-local input paths.
+  - Added invalid-partial detection (`hasInvalidCreateExpiryPreview`) and inline warning-tone helper (`Expiry preview: Enter a valid datetime.`).
+  - Added polite live-region preview copy for valid values (`Will set expiry to ...`) and empty optional state (`No expiry (optional).`).
+  - Kept POST payload contract unchanged (`token_expires_at` still uses `toIsoFromDatetimeLocal(...)` and remains nullable).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add `aria-describedby` wiring from create expiry input to helper/preview text so assistive tech reads both format and live validation context together.
+
+## 2026-03-05 16:06 KST — Agent Chat implementation cycle
+- Delta: Added create-credential expiry format guidance in `frontend/src/main.tsx` to match selected-credential edit flow.
+  - Added `title` + `aria-label` on create `datetime-local` expiry input (`YYYY-MM-DDTHH:mm`).
+  - Added compact inline helper copy (`Optional • format: YYYY-MM-DDTHH:mm`) beside create form controls.
+  - Scope kept strictly frontend UX wiring (no API/backend contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Commit: `0dabf1a` (pushed to `main`)
+- Next action: add lightweight inline validation preview text for create expiry input (e.g., show `Enter a valid datetime.` while partial value is invalid) without changing create payload semantics.
+
 ## 2026-03-05 15:50 KST — Agent Chat offset lane cycle
 - Delta: Added inline clear-expiry override helper in selected credential editor (`frontend/src/main.tsx`) to reduce ambiguity when both datetime and clear toggle are present.
   - Shows `Clear expiry overrides any typed datetime.` beside edit controls only when **clear expiry** is checked.

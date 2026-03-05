@@ -657,6 +657,18 @@ function App() {
       ? 'PATCH clears token_expires_at (expiry removed).'
       : 'PATCH sets token_expires_at to the selected datetime.',
   }
+  const parsedCreateExpiryPreview = newCredentialExpiresAt
+    ? new Date(newCredentialExpiresAt)
+    : null
+  const hasInvalidCreateExpiryPreview =
+    newCredentialExpiresAt.length > 0 &&
+    (!parsedCreateExpiryPreview || Number.isNaN(parsedCreateExpiryPreview.getTime()))
+  const createExpiryPreview = !newCredentialExpiresAt
+    ? 'No expiry (optional).'
+    : hasInvalidCreateExpiryPreview
+      ? 'Enter a valid datetime.'
+      : `Will set expiry to ${parsedCreateExpiryPreview.toLocaleString()}.`
+
   const parsedEditExpiryPreview = editCredentialExpiresAt
     ? new Date(editCredentialExpiresAt)
     : null
@@ -1437,6 +1449,19 @@ function App() {
           aria-label="New credential expiry datetime (local format YYYY-MM-DDTHH:mm)"
         />
         <small style={{ fontSize: 12, color: '#666' }}>Optional • format: YYYY-MM-DDTHH:mm</small>
+        <small
+          aria-live="polite"
+          style={{
+            fontSize: 12,
+            color: hasInvalidCreateExpiryPreview ? '#8a4b00' : '#666',
+            background: hasInvalidCreateExpiryPreview ? '#fff4e5' : 'transparent',
+            border: hasInvalidCreateExpiryPreview ? '1px solid #ffd8a8' : 'none',
+            borderRadius: hasInvalidCreateExpiryPreview ? 6 : 0,
+            padding: hasInvalidCreateExpiryPreview ? '2px 6px' : 0,
+          }}
+        >
+          Expiry preview: {createExpiryPreview}
+        </small>
 
         <button type="button" onClick={() => void submitCreateCredential()} disabled={credentialFormSubmitting}>
           {credentialFormSubmitting ? 'Saving…' : 'Create credential'}
