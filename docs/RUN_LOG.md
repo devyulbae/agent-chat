@@ -1451,3 +1451,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `1c24906` (pushed to `main`)
 - Next action: add a tiny visual cue on thread boundary hints themselves (not just helper text) when jump source is Shift+PgUp/PgDn to improve discoverability.
+
+## 2026-03-06 08:25 KST — Agent Chat implementation cycle
+- Delta: Refined thread boundary shortcut badge so Shift+Page direction is explicit in jump hints.
+  - Frontend: added `boundaryJumpShiftShortcutBadge` in `frontend/src/main.tsx` to map shortcut source to `⇧PgUp` / `⇧PgDn`.
+  - UI: boundary hint badge now renders direction-specific label and tooltip (`Shift+PageUp boundary jump` / `Shift+PageDown boundary jump`) instead of generic `⇧Pg`.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add a short direction-aware microcopy suffix in the boundary hint helper (e.g., “toward first/last visible”) to match the new `⇧PgUp`/`⇧PgDn` badge clarity.

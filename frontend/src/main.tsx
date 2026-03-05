@@ -1576,6 +1576,13 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
+  const boundaryJumpShiftShortcutBadge =
+    boundaryJumpSourceShortcut === 'Shift+PageUp'
+      ? '⇧PgUp'
+      : boundaryJumpSourceShortcut === 'Shift+PageDown'
+        ? '⇧PgDn'
+        : null
+
   const rootJumpSourceShortcut = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2408,9 +2415,9 @@ function App() {
             )}
             {threadBoundaryJumpHint && (
               <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
-                {boundaryJumpUsesShiftPageShortcut && (
+                {boundaryJumpUsesShiftPageShortcut && boundaryJumpShiftShortcutBadge && (
                   <span
-                    title="Shift+PgUp/PgDn boundary jump"
+                    title={`${boundaryJumpSourceShortcut} boundary jump`}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
@@ -2421,7 +2428,7 @@ function App() {
                       letterSpacing: '0.02em',
                     }}
                   >
-                    ⇧Pg
+                    {boundaryJumpShiftShortcutBadge}
                   </span>
                 )}
                 {threadBoundaryJumpHint}
