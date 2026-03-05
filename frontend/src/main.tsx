@@ -1465,6 +1465,9 @@ function App() {
     selectedVisibleThreadHiddenByFilter && selectedThreadId !== null
       ? `hidden/${visibleThreadIds.length}`
       : `${selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/${visibleThreadIds.length}`
+  const selectedVisibleThreadPositionTitle = selectedVisibleThreadHiddenByFilter
+    ? 'Selection is hidden by current filters. Use "Jump to first visible" to recover to the visible list.'
+    : undefined
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -2105,7 +2108,7 @@ function App() {
               include root
             </label>
             <small style={{ color: '#666' }}>{threadFilterSummary}</small>
-            <small style={{ color: '#666' }}>
+            <small style={{ color: '#666' }} title={selectedVisibleThreadPositionTitle}>
               Selection: {selectedVisibleThreadPositionLabel} ({selectedVisibleThreadLabel})
             </small>
             {selectedVisibleThreadHiddenByFilter && (

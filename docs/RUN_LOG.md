@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 04:30 KST — Agent Chat offset lane cycle
+- Delta: Added hidden-selection tooltip guidance in `frontend/src/main.tsx` to clarify `hidden/N` thread position state and recovery action.
+  - Added derived `selectedVisibleThreadPositionTitle` copy that explains selection is hidden by current filters and points operators to `Jump to first visible`.
+  - Wired the tooltip onto the `Selection: hidden/N (...)` status line so meaning is discoverable without changing keyboard flow.
+  - API contract unchanged (frontend-only helper/tooltip refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: mirror the same hidden-selection explanation into inline helper microcopy (non-hover) near thread controls for touch/keyboard-only discoverability.
+
 ## 2026-03-06 04:14 KST — Agent Chat offset lane cycle
 - Delta: Clarified root-jump position-hint semantics with inline help copy in `frontend/src/main.tsx`.
   - Updated `Jump root` button tooltip to explain that `1/N` in root hints is calculated from the currently visible filtered thread list.
