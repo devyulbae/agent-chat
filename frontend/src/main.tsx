@@ -227,6 +227,7 @@ function App() {
   const [editCredentialClearExpiry, setEditCredentialClearExpiry] = useState(false)
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
   const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
+  const [auditLabelFilter, setAuditLabelFilter] = useState<string>('all')
   const [auditActionFilter, setAuditActionFilter] = useState<string>('all')
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
@@ -518,7 +519,13 @@ function App() {
   )
 
   const loadCredentialAuditEvents = useCallback(
-    async (credentialId: string, action: string, signal?: AbortSignal) => {
+    async (
+      credentialId: string,
+      action: string,
+      provider: string,
+      label: string,
+      signal?: AbortSignal
+    ) => {
       if (!credentialId) {
         setCredentialAuditEvents([])
         setCredentialAuditError(null)
@@ -535,6 +542,12 @@ function App() {
       })
       if (action !== 'all') {
         params.set('action', action)
+      }
+      if (provider !== 'all') {
+        params.set('provider', provider)
+      }
+      if (label !== 'all') {
+        params.set('label', label)
       }
 
       try {
@@ -652,12 +665,21 @@ function App() {
       ? `Showing provider suggestions for owner ${trimmedOwnerAgentId}.`
       : 'Showing provider suggestions across all owners.'
 
-  const filteredCredentialsForAudit = useMemo(() => {
-    if (auditProviderFilter === 'all') {
-      return credentials
-    }
-    return credentials.filter((item) => item.provider === auditProviderFilter)
+  const auditLabelOptions = useMemo(() => {
+    const providerScopedCredentials =
+      auditProviderFilter === 'all'
+        ? credentials
+        : credentials.filter((item) => item.provider === auditProviderFilter)
+    return Array.from(new Set(providerScopedCredentials.map((item) => item.label))).sort()
   }, [auditProviderFilter, credentials])
+
+  const filteredCredentialsForAudit = useMemo(() => {
+    return credentials.filter((item) => {
+      const matchesProvider = auditProviderFilter === 'all' || item.provider === auditProviderFilter
+      const matchesLabel = auditLabelFilter === 'all' || item.label === auditLabelFilter
+      return matchesProvider && matchesLabel
+    })
+  }, [auditLabelFilter, auditProviderFilter, credentials])
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -941,6 +963,15 @@ function App() {
   }, [loadCredentialProviders, loadCredentials, selectedCredential])
 
   useEffect(() => {
+    if (auditLabelFilter === 'all') {
+      return
+    }
+    if (!auditLabelOptions.includes(auditLabelFilter)) {
+      setAuditLabelFilter('all')
+    }
+  }, [auditLabelFilter, auditLabelOptions])
+
+  useEffect(() => {
     const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
       ? selectedCredentialId
       : filteredCredentialsForAudit[0]?.id ?? ''
@@ -951,9 +982,21 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
-    void loadCredentialAuditEvents(selectedCredentialId, auditActionFilter, controller.signal)
+    void loadCredentialAuditEvents(
+      selectedCredentialId,
+      auditActionFilter,
+      auditProviderFilter,
+      auditLabelFilter,
+      controller.signal
+    )
     return () => controller.abort()
-  }, [auditActionFilter, loadCredentialAuditEvents, selectedCredentialId])
+  }, [
+    auditActionFilter,
+    auditLabelFilter,
+    auditProviderFilter,
+    loadCredentialAuditEvents,
+    selectedCredentialId,
+  ])
 
   useEffect(() => {
     if (!channelId.trim()) {
@@ -1738,6 +1781,20 @@ function App() {
           ))}
         </select>
 
+        <label htmlFor="credential-audit-label">Label:</label>
+        <select
+          id="credential-audit-label"
+          value={auditLabelFilter}
+          onChange={(event) => setAuditLabelFilter(event.target.value)}
+        >
+          <option value="all">all</option>
+          {auditLabelOptions.map((label) => (
+            <option key={label} value={label}>
+              {label}
+            </option>
+          ))}
+        </select>
+
         <label htmlFor="credential-audit-action">Action:</label>
         <select
           id="credential-audit-action"
@@ -1767,7 +1824,14 @@ function App() {
 
         <button
           type="button"
-          onClick={() => void loadCredentialAuditEvents(selectedCredentialId, auditActionFilter)}
+          onClick={() =>
+            void loadCredentialAuditEvents(
+              selectedCredentialId,
+              auditActionFilter,
+              auditProviderFilter,
+              auditLabelFilter
+            )
+          }
         >
           Refresh audit trail
         </button>

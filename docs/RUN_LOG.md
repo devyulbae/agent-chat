@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 17:50 KST — Agent Chat offset lane cycle
+- Delta: Wired frontend credential audit panel to send server-side provider/label filters and kept filter contracts synchronized with `GET /audit-events`.
+  - Added audit label filter state in `frontend/src/main.tsx` and included `provider` + `label` query params in audit requests when set.
+  - Added provider-scoped audit label dropdown options sourced from loaded credentials (`all` + distinct labels for selected provider).
+  - Updated audit credential list filtering to respect both provider and label filters before selection fallback.
+  - Updated auto-refresh and manual refresh audit fetch calls to include action/provider/label filters together.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: decouple audit trail fetch from mandatory credential selection (support provider/label/action-only timeline query) while keeping backward-compatible credential drill-down.
+
 ## 2026-03-05 17:30 KST — Agent Chat offset lane cycle
 - Delta: Added auto-dismiss + pin/hover exception behavior for credential success notices in `frontend/src/main.tsx` to reduce stale confirmation clutter while preserving operator control.
   - Added 10s auto-dismiss timeout for active success notices.
@@ -642,3 +653,16 @@
   - `pytest` ✅ (15 passed)
 - Commit: `9aa975c` (pushed to `main`)
 - Next action: add provider/label server-side filters to `GET /audit-events` so audit queries don’t require client-side credential pre-filtering.
+
+## 2026-03-05 17:41 KST — Agent Chat cycle
+- Delta: Added server-side provider/label filtering for credential audit events.
+  - API: `GET /audit-events` now accepts `provider` and `label` query params.
+  - Service/repository: threaded new filters through `AuditService` and `InMemoryAuditRepository`.
+  - Audit metadata: credential `updated`/`rotated`/`deleted` events now include provider + label, enabling filter matches without client-side credential lookups.
+  - Tests: extended audit service filter coverage and credential audit metadata assertions.
+- Quality gates:
+  - `black backend` ✅
+  - `pre-commit run --all-files` ✅
+  - `pytest` ✅ (16 passed)
+- Commit: `57d7180` (pushed to `main`)
+- Next action: wire frontend credential audit panel to send `provider`/`label` filters directly (and load label options from credentials for selected provider).
