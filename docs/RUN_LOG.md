@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 01:30 KST — Agent Chat offset lane cycle
+- Delta: Added compact selection-position suffix to one-step keyboard thread navigation feedback in `frontend/src/main.tsx`.
+  - Extended `moveVisibleThreadSelection(...)` to append position context (`X/Y`) in transient hint copy after `J/K` / `↑/↓` moves.
+  - Included the same positional suffix for no-op single-result confirmations (`Already at only visible thread ... · 1/1.`) for parity.
+  - API contract unchanged (frontend-only navigation feedback copy/state).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: include selected thread label (`Root` or thread id) in one-step feedback hints so rapid keyboard triage surfaces both position and target identity.
+
 ## 2026-03-06 01:23 KST — Agent Chat implementation cycle
 - Delta: Added compact one-step keyboard navigation feedback for thread selection in `frontend/src/main.tsx`.
   - Extended `moveVisibleThreadSelection(...)` to accept key source (`J`/`K`/`ArrowDown`/`ArrowUp`) and emit transient confirmation hints.
