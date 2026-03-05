@@ -1415,5 +1415,5 @@
   - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
-- Commit: pending
+- Commit: `1c24906` (pushed to `main`)
 - Next action: add a tiny visual cue on thread boundary hints themselves (not just helper text) when jump source is Shift+PgUp/PgDn to improve discoverability.
