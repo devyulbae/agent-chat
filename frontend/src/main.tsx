@@ -678,6 +678,7 @@ function App() {
 
     const payload: Record<string, unknown> = { label: nextLabel }
     const trimmedSecret = editCredentialSecret.trim()
+    const normalizedCurrentExpiresAt = toDatetimeLocalValue(selectedCredential.token_expires_at)
     if (trimmedSecret.length > 0) {
       payload.secret = trimmedSecret
     }
@@ -685,6 +686,17 @@ function App() {
       payload.clear_token_expires_at = true
     } else {
       payload.token_expires_at = toIsoFromDatetimeLocal(editCredentialExpiresAt)
+    }
+
+    const isLabelChanged = nextLabel !== selectedCredential.label
+    const isSecretProvided = trimmedSecret.length > 0
+    const isExpiryChanged = editCredentialClearExpiry
+      ? selectedCredential.token_expires_at !== null
+      : editCredentialExpiresAt !== normalizedCurrentExpiresAt
+
+    if (!isLabelChanged && !isSecretProvided && !isExpiryChanged) {
+      setCredentialFormError('No update to apply. Change label, provide a new secret, or update expiry.')
+      return
     }
 
     setCredentialFormSubmitting(true)
@@ -1080,7 +1092,7 @@ function App() {
           type="password"
           value={editCredentialSecret}
           onChange={(event) => setEditCredentialSecret(event.target.value)}
-          placeholder="New secret (optional)"
+          placeholder="Leave blank to keep existing secret"
           disabled={!selectedCredential}
         />
         <input
@@ -1102,6 +1114,9 @@ function App() {
           {credentialFormSubmitting ? 'Saving…' : 'Update selected credential'}
         </button>
       </div>
+      <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
+        Secret is optional when updating. If left blank, the existing secret remains unchanged.
+      </p>
 
       <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>{providerScopeHint}</p>
       {providerLoading && <p>Loading provider suggestions…</p>}
