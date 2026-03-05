@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 03:02 KST — Agent Chat implementation cycle
+- Delta: Clarified shift-modified first-boundary source labeling in `frontend/src/main.tsx`.
+  - Extended `jumpToVisibleThreadBoundary(...)` source-key union to include `Shift+Home`.
+  - Updated shift-boundary handler to pass `Shift+Home` (instead of generic `Home`) when routing first-visible jump source labels.
+  - Keeps boundary hint copy source-specific for shift-path invocations; API contract unchanged (frontend-only keyboard UX copy wiring).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `0a42dc4` (pushed to `main`)
+- Next action: add source-specific root-jump confirmation copy for `Shift+Home` (distinct from `Shift+R`) so root shortcut telemetry mirrors boundary shortcut specificity.
+
 ## 2026-03-06 02:50 KST — Agent Chat offset lane cycle
 - Delta: Added boundary-jump position context to thread keyboard feedback in `frontend/src/main.tsx`.
   - Extended `jumpToVisibleThreadBoundary(...)` hint copy to append compact position suffix (`X/Y`) for both jump and no-op confirmations.
