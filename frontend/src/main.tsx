@@ -567,10 +567,17 @@ function App() {
     return () => controller.abort()
   }, [loadCredentialProviders, newCredentialOwnerAgentId])
 
+  const trimmedOwnerAgentId = newCredentialOwnerAgentId.trim()
+
   const credentialProvidersWithFallback = useMemo(() => {
     const fromCredentials = credentials.map((item) => item.provider)
     return Array.from(new Set([...credentialProviders, ...fromCredentials])).sort()
   }, [credentialProviders, credentials])
+
+  const providerScopeHint =
+    trimmedOwnerAgentId.length > 0
+      ? `Showing provider suggestions for owner ${trimmedOwnerAgentId}.`
+      : 'Showing provider suggestions across all owners.'
 
   const filteredCredentialsForAudit = useMemo(() => {
     if (auditProviderFilter === 'all') {
@@ -1024,8 +1031,17 @@ function App() {
         </button>
       </div>
 
+      <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>{providerScopeHint}</p>
       {providerLoading && <p>Loading provider suggestions…</p>}
       {providerError && <p style={{ color: 'crimson' }}>Provider load error: {providerError}</p>}
+      {!providerLoading &&
+        !providerError &&
+        trimmedOwnerAgentId.length > 0 &&
+        credentialProviders.length === 0 && (
+          <p style={{ fontSize: 13, color: '#555', marginTop: 4 }}>
+            No providers found for this owner yet. You can still type a new provider value manually.
+          </p>
+        )}
       {selectedCredential && (
         <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>
           Selected credential provider: <code>{selectedCredential.provider}</code> · expires:{' '}

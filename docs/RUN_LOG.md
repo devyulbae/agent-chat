@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 10:51 KST — Agent Chat offset lane cycle
+- Delta: Added owner-scope provider guidance/fallback UX in `frontend/src/main.tsx` to tighten frontend/API contract clarity.
+  - Added scope hint text under credential form (`Showing provider suggestions for owner ...` vs global scope).
+  - Added explicit empty-state message when `GET /credentials/providers?owner_agent_id=...` returns no providers.
+  - Kept manual provider entry path visible so create flow remains unblocked for new owners/providers.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `cd frontend && npx vite build` ✅
+- Notes:
+  - First build attempt failed due missing frontend deps (`react` unresolved); resolved by `cd frontend && npm install`, then reran build successfully.
+- Next action: replace prompt-based credential label quick edit with inline editable fields (label/secret/expiry clear toggle) while preserving provider owner-scoping behavior.
+
 ## 2026-03-05 10:41 KST — Agent Chat implementation cycle
 - Delta: Scoped credential provider suggestions to selected owner context in `frontend/src/main.tsx`.
   - Updated provider loader to call `GET /credentials/providers?owner_agent_id=...` when owner input is set.
