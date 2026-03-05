@@ -1265,3 +1265,15 @@
   - `cd frontend && npx vite build` ✅
 - Commit: pending
 - Next action: add an inline tooltip explaining `hidden/N` state and pointing to the `Jump to first visible` recovery button.
+
+## 2026-03-06 05:03 KST — Agent Chat implementation cycle
+- Delta: Improved thread explorer keyboard recovery when current selection is hidden by active filters.
+  - Frontend: updated `moveVisibleThreadSelection` in `frontend/src/main.tsx` so `J/K` and `↑/↓` recover directly to first/last visible thread when selection is hidden, instead of skipping one position.
+  - Added explicit transient hint message for hidden-selection recovery (`Recovered hidden selection (...)`) to clarify what happened.
+  - Scope: chat thread UX wiring only.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `ec5bcfa` (pushed to `main`)
+- Next action: add a tiny thread-control hint that `J/K` or `↑/↓` will recover hidden selection to first/last visible result.
