@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 17:12 KST — Agent Chat offset lane cycle
+- Delta: Added minute-level auto-refresh for credential success notice age label in `frontend/src/main.tsx` so recency suffix advances while the notice remains visible.
+  - Added `credentialFormNoticeTick` state and interval effect (60s) gated to active success notices.
+  - Added memoized `credentialFormNoticeAgeLabel` (`(just now)` → `(1m ago)` → `(2m ago)`…) driven by the tick and original notice timestamp.
+  - Kept API contracts untouched (frontend-only state/render update; no request payload/schema changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add an auto-dismiss timeout for success notices (with optional hover/pin exception) to reduce stale confirmation clutter in long credential edit sessions.
+
 ## 2026-03-05 17:08 KST — Agent Chat implementation cycle
 - Delta: Added lightweight recency suffix for credential form success notices in `frontend/src/main.tsx`.
   - Added `credentialFormNoticeAt` state and `formatNoticeAge(...)` helper to render relative age (`just now`, `Xm ago`, `Xh ago`).

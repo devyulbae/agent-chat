@@ -211,6 +211,7 @@ function App() {
   const [credentialFormError, setCredentialFormError] = useState<string | null>(null)
   const [credentialFormNotice, setCredentialFormNotice] = useState<string | null>(null)
   const [credentialFormNoticeAt, setCredentialFormNoticeAt] = useState<number | null>(null)
+  const [credentialFormNoticeTick, setCredentialFormNoticeTick] = useState(0)
   const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
   const [credentialDeleteSubmitting, setCredentialDeleteSubmitting] = useState(false)
   const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
@@ -725,6 +726,24 @@ function App() {
       setCredentialFormNoticeAt(null)
     }
   }, [credentialFormNotice])
+
+  useEffect(() => {
+    if (!credentialFormNotice || !credentialFormNoticeAt) {
+      return
+    }
+    const intervalId = window.setInterval(() => {
+      setCredentialFormNoticeTick((current) => current + 1)
+    }, 60_000)
+
+    return () => window.clearInterval(intervalId)
+  }, [credentialFormNotice, credentialFormNoticeAt])
+
+  const credentialFormNoticeAgeLabel = useMemo(() => {
+    if (!credentialFormNoticeAt) {
+      return ''
+    }
+    return ` (${formatNoticeAge(credentialFormNoticeAt)})`
+  }, [credentialFormNoticeAt, credentialFormNoticeTick])
 
   const submitCreateCredential = useCallback(async () => {
     const provider = newCredentialProvider.trim()
@@ -1644,7 +1663,7 @@ function App() {
       {credentialFormNotice && (
         <p role="status" aria-live="polite" style={{ color: '#1f6f3e' }}>
           {credentialFormNotice}
-          {credentialFormNoticeAt ? ` (${formatNoticeAge(credentialFormNoticeAt)})` : ''}
+          {credentialFormNoticeAgeLabel}
         </p>
       )}
 
