@@ -948,3 +948,14 @@
   - `cd frontend && npx vite build` ✅
 - Commit: pending
 - Next action: add visible selected-thread index cue (e.g., `3/12`) near thread controls to improve keyboard navigation orientation.
+
+## 2026-03-05 23:41 KST — Agent Chat implementation cycle
+- Delta: Added thread-selection recovery affordance when current thread is hidden by active filters.
+  - Thread selection summary now distinguishes hidden state (`<thread_id> (hidden by current filters)`) vs no selection.
+  - Added `Jump to first visible` button in thread controls when selected thread is filtered out.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Commit: pending
+- Next action: add keyboard shortcut (`Shift+Home`) to jump directly to root thread without leaving current filter context.

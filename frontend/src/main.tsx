@@ -1358,12 +1358,16 @@ function App() {
   }, [filteredChildThreads, showRootThreadInList])
 
   const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
+  const selectedVisibleThreadHiddenByFilter =
+    selectedThreadId !== null && selectedVisibleThreadIndex < 0 && visibleThreadIds.length > 0
   const selectedVisibleThreadLabel =
     selectedVisibleThreadIndex >= 0
       ? visibleThreadIds[selectedVisibleThreadIndex] === null
         ? 'Root'
         : visibleThreadIds[selectedVisibleThreadIndex]
-      : 'none'
+      : selectedVisibleThreadHiddenByFilter
+        ? `${selectedThreadId} (hidden by current filters)`
+        : 'none'
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -1885,6 +1889,15 @@ function App() {
               Selection: {selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/
               {visibleThreadIds.length} ({selectedVisibleThreadLabel})
             </small>
+            {selectedVisibleThreadHiddenByFilter && (
+              <button
+                type="button"
+                onClick={() => selectThread(visibleThreadIds[0] ?? null)}
+                title="Selected thread is hidden by filters. Jump to first visible result."
+              >
+                Jump to first visible
+              </button>
+            )}
             <button
               type="button"
               onClick={() => void copySelectedThreadLabel()}
