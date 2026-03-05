@@ -1332,3 +1332,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `ec5bcfa` (pushed to `main`)
 - Next action: add a tiny thread-control hint that `J/K` or `↑/↓` will recover hidden selection to first/last visible result.
+
+## 2026-03-06 06:22 KST — Agent Chat implementation cycle
+- Delta: Added an inline hidden-selection recovery hint in thread controls for keyboard navigation.
+  - Frontend: introduced `selectedVisibleThreadInlineRecoveryHint` in `frontend/src/main.tsx`.
+  - UI: when selection is hidden by active filters, thread controls now show `Hidden selection recovery: J/K or ↑/↓ → first/last visible.` next to the selection summary.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: mirror the same hidden-selection recovery hint semantics inside the filter helper text so keyboard behavior stays discoverable even before selection becomes hidden.

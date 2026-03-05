@@ -1522,6 +1522,9 @@ function App() {
   const selectedVisibleThreadShortcutRecoveryHint = selectedVisibleThreadHiddenByFilter
     ? 'Tip: J/K or ↑/↓ will also recover to first/last visible thread.'
     : null
+  const selectedVisibleThreadInlineRecoveryHint = selectedVisibleThreadHiddenByFilter
+    ? 'Hidden selection recovery: J/K or ↑/↓ → first/last visible.'
+    : null
 
   const firstVisibleJumpHintHelp = useMemo(() => {
     if (!threadBoundaryJumpHint) {
@@ -2198,6 +2201,11 @@ function App() {
             <small style={{ color: '#666' }} title={selectedVisibleThreadPositionTitle}>
               Selection: {selectedVisibleThreadPositionLabel} ({selectedVisibleThreadLabel})
             </small>
+            {selectedVisibleThreadInlineRecoveryHint && (
+              <small style={{ color: '#7a4b00' }} title="Hidden selection recovers to boundary on next J/K or Arrow key.">
+                {selectedVisibleThreadInlineRecoveryHint}
+              </small>
+            )}
             {selectedVisibleThreadHiddenByFilter && (
               <>
                 <button
