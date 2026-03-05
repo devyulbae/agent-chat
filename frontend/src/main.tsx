@@ -65,6 +65,13 @@ type ThreadSeenStorage = {
   lastSeenCountByThread: Record<string, number>
 }
 
+type UnreadClearUndoSnapshot = {
+  lastSeenByThread: Record<string, string>
+  lastSeenCountByThread: Record<string, number>
+  unseenThreadKeys: string[]
+  clearedCount: number
+}
+
 function getCredentialStatus(credential: Credential): 'active' | 'expired' | 'expiring_soon' {
   if (!credential.token_expires_at) {
     return 'active'
@@ -165,6 +172,8 @@ function App() {
   const [composerSubmitting, setComposerSubmitting] = useState(false)
   const [threadFilterText, setThreadFilterText] = useState('')
   const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
+  const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
+    useState<UnreadClearUndoSnapshot | null>(null)
 
   const [credentials, setCredentials] = useState<Credential[]>([])
   const [credentialFilter, setCredentialFilter] = useState<TokenStatusFilter>('all')
@@ -862,26 +871,47 @@ function App() {
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
   const clearAllUnreadMarkers = useCallback(() => {
-    if (!threads.length) {
+    if (!threads.length || unreadThreadIds.length === 0) {
       return
     }
+
+    setUnreadClearUndoSnapshot({
+      lastSeenByThread,
+      lastSeenCountByThread,
+      unseenThreadKeys,
+      clearedCount: unreadThreadIds.length,
+    })
+
     const marker = `cleared:${Date.now()}`
-    setLastSeenByThread((current) => {
-      const next = { ...current }
-      threads.forEach((thread) => {
-        next[toThreadKey(thread.thread_id)] = marker
-      })
-      return next
+    const nextLastSeenByThread = { ...lastSeenByThread }
+    const nextLastSeenCountByThread = { ...lastSeenCountByThread }
+
+    threads.forEach((thread) => {
+      const key = toThreadKey(thread.thread_id)
+      nextLastSeenByThread[key] = marker
+      nextLastSeenCountByThread[key] = thread.message_count
     })
-    setLastSeenCountByThread((current) => {
-      const next = { ...current }
-      threads.forEach((thread) => {
-        next[toThreadKey(thread.thread_id)] = thread.message_count
-      })
-      return next
-    })
+
+    setLastSeenByThread(nextLastSeenByThread)
+    setLastSeenCountByThread(nextLastSeenCountByThread)
     setUnseenThreadKeys([])
-  }, [threads])
+  }, [
+    lastSeenByThread,
+    lastSeenCountByThread,
+    threads,
+    unreadThreadIds.length,
+    unseenThreadKeys,
+  ])
+
+  const undoClearAllUnreadMarkers = useCallback(() => {
+    if (!unreadClearUndoSnapshot) {
+      return
+    }
+    setLastSeenByThread(unreadClearUndoSnapshot.lastSeenByThread)
+    setLastSeenCountByThread(unreadClearUndoSnapshot.lastSeenCountByThread)
+    setUnseenThreadKeys(unreadClearUndoSnapshot.unseenThreadKeys)
+    setUnreadClearUndoSnapshot(null)
+  }, [unreadClearUndoSnapshot])
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -977,6 +1007,15 @@ function App() {
         <button type="button" onClick={clearAllUnreadMarkers} disabled={unreadThreadIds.length === 0}>
           Clear all unread markers
         </button>
+        {unreadClearUndoSnapshot && (
+          <small style={{ color: '#555', display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+            Cleared {unreadClearUndoSnapshot.clearedCount} unread marker
+            {unreadClearUndoSnapshot.clearedCount === 1 ? '' : 's'}.
+            <button type="button" onClick={undoClearAllUnreadMarkers}>
+              Undo
+            </button>
+          </small>
+        )}
         <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length}</small>
       </div>
 
