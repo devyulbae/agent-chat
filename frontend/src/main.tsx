@@ -51,6 +51,8 @@ type AuditEvent = {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
+const MIN_EXPIRING_WINDOW_HOURS = 1
+const MAX_EXPIRING_WINDOW_HOURS = 24 * 30
 
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
@@ -182,6 +184,13 @@ function toIsoFromDatetimeLocal(value: string): string | null {
     return null
   }
   return parsed.toISOString()
+}
+
+function clampExpiringWindowHours(value: number): number {
+  if (!Number.isFinite(value)) {
+    return 24
+  }
+  return Math.min(MAX_EXPIRING_WINDOW_HOURS, Math.max(MIN_EXPIRING_WINDOW_HOURS, Math.trunc(value)))
 }
 
 function isEditableElement(target: EventTarget | null): boolean {
@@ -585,7 +594,7 @@ function App() {
       if (credentialFilter !== 'all') {
         params.set('token_status', credentialFilter)
       }
-      params.set('expiring_within_hours', String(expiringWithinHours))
+      params.set('expiring_within_hours', String(clampExpiringWindowHours(expiringWithinHours)))
 
       const query = params.toString()
       const url = `${API_BASE}/credentials${query ? `?${query}` : ''}`
@@ -2191,10 +2200,18 @@ function App() {
         <input
           id="expiring-hours"
           type="number"
-          min={1}
-          max={24 * 30}
+          min={MIN_EXPIRING_WINDOW_HOURS}
+          max={MAX_EXPIRING_WINDOW_HOURS}
           value={expiringWithinHours}
-          onChange={(event) => setExpiringWithinHours(Number(event.target.value) || 24)}
+          onChange={(event) => {
+            const raw = event.target.value
+            if (raw.trim() === '') {
+              setExpiringWithinHours(24)
+              return
+            }
+            setExpiringWithinHours(clampExpiringWindowHours(Number(raw)))
+          }}
+          onBlur={() => setExpiringWithinHours((current) => clampExpiringWindowHours(current))}
         />
 
         <button type="button" onClick={() => void loadCredentials()}>
