@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-05 09:35 KST — Agent Chat offset lane cycle
+- Delta: Wired frontend credential create/edit flows to consume backend provider contract (`GET /credentials/providers`) and reduce provider key typo risk.
+  - Added provider suggestion loader in `frontend/src/main.tsx` backed by `/credentials/providers`.
+  - Added **Credential Create/Edit** form with provider autocomplete (`datalist`) sourced from API providers (+ credential fallback).
+  - Added create flow posting to `POST /credentials` (owner/provider/label/secret/optional expiry).
+  - Added quick label-edit flow for selected credential via `PATCH /credentials/{credential_id}`.
+  - Added provider load/error states and selected credential provider context hint.
+- Quality gates:
+  - `./venv/bin/black backend` ✅
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `./venv/bin/pytest` ✅ (15 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: replace prompt-based quick edit with inline editable credential form fields (label/secret/expiry clear toggle) and keep provider suggestions scoped by optional owner filter.
+
 ## 2026-03-05 09:06 KST — Agent Chat cycle
 - Delta: Added credential provider discovery API wiring to support OAuth/provider CRUD flows in UI forms.
   - Extended `CredentialRepository` with `list_providers(owner_agent_id?)` and SQL distinct/sorted implementation.

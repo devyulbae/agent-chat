@@ -120,6 +120,29 @@ function formatTimestamp(value: string): string {
   return parsed.toLocaleString()
 }
 
+function toDatetimeLocalValue(value: string | null): string {
+  if (!value) {
+    return ''
+  }
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return ''
+  }
+  const tzOffsetMs = parsed.getTimezoneOffset() * 60 * 1000
+  return new Date(parsed.getTime() - tzOffsetMs).toISOString().slice(0, 16)
+}
+
+function toIsoFromDatetimeLocal(value: string): string | null {
+  if (!value.trim()) {
+    return null
+  }
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return null
+  }
+  return parsed.toISOString()
+}
+
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
@@ -145,6 +168,16 @@ function App() {
   const [expiringWithinHours, setExpiringWithinHours] = useState(24)
   const [credentialLoading, setCredentialLoading] = useState(false)
   const [credentialError, setCredentialError] = useState<string | null>(null)
+  const [credentialProviders, setCredentialProviders] = useState<string[]>([])
+  const [providerLoading, setProviderLoading] = useState(false)
+  const [providerError, setProviderError] = useState<string | null>(null)
+  const [credentialFormError, setCredentialFormError] = useState<string | null>(null)
+  const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
+  const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
+  const [newCredentialProvider, setNewCredentialProvider] = useState('')
+  const [newCredentialLabel, setNewCredentialLabel] = useState('')
+  const [newCredentialSecret, setNewCredentialSecret] = useState('')
+  const [newCredentialExpiresAt, setNewCredentialExpiresAt] = useState('')
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
   const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
   const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('all')
@@ -355,6 +388,27 @@ function App() {
     [credentialFilter, expiringWithinHours]
   )
 
+  const loadCredentialProviders = useCallback(async (signal?: AbortSignal) => {
+    setProviderLoading(true)
+    setProviderError(null)
+    try {
+      const response = await fetch(`${API_BASE}/credentials/providers`, { signal })
+      if (!response.ok) {
+        throw new Error(`Failed to load credential providers (${response.status})`)
+      }
+      const payload = (await response.json()) as string[]
+      setCredentialProviders(payload)
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        return
+      }
+      setProviderError(err instanceof Error ? err.message : 'Unknown error')
+      setCredentialProviders([])
+    } finally {
+      setProviderLoading(false)
+    }
+  }, [])
+
   const loadCredentialAuditEvents = useCallback(
     async (credentialId: string, eventType: string, signal?: AbortSignal) => {
       if (!credentialId) {
@@ -467,10 +521,16 @@ function App() {
     return () => controller.abort()
   }, [loadCredentials])
 
-  const credentialProviders = useMemo(
-    () => Array.from(new Set(credentials.map((item) => item.provider))).sort(),
-    [credentials]
-  )
+  useEffect(() => {
+    const controller = new AbortController()
+    void loadCredentialProviders(controller.signal)
+    return () => controller.abort()
+  }, [loadCredentialProviders])
+
+  const credentialProvidersWithFallback = useMemo(() => {
+    const fromCredentials = credentials.map((item) => item.provider)
+    return Array.from(new Set([...credentialProviders, ...fromCredentials])).sort()
+  }, [credentialProviders, credentials])
 
   const filteredCredentialsForAudit = useMemo(() => {
     if (auditProviderFilter === 'all') {
@@ -478,6 +538,94 @@ function App() {
     }
     return credentials.filter((item) => item.provider === auditProviderFilter)
   }, [auditProviderFilter, credentials])
+
+  const selectedCredential = useMemo(
+    () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
+    [credentials, selectedCredentialId]
+  )
+
+  const submitCreateCredential = useCallback(async () => {
+    const provider = newCredentialProvider.trim()
+    const ownerAgentId = newCredentialOwnerAgentId.trim()
+    const label = newCredentialLabel.trim()
+    const secret = newCredentialSecret.trim()
+
+    if (!provider || !ownerAgentId || !label || !secret) {
+      setCredentialFormError('Owner, provider, label, and secret are required to create a credential.')
+      return
+    }
+
+    setCredentialFormSubmitting(true)
+    setCredentialFormError(null)
+
+    try {
+      const response = await fetch(`${API_BASE}/credentials`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id:
+            typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+              ? crypto.randomUUID()
+              : `cred-${Date.now()}`,
+          owner_agent_id: ownerAgentId,
+          provider,
+          label,
+          secret,
+          token_expires_at: toIsoFromDatetimeLocal(newCredentialExpiresAt),
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to create credential (${response.status})`)
+      }
+
+      setNewCredentialLabel('')
+      setNewCredentialSecret('')
+      setNewCredentialExpiresAt('')
+      await Promise.all([loadCredentials(), loadCredentialProviders()])
+    } catch (err) {
+      setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setCredentialFormSubmitting(false)
+    }
+  }, [
+    loadCredentialProviders,
+    loadCredentials,
+    newCredentialExpiresAt,
+    newCredentialLabel,
+    newCredentialOwnerAgentId,
+    newCredentialProvider,
+    newCredentialSecret,
+  ])
+
+  const submitUpdateCredentialLabel = useCallback(async () => {
+    if (!selectedCredential) {
+      setCredentialFormError('Select a credential to update.')
+      return
+    }
+
+    const nextLabel = window.prompt('New label', selectedCredential.label)?.trim()
+    if (!nextLabel) {
+      return
+    }
+
+    setCredentialFormSubmitting(true)
+    setCredentialFormError(null)
+    try {
+      const response = await fetch(`${API_BASE}/credentials/${encodeURIComponent(selectedCredential.id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label: nextLabel }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to update credential (${response.status})`)
+      }
+      await loadCredentials()
+    } catch (err) {
+      setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setCredentialFormSubmitting(false)
+    }
+  }, [loadCredentials, selectedCredential])
 
   useEffect(() => {
     const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
@@ -733,6 +881,80 @@ function App() {
         </button>
       </div>
 
+      <h4 style={{ marginTop: 16 }}>Credential Create/Edit</h4>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+        <label htmlFor="credential-owner">Owner:</label>
+        <input
+          id="credential-owner"
+          value={newCredentialOwnerAgentId}
+          onChange={(event) => setNewCredentialOwnerAgentId(event.target.value)}
+          placeholder="agent-ui"
+        />
+
+        <label htmlFor="credential-provider-input">Provider:</label>
+        <input
+          id="credential-provider-input"
+          value={newCredentialProvider}
+          onChange={(event) => setNewCredentialProvider(event.target.value)}
+          list="credential-provider-options"
+          placeholder="openai_api"
+        />
+        <datalist id="credential-provider-options">
+          {credentialProvidersWithFallback.map((provider) => (
+            <option key={provider} value={provider} />
+          ))}
+        </datalist>
+
+        <label htmlFor="credential-label">Label:</label>
+        <input
+          id="credential-label"
+          value={newCredentialLabel}
+          onChange={(event) => setNewCredentialLabel(event.target.value)}
+          placeholder="Primary OpenAI key"
+        />
+
+        <label htmlFor="credential-secret">Secret:</label>
+        <input
+          id="credential-secret"
+          type="password"
+          value={newCredentialSecret}
+          onChange={(event) => setNewCredentialSecret(event.target.value)}
+          placeholder="sk-..."
+        />
+
+        <label htmlFor="credential-expires">Expires at:</label>
+        <input
+          id="credential-expires"
+          type="datetime-local"
+          value={newCredentialExpiresAt}
+          onChange={(event) => setNewCredentialExpiresAt(event.target.value)}
+        />
+
+        <button type="button" onClick={() => void submitCreateCredential()} disabled={credentialFormSubmitting}>
+          {credentialFormSubmitting ? 'Saving…' : 'Create credential'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => void submitUpdateCredentialLabel()}
+          disabled={!selectedCredential || credentialFormSubmitting}
+        >
+          Quick edit label
+        </button>
+      </div>
+
+      {providerLoading && <p>Loading provider suggestions…</p>}
+      {providerError && <p style={{ color: 'crimson' }}>Provider load error: {providerError}</p>}
+      {selectedCredential && (
+        <p style={{ fontSize: 13, color: '#555', marginTop: 8 }}>
+          Selected credential provider: <code>{selectedCredential.provider}</code> · expires:{' '}
+          {selectedCredential.token_expires_at
+            ? formatTimestamp(selectedCredential.token_expires_at)
+            : 'no expiry'}
+        </p>
+      )}
+      {credentialFormError && <p style={{ color: 'crimson' }}>Form error: {credentialFormError}</p>}
+
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
         <label htmlFor="credential-audit-provider">Provider:</label>
         <select
@@ -741,7 +963,7 @@ function App() {
           onChange={(event) => setAuditProviderFilter(event.target.value)}
         >
           <option value="all">all</option>
-          {credentialProviders.map((provider) => (
+          {credentialProvidersWithFallback.map((provider) => (
             <option key={provider} value={provider}>
               {provider}
             </option>
