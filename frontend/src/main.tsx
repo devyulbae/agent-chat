@@ -1009,13 +1009,19 @@ function App() {
     if (auditLabelFilter !== 'all') {
       sourceParts.push(`label=${auditLabelFilter}`)
     }
+    if (auditActionFilter !== 'all') {
+      sourceParts.push(`action=${auditActionFilter}`)
+    }
+    if (auditEventTypeFilter.trim()) {
+      sourceParts.push(`event_type=${auditEventTypeFilter.trim()}`)
+    }
 
     if (sourceParts.length === 0) {
       return null
     }
 
     return `API filters: ${sourceParts.join(' + ')}`
-  }, [auditLabelFilter, auditProviderFilter])
+  }, [auditActionFilter, auditEventTypeFilter, auditLabelFilter, auditProviderFilter])
 
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
