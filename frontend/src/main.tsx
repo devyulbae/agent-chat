@@ -1539,6 +1539,12 @@ function App() {
     if (threadBoundaryJumpHint.startsWith('Already at last visible thread')) {
       return 'Already at last = no-op confirmation (selection did not move).'
     }
+    if (threadBoundaryJumpHint.startsWith('Jumped to first visible thread')) {
+      return 'Jumped to first = normal boundary jump to the first visible result.'
+    }
+    if (threadBoundaryJumpHint.startsWith('Jumped to last visible thread')) {
+      return 'Jumped to last = normal boundary jump to the last visible result.'
+    }
     return null
   }, [threadBoundaryJumpHint])
 
