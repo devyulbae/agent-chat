@@ -197,6 +197,7 @@ function App() {
   const [providerError, setProviderError] = useState<string | null>(null)
   const [credentialFormError, setCredentialFormError] = useState<string | null>(null)
   const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
+  const [credentialDeleteSubmitting, setCredentialDeleteSubmitting] = useState(false)
   const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
   const [newCredentialProvider, setNewCredentialProvider] = useState('')
   const [newCredentialLabel, setNewCredentialLabel] = useState('')
@@ -757,6 +758,41 @@ function App() {
     loadCredentials,
     selectedCredential,
   ])
+
+  const submitDeleteCredential = useCallback(async () => {
+    if (!selectedCredential) {
+      setCredentialFormError('Select a credential to delete.')
+      return
+    }
+
+    const confirmDelete = window.confirm(
+      `Delete credential "${selectedCredential.label}" (${selectedCredential.provider})? This cannot be undone.`
+    )
+    if (!confirmDelete) {
+      return
+    }
+
+    setCredentialDeleteSubmitting(true)
+    setCredentialFormError(null)
+    try {
+      const response = await fetch(`${API_BASE}/credentials/${encodeURIComponent(selectedCredential.id)}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to delete credential (${response.status})`)
+      }
+
+      setSelectedCredentialId('')
+      await Promise.all([
+        loadCredentials(),
+        loadCredentialProviders(selectedCredential.owner_agent_id),
+      ])
+    } catch (err) {
+      setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setCredentialDeleteSubmitting(false)
+    }
+  }, [loadCredentialProviders, loadCredentials, selectedCredential])
 
   useEffect(() => {
     const nextSelection = filteredCredentialsForAudit.some((item) => item.id === selectedCredentialId)
@@ -1320,9 +1356,17 @@ function App() {
         <button
           type="button"
           onClick={() => void submitUpdateCredential()}
-          disabled={!selectedCredential || credentialFormSubmitting || !hasPendingCredentialEditChange}
+          disabled={!selectedCredential || credentialFormSubmitting || credentialDeleteSubmitting || !hasPendingCredentialEditChange}
         >
           {credentialFormSubmitting ? 'Saving…' : 'Update selected credential'}
+        </button>
+        <button
+          type="button"
+          onClick={() => void submitDeleteCredential()}
+          disabled={!selectedCredential || credentialFormSubmitting || credentialDeleteSubmitting}
+          style={{ color: '#b00020' }}
+        >
+          {credentialDeleteSubmitting ? 'Deleting…' : 'Delete selected credential'}
         </button>
       </div>
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
