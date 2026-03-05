@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 08:50 KST — Agent Chat parallel offset cycle
+- Delta: Added direction-aware root-jump helper suffix parity for `Shift+Home`/`Shift+R` in `frontend/src/main.tsx`.
+  - Extended `rootJumpHintHelp` to append source-aware guidance when root hints come from shift shortcuts (`Shift+Home` / `Shift+R`).
+  - Added explicit direction semantics in helper microcopy:
+    - `Shift+Home` → `Direction: hard jump to Root thread.`
+    - `Shift+R` → `Direction: root context recall.`
+  - Kept root jump/no-op base semantics unchanged (`Jumped to root...` / `Already at root...`) and composed suffixes only when source shortcut is present.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add root-jump source badge helper tooltip parity so `⇧Home`/`⇧R` badges expose the same direction semantics on hover.
+
 ## 2026-03-06 08:31 KST — Agent Chat parallel offset cycle
 - Delta: Added direction-aware Shift+Page helper suffixes for boundary jump legends in `frontend/src/main.tsx`.
   - Extended `firstVisibleJumpHintHelp` with `shiftPageDirectionHelp` mapping so `Shift+PageUp` helper text now explicitly says `Direction: toward first visible.`

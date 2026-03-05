@@ -1602,16 +1602,34 @@ function App() {
       return null
     }
 
+    const rootShortcutSourceHelp =
+      rootJumpSourceShortcut === 'Shift+Home' || rootJumpSourceShortcut === 'Shift+R'
+        ? `${rootJumpSourceShortcut} keeps active filters while jumping to root context.`
+        : null
+
+    const rootDirectionHelp =
+      rootJumpSourceShortcut === 'Shift+Home'
+        ? 'Direction: hard jump to Root thread.'
+        : rootJumpSourceShortcut === 'Shift+R'
+          ? 'Direction: root context recall.'
+          : null
+
+    const rootHelpSuffix = [rootShortcutSourceHelp, rootDirectionHelp].filter(Boolean).join(' ')
+
     if (threadRootJumpHint.startsWith('Jumped to root thread')) {
-      return 'Jumped to root = switched focus to Root thread context.'
+      return `Jumped to root = switched focus to Root thread context.${
+        rootHelpSuffix ? ` ${rootHelpSuffix}` : ''
+      }`
     }
 
     if (threadRootJumpHint.startsWith('Already at root thread')) {
-      return 'Already at root = no-op confirmation (selection did not move).'
+      return `Already at root = no-op confirmation (selection did not move).${
+        rootHelpSuffix ? ` ${rootHelpSuffix}` : ''
+      }`
     }
 
     return null
-  }, [threadRootJumpHint])
+  }, [rootJumpSourceShortcut, threadRootJumpHint])
 
   const firstVisibleJumpHintHelp = useMemo(() => {
     if (!threadBoundaryJumpHint) {
