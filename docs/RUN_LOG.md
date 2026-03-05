@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 06:12 KST — Agent Chat offset lane cycle
+- Delta: Added compact legend coverage for standard boundary jump confirmations in `frontend/src/main.tsx`.
+  - Extended `firstVisibleJumpHintHelp` derivation to decode normal boundary transitions:
+    - `Jumped to first = normal boundary jump to the first visible result.`
+    - `Jumped to last = normal boundary jump to the last visible result.`
+  - Existing recovery/no-op legend semantics remain unchanged; this closes the remaining hint-legend gap for first/last jump variants.
+  - API contract unchanged (frontend-only helper-copy mapping).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: `51d383a` (pushed to `main`)
+- Next action: add equivalent compact legend copy for root-jump normal confirmations (`Jumped to root thread ...`) so root and boundary hints are equally self-describing.
+
 ## 2026-03-06 05:50 KST — Agent Chat offset lane cycle
 - Delta: Added last-visible recovery parity for thread filter quick jumps in `frontend/src/main.tsx`.
   - Introduced shared `recoverToVisibleBoundaryThread(source, boundary)` helper so filter-jump flows can target first/last visible threads with consistent recovery/no-op confirmations.
