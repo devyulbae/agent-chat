@@ -2021,7 +2021,7 @@ function App() {
         <button
           type="button"
           onClick={() => jumpToRootThreadContext('button')}
-          title="Shift+Home (or Shift+R)"
+          title="Shift+Home (or Shift+R) · Root hints show 1/N where N is currently visible filtered threads"
         >
           Jump root
         </button>
@@ -2125,7 +2125,16 @@ function App() {
               Copy selected
             </button>
             {threadRootJumpHint && (
-              <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
+              <small
+                aria-live="polite"
+                role="status"
+                title={
+                  threadRootJumpHint.includes(' · 1/')
+                    ? 'In root hints, N in 1/N is the number of currently visible threads after filters.'
+                    : undefined
+                }
+                style={{ color: '#1f4b99' }}
+              >
                 {threadRootJumpHint}
               </small>
             )}

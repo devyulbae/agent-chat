@@ -1,5 +1,26 @@
 # Run Log
 
+## 2026-03-06 04:14 KST — Agent Chat offset lane cycle
+- Delta: Clarified root-jump position-hint semantics with inline help copy in `frontend/src/main.tsx`.
+  - Updated `Jump root` button tooltip to explain that `1/N` in root hints is calculated from the currently visible filtered thread list.
+  - Added conditional hover help on live root-jump status hints (`threadRootJumpHint`) when position context is present (`· 1/N`), so operators can verify what `N` represents without leaving keyboard flow.
+  - API contract unchanged (frontend-only UX copy/tooltip refinement).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: mirror the same `N = visible filtered threads` clarification into keyboard helper microcopy near thread filter controls for non-hover discoverability.
+
+## 2026-03-06 04:02 KST — Agent Chat implementation cycle
+- Delta: Added compact root-position context to root-jump confirmation hints in `frontend/src/main.tsx`.
+  - Updated `jumpToRootThreadContext(...)` to append `· 1/N` when root is visible in the current filtered thread list.
+  - Applied parity for both jump and no-op confirmations (`Shift+Home`, `Shift+R`, and `Jump root` button) while preserving existing root identity suffix (`· Root`).
+  - Kept behavior unchanged when root is currently hidden by filters (no position suffix in that case).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `f32854d` (pushed to `main`)
+- Next action: add an inline tooltip/help copy for `Root · 1/N` jump hints clarifying that `N` reflects the currently filtered visible thread list.
+
 ## 2026-03-06 03:41 KST — Agent Chat implementation cycle
 - Delta: Added root target identity suffix to root-jump confirmations in `frontend/src/main.tsx`.
   - Updated `jumpToRootThreadContext(...)` hint copy to append `· Root` for both jump and no-op confirmations.
