@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 11:35 KST — Agent Chat offset lane cycle
+- Delta: Added edit-state validation UX for credential updates in `frontend/src/main.tsx` (frontend integration + API contract-safe PATCH behavior).
+  - Added derived edit-diff checks (`label`, optional `secret`, expiry/clear toggle) so UI can detect whether a PATCH would change server state.
+  - Disabled **Update selected credential** button until at least one effective edit is present.
+  - Added inline helper copy (`Edit a field to enable update.`) while preserving existing guidance that secret is optional and blank keeps current secret.
+  - Kept backend contract payload semantics unchanged (`clear_token_expires_at` vs `token_expires_at`), avoiding no-op PATCH submissions.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Commit: `e658703` (pushed to `main`)
+- Next action: add lightweight per-field "changed" indicators in the selected credential edit row so operators can see exactly which PATCH fields will be sent before saving.
+
 ## 2026-03-05 11:18 KST — Agent Chat offset lane cycle
 - Delta: Replaced prompt-based credential quick edit with inline update controls in `frontend/src/main.tsx` (frontend/API contract sync).
   - Added editable fields for selected credential: label, optional secret rotation input, and expiry datetime.
