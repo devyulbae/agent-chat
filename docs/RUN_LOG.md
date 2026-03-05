@@ -1,5 +1,33 @@
 # Run Log
 
+## 2026-03-05 10:22 KST — Agent Chat implementation cycle
+- Delta: Improved chat thread triage UX with unread navigation in `frontend/src/main.tsx`.
+  - Added computed unread thread list from existing unseen state.
+  - Added **Jump to next unread** action in composer bar (supports root thread + child threads).
+  - Added inline unread summary count (`Unread threads: N`) for quick situational awareness.
+- Quality gates:
+  - `./venv/bin/black backend` ✅
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `./venv/bin/pytest` ✅ (15 passed)
+- Next action: improve unread navigation by rotating through unread threads (instead of always selecting the first) and preserve cursor position after send.
+
+## 2026-03-05 10:12 KST — Agent Chat offset lane cycle
+- Delta: Added keyboard-first composer behavior in Chat Thread Explorer (`frontend/src/main.tsx`) to speed reply flow.
+  - Switched composer body control from single-line `<input>` to multi-line `<textarea>`.
+  - Added `handleComposerKeyDown` logic: **Enter** submits, **Shift+Enter** inserts newline.
+  - Added inline helper hint (`Enter to send • Shift+Enter newline`) near composer controls.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `./venv/bin/pytest` ✅ (15 passed)
+  - `cd frontend && npx vite build` ❌ blocker: unresolved import `react` during build (frontend dependencies not installed in current environment).
+- Blocker: Frontend build sanity cannot pass until local frontend dependencies are present.
+- Exact remedy:
+  1. `cd frontend && npm install`
+  2. `cd frontend && npx vite build`
+  3. If build passes, commit with prefix policy and push.
+- Commit: none (blocked by frontend build gate)
+- Next action: after dependency install/build recovery, add provider-suggestion owner filter sync to credential create/edit form (frontend + `/credentials/providers?owner_agent_id=...` contract usage).
+
 ## 2026-03-05 10:08 KST — Agent Chat cycle
 - Delta: Added thread ID filter UX in Chat Thread Explorer (`frontend/src/main.tsx`) for faster triage in high-thread channels.
   - Added local `threadFilterText` state with case-insensitive filtering against child thread IDs.

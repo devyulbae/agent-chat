@@ -357,6 +357,17 @@ function App() {
     }
   }, [channelId, composerBody, composerSenderId, loadMessages, loadThreads, selectedThreadId])
 
+  const handleComposerKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key !== 'Enter' || event.shiftKey || composerSubmitting) {
+        return
+      }
+      event.preventDefault()
+      void submitMessage()
+    },
+    [composerSubmitting, submitMessage]
+  )
+
   const loadCredentials = useCallback(
     async (signal?: AbortSignal) => {
       setCredentialLoading(true)
@@ -720,6 +731,14 @@ function App() {
     return childThreads.filter((thread) => (thread.thread_id ?? '').toLowerCase().includes(query))
   }, [childThreads, threadFilterText])
 
+  const unreadThreadIds = useMemo(() => {
+    return threads
+      .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
+      .map((thread) => thread.thread_id)
+  }, [threads, unseenThreadKeys])
+
+  const nextUnreadThreadId = unreadThreadIds.length > 0 ? unreadThreadIds[0] : undefined
+
   const typeCounts = useMemo(() => {
     if (!graph) {
       return { freeform: 0, department: 0, squad: 0 }
@@ -794,16 +813,27 @@ function App() {
           placeholder="agent-1"
         />
         <label htmlFor="composer-body">Message:</label>
-        <input
+        <textarea
           id="composer-body"
           value={composerBody}
           onChange={(event) => setComposerBody(event.target.value)}
+          onKeyDown={handleComposerKeyDown}
           placeholder={selectedThreadId ? `Reply in ${selectedThreadId}` : 'Root message'}
-          style={{ minWidth: 260 }}
+          rows={2}
+          style={{ minWidth: 260, resize: 'vertical' }}
         />
+        <small style={{ color: 'dimgray' }}>Enter to send • Shift+Enter newline</small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
         </button>
+        <button
+          type="button"
+          onClick={() => selectThread(nextUnreadThreadId ?? null)}
+          disabled={typeof nextUnreadThreadId === 'undefined'}
+        >
+          Jump to next unread
+        </button>
+        <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length}</small>
       </div>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
