@@ -1,5 +1,20 @@
 # Run Log
 
+## 2026-03-06 01:23 KST — Agent Chat implementation cycle
+- Delta: Added compact one-step keyboard navigation feedback for thread selection in `frontend/src/main.tsx`.
+  - Extended `moveVisibleThreadSelection(...)` to accept key source (`J`/`K`/`ArrowDown`/`ArrowUp`) and emit transient confirmation hints.
+  - Added explicit no-op confirmation when the move resolves to the same thread (`Already at only visible thread (...) confirmed`) for single-result parity with boundary/root confirmations.
+  - Preserved existing cyclic selection behavior while surfacing direction-aware copy (`Moved to next/previous visible thread (...)`).
+  - API contract unchanged (frontend-only UX feedback wiring).
+- Blocker: `cd frontend && npm run build` failed (`Missing script: "build"`).
+- Fix action: switched validation command to existing project build path `cd frontend && npx vite build` and reran to green.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add compact selection-position hint (`Thread X of Y`) to the same one-step keyboard feedback so operators can orient quickly after rapid J/K triage.
+
 ## 2026-03-06 01:10 KST — Agent Chat offset lane cycle
 - Delta: Added explicit boundary-jump confirmation hints for thread-list keyboard navigation in `frontend/src/main.tsx`.
   - Extended `jumpToVisibleThreadBoundary(...)` to emit source-aware confirmation copy for `Home` / `End` / `PageUp` / `PageDown` jumps.

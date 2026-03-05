@@ -1613,7 +1613,7 @@ function App() {
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
   const moveVisibleThreadSelection = useCallback(
-    (step: 1 | -1) => {
+    (step: 1 | -1, sourceKey: 'J' | 'K' | 'ArrowDown' | 'ArrowUp') => {
       if (!visibleThreadIds.length) {
         return
       }
@@ -1621,9 +1621,17 @@ function App() {
       const fallbackIndex = step > 0 ? 0 : visibleThreadIds.length - 1
       const startIndex = currentIndex >= 0 ? currentIndex : fallbackIndex
       const nextIndex = (startIndex + step + visibleThreadIds.length) % visibleThreadIds.length
-      selectThread(visibleThreadIds[nextIndex])
+      const targetThreadId = visibleThreadIds[nextIndex]
+      const alreadyAtTarget = selectedThreadId === targetThreadId
+      selectThread(targetThreadId)
+      const directionLabel = step > 0 ? 'next' : 'previous'
+      setThreadBoundaryJumpHint(
+        alreadyAtTarget
+          ? `Already at only visible thread (${sourceKey} confirmed).`
+          : `Moved to ${directionLabel} visible thread (${sourceKey}).`
+      )
     },
-    [selectThread, selectedVisibleThreadIndex, visibleThreadIds]
+    [selectThread, selectedThreadId, selectedVisibleThreadIndex, visibleThreadIds]
   )
 
   const jumpToVisibleThreadBoundary = useCallback(
@@ -1734,8 +1742,11 @@ function App() {
         jumpToVisibleThreadBoundary('first', 'PageUp')
         return
       }
-      const step = lowered === 'j' || event.key === 'ArrowDown' ? 1 : -1
-      moveVisibleThreadSelection(step)
+      const isForwardStep = lowered === 'j' || event.key === 'ArrowDown'
+      const step = isForwardStep ? 1 : -1
+      const sourceKey: 'J' | 'K' | 'ArrowDown' | 'ArrowUp' =
+        lowered === 'j' ? 'J' : lowered === 'k' ? 'K' : event.key === 'ArrowDown' ? 'ArrowDown' : 'ArrowUp'
+      moveVisibleThreadSelection(step, sourceKey)
     }
 
     window.addEventListener('keydown', onKeyDown)
