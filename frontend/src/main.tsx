@@ -665,6 +665,20 @@ function App() {
   )
 
   useEffect(() => {
+    if (!credentialAuditPagingAnnouncement || credentialAuditPaging) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCredentialAuditPagingAnnouncement(null)
+    }, 4000)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [credentialAuditPaging, credentialAuditPagingAnnouncement])
+
+  useEffect(() => {
     const raw = window.localStorage.getItem(threadStateStorageKey(channelId))
     setUnreadClearUndoSnapshot(null)
     if (!raw) {

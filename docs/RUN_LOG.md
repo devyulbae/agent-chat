@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 22:42 KST — Agent Chat implementation cycle
+- Delta: Added auto-expiring live-region copy for credential-audit older-page announcements in `frontend/src/main.tsx`.
+  - Added a focused `useEffect` that clears `credentialAuditPagingAnnouncement` 4 seconds after append-mode pagination settles.
+  - Loading-phase announcement (`Loading older audit events…`) stays present while paging is active, then success/empty/error completion messages now self-dismiss to avoid stale screen-reader/status noise.
+  - No API contract change (`GET /audit-events` unchanged: `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a brief timestamp (e.g., “just now”) alongside completion announcements so operators can correlate older-page status with rapid repeated pagination attempts.
+
 ## 2026-03-05 22:31 KST — Agent Chat offset lane cycle
 - Delta: Added polite live-region progress announcements for credential audit older-page pagination in `frontend/src/main.tsx`.
   - Added `credentialAuditPagingAnnouncement` state to surface append-mode pagination status for assistive tech.
