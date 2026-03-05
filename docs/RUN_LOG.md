@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 10:41 KST — Agent Chat implementation cycle
+- Delta: Scoped credential provider suggestions to selected owner context in `frontend/src/main.tsx`.
+  - Updated provider loader to call `GET /credentials/providers?owner_agent_id=...` when owner input is set.
+  - Wired provider reload effect to owner field changes so autocomplete list follows current owner agent.
+  - Updated post-create refresh path to reload provider suggestions for the same owner used in credential creation.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (15 passed)
+- Next action: add a small provider-scope UX hint (e.g., “showing providers for owner X”) and explicit fallback affordance when owner-scoped list is empty.
+
 ## 2026-03-05 10:31 KST — Agent Chat offset lane cycle
 - Delta: Improved unread triage flow and composer cursor continuity in `frontend/src/main.tsx`.
   - Updated **Jump to next unread** to rotate through unread threads relative to current selection (wrap-around instead of always choosing first).

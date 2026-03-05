@@ -413,26 +413,37 @@ function App() {
     [credentialFilter, expiringWithinHours]
   )
 
-  const loadCredentialProviders = useCallback(async (signal?: AbortSignal) => {
-    setProviderLoading(true)
-    setProviderError(null)
-    try {
-      const response = await fetch(`${API_BASE}/credentials/providers`, { signal })
-      if (!response.ok) {
-        throw new Error(`Failed to load credential providers (${response.status})`)
+  const loadCredentialProviders = useCallback(
+    async (ownerAgentId?: string, signal?: AbortSignal) => {
+      setProviderLoading(true)
+      setProviderError(null)
+      try {
+        const params = new URLSearchParams()
+        const trimmedOwnerAgentId = ownerAgentId?.trim() ?? ''
+        if (trimmedOwnerAgentId) {
+          params.set('owner_agent_id', trimmedOwnerAgentId)
+        }
+        const query = params.toString()
+        const url = `${API_BASE}/credentials/providers${query ? `?${query}` : ''}`
+
+        const response = await fetch(url, { signal })
+        if (!response.ok) {
+          throw new Error(`Failed to load credential providers (${response.status})`)
+        }
+        const payload = (await response.json()) as string[]
+        setCredentialProviders(payload)
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return
+        }
+        setProviderError(err instanceof Error ? err.message : 'Unknown error')
+        setCredentialProviders([])
+      } finally {
+        setProviderLoading(false)
       }
-      const payload = (await response.json()) as string[]
-      setCredentialProviders(payload)
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') {
-        return
-      }
-      setProviderError(err instanceof Error ? err.message : 'Unknown error')
-      setCredentialProviders([])
-    } finally {
-      setProviderLoading(false)
-    }
-  }, [])
+    },
+    []
+  )
 
   const loadCredentialAuditEvents = useCallback(
     async (credentialId: string, eventType: string, signal?: AbortSignal) => {
@@ -552,9 +563,9 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
-    void loadCredentialProviders(controller.signal)
+    void loadCredentialProviders(newCredentialOwnerAgentId, controller.signal)
     return () => controller.abort()
-  }, [loadCredentialProviders])
+  }, [loadCredentialProviders, newCredentialOwnerAgentId])
 
   const credentialProvidersWithFallback = useMemo(() => {
     const fromCredentials = credentials.map((item) => item.provider)
@@ -610,7 +621,7 @@ function App() {
       setNewCredentialLabel('')
       setNewCredentialSecret('')
       setNewCredentialExpiresAt('')
-      await Promise.all([loadCredentials(), loadCredentialProviders()])
+      await Promise.all([loadCredentials(), loadCredentialProviders(ownerAgentId)])
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
