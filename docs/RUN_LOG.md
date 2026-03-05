@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 12:06 KST — Agent Chat implementation cycle
+- Delta: Added one-click unread reset action in Chat Thread Explorer (`frontend/src/main.tsx`) for post-triage cleanup.
+  - Added **Clear all unread markers** button beside unread navigation controls.
+  - Button is channel-scoped (applies to currently selected channel state only).
+  - Clear action snapshots current `thread.message_count` for root + child threads into seen-count storage and clears transient unseen flags.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a lightweight confirmation/undo affordance for clear-all unread so operators can revert accidental resets without full manual thread reopening.
+
 ## 2026-03-05 11:43 KST — Agent Chat implementation cycle
 - Delta: Added unread-focused thread triage control in `frontend/src/main.tsx` for faster chat inbox handling.
   - Added `unread only` toggle beside thread ID filter in **Chat Thread Explorer**.

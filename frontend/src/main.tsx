@@ -861,6 +861,28 @@ function App() {
     selectThread(unreadThreadIds[nextIndex])
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
+  const clearAllUnreadMarkers = useCallback(() => {
+    if (!threads.length) {
+      return
+    }
+    const marker = `cleared:${Date.now()}`
+    setLastSeenByThread((current) => {
+      const next = { ...current }
+      threads.forEach((thread) => {
+        next[toThreadKey(thread.thread_id)] = marker
+      })
+      return next
+    })
+    setLastSeenCountByThread((current) => {
+      const next = { ...current }
+      threads.forEach((thread) => {
+        next[toThreadKey(thread.thread_id)] = thread.message_count
+      })
+      return next
+    })
+    setUnseenThreadKeys([])
+  }, [threads])
+
   const typeCounts = useMemo(() => {
     if (!graph) {
       return { freeform: 0, department: 0, squad: 0 }
@@ -951,6 +973,9 @@ function App() {
         </button>
         <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
           Jump to next unread
+        </button>
+        <button type="button" onClick={clearAllUnreadMarkers} disabled={unreadThreadIds.length === 0}>
+          Clear all unread markers
         </button>
         <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length}</small>
       </div>
