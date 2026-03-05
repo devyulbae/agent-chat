@@ -1468,6 +1468,9 @@ function App() {
   const selectedVisibleThreadPositionTitle = selectedVisibleThreadHiddenByFilter
     ? 'Selection is hidden by current filters. Use "Jump to first visible" to recover to the visible list.'
     : undefined
+  const selectedVisibleThreadRecoveryHint = selectedVisibleThreadHiddenByFilter
+    ? 'Selection hidden by current filters → use “Jump to first visible”.'
+    : null
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -2112,13 +2115,18 @@ function App() {
               Selection: {selectedVisibleThreadPositionLabel} ({selectedVisibleThreadLabel})
             </small>
             {selectedVisibleThreadHiddenByFilter && (
-              <button
-                type="button"
-                onClick={() => selectThread(visibleThreadIds[0] ?? null)}
-                title="Selected thread is hidden by filters. Jump to first visible result."
-              >
-                Jump to first visible
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => selectThread(visibleThreadIds[0] ?? null)}
+                  title="Selected thread is hidden by filters. Jump to first visible result."
+                >
+                  Jump to first visible
+                </button>
+                {selectedVisibleThreadRecoveryHint && (
+                  <small style={{ color: '#666' }}>{selectedVisibleThreadRecoveryHint}</small>
+                )}
+              </>
             )}
             <button
               type="button"

@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 04:42 KST — Agent Chat implementation cycle
+- Delta: Added non-hover recovery microcopy for hidden thread selections in `frontend/src/main.tsx`.
+  - Added derived `selectedVisibleThreadRecoveryHint` text when current selection is hidden by active thread filters.
+  - Wired inline helper text directly beside `Jump to first visible` so keyboard/touch users get recovery guidance without relying on tooltip hover.
+  - API contract unchanged (frontend-only chat thread UX wiring).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add source-aware confirmation hint copy when `Jump to first visible` is used (button/Enter) so recovery actions get the same transient feedback parity as boundary/root keyboard jumps.
+
 ## 2026-03-06 04:30 KST — Agent Chat offset lane cycle
 - Delta: Added hidden-selection tooltip guidance in `frontend/src/main.tsx` to clarify `hidden/N` thread position state and recovery action.
   - Added derived `selectedVisibleThreadPositionTitle` copy that explains selection is hidden by current filters and points operators to `Jump to first visible`.
