@@ -52,6 +52,22 @@ type AuditEvent = {
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
 
+function buildWebSocketChannelUrl(channelId: string): string {
+  const encodedChannelId = encodeURIComponent(channelId)
+  const normalizedApiBase = API_BASE.replace(/\/+$/, '')
+  const wsPath = `${normalizedApiBase}/ws/channels/${encodedChannelId}`
+
+  if (/^https?:\/\//i.test(normalizedApiBase)) {
+    const httpUrl = new URL(wsPath)
+    httpUrl.protocol = httpUrl.protocol === 'https:' ? 'wss:' : 'ws:'
+    return httpUrl.toString()
+  }
+
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+  const normalizedPath = wsPath.startsWith('/') ? wsPath : `/${wsPath}`
+  return `${wsProtocol}//${window.location.host}${normalizedPath}`
+}
+
 function toThreadKey(threadId: string | null): string {
   return threadId ?? ROOT_THREAD_KEY
 }
@@ -1076,9 +1092,7 @@ function App() {
       return
     }
 
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const wsBase = `${wsProtocol}//${window.location.host}`
-    const wsUrl = `${wsBase}/api/v1/ws/channels/${encodeURIComponent(channelId)}`
+    const wsUrl = buildWebSocketChannelUrl(channelId)
     const socket = new WebSocket(wsUrl)
 
     socket.onopen = () => {
