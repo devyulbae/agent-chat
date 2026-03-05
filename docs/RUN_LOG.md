@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 12:30 KST — Agent Chat offset lane cycle
+- Delta: Added keyboard shortcut support for unread triage in `frontend/src/main.tsx` (frontend integration, API contract unchanged).
+  - Added global `keydown` listener for **U** to trigger `jumpToNextUnread` when focus is outside editable controls.
+  - Guarded shortcut against modifier keys/repeat events and ignored inputs/textareas/select/contenteditable targets.
+  - Added inline affordance text near unread count (`Press U to jump`) so operators discover the shortcut without docs lookup.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add visible disabled-state hint for unread jump control when no unread threads exist (e.g., lightweight helper copy) to clarify why action is unavailable.
+
 ## 2026-03-05 12:21 KST — Agent Chat implementation cycle
 - Delta: Tightened chat unread-reset UX lifecycle in `frontend/src/main.tsx`.
   - Added channel-scope safety reset by clearing unread undo snapshot whenever `channelId` changes.

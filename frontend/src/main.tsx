@@ -151,6 +151,17 @@ function toIsoFromDatetimeLocal(value: string): string | null {
   return parsed.toISOString()
 }
 
+function isEditableElement(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false
+  }
+  const tagName = target.tagName.toLowerCase()
+  if (tagName === 'input' || tagName === 'textarea' || tagName === 'select') {
+    return true
+  }
+  return target.isContentEditable
+}
+
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
@@ -871,6 +882,31 @@ function App() {
     selectThread(unreadThreadIds[nextIndex])
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'u') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!unreadThreadIds.length) {
+        return
+      }
+      event.preventDefault()
+      jumpToNextUnread()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [jumpToNextUnread, unreadThreadIds.length])
+
   const clearAllUnreadMarkers = useCallback(() => {
     if (!threads.length || unreadThreadIds.length === 0) {
       return
@@ -1028,7 +1064,7 @@ function App() {
             </button>
           </small>
         )}
-        <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length}</small>
+        <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length} • Press U to jump</small>
       </div>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
