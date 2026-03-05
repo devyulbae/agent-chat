@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 08:31 KST — Agent Chat parallel offset cycle
+- Delta: Added direction-aware Shift+Page helper suffixes for boundary jump legends in `frontend/src/main.tsx`.
+  - Extended `firstVisibleJumpHintHelp` with `shiftPageDirectionHelp` mapping so `Shift+PageUp` helper text now explicitly says `Direction: toward first visible.`
+  - Added complementary `Shift+PageDown` helper direction suffix (`Direction: toward last visible.`).
+  - Composed direction + existing source semantics into one suffix so all boundary hint variants (recovered/no-op/normal jump) keep consistent copy behavior.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add direction-aware microcopy parity for root-jump helper hints (`Shift+Home` vs `Shift+R`) so boundary/root shortcut legends stay equally explicit.
+
 ## 2026-03-06 08:15 KST — Agent Chat parallel offset cycle
 - Delta: Added compact helper legend coverage for root-jump confirmation hints in `frontend/src/main.tsx`.
   - Added derived `rootJumpHintHelp` memo to decode root-jump status text into explicit semantics.
