@@ -1674,7 +1674,14 @@ function App() {
   const jumpToVisibleThreadBoundary = useCallback(
     (
       boundary: 'first' | 'last',
-      sourceKey: 'Home' | 'End' | 'PageUp' | 'PageDown' | 'Shift+End' | 'Shift+PageDown'
+      sourceKey:
+        | 'Home'
+        | 'End'
+        | 'PageUp'
+        | 'PageDown'
+        | 'Shift+PageUp'
+        | 'Shift+End'
+        | 'Shift+PageDown'
     ) => {
       if (!visibleThreadIds.length) {
         return
@@ -1752,8 +1759,9 @@ function App() {
       if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
         return
       }
-      const isShiftLastVisibleShortcut = event.key === 'End' || event.key === 'PageDown'
-      if (!isShiftLastVisibleShortcut) {
+      const isShiftBoundaryShortcut =
+        event.key === 'Home' || event.key === 'PageUp' || event.key === 'End' || event.key === 'PageDown'
+      if (!isShiftBoundaryShortcut) {
         return
       }
       if (isEditableElement(event.target)) {
@@ -1763,6 +1771,10 @@ function App() {
         return
       }
       event.preventDefault()
+      if (event.key === 'Home' || event.key === 'PageUp') {
+        jumpToVisibleThreadBoundary('first', event.key === 'PageUp' ? 'Shift+PageUp' : 'Home')
+        return
+      }
       jumpToVisibleThreadBoundary('last', event.key === 'PageDown' ? 'Shift+PageDown' : 'Shift+End')
     }
 
@@ -1983,7 +1995,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root • Shift+End/Shift+PgDn jump last visible
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • Shift+Home (or Shift+R) jump root • Shift+PgUp/Shift+PgDn jump first/last visible
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
@@ -2060,7 +2072,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+End/Shift+PgDn to jump last while keeping filters · Y to copy selected
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
