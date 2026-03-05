@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 01:41 KST — Agent Chat implementation cycle
+- Delta: Added keyboard thread-label copy shortcut wiring in `frontend/src/main.tsx` for faster triage handoff.
+  - Extended `copySelectedThreadLabel(...)` with source-aware feedback copy so keyboard-triggered copy confirms via `Copied thread via Y: ...`.
+  - Added global `Y` key handler (outside editable fields) to copy current selected thread label (`root` or thread id) without pointer use.
+  - Updated inline thread helper hint text to advertise `Y to copy selected` for discoverability.
+  - API contract unchanged (frontend-only chat thread UX wiring).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (17 passed)
+- Next action: add a tiny thread-copy context hint that includes current selection index (`X/Y`) so copied-thread confirmations carry both identity and list position during keyboard triage.
+
 ## 2026-03-06 01:30 KST — Agent Chat offset lane cycle
 - Delta: Added compact selection-position suffix to one-step keyboard thread navigation feedback in `frontend/src/main.tsx`.
   - Extended `moveVisibleThreadSelection(...)` to append position context (`X/Y`) in transient hint copy after `J/K` / `↑/↓` moves.

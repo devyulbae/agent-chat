@@ -483,20 +483,25 @@ function App() {
     [selectThread, selectedThreadId]
   )
 
-  const copySelectedThreadLabel = useCallback(async () => {
-    const threadLabel = selectedThreadId ?? 'root'
-    if (!navigator.clipboard?.writeText) {
-      setThreadCopyHint('Clipboard API unavailable in this browser context.')
-      return
-    }
+  const copySelectedThreadLabel = useCallback(
+    async (source: 'button' | 'shortcut' = 'button') => {
+      const threadLabel = selectedThreadId ?? 'root'
+      if (!navigator.clipboard?.writeText) {
+        setThreadCopyHint('Clipboard API unavailable in this browser context.')
+        return
+      }
 
-    try {
-      await navigator.clipboard.writeText(threadLabel)
-      setThreadCopyHint(`Copied thread: ${threadLabel}`)
-    } catch {
-      setThreadCopyHint('Failed to copy thread label.')
-    }
-  }, [selectedThreadId])
+      try {
+        await navigator.clipboard.writeText(threadLabel)
+        setThreadCopyHint(
+          source === 'shortcut' ? `Copied thread via Y: ${threadLabel}` : `Copied thread: ${threadLabel}`
+        )
+      } catch {
+        setThreadCopyHint('Failed to copy thread label.')
+      }
+    },
+    [selectedThreadId]
+  )
 
   const copyCredentialAuditTimestamp = useCallback(async (timestamp: number | null, copyLabel: string) => {
     if (!timestamp || credentialAuditPaging) {
@@ -1535,6 +1540,28 @@ function App() {
   }, [threadCopyHint])
 
   useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'y') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      void copySelectedThreadLabel('shortcut')
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [copySelectedThreadLabel])
+
+  useEffect(() => {
     if (!credentialAuditPagingCopyHint) {
       return
     }
@@ -1995,7 +2022,7 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last
+              / to focus · Enter to jump top result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection · Home/End (or PgUp/PgDn) to jump first/last · Y to copy selected
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
