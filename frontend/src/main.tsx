@@ -407,6 +407,17 @@ function App() {
     [composerSubmitting, submitMessage]
   )
 
+  const handleThreadFilterKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key !== 'Escape' || !threadFilterText) {
+        return
+      }
+      event.preventDefault()
+      setThreadFilterText('')
+    },
+    [threadFilterText]
+  )
+
   const loadCredentials = useCallback(
     async (signal?: AbortSignal) => {
       setCredentialLoading(true)
@@ -1174,6 +1185,7 @@ function App() {
             <input
               value={threadFilterText}
               onChange={(event) => setThreadFilterText(event.target.value)}
+              onKeyDown={handleThreadFilterKeyDown}
               placeholder="Filter thread IDs"
             />
             <button

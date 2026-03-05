@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 13:50 KST — Agent Chat offset lane cycle
+- Delta: Added keyboard **Escape** support to clear thread ID text filter in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
+  - Added `handleThreadFilterKeyDown` callback on the thread filter input.
+  - Pressing `Escape` now clears non-empty `threadFilterText` immediately for faster triage reset without mouse use.
+  - No-op guard keeps behavior quiet when filter is already empty.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add a small filter hint (`Esc to clear`) near the input so keyboard affordance is discoverable.
+
 ## 2026-03-05 13:42 KST — Agent Chat implementation cycle
 - Delta: Added a compact **Clear filter** action to Chat Thread Explorer thread-ID filtering in `frontend/src/main.tsx`.
   - Added inline `Clear filter` button next to the thread filter input.
