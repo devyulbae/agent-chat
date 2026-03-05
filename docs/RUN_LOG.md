@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 18:30 KST — Agent Chat offset lane cycle
+- Delta: Added a compact truncation badge for credential audit summaries in `frontend/src/main.tsx` so operators can quickly spot potential timeline capping.
+  - Added derived `isAuditResultCapped` state (`true` only when audit load is successful and returned exactly 20 events).
+  - Rendered subdued inline badge `capped to latest 20` next to existing scope/result hint text.
+  - Added tooltip context clarifying API behavior (`up to 20 latest events per request`) while keeping current audit request contract unchanged.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (16 passed)
+- Next action: add a compact "load older"/pagination affordance to audit timeline controls so operators can continue investigation beyond latest-20 results when needed.
+
 ## 2026-03-05 18:21 KST — Agent Chat implementation cycle
 - Delta: Added compact audit result-count context next to credential scope hint in `frontend/src/main.tsx`.
   - Added derived `auditResultHint` memo to summarize current credential audit load state.

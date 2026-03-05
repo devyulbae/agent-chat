@@ -720,6 +720,9 @@ function App() {
     return `Showing ${countLabel} (latest 20 max).`
   }, [credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
 
+  const isAuditResultCapped =
+    !credentialAuditLoading && !credentialAuditError && credentialAuditEvents.length === 20
+
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
     [credentials, selectedCredentialId]
@@ -1882,7 +1885,23 @@ function App() {
         </button>
       </div>
       <p style={{ fontSize: 12, color: '#666', marginTop: 6 }}>
-        {auditScopeHint} {auditResultHint}
+        {auditScopeHint} {auditResultHint}{' '}
+        {isAuditResultCapped && (
+          <span
+            title="Audit API returns up to 20 latest events per request."
+            style={{
+              display: 'inline-block',
+              padding: '1px 6px',
+              borderRadius: 999,
+              border: '1px solid #c9b458',
+              color: '#6f5a00',
+              backgroundColor: '#fff7cf',
+              fontWeight: 600,
+            }}
+          >
+            capped to latest 20
+          </span>
+        )}
       </p>
 
       {credentialError && <p style={{ color: 'crimson' }}>Error: {credentialError}</p>}
