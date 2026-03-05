@@ -1576,6 +1576,20 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
+  const rootJumpSourceShortcut = useMemo(() => {
+    if (!threadRootJumpHint) {
+      return null
+    }
+    return threadRootJumpHint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
+  }, [threadRootJumpHint])
+
+  const rootJumpShiftShortcutBadge =
+    rootJumpSourceShortcut === 'Shift+Home'
+      ? '⇧Home'
+      : rootJumpSourceShortcut === 'Shift+R'
+        ? '⇧R'
+        : null
+
   const firstVisibleJumpHintHelp = useMemo(() => {
     if (!threadBoundaryJumpHint) {
       return null
@@ -2352,6 +2366,22 @@ function App() {
                 }
                 style={{ color: '#1f4b99' }}
               >
+                {rootJumpShiftShortcutBadge && (
+                  <span
+                    title={`${rootJumpSourceShortcut} root jump`}
+                    style={{
+                      display: 'inline-block',
+                      marginRight: 6,
+                      padding: '0 4px',
+                      border: '1px solid #97b6f4',
+                      borderRadius: 6,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {rootJumpShiftShortcutBadge}
+                  </span>
+                )}
                 {threadRootJumpHint}
               </small>
             )}
