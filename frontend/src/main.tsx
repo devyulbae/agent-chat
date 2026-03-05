@@ -183,6 +183,7 @@ function App() {
   const [composerSubmitting, setComposerSubmitting] = useState(false)
   const [threadFilterText, setThreadFilterText] = useState('')
   const [showUnreadOnlyThreads, setShowUnreadOnlyThreads] = useState(false)
+  const [includeRootInUnreadOnly, setIncludeRootInUnreadOnly] = useState(true)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
 
@@ -873,12 +874,16 @@ function App() {
     [sortedChildThreads, unseenThreadKeys]
   )
 
+  const hasUnreadRootThread = unseenThreadKeys.includes(ROOT_THREAD_KEY)
+  const showRootThreadInList = !showUnreadOnlyThreads || includeRootInUnreadOnly || hasUnreadRootThread
+
   const threadFilterSummary = useMemo(() => {
     const visibleCount = filteredChildThreads.length
     const totalChildCount = sortedChildThreads.length
 
     if (showUnreadOnlyThreads) {
-      return `Showing ${visibleCount} of ${unreadChildThreadCount} unread thread${unreadChildThreadCount === 1 ? '' : 's'}`
+      const rootMode = includeRootInUnreadOnly ? 'including root' : 'excluding root'
+      return `Showing ${visibleCount} of ${unreadChildThreadCount} unread thread${unreadChildThreadCount === 1 ? '' : 's'} (${rootMode})`
     }
 
     if (threadFilterText.trim()) {
@@ -886,7 +891,14 @@ function App() {
     }
 
     return `Total child threads: ${totalChildCount}`
-  }, [filteredChildThreads.length, showUnreadOnlyThreads, sortedChildThreads.length, threadFilterText, unreadChildThreadCount])
+  }, [
+    filteredChildThreads.length,
+    includeRootInUnreadOnly,
+    showUnreadOnlyThreads,
+    sortedChildThreads.length,
+    threadFilterText,
+    unreadChildThreadCount,
+  ])
 
   const unreadThreadIds = useMemo(() => {
     return threads
@@ -1112,27 +1124,38 @@ function App() {
               />
               unread only
             </label>
+            <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
+              <input
+                type="checkbox"
+                checked={includeRootInUnreadOnly}
+                disabled={!showUnreadOnlyThreads}
+                onChange={(event) => setIncludeRootInUnreadOnly(event.target.checked)}
+              />
+              include root
+            </label>
             <small style={{ color: '#666' }}>{threadFilterSummary}</small>
           </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (
             <ul>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => selectThread(null)}
-                  style={{
-                    fontWeight: selectedThreadId === null ? 700 : 400,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Root messages ({rootThreadSummary?.message_count ?? 0})
-                  {rootThreadSummary?.latest_message_at
-                    ? ` · last ${formatTimestamp(rootThreadSummary.latest_message_at)}`
-                    : ''}
-                  {unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
-                </button>
-              </li>
+              {showRootThreadInList && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => selectThread(null)}
+                    style={{
+                      fontWeight: selectedThreadId === null ? 700 : 400,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Root messages ({rootThreadSummary?.message_count ?? 0})
+                    {rootThreadSummary?.latest_message_at
+                      ? ` · last ${formatTimestamp(rootThreadSummary.latest_message_at)}`
+                      : ''}
+                    {unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
+                  </button>
+                </li>
+              )}
               {filteredChildThreads.map((thread) => (
                 <li key={thread.thread_id}>
                   <button
