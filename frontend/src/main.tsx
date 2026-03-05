@@ -128,6 +128,19 @@ function formatTimestamp(value: string): string {
   return parsed.toLocaleString()
 }
 
+function formatNoticeAge(timestampMs: number): string {
+  const elapsedSeconds = Math.max(0, Math.floor((Date.now() - timestampMs) / 1000))
+  if (elapsedSeconds < 60) {
+    return 'just now'
+  }
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60)
+  if (elapsedMinutes < 60) {
+    return `${elapsedMinutes}m ago`
+  }
+  const elapsedHours = Math.floor(elapsedMinutes / 60)
+  return `${elapsedHours}h ago`
+}
+
 function toDatetimeLocalValue(value: string | null): string {
   if (!value) {
     return ''
@@ -197,6 +210,7 @@ function App() {
   const [providerError, setProviderError] = useState<string | null>(null)
   const [credentialFormError, setCredentialFormError] = useState<string | null>(null)
   const [credentialFormNotice, setCredentialFormNotice] = useState<string | null>(null)
+  const [credentialFormNoticeAt, setCredentialFormNoticeAt] = useState<number | null>(null)
   const [credentialFormSubmitting, setCredentialFormSubmitting] = useState(false)
   const [credentialDeleteSubmitting, setCredentialDeleteSubmitting] = useState(false)
   const [newCredentialOwnerAgentId, setNewCredentialOwnerAgentId] = useState('agent-ui')
@@ -706,6 +720,12 @@ function App() {
     setEditCredentialClearExpiry(false)
   }, [selectedCredential])
 
+  useEffect(() => {
+    if (!credentialFormNotice) {
+      setCredentialFormNoticeAt(null)
+    }
+  }, [credentialFormNotice])
+
   const submitCreateCredential = useCallback(async () => {
     const provider = newCredentialProvider.trim()
     const ownerAgentId = newCredentialOwnerAgentId.trim()
@@ -747,6 +767,7 @@ function App() {
       setNewCredentialExpiresAt('')
       await Promise.all([loadCredentials(), loadCredentialProviders(ownerAgentId)])
       setCredentialFormNotice('Credential created successfully.')
+      setCredentialFormNoticeAt(Date.now())
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -809,6 +830,7 @@ function App() {
       setEditCredentialSecret('')
       await loadCredentials()
       setCredentialFormNotice('Selected credential updated successfully.')
+      setCredentialFormNoticeAt(Date.now())
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -856,6 +878,7 @@ function App() {
         loadCredentialProviders(selectedCredential.owner_agent_id),
       ])
       setCredentialFormNotice('Selected credential deleted successfully.')
+      setCredentialFormNoticeAt(Date.now())
     } catch (err) {
       setCredentialFormError(err instanceof Error ? err.message : 'Unknown error')
       setCredentialFormNotice(null)
@@ -1621,6 +1644,7 @@ function App() {
       {credentialFormNotice && (
         <p role="status" aria-live="polite" style={{ color: '#1f6f3e' }}>
           {credentialFormNotice}
+          {credentialFormNoticeAt ? ` (${formatNoticeAge(credentialFormNoticeAt)})` : ''}
         </p>
       )}
 
