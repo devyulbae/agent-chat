@@ -209,7 +209,7 @@ function App() {
   const [editCredentialClearExpiry, setEditCredentialClearExpiry] = useState(false)
   const [selectedCredentialId, setSelectedCredentialId] = useState<string>('')
   const [auditProviderFilter, setAuditProviderFilter] = useState<string>('all')
-  const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('all')
+  const [auditActionFilter, setAuditActionFilter] = useState<string>('all')
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
@@ -485,7 +485,7 @@ function App() {
   )
 
   const loadCredentialAuditEvents = useCallback(
-    async (credentialId: string, eventType: string, signal?: AbortSignal) => {
+    async (credentialId: string, action: string, signal?: AbortSignal) => {
       if (!credentialId) {
         setCredentialAuditEvents([])
         setCredentialAuditError(null)
@@ -500,8 +500,8 @@ function App() {
         entity_id: credentialId,
         limit: '20',
       })
-      if (eventType !== 'all') {
-        params.set('event_type', eventType)
+      if (action !== 'all') {
+        params.set('action', action)
       }
 
       try {
@@ -816,9 +816,9 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
-    void loadCredentialAuditEvents(selectedCredentialId, auditEventTypeFilter, controller.signal)
+    void loadCredentialAuditEvents(selectedCredentialId, auditActionFilter, controller.signal)
     return () => controller.abort()
-  }, [auditEventTypeFilter, loadCredentialAuditEvents, selectedCredentialId])
+  }, [auditActionFilter, loadCredentialAuditEvents, selectedCredentialId])
 
   useEffect(() => {
     if (!channelId.trim()) {
@@ -1465,13 +1465,13 @@ function App() {
         <label htmlFor="credential-audit-action">Action:</label>
         <select
           id="credential-audit-action"
-          value={auditEventTypeFilter}
-          onChange={(event) => setAuditEventTypeFilter(event.target.value)}
+          value={auditActionFilter}
+          onChange={(event) => setAuditActionFilter(event.target.value)}
         >
           <option value="all">all</option>
-          <option value="credential.updated">updated</option>
-          <option value="credential.rotated">rotated</option>
-          <option value="credential.deleted">deleted</option>
+          <option value="updated">updated</option>
+          <option value="rotated">rotated</option>
+          <option value="deleted">deleted</option>
         </select>
 
         <label htmlFor="credential-audit-select">Audit trail credential:</label>
@@ -1491,7 +1491,7 @@ function App() {
 
         <button
           type="button"
-          onClick={() => void loadCredentialAuditEvents(selectedCredentialId, auditEventTypeFilter)}
+          onClick={() => void loadCredentialAuditEvents(selectedCredentialId, auditActionFilter)}
         >
           Refresh audit trail
         </button>

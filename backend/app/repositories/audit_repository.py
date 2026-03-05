@@ -18,6 +18,7 @@ class InMemoryAuditRepository:
         entity_type: str | None = None,
         entity_id: str | None = None,
         event_type: str | None = None,
+        action: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]:
         items = self._events
@@ -27,6 +28,12 @@ class InMemoryAuditRepository:
             items = [item for item in items if item.entity_id == entity_id]
         if event_type is not None:
             items = [item for item in items if item.event_type == event_type]
+        if action is not None:
+            items = [
+                item
+                for item in items
+                if item.event_type.rsplit(".", maxsplit=1)[-1] == action
+            ]
 
         ordered = sorted(items, key=lambda item: item.occurred_at, reverse=True)
         return ordered[:limit]

@@ -154,6 +154,7 @@ def list_audit_events(
     entity_type: str | None = None,
     entity_id: str | None = None,
     event_type: str | None = None,
+    action: str | None = None,
     limit: int = 100,
     service: AuditService = Depends(Provide[AppContainer.audit_service]),
 ):
@@ -161,6 +162,7 @@ def list_audit_events(
         entity_type=entity_type,
         entity_id=entity_id,
         event_type=event_type,
+        action=action,
         limit=limit,
     )
     return [AuditEventRead.from_entity(item) for item in items]

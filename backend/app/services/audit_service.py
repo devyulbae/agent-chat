@@ -33,6 +33,7 @@ class AuditEventRepository(Protocol):
         entity_type: str | None = None,
         entity_id: str | None = None,
         event_type: str | None = None,
+        action: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]: ...
 
@@ -55,12 +56,14 @@ class AuditService:
         entity_type: str | None = None,
         entity_id: str | None = None,
         event_type: str | None = None,
+        action: str | None = None,
         limit: int = 100,
     ) -> Sequence[AuditEvent]:
         return self._repository.list(
             entity_type=entity_type,
             entity_id=entity_id,
             event_type=event_type,
+            action=action,
             limit=limit,
         )
 

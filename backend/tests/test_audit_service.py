@@ -45,3 +45,6 @@ def test_audit_service_filters_and_orders_events() -> None:
         "credential.rotated",
         "credential.updated",
     ]
+
+    updated_only = service.list_events(entity_type="credential", action="updated")
+    assert [item.event_type for item in updated_only] == ["credential.updated"]
