@@ -1212,6 +1212,31 @@ function App() {
     setIncludeRootInUnreadOnly(true)
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
+        return
+      }
+      if (event.key !== 'Escape') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!hasThreadViewFiltersActive) {
+        return
+      }
+      event.preventDefault()
+      resetThreadViewFilters()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [hasThreadViewFiltersActive, resetThreadViewFilters])
+
   const unreadThreadIds = useMemo(() => {
     return threads
       .filter((thread) => unseenThreadKeys.includes(toThreadKey(thread.thread_id)))
@@ -1488,7 +1513,7 @@ function App() {
               type="button"
               onClick={resetThreadViewFilters}
               disabled={!hasThreadViewFiltersActive}
-              title="Reset thread filter + unread toggles"
+              title="Reset thread filter + unread toggles (Shift+Esc)"
             >
               Reset view
             </button>
