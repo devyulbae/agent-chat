@@ -1501,6 +1501,9 @@ function App() {
   const selectedVisibleThreadRecoveryHint = selectedVisibleThreadHiddenByFilter
     ? 'Selection hidden by current filters → use “Jump to first visible”.'
     : null
+  const selectedVisibleThreadShortcutRecoveryHint = selectedVisibleThreadHiddenByFilter
+    ? 'Tip: J/K or ↑/↓ will also recover to first/last visible thread.'
+    : null
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -2160,6 +2163,9 @@ function App() {
                 </button>
                 {selectedVisibleThreadRecoveryHint && (
                   <small style={{ color: '#666' }}>{selectedVisibleThreadRecoveryHint}</small>
+                )}
+                {selectedVisibleThreadShortcutRecoveryHint && (
+                  <small style={{ color: '#666' }}>{selectedVisibleThreadShortcutRecoveryHint}</small>
                 )}
               </>
             )}
