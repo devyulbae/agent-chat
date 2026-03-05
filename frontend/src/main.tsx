@@ -1489,13 +1489,18 @@ function App() {
           disabled={!selectedCredential}
         />
         <input
+          id="selected-credential-expires"
           type="datetime-local"
           value={editCredentialExpiresAt}
           onChange={(event) => setEditCredentialExpiresAt(event.target.value)}
           disabled={!selectedCredential || editCredentialClearExpiry}
           title="Use local date/time picker format (YYYY-MM-DDTHH:mm). Invalid partial values are ignored until complete."
           aria-label="Credential expiry datetime (local format YYYY-MM-DDTHH:mm)"
+          aria-describedby="selected-credential-expires-hint selected-credential-expires-preview"
         />
+        <small id="selected-credential-expires-hint" style={{ fontSize: 12, color: '#666' }}>
+          Optional • format: YYYY-MM-DDTHH:mm
+        </small>
         <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
           <input
             type="checkbox"
@@ -1555,6 +1560,7 @@ function App() {
             <span style={{ fontSize: 12, color: '#777' }}>Hover chips for PATCH behavior.</span>
           )}
           <span
+            id="selected-credential-expires-preview"
             style={{
               fontSize: 12,
               color: hasInvalidEditExpiryPreview ? '#8a4b00' : '#555',

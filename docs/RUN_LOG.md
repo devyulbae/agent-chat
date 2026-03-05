@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 16:30 KST — Agent Chat offset lane cycle
+- Delta: Synced selected-credential expiry edit accessibility descriptors in `frontend/src/main.tsx` so edit flow matches create flow helper/preview announcements.
+  - Added stable edit expiry input id (`selected-credential-expires`) and `aria-describedby` wiring to helper + live preview elements.
+  - Added edit format helper text element (`selected-credential-expires-hint`) with explicit `YYYY-MM-DDTHH:mm` guidance.
+  - Added preview id (`selected-credential-expires-preview`) on the existing polite live-region expiry preview so screen readers announce current edit validation/intent context.
+  - Kept PATCH/API contract unchanged (`clear_token_expires_at` and `token_expires_at` semantics untouched).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add `htmlFor` + visible label for selected credential expiry input to align visible and assistive naming symmetry with other credential fields.
+
 ## 2026-03-05 16:21 KST — Agent Chat implementation cycle
 - Delta: Wired create-credential expiry accessibility descriptors in `frontend/src/main.tsx` (chat thread/OAuth lane-adjacent UX hardening, frontend-only).
   - Added `aria-describedby` on create expiry `datetime-local` input to reference both format helper and live preview text.
