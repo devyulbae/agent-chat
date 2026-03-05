@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 type OrgType = 'freeform' | 'department' | 'squad'
@@ -184,6 +184,8 @@ function App() {
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
+
+  const messageListEndRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -514,6 +516,10 @@ function App() {
     void loadMessages(controller.signal)
     return () => controller.abort()
   }, [loadMessages])
+
+  useEffect(() => {
+    messageListEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [messages])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -847,6 +853,7 @@ function App() {
             ) : (
               <p>No messages.</p>
             ))}
+          <div ref={messageListEndRef} />
         </div>
       </div>
 
