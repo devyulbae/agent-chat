@@ -1257,6 +1257,12 @@ function App() {
   }, [filteredChildThreads, showRootThreadInList])
 
   const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
+  const selectedVisibleThreadLabel =
+    selectedVisibleThreadIndex >= 0
+      ? visibleThreadIds[selectedVisibleThreadIndex] === null
+        ? 'Root'
+        : visibleThreadIds[selectedVisibleThreadIndex]
+      : 'none'
 
   const threadFilterSummary = useMemo(() => {
     const totalChildCount = sortedChildThreads.length
@@ -1712,7 +1718,7 @@ function App() {
             <small style={{ color: '#666' }}>{threadFilterSummary}</small>
             <small style={{ color: '#666' }}>
               Selection: {selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/
-              {visibleThreadIds.length}
+              {visibleThreadIds.length} ({selectedVisibleThreadLabel})
             </small>
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && <small style={{ color: '#666' }}>{threadFilterJumpHint}</small>}

@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 21:24 KST — Agent Chat implementation cycle
+- Delta: Added selected-thread identity cue next to keyboard navigation index in `frontend/src/main.tsx`.
+  - Kept existing positional cue (`Selection: X/Y`) and appended active target label (`Root`, concrete thread ID, or `none`).
+  - Improves keyboard triage orientation when cycling with `J/K` or `↑/↓`, especially in mixed root/child filtered views.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add a tiny “selection changed” flash hint (1–2s) when keyboard navigation moves threads so operators notice context jumps immediately.
+
 ## 2026-03-05 21:04 KST — Agent Chat implementation cycle
 - Delta: Added root-jump clarification hint for thread filter Enter navigation in `frontend/src/main.tsx`.
   - Added `threadFilterJumpHint` state to surface why Enter selected **Root messages** when root is included at the top.
