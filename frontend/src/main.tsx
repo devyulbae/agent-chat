@@ -1071,6 +1071,13 @@ function App() {
     hasOlderAuditPageError,
   ])
 
+  const olderAuditPageFailureTitle = useMemo(() => {
+    if (!hasOlderAuditPageError || !credentialAuditOlderPageFailureAt || credentialAuditPaging) {
+      return undefined
+    }
+    return `Failure completed at ${formatEpochTimestamp(credentialAuditOlderPageFailureAt)}`
+  }, [credentialAuditOlderPageFailureAt, credentialAuditPaging, hasOlderAuditPageError])
+
   const credentialAuditPagingAnnouncementTitle = useMemo(() => {
     if (!credentialAuditPagingAnnouncementAt || credentialAuditPaging) {
       return undefined
@@ -2531,7 +2538,9 @@ function App() {
           </button>
         )}{' '}
         {olderAuditPageFailureAgeLabel && (
-          <span style={{ fontSize: 12, color: '#666' }}>{olderAuditPageFailureAgeLabel}</span>
+          <span title={olderAuditPageFailureTitle} style={{ fontSize: 12, color: '#666' }}>
+            {olderAuditPageFailureAgeLabel}
+          </span>
         )}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, minHeight: 18 }}>

@@ -1,5 +1,23 @@
 # Run Log
 
+## 2026-03-06 00:30 KST — Agent Chat offset lane cycle
+- Delta: Added absolute failure timestamp tooltip for retained older-page audit pagination errors in `frontend/src/main.tsx`.
+  - Added `olderAuditPageFailureTitle` memo that resolves to `Failure completed at <local datetime>` while retained older-page error state is active.
+  - Wired `title` on the inline failure-age label (`failed just now` / `failed Xm ago`) so hover reveals the exact failure completion timestamp.
+  - API contract unchanged (`GET /audit-events` query shape remains `entity_type`, optional filters, `limit`, `offset`).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (17 passed)
+- Next action: add keyboard shortcut (`Shift+Home`) to jump directly to root thread without leaving current filter context.
+
+## 2026-03-06 00:24 KST — Cadence sync (project-controls)
+- Source check:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ❌ unreachable (connection refused).
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500 Internal Server Error.
+- Result: **no-op** cadence sync (kept current cron schedules unchanged; no destructive edits).
+- Applied policy: endpoint unavailable/failing => preserve existing schedule and log blocker.
+- Next action: recover project-controls API availability, then re-run level→cadence mapping + burst override evaluation.
+
 ## 2026-03-06 00:23 KST — Agent Chat implementation cycle
 - Delta: Pinned older-page audit failure completion timestamps independently from transient live announcements in `frontend/src/main.tsx`.
   - Added dedicated `credentialAuditOlderPageFailureAt` state set on append pagination failures and cleared on retry/dismiss/full reload.
