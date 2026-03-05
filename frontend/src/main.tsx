@@ -1183,6 +1183,9 @@ function App() {
           <h4>Threads</h4>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
             <input
+              id="thread-filter-input"
+              aria-label="Filter threads by thread ID"
+              aria-describedby="thread-filter-hint"
               value={threadFilterText}
               onChange={(event) => setThreadFilterText(event.target.value)}
               onKeyDown={handleThreadFilterKeyDown}
@@ -1190,13 +1193,14 @@ function App() {
             />
             <button
               type="button"
+              aria-label="Clear thread ID filter"
               onClick={() => setThreadFilterText('')}
               disabled={!threadFilterText.trim()}
               title="Clear thread filter (Esc)"
             >
               Clear filter
             </button>
-            <small style={{ color: '#666' }}>Esc to clear</small>
+            <small id="thread-filter-hint" style={{ color: '#666' }}>Esc to clear</small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
                 type="checkbox"

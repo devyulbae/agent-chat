@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-05 14:13 KST — Agent Chat offset lane cycle
+- Delta: Added explicit accessibility labels for thread filter controls in `frontend/src/main.tsx` (frontend integration; API contract unchanged).
+  - Added `aria-label="Filter threads by thread ID"` and `aria-describedby="thread-filter-hint"` on thread filter input.
+  - Added `aria-label="Clear thread ID filter"` on **Clear filter** button.
+  - Added stable hint id (`thread-filter-hint`) so assistive tech reads shortcut guidance (`Esc to clear`) alongside filter field context.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: add semantic `<label htmlFor="thread-filter-input">` text for the filter control so visible label and assistive label stay aligned.
+
 ## 2026-03-05 14:03 KST — Agent Chat implementation cycle
 - Delta: Added discoverable keyboard affordance for thread filter reset in `frontend/src/main.tsx`.
   - Updated **Clear filter** button tooltip to `Clear thread filter (Esc)`.
