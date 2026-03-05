@@ -22,6 +22,7 @@ class InMemoryAuditRepository:
         provider: str | None = None,
         label: str | None = None,
         limit: int = 100,
+        offset: int = 0,
     ) -> Sequence[AuditEvent]:
         items = self._events
         if entity_type is not None:
@@ -44,4 +45,4 @@ class InMemoryAuditRepository:
             items = [item for item in items if item.metadata.get("label") == label]
 
         ordered = sorted(items, key=lambda item: item.occurred_at, reverse=True)
-        return ordered[:limit]
+        return ordered[offset : offset + limit]

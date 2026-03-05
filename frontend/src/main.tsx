@@ -247,7 +247,9 @@ function App() {
   const [auditActionFilter, setAuditActionFilter] = useState<string>('all')
   const [auditEventTypeFilter, setAuditEventTypeFilter] = useState<string>('')
   const [auditLimit, setAuditLimit] = useState<number>(20)
+  const [auditOffset, setAuditOffset] = useState<number>(0)
   const [credentialAuditEvents, setCredentialAuditEvents] = useState<AuditEvent[]>([])
+  const [credentialAuditHasMore, setCredentialAuditHasMore] = useState(false)
   const [credentialAuditLoading, setCredentialAuditLoading] = useState(false)
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
 
@@ -545,6 +547,8 @@ function App() {
       provider: string,
       label: string,
       limit: number,
+      offset: number,
+      append: boolean,
       signal?: AbortSignal
     ) => {
       setCredentialAuditLoading(true)
@@ -553,6 +557,7 @@ function App() {
       const params = new URLSearchParams({
         entity_type: 'credential',
         limit: String(limit),
+        offset: String(offset),
       })
       if (credentialId) {
         params.set('entity_id', credentialId)
@@ -577,12 +582,28 @@ function App() {
           throw new Error(`Failed to load audit trail (${response.status})`)
         }
         const payload = (await response.json()) as AuditEvent[]
-        setCredentialAuditEvents(payload)
+        setCredentialAuditHasMore(payload.length === limit)
+        setCredentialAuditEvents((current) => {
+          if (!append) {
+            return payload
+          }
+          const merged = [...current, ...payload]
+          const seen = new Set<string>()
+          return merged.filter((item) => {
+            const key = `${item.event_type}-${item.entity_id}-${item.occurred_at}`
+            if (seen.has(key)) {
+              return false
+            }
+            seen.add(key)
+            return true
+          })
+        })
       } catch (err) {
         if (err instanceof DOMException && err.name === 'AbortError') {
           return
         }
         setCredentialAuditError(err instanceof Error ? err.message : 'Unknown error')
+        setCredentialAuditHasMore(false)
         setCredentialAuditEvents([])
       } finally {
         setCredentialAuditLoading(false)
@@ -746,24 +767,11 @@ function App() {
     }
 
     const countLabel = `${credentialAuditEvents.length} event${credentialAuditEvents.length === 1 ? '' : 's'}`
-    return `Showing ${countLabel} (latest ${auditLimit} max).`
-  }, [auditLimit, credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
+    return `Showing ${countLabel} (page size ${auditLimit}, offset ${auditOffset}).`
+  }, [auditLimit, auditOffset, credentialAuditError, credentialAuditEvents.length, credentialAuditLoading])
 
   const isAuditResultCapped =
-    !credentialAuditLoading && !credentialAuditError && credentialAuditEvents.length === auditLimit
-
-  const nextAuditLimit = useMemo<number | null>(() => {
-    if (!isAuditResultCapped) {
-      return null
-    }
-    if (auditLimit < 50) {
-      return 50
-    }
-    if (auditLimit < 100) {
-      return 100
-    }
-    return null
-  }, [auditLimit, isAuditResultCapped])
+    !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
 
   const selectedCredential = useMemo(
     () => credentials.find((item) => item.id === selectedCredentialId) ?? null,
@@ -1066,6 +1074,7 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController()
+    setAuditOffset(0)
     void loadCredentialAuditEvents(
       selectedCredentialId,
       auditActionFilter,
@@ -1073,6 +1082,8 @@ function App() {
       auditProviderFilter,
       auditLabelFilter,
       auditLimit,
+      0,
+      false,
       controller.signal
     )
     return () => controller.abort()
@@ -2059,37 +2070,43 @@ function App() {
 
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
+            setAuditOffset(0)
             void loadCredentialAuditEvents(
               selectedCredentialId,
               auditActionFilter,
               auditEventTypeFilter,
               auditProviderFilter,
               auditLabelFilter,
-              auditLimit
+              auditLimit,
+              0,
+              false
             )
-          }
+          }}
         >
           Refresh audit trail
         </button>
 
-        {nextAuditLimit && (
+        {credentialAuditHasMore && !credentialAuditLoading && (
           <button
             type="button"
             onClick={() => {
-              setAuditLimit(nextAuditLimit)
+              const nextOffset = credentialAuditEvents.length
+              setAuditOffset(nextOffset)
               void loadCredentialAuditEvents(
                 selectedCredentialId,
                 auditActionFilter,
                 auditEventTypeFilter,
                 auditProviderFilter,
                 auditLabelFilter,
-                nextAuditLimit
+                auditLimit,
+                nextOffset,
+                true
               )
             }}
-            title={`Expand fetch window to latest ${nextAuditLimit} events`}
+            title={`Load older audit events (offset ${credentialAuditEvents.length})`}
           >
-            Load older (latest {nextAuditLimit})
+            Load older page
           </button>
         )}
       </div>
@@ -2097,7 +2114,7 @@ function App() {
         {auditScopeHint} {auditResultHint}{' '}
         {isAuditResultCapped && (
           <span
-            title={`Audit API returns up to ${auditLimit} latest events per request.`}
+            title={`Audit API returns up to ${auditLimit} events per request; load older pages to continue.`}
             style={{
               display: 'inline-block',
               padding: '1px 6px',

@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-05 20:14 KST — Agent Chat offset lane cycle
+- Delta: Added audit pagination contract (`offset`) and wired frontend "Load older" to append older pages instead of replacing the current timeline.
+  - Backend: `GET /audit-events` now accepts optional `offset` query param (`>= 0`) in addition to `limit`.
+  - Backend: audit repository/service now slice with `offset : offset + limit` to support deterministic page windows.
+  - Frontend: credential audit loader now sends `offset`, tracks whether another page is likely available, and appends deduplicated results for older-page fetches.
+  - Frontend: replaced limit-jump "Load older" behavior with page-based `Load older page` action and updated result hint to show page window context.
+  - Tests: extended audit API contract coverage for `offset` and added audit service pagination assertion.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (17 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add a compact "Loaded N pages" / "end reached" cue in the audit panel so operators can tell when pagination has exhausted results.
+
 ## 2026-03-05 19:48 KST — Agent Chat implementation cycle
 - Delta: Added a global thread-filter focus shortcut in `frontend/src/main.tsx` to speed thread triage navigation.
   - Added `threadFilterInputRef` and wired the thread filter input to it.

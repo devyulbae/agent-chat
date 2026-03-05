@@ -37,6 +37,7 @@ class AuditEventRepository(Protocol):
         provider: str | None = None,
         label: str | None = None,
         limit: int = 100,
+        offset: int = 0,
     ) -> Sequence[AuditEvent]: ...
 
 
@@ -62,6 +63,7 @@ class AuditService:
         provider: str | None = None,
         label: str | None = None,
         limit: int = 100,
+        offset: int = 0,
     ) -> Sequence[AuditEvent]:
         return self._repository.list(
             entity_type=entity_type,
@@ -71,6 +73,7 @@ class AuditService:
             provider=provider,
             label=label,
             limit=limit,
+            offset=offset,
         )
 
 

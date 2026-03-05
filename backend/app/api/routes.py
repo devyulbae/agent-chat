@@ -171,6 +171,7 @@ def list_audit_events(
     provider: str | None = None,
     label: str | None = None,
     limit: int = Query(default=100, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     service: AuditService = Depends(Provide[AppContainer.audit_service]),
 ):
     items = service.list_events(
@@ -181,6 +182,7 @@ def list_audit_events(
         provider=provider,
         label=label,
         limit=limit,
+        offset=offset,
     )
     return [AuditEventRead.from_entity(item) for item in items]
 

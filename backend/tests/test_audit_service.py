@@ -60,3 +60,6 @@ def test_audit_service_filters_and_orders_events() -> None:
 
     label_only = service.list_events(entity_type="credential", label="alerts")
     assert [item.event_type for item in label_only] == ["credential.deleted"]
+
+    paged = service.list_events(entity_type="credential", limit=1, offset=1)
+    assert [item.event_type for item in paged] == ["credential.rotated"]
