@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-05 10:31 KST — Agent Chat offset lane cycle
+- Delta: Improved unread triage flow and composer cursor continuity in `frontend/src/main.tsx`.
+  - Updated **Jump to next unread** to rotate through unread threads relative to current selection (wrap-around instead of always choosing first).
+  - Added composer textarea ref handling so post-send flow keeps keyboard focus for fast follow-up replies.
+  - On send failure, restores prior textarea selection range so cursor position is preserved while retrying.
+- Quality gates:
+  - `./venv/bin/pre-commit run --all-files` ✅
+  - `./venv/bin/pytest` ✅ (15 passed)
+  - `cd frontend && npm install && npx vite build` ✅
+- Next action: sync credential provider suggestions with owner context by requesting `/credentials/providers?owner_agent_id=...` when owner field changes.
+
 ## 2026-03-05 10:22 KST — Agent Chat implementation cycle
 - Delta: Improved chat thread triage UX with unread navigation in `frontend/src/main.tsx`.
   - Added computed unread thread list from existing unseen state.

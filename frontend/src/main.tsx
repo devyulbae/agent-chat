@@ -187,6 +187,7 @@ function App() {
   const [credentialAuditError, setCredentialAuditError] = useState<string | null>(null)
 
   const messageListEndRef = useRef<HTMLDivElement | null>(null)
+  const composerBodyRef = useRef<HTMLTextAreaElement | null>(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -317,6 +318,8 @@ function App() {
     const trimmedChannelId = channelId.trim()
     const trimmedSenderId = composerSenderId.trim()
     const trimmedBody = composerBody.trim()
+    const composerSelectionStart = composerBodyRef.current?.selectionStart ?? 0
+    const composerSelectionEnd = composerBodyRef.current?.selectionEnd ?? 0
 
     if (!trimmedChannelId || !trimmedSenderId || !trimmedBody) {
       setChatError('Channel ID, sender agent ID, and message body are required.')
@@ -350,8 +353,16 @@ function App() {
 
       setComposerBody('')
       await Promise.all([loadThreads(), loadMessages()])
+      requestAnimationFrame(() => {
+        composerBodyRef.current?.focus()
+        composerBodyRef.current?.setSelectionRange(0, 0)
+      })
     } catch (err) {
       setChatError(err instanceof Error ? err.message : 'Unknown error')
+      requestAnimationFrame(() => {
+        composerBodyRef.current?.focus()
+        composerBodyRef.current?.setSelectionRange(composerSelectionStart, composerSelectionEnd)
+      })
     } finally {
       setComposerSubmitting(false)
     }
@@ -737,7 +748,14 @@ function App() {
       .map((thread) => thread.thread_id)
   }, [threads, unseenThreadKeys])
 
-  const nextUnreadThreadId = unreadThreadIds.length > 0 ? unreadThreadIds[0] : undefined
+  const jumpToNextUnread = useCallback(() => {
+    if (!unreadThreadIds.length) {
+      return
+    }
+    const currentIndex = unreadThreadIds.findIndex((threadId) => threadId === selectedThreadId)
+    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % unreadThreadIds.length : 0
+    selectThread(unreadThreadIds[nextIndex])
+  }, [unreadThreadIds, selectedThreadId, selectThread])
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -815,6 +833,7 @@ function App() {
         <label htmlFor="composer-body">Message:</label>
         <textarea
           id="composer-body"
+          ref={composerBodyRef}
           value={composerBody}
           onChange={(event) => setComposerBody(event.target.value)}
           onKeyDown={handleComposerKeyDown}
@@ -826,11 +845,7 @@ function App() {
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
         </button>
-        <button
-          type="button"
-          onClick={() => selectThread(nextUnreadThreadId ?? null)}
-          disabled={typeof nextUnreadThreadId === 'undefined'}
-        >
+        <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
           Jump to next unread
         </button>
         <small style={{ color: '#555' }}>Unread threads: {unreadThreadIds.length}</small>
