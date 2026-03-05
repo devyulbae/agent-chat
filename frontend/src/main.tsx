@@ -1001,7 +1001,7 @@ function App() {
     credentialAuditLoading,
   ])
 
-  const auditApiSourceFilterBadge = useMemo(() => {
+  const auditApiSourceFilterParts = useMemo(() => {
     const sourceParts: string[] = []
     if (auditProviderFilter !== 'all') {
       sourceParts.push(`provider=${auditProviderFilter}`)
@@ -1016,11 +1016,7 @@ function App() {
       sourceParts.push(`event_type=${auditEventTypeFilter.trim()}`)
     }
 
-    if (sourceParts.length === 0) {
-      return null
-    }
-
-    return `API filters: ${sourceParts.join(' + ')}`
+    return sourceParts
   }, [auditActionFilter, auditEventTypeFilter, auditLabelFilter, auditProviderFilter])
 
   const isAuditResultCapped =
@@ -2826,11 +2822,13 @@ function App() {
         }}
       >
         {auditScopeHint} {auditResultHint}{' '}
-        {auditApiSourceFilterBadge && (
+        {auditApiSourceFilterParts.length > 0 && (
           <span
-            title="Provider/label filters are applied server-side by GET /audit-events."
+            title="Provider/label/action/event_type filters are applied server-side by GET /audit-events."
             style={{
-              display: 'inline-block',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
               padding: '1px 6px',
               borderRadius: 999,
               border: '1px solid #9ec5ff',
@@ -2839,7 +2837,25 @@ function App() {
               fontWeight: 600,
             }}
           >
-            {auditApiSourceFilterBadge}
+            <span>API filters:</span>
+            {auditApiSourceFilterParts.map((part) => (
+              <span
+                key={part}
+                style={{
+                  display: 'inline-block',
+                  padding: '0 4px',
+                  borderRadius: 4,
+                  border: '1px solid #b5cdfa',
+                  backgroundColor: '#f5f9ff',
+                  fontFamily:
+                    'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, Consolas, monospace',
+                  fontWeight: 700,
+                  fontSize: 11,
+                }}
+              >
+                {part}
+              </span>
+            ))}
           </span>
         )}{' '}
         {isAuditResultCapped && (

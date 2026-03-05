@@ -1,5 +1,26 @@
 # Run Log
 
+## 2026-03-06 07:11 KST — Agent Chat offset lane cycle
+- Delta: Added compact monospace chip emphasis for credential-audit API filter badge segments in `frontend/src/main.tsx`.
+  - Replaced single-string `auditApiSourceFilterBadge` derivation with `auditApiSourceFilterParts` array state so each active server-side filter can render independently.
+  - Updated the inline `API filters` badge rendering to show each active filter (`provider`, `label`, `action`, `event_type`) as a distinct monospace chip for faster visual parsing during dense triage.
+  - Kept scope frontend-only; no backend/API contract changes.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add compact truncation/ellipsis handling for long `event_type` chip values so badge readability remains stable with custom event filters.
+
+## 2026-03-06 07:10 KST — Agent Chat implementation cycle
+- Delta: Extended credential-audit API-filter badge coverage in `frontend/src/main.tsx`.
+  - Updated `auditApiSourceFilterBadge` to include active `action` filter (`action=<value>`) when `auditActionFilter` is not `all`.
+  - Added explicit `event_type=<value>` chip when manual event type filter input is non-empty.
+  - Existing provider/label badge behavior remains unchanged; badge now reflects full server-side filter envelope used by `GET /audit-events`.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `bb2cd90` (pushed to `main`)
+- Next action: add compact per-filter visual emphasis (e.g., monospace chips) for API badge segments to improve scanability when multiple server-side filters are active.
+
 ## 2026-03-06 06:53 KST — Agent Chat offset lane cycle
 - Delta: Added compact server-side source-filter badge for credential audit results in `frontend/src/main.tsx`.
   - Added derived `auditApiSourceFilterBadge` state to surface active API-level source filters when `provider` and/or `label` are set.
