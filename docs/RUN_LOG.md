@@ -1405,3 +1405,15 @@
   - `cd frontend && npx vite build` ✅
 - Commit: `e981ce9` (pushed to `main`)
 - Next action: add a compact “source filters applied by API” badge near the credential audit results hint to make server-side provider/label filtering explicit in the UI.
+
+## 2026-03-06 07:53 KST — Agent Chat implementation cycle
+- Delta: Added source-aware helper text for thread boundary jump hints so Shift+PgUp/PgDn behavior is explicit.
+  - Frontend: updated `firstVisibleJumpHintHelp` in `frontend/src/main.tsx` to parse the shortcut source from boundary hint messages.
+  - UX: when boundary jumps are triggered via `Shift+PageUp`/`Shift+PageDown`, helper text now appends `keeps active filters while jumping to boundary` guidance.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add a tiny visual cue on thread boundary hints themselves (not just helper text) when jump source is Shift+PgUp/PgDn to improve discoverability.

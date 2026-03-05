@@ -1570,23 +1570,43 @@ function App() {
     if (!threadBoundaryJumpHint) {
       return null
     }
+
+    const sourceMatch = threadBoundaryJumpHint.match(/\(([^)]+)\)/)
+    const sourceShortcut = sourceMatch?.[1]?.trim()
+    const sourceShortcutHelp =
+      sourceShortcut === 'Shift+PageUp' || sourceShortcut === 'Shift+PageDown'
+        ? `${sourceShortcut} keeps active filters while jumping to boundary.`
+        : null
+
     if (threadBoundaryJumpHint.startsWith('Recovered to first visible thread')) {
-      return 'Recovered = hidden selection was restored to the first visible result.'
+      return `Recovered = hidden selection was restored to the first visible result.${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     if (threadBoundaryJumpHint.startsWith('Recovered to last visible thread')) {
-      return 'Recovered = hidden selection was restored to the last visible result.'
+      return `Recovered = hidden selection was restored to the last visible result.${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     if (threadBoundaryJumpHint.startsWith('Already at first visible thread')) {
-      return 'Already at first = no-op confirmation (selection did not move).'
+      return `Already at first = no-op confirmation (selection did not move).${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     if (threadBoundaryJumpHint.startsWith('Already at last visible thread')) {
-      return 'Already at last = no-op confirmation (selection did not move).'
+      return `Already at last = no-op confirmation (selection did not move).${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     if (threadBoundaryJumpHint.startsWith('Jumped to first visible thread')) {
-      return 'Jumped to first = normal boundary jump to the first visible result.'
+      return `Jumped to first = normal boundary jump to the first visible result.${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     if (threadBoundaryJumpHint.startsWith('Jumped to last visible thread')) {
-      return 'Jumped to last = normal boundary jump to the last visible result.'
+      return `Jumped to last = normal boundary jump to the last visible result.${
+        sourceShortcutHelp ? ` ${sourceShortcutHelp}` : ''
+      }`
     }
     return null
   }, [threadBoundaryJumpHint])
