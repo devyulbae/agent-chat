@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-05 15:50 KST — Agent Chat offset lane cycle
+- Delta: Added inline clear-expiry override helper in selected credential editor (`frontend/src/main.tsx`) to reduce ambiguity when both datetime and clear toggle are present.
+  - Shows `Clear expiry overrides any typed datetime.` beside edit controls only when **clear expiry** is checked.
+  - Keeps existing PATCH contract and gating unchanged (`clear_token_expires_at` still drives clear behavior; update enablement still tied to pending diff fields).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Next action: mirror the same datetime-format hint (`YYYY-MM-DDTHH:mm`) on the create-credential expiry input for consistency with edit flow.
+
 ## 2026-03-05 15:41 KST — Agent Chat implementation cycle
 - Delta: Added explicit datetime format guidance on selected credential expiry editor in `frontend/src/main.tsx` to reduce invalid partial-input confusion.
   - Added `title` hint on selected credential `datetime-local` input (`YYYY-MM-DDTHH:mm`) with behavior note that incomplete/invalid partial values are ignored until complete.

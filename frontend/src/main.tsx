@@ -1473,6 +1473,11 @@ function App() {
           />
           clear expiry
         </label>
+        {selectedCredential && editCredentialClearExpiry && (
+          <small style={{ fontSize: 12, color: '#8a4b00' }}>
+            Clear expiry overrides any typed datetime.
+          </small>
+        )}
         <button
           type="button"
           onClick={() => void submitUpdateCredential()}
