@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-05 12:50 KST — Agent Chat offset lane cycle
+- Delta: Added thread filter visibility summary chip in `frontend/src/main.tsx` to tighten unread triage situational awareness (frontend integration, API contract unchanged).
+  - Added derived `unreadChildThreadCount` and `threadFilterSummary` state projections.
+  - Shows `Showing X of Y unread threads` when **unread only** is enabled.
+  - Shows `Showing X of Y threads` when a text filter is active; otherwise shows total child-thread count.
+  - Placed summary copy inline beside filter controls so operators can see filter impact at a glance.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+  - `./venv/bin/pytest -q` ✅ (15 passed)
+- Commit: `ce73e90` (pushed to `main`)
+- Next action: expose root-thread inclusion option in unread-only triage (toggle to include/exclude root `thread_id=null`) for teams that treat root channel as high-priority inbox.
+
 ## 2026-03-05 12:41 KST — Agent Chat implementation cycle
 - Delta: Added disabled-state guidance for unread triage controls in `frontend/src/main.tsx`.
   - Introduced derived `unreadNavigationHint` copy tied to current unread count.
