@@ -14,12 +14,14 @@ class MessageCreate(BaseModel):
 class ThreadSummaryRead(BaseModel):
     thread_id: str | None
     message_count: int
+    latest_message_at: datetime | None
 
     @classmethod
     def from_entity(cls, entity: object) -> "ThreadSummaryRead":
         return cls(
             thread_id=getattr(entity, "thread_id"),
             message_count=getattr(entity, "message_count"),
+            latest_message_at=getattr(entity, "latest_message_at"),
         )
 
 

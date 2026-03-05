@@ -1,3 +1,5 @@
+from datetime import UTC, datetime, timedelta
+
 from app.schemas.message import MessageCreate
 from app.services.message_service import MessageService
 
@@ -7,8 +9,14 @@ class FakeMessageRepo:
         self.items = []
 
     def create(self, payload: MessageCreate):
-        self.items.append(payload)
-        return payload
+        created_at = datetime(2026, 1, 1, tzinfo=UTC) + timedelta(
+            seconds=len(self.items)
+        )
+        item = type(
+            "StoredMessage", (), {**payload.model_dump(), "created_at": created_at}
+        )
+        self.items.append(item)
+        return item
 
     def list_by_channel(self, channel_id: str, thread_id: str | None = None):
         result = [item for item in self.items if item.channel_id == channel_id]
@@ -18,20 +26,40 @@ class FakeMessageRepo:
 
     def list_threads_by_channel(self, channel_id: str):
         root_count = 0
+        root_latest_message_at = None
         counts: dict[str, int] = {}
+        latest_by_thread: dict[str, datetime] = {}
         for item in self.items:
             if item.channel_id != channel_id:
                 continue
             if item.thread_id is None:
                 root_count += 1
+                root_latest_message_at = item.created_at
                 continue
             counts[item.thread_id] = counts.get(item.thread_id, 0) + 1
+            latest_by_thread[item.thread_id] = item.created_at
         summaries = [
-            type("ThreadSummary", (), {"thread_id": thread_id, "message_count": count})
+            type(
+                "ThreadSummary",
+                (),
+                {
+                    "thread_id": thread_id,
+                    "message_count": count,
+                    "latest_message_at": latest_by_thread[thread_id],
+                },
+            )
             for thread_id, count in sorted(counts.items(), key=lambda x: (-x[1], x[0]))
         ]
         return [
-            type("ThreadSummary", (), {"thread_id": None, "message_count": root_count}),
+            type(
+                "ThreadSummary",
+                (),
+                {
+                    "thread_id": None,
+                    "message_count": root_count,
+                    "latest_message_at": root_latest_message_at,
+                },
+            ),
             *summaries,
         ]
 
@@ -131,3 +159,5 @@ def test_message_service_list_threads_returns_ranked_counts() -> None:
         ("thread-a", 2),
         ("thread-b", 1),
     ]
+    assert listed[1].latest_message_at is not None
+    assert listed[2].latest_message_at is not None

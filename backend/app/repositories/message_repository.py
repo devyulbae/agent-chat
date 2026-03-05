@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Sequence
 
 from sqlalchemy import func, select
@@ -15,6 +16,7 @@ from app.schemas.message import MessageCreate
 class ThreadSummary:
     thread_id: str | None
     message_count: int
+    latest_message_at: datetime | None
 
 
 class MessageRepository(ABC):
@@ -62,14 +64,20 @@ class SQLMessageRepository(MessageRepository):
         return self._session.execute(stmt).scalars().all()
 
     def list_threads_by_channel(self, channel_id: str) -> Sequence[ThreadSummary]:
-        root_count_stmt = select(func.count(Message.id)).where(
+        root_summary_stmt = select(
+            func.count(Message.id), func.max(Message.created_at)
+        ).where(
             Message.channel_id == channel_id,
             Message.thread_id.is_(None),
         )
-        root_count = int(self._session.execute(root_count_stmt).scalar_one())
+        root_count, root_latest_message_at = self._session.execute(
+            root_summary_stmt
+        ).one()
 
         thread_stmt = (
-            select(Message.thread_id, func.count(Message.id))
+            select(
+                Message.thread_id, func.count(Message.id), func.max(Message.created_at)
+            )
             .where(Message.channel_id == channel_id, Message.thread_id.is_not(None))
             .group_by(Message.thread_id)
             .order_by(func.count(Message.id).desc(), Message.thread_id.asc())
@@ -77,9 +85,20 @@ class SQLMessageRepository(MessageRepository):
         rows = self._session.execute(thread_stmt).all()
 
         summaries = [
-            ThreadSummary(thread_id=thread_id, message_count=message_count)
-            for thread_id, message_count in rows
+            ThreadSummary(
+                thread_id=thread_id,
+                message_count=message_count,
+                latest_message_at=latest_message_at,
+            )
+            for thread_id, message_count, latest_message_at in rows
             if thread_id is not None
         ]
 
-        return [ThreadSummary(thread_id=None, message_count=root_count), *summaries]
+        return [
+            ThreadSummary(
+                thread_id=None,
+                message_count=int(root_count),
+                latest_message_at=root_latest_message_at,
+            ),
+            *summaries,
+        ]

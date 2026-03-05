@@ -19,6 +19,7 @@ type OrganizationsGraph = {
 type ThreadSummary = {
   thread_id: string | null
   message_count: number
+  latest_message_at: string | null
 }
 
 type Message = {
@@ -893,6 +894,9 @@ function App() {
                   }}
                 >
                   Root messages ({rootThreadSummary?.message_count ?? 0})
+                  {rootThreadSummary?.latest_message_at
+                    ? ` · last ${formatTimestamp(rootThreadSummary.latest_message_at)}`
+                    : ''}
                   {unseenThreadKeys.includes(ROOT_THREAD_KEY) ? ' • new' : ''}
                 </button>
               </li>
@@ -907,6 +911,7 @@ function App() {
                     }}
                   >
                     {thread.thread_id} ({thread.message_count})
+                    {thread.latest_message_at ? ` · last ${formatTimestamp(thread.latest_message_at)}` : ''}
                     {unseenThreadKeys.includes(toThreadKey(thread.thread_id)) ? ' • new' : ''}
                   </button>
                 </li>
