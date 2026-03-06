@@ -2464,11 +2464,15 @@ function App() {
     setLastSeenByThread(nextLastSeenByThread)
     setLastSeenCountByThread(nextLastSeenCountByThread)
     setUnseenThreadKeys([])
-    setThreadBoundaryJumpHint(`Cleared unread markers (Shift+U) · ${unreadThreadIds.length} thread(s).`)
+    const unreadClearShortcutBadge = unreadNavigationClearShortcutChipPresentation?.badge ?? 'Shift+U'
+    setThreadBoundaryJumpHint(
+      `Cleared unread markers (${unreadClearShortcutBadge}) · ${unreadThreadIds.length} thread(s).`,
+    )
   }, [
     lastSeenByThread,
     lastSeenCountByThread,
     threads,
+    unreadNavigationClearShortcutChipPresentation,
     unreadThreadIds.length,
     unseenThreadKeys,
   ])

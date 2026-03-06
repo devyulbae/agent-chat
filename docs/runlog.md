@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 04:12 KST — clear-unread status hint uses chip badge token (offset lane)
+- Scope: frontend integration copy-sync polish so clear-unread status feedback stays aligned with shortcut chip badge formatting.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated clear-unread status hint text to source the shortcut token from `unreadNavigationClearShortcutChipPresentation.badge` with fallback (`Shift+U`).
+    - This keeps post-clear status copy in lockstep with helper-row/button chip badge rendering (`⇧U`) and avoids hard-coded drift.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 03:52 KST — unread navigation status boundary-direction chip parity (offset lane)
 - Scope: frontend integration follow-up to surface boundary direction cues in unread navigation status hints for parity with visible-thread boundary feedback.
 - Change:
