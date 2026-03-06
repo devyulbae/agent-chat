@@ -1663,15 +1663,19 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
-  const boundaryJumpSourceShortcutBadge = useMemo(
-    () => getThreadShortcutBadge(boundaryJumpSourceShortcut),
-    [boundaryJumpSourceShortcut],
-  )
+  const boundaryJumpShortcutChipPresentation = useMemo(() => {
+    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadBoundaryJumpHint, 'boundary jump')
+    if (!shortcutChipPresentation) {
+      return null
+    }
 
-  const boundaryJumpSourceShortcutTooltip = useMemo(
-    () => getThreadShortcutTooltip(boundaryJumpSourceShortcut),
-    [boundaryJumpSourceShortcut],
-  )
+    return {
+      badge: shortcutChipPresentation.badge,
+      title: shortcutChipPresentation.copy.title,
+      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
+      context: 'thread-jump' as const,
+    }
+  }, [threadBoundaryJumpHint])
 
   const boundaryJumpDirectionChipPresentation = useMemo(() => {
     const directionChipPresentation = getBoundaryDirectionChipPresentationFromHint(threadBoundaryJumpHint)
@@ -1720,11 +1724,6 @@ function App() {
   const rootJumpShortcutChipCopy = useMemo(
     () => getShortcutChipPresentationFromHint(threadRootJumpHint, 'root jump')?.copy ?? null,
     [threadRootJumpHint],
-  )
-
-  const boundaryJumpShortcutChipCopy = useMemo(
-    () => getShortcutChipPresentationFromHint(threadBoundaryJumpHint, 'boundary jump')?.copy ?? null,
-    [threadBoundaryJumpHint],
   )
 
   const filterJumpShortcutChipCopy = useMemo(
@@ -2656,7 +2655,7 @@ function App() {
                 aria-label={boundaryJumpStatusAriaLabel}
                 style={{ color: '#1f4b99' }}
               >
-                {renderShortcutChip(boundaryJumpSourceShortcutBadge, boundaryJumpShortcutChipCopy, 'thread-jump')}
+                {renderShortcutChipPresentation(boundaryJumpShortcutChipPresentation)}
                 {renderShortcutChipPresentation(boundaryJumpDirectionChipPresentation)}
                 {threadBoundaryJumpHint}
               </small>

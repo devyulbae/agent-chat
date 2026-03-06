@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-06 19:32 KST — boundary jump status chip presentation sync (offset lane)
+- Scope: frontend integration cleanup to align boundary jump status rendering with parsed shortcut chip presentation contract.
+- Change:
+  - `frontend/src/main.tsx`
+  - Switched boundary status source-chip rendering from split badge/copy wiring to `getShortcutChipPresentationFromHint(...)`-derived presentation object.
+  - Kept boundary direction chip rendering unchanged, so source + direction chips now share the same presentation path (`renderShortcutChipPresentation`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (20/20)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend files/contracts were not touched).
+
 ## 2026-03-06 19:22 KST — chat thread UX alias normalization (Return-key)
 - Scope: tightened shortcut hint normalization for chat-thread status chips.
 - Change:
