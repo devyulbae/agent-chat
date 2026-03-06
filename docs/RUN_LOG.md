@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 18:12 KST — Agent Chat parallel offset cycle
+- Delta: Extended frontend thread shortcut chip mappings for modifier+arrow variants so parser-normalized `Cmd/Ctrl/Option/Control/Meta + ArrowUp/ArrowDown` sources now render explicit badges/tooltips instead of dropping chip presentation.
+  - Frontend parser: expanded `getThreadShortcutBadge(...)`/`getThreadShortcutTooltip(...)` mappings in `frontend/src/threadHintParsers.ts` for modifier+arrow combos.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` to cover word-form arrow extraction (`Cmd+Up Arrow`, `Option+Down Arrow`) and new badge/tooltip mappings for modifier+arrow variants.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 20 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add parser-level normalization for compact no-plus modifier arrow aliases (e.g., `CmdUpArrow` / `OptDownArrow`) only if product hint copy introduces those forms.
+
 ## 2026-03-06 17:51 KST — Agent Chat parallel offset cycle
 - Delta: Normalized word-order arrow shortcut aliases in thread hint parsing so frontend shortcut chips remain stable when hint copy uses `Up Arrow` / `Down Arrow` wording.
   - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to canonicalize `up arrow`/`down arrow` (and hyphenated forms) into `ArrowUp`/`ArrowDown` before shortcut-source extraction.
