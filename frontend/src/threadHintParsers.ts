@@ -74,6 +74,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/⌥/gu, 'option+')
     .replace(/⌃/gu, 'ctrl+')
     .replace(/⇧/gu, 'shift+')
+    .replace(/↩/gu, 'enter')
     .replace(/page[\s-]?up/gu, 'pageup')
     .replace(/page[\s-]?down/gu, 'pagedown')
     .replace(/pg[\s-]?up/gu, 'pgup')

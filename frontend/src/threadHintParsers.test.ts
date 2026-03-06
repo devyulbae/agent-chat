@@ -230,6 +230,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Moved to next visible thread (Arrow Up).')).toBe('ArrowUp')
       expect(getHintShortcutSource('Moved to previous visible thread (Arrow-Down).')).toBe('ArrowDown')
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
+      expect(getHintShortcutSource('Recovered to first visible thread (↩).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (⌤).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Return).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Return key).')).toBe('Enter')
@@ -242,6 +243,9 @@ describe('threadHintParsers', () => {
         'Shift+Enter',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+⌤ confirmed).')).toBe(
+        'Shift+Enter',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift+↩ confirmed).')).toBe(
         'Shift+Enter',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+Return-key confirmed).')).toBe(

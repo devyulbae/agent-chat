@@ -1,5 +1,31 @@
 # Run Log
 
+## 2026-03-06 20:43 KST — Agent Chat implementation cycle
+- Delta: Added macOS return-arrow glyph alias normalization for thread hint shortcut parsing so return-style hint copy resolves to existing Enter chip semantics.
+  - Frontend parser: `normalizeShortcutAlias(...)` now rewrites `↩` to `enter` before shortcut-key canonicalization in `frontend/src/threadHintParsers.ts`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` coverage for `(↩)` and `(Shift+↩ confirmed)` → `Enter` / `Shift+Enter`.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check /Users/sybae/code/agent-chat` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (20 passed)
+- Commit: pending
+- Next action: add parser normalization for optional `Enter/Return` symbol variants in composed key hints (e.g., `Cmd+↩`) to keep modifier+enter chip paths canonical.
+
+## 2026-03-06 20:24 KST — Cadence sync (project-controls)
+- Source check:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ❌ HTTP 401 Unauthorized (BasicAuth required; local BasicAuth env not found in current runtime).
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500 Internal Server Error.
+- Result: **no-op** cadence sync (kept current schedules unchanged).
+- Applied policy: when both source endpoints are unavailable/failing for this run, preserve existing cron cadence and log blocker (no destructive edits).
+- Impact on mapped jobs:
+  - `agentchat-build-cycle-40m`: unchanged (`*/20 * * * *`)
+  - `agentchat-build-cycle-20m-offset`: unchanged (`10-59/20 * * * *`)
+  - `startup-loop-day-30m` (appflowy-bridge lane notes): unchanged (core startup loop preserved)
+- Burst override: skipped (control payload unavailable).
+- Next action: restore project-controls endpoint auth/env and re-run level→cadence + trigger override sync.
+
 ## 2026-03-06 20:06 KST — Agent Chat implementation cycle
 - Delta: Wired root/filter shortcut chips to consume a single parser-derived presentation contract in thread status rendering.
   - Frontend wiring: replaced split badge/copy composition in `frontend/src/main.tsx` with shared `getShortcutChipPresentationFromHint(...)` output for both root-jump and filter-jump status rows.
