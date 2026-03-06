@@ -149,6 +149,12 @@ describe('getShortcutChipPropsFromSource', () => {
       ariaLabel: 'Shortcut badge K: K (boundary jump).',
       context: 'thread-jump',
     })
+    expect(getShortcutChipPropsFromSource('ArrowUp', 'boundary jump', 'thread-jump')).toEqual({
+      badge: '↑',
+      title: 'Arrow Up boundary jump',
+      ariaLabel: 'Shortcut badge ↑: Arrow Up (boundary jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('returns null for unknown shortcut source', () => {

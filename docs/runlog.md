@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-06 23:32 KST — hidden-selection inline recovery hint chip/aria sync (offset lane)
+- Scope: frontend integration follow-up to keep hidden-selection recovery helper text on the same source-based shortcut chip + status aria composition path.
+- Change:
+  - `frontend/src/main.tsx`
+    - Upgraded hidden-selection inline recovery hint (`Hidden selection recovery: J/K or ↑/↓ ...`) to render source-based shortcut chips for `J`, `K`, `ArrowUp`, and `ArrowDown`.
+    - Added shared status aria-label composition via `getStatusAriaLabelWithShortcutChips(...)` for that inline recovery hint.
+    - Marked the inline recovery hint as live status semantics (`role="status"`, `aria-live="polite"`) for accessibility parity with other hint rows.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added explicit source-mapping regression for `ArrowUp` chip props (`↑` badge, tooltip/title, aria-label) to guard inline recovery chip rendering.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-06 23:11 KST — dotted Pg.Up/Pg.Dn alias normalization for helper hint drift (offset lane)
 - Scope: frontend integration + parser contract sync follow-up to keep helper-row shortcut chips canonical when copy drifts to dotted Pg. key variants.
 - Change:
@@ -300,3 +314,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (15/15)
   - `cd frontend && npm run build` ✅
 - API contract checks: not required this cycle (backend contracts/files were not touched).
+
+## 2026-03-06 23:22 KST — thread copy hint source-aware chip wiring (offset lane)
+- Scope: chat thread UX wiring for copy-status shortcut hint accuracy.
+- Change:
+  - `frontend/src/main.tsx`
+    - Made `copySelectedThreadLabel` source-aware (`'Y' | 'button'`).
+    - Keyboard-triggered copy keeps `Copied thread (Y) ...`; button-triggered copy now emits `Copied thread (button) ...`.
+    - Wired the Copy selected button to pass `'button'` source so shortcut chip rendering only appears for actual shortcut-triggered copies.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression test ensuring `Copied thread (button) ...` does not produce a shortcut chip presentation.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (16/16)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Commit: `c1e439e`
+- Next action: wire filter-hidden recovery inline hint to shared shortcut chip presentation + aria-label path (replace plain text-only recovery hint with chip-backed status text).

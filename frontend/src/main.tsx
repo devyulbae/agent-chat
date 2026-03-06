@@ -1599,6 +1599,23 @@ function App() {
     () => getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
     [],
   )
+  const selectedVisibleThreadInlineRecoveryShortcutChipPresentations = useMemo(
+    () => [
+      selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
+      selectedVisibleThreadLastRecoveryShortcutChipPresentation,
+      getShortcutChipPropsFromSource('ArrowUp', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('ArrowDown', 'boundary jump', 'thread-jump'),
+    ],
+    [selectedVisibleThreadFirstRecoveryShortcutChipPresentation, selectedVisibleThreadLastRecoveryShortcutChipPresentation],
+  )
+  const selectedVisibleThreadInlineRecoveryAriaLabel = useMemo(
+    () =>
+      getStatusAriaLabelWithShortcutChips(
+        selectedVisibleThreadInlineRecoveryHint,
+        selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+      ),
+    [selectedVisibleThreadInlineRecoveryHint, selectedVisibleThreadInlineRecoveryShortcutChipPresentations],
+  )
   const selectedVisibleThreadShortcutRecoveryStatusAriaLabel = useMemo(
     () =>
       getStatusAriaLabelWithShortcutChips(selectedVisibleThreadShortcutRecoveryHint, [
@@ -2609,7 +2626,16 @@ function App() {
               Selection: {selectedVisibleThreadPositionLabel} ({selectedVisibleThreadLabel})
             </small>
             {selectedVisibleThreadInlineRecoveryHint && (
-              <small style={{ color: '#7a4b00' }} title="Hidden selection recovers to boundary on next J/K or Arrow key.">
+              <small
+                aria-live="polite"
+                role="status"
+                aria-label={selectedVisibleThreadInlineRecoveryAriaLabel}
+                style={{ color: '#7a4b00' }}
+                title="Hidden selection recovers to boundary on next J/K or Arrow key."
+              >
+                {selectedVisibleThreadInlineRecoveryShortcutChipPresentations.map((chip) =>
+                  renderShortcutChipPresentation(chip),
+                )}
                 {selectedVisibleThreadInlineRecoveryHint}
               </small>
             )}
