@@ -1592,3 +1592,18 @@
 - Quality gates:
   - `cd frontend && npx vite build` ✅
 - Next action: add focused parser-level tests for `threadHintParsers` direction/shortcut helpers so first/last cue copy stays regression-safe.
+
+## 2026-03-06 10:51 KST — Agent Chat parallel offset cycle
+- Delta: Added focused parser-level regression tests for thread hint parsing in frontend to harden direction/source UX copy behavior.
+  - Added `frontend/src/threadHintParsers.test.ts` covering boundary direction detection (`first`/`last`) across case/punctuation variants and null/non-boundary fallbacks.
+  - Added shortcut-source extraction assertions for parenthesized hint sources and missing-source paths.
+  - Added compact helper output checks for direction badge/label parity (`↖ first` / `↘ last`, `first/last visible thread`).
+  - Added frontend test runner wiring by introducing `vitest` and `test`/`build` scripts in `frontend/package.json`.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test` ✅ (vitest: 6 passed)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `86f5935` (pushed to `main`)
+- Next action: extend parser tests with edge cases for nested/multiple parentheses in hint copy so shortcut-source extraction remains robust to future microcopy changes.
