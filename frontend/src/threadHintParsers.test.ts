@@ -21,6 +21,7 @@ import {
   getUnreadJumpWrapStatusCue,
   getUnreadJumpWrapStatusCueAriaLabel,
   getUnreadNavigationHintAriaLabel,
+  getUnreadNavigationWrapCueForAria,
   isThreadShortcutLegendDismissKey,
   isUnreadNavigationShortcutSource,
   isThreadShortcutLegendToggleKey,
@@ -192,6 +193,38 @@ describe('threadHintParsers', () => {
       expect(isUnreadNavigationShortcutSource('P')).toBe(true)
       expect(isUnreadNavigationShortcutSource('J')).toBe(false)
       expect(isUnreadNavigationShortcutSource(null)).toBe(false)
+    })
+  })
+
+  describe('getUnreadNavigationWrapCueForAria', () => {
+    it('suppresses unread navigation wrap cue aria when unread boundary jump status is active', () => {
+      expect(
+        getUnreadNavigationWrapCueForAria(
+          'wrapped last→first',
+          'Jumped to next unread thread (N) · t-9 · 1/3.',
+          'N',
+        ),
+      ).toBeNull()
+      expect(
+        getUnreadNavigationWrapCueForAria(
+          'wrapped first→last',
+          'Jumped to previous unread thread (P) · t-2 · 3/3.',
+          'P',
+        ),
+      ).toBeNull()
+    })
+
+    it('keeps wrap cue aria for non-unread boundary hints or when boundary hint is absent', () => {
+      expect(
+        getUnreadNavigationWrapCueForAria(
+          'wrapped last→first',
+          'Recovered to first visible thread (J) · Root · 1/9.',
+          'J',
+        ),
+      ).toBe('wrapped last→first')
+      expect(getUnreadNavigationWrapCueForAria('wrapped first→last', null, 'N')).toBe(
+        'wrapped first→last',
+      )
     })
   })
 

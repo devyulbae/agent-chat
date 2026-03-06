@@ -113,6 +113,17 @@ export function isUnreadNavigationShortcutSource(shortcutSource: string | null):
   return shortcutSource === 'U' || shortcutSource === 'N' || shortcutSource === 'P'
 }
 
+export function getUnreadNavigationWrapCueForAria(
+  wrapCue: string | null,
+  boundaryJumpHint: string | null,
+  boundaryJumpSourceShortcut: string | null,
+): string | null {
+  const shouldSuppressWrapCueAria =
+    Boolean(boundaryJumpHint) && isUnreadNavigationShortcutSource(boundaryJumpSourceShortcut)
+
+  return shouldSuppressWrapCueAria ? null : wrapCue
+}
+
 export function getUnreadBoundaryJumpStatusAriaLabel(
   baseAriaLabel: string | undefined,
   shortcutSource: string | null,

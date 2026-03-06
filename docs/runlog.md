@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 08:12 KST — unread wrap cue aria suppression helper extraction (offset lane)
+- Scope: frontend integration + API contract sync follow-up to keep unread wrap aria suppression logic centralized and parser-testable.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getUnreadNavigationWrapCueForAria(wrapCue, boundaryJumpHint, boundaryJumpSourceShortcut)` helper.
+    - Centralizes suppression of unread navigation wrap cue aria when an unread boundary jump status (`U`/`N`/`P`) is already active.
+  - `frontend/src/main.tsx`
+    - Replaced inline suppression condition in unread navigation aria-label composition with the new parser helper.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for suppression and passthrough scenarios.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (65/65)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 07:31 KST — unread wrap cue aria narration dedupe guard (offset lane)
 - Scope: frontend integration + API contract sync follow-up to avoid repeated unread wrap narration when status aria labels already include wrap cues.
 - Change:
