@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 17:51 KST — Agent Chat parallel offset cycle
+- Delta: Normalized word-order arrow shortcut aliases in thread hint parsing so frontend shortcut chips remain stable when hint copy uses `Up Arrow` / `Down Arrow` wording.
+  - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to canonicalize `up arrow`/`down arrow` (and hyphenated forms) into `ArrowUp`/`ArrowDown` before shortcut-source extraction.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+Up Arrow` / `Shift+Down Arrow` and hyphenated variant coverage to lock normalization behavior.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 20 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add parser normalization for optional `Arrow Up`/`Arrow Down` copy without modifiers in parenthesized hint sources so one-step movement hints canonicalize to `ArrowUp`/`ArrowDown` consistently.
+
 ## 2026-03-06 17:32 KST — Agent Chat parallel offset cycle
 - Delta: Consolidated boundary-direction cue parsing + chip composition into a single parser-level integration helper so `main.tsx` consumes one memoized payload instead of separate cue/presentation steps.
   - Frontend parser: added `getBoundaryDirectionChipPresentationFromHint(...)` in `frontend/src/threadHintParsers.ts` to derive `first`/`last` intent and build badge/title/aria copy in one call.
@@ -2045,5 +2056,5 @@
   - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
-- Commit: pending
+- Commit: `492a7a7` (pushed to `main`)
 - Next action: normalize parser extraction for wordy arrow aliases in hint copy (`Shift+Up Arrow` / `Shift+Down Arrow`) so future wording changes still resolve to the same shortcut chip.

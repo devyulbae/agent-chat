@@ -174,7 +174,19 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+↑ confirmed).')).toBe(
         'Shift+ArrowUp',
       )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift+Up Arrow confirmed).')).toBe(
+        'Shift+ArrowUp',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift+Up-Arrow confirmed).')).toBe(
+        'Shift+ArrowUp',
+      )
       expect(getHintShortcutSource('Recovered to last visible thread (⇧+↓ confirmed).')).toBe(
+        'Shift+ArrowDown',
+      )
+      expect(getHintShortcutSource('Recovered to last visible thread (Shift+Down Arrow confirmed).')).toBe(
+        'Shift+ArrowDown',
+      )
+      expect(getHintShortcutSource('Recovered to last visible thread (Shift+Down-Arrow confirmed).')).toBe(
         'Shift+ArrowDown',
       )
       expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')

@@ -80,7 +80,9 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/pg[\s-]?down/gu, 'pgdn')
     .replace(/pg[\s-]?dn/gu, 'pgdn')
     .replace(/arrow[\s-]?up/gu, 'arrowup')
+    .replace(/up[\s-]?arrow/gu, 'arrowup')
     .replace(/arrow[\s-]?down/gu, 'arrowdown')
+    .replace(/down[\s-]?arrow/gu, 'arrowdown')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 
