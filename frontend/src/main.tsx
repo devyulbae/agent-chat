@@ -61,6 +61,18 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
 const MIN_EXPIRING_WINDOW_HOURS = 1
 const MAX_EXPIRING_WINDOW_HOURS = 24 * 30
+const THREAD_SHORTCUT_CHIP_BASE_STYLE: React.CSSProperties = {
+  display: 'inline-block',
+  marginRight: 6,
+  padding: '0 4px',
+  borderRadius: 6,
+  fontSize: '0.75rem',
+  letterSpacing: '0.02em',
+}
+const THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT: Record<'thread-jump' | 'filter-jump', string> = {
+  'thread-jump': '1px solid #97b6f4',
+  'filter-jump': '1px solid #d0d7de',
+}
 
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
@@ -2532,13 +2544,8 @@ function App() {
                       'root jump',
                     )}
                     style={{
-                      display: 'inline-block',
-                      marginRight: 6,
-                      padding: '0 4px',
-                      border: '1px solid #97b6f4',
-                      borderRadius: 6,
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.02em',
+                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
                     }}
                   >
                     {rootJumpShiftShortcutBadge}
@@ -2568,13 +2575,8 @@ function App() {
                       'boundary jump',
                     )}
                     style={{
-                      display: 'inline-block',
-                      marginRight: 6,
-                      padding: '0 4px',
-                      border: '1px solid #97b6f4',
-                      borderRadius: 6,
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.02em',
+                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
                     }}
                   >
                     {boundaryJumpSourceShortcutBadge}
@@ -2585,13 +2587,8 @@ function App() {
                     title={`Boundary direction: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
                     aria-label={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
                     style={{
-                      display: 'inline-block',
-                      marginRight: 6,
-                      padding: '0 4px',
-                      border: '1px solid #97b6f4',
-                      borderRadius: 6,
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.02em',
+                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
                     }}
                   >
                     {getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
@@ -2622,13 +2619,8 @@ function App() {
                       'filter jump',
                     )}
                     style={{
-                      display: 'inline-block',
-                      marginRight: 6,
-                      padding: '0 4px',
-                      border: '1px solid #d0d7de',
-                      borderRadius: 6,
-                      fontSize: '0.75rem',
-                      letterSpacing: '0.02em',
+                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['filter-jump'],
                     }}
                   >
                     {threadFilterJumpSourceShortcutBadge}
