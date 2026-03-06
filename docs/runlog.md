@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 04:52 KST — unread wrap cue mirrored in unread hint aria path (offset lane)
+- Scope: frontend integration follow-up so assistive unread-navigation hint output mirrors unread jump wrap-around transitions.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added local `unreadNavigationWrapCue` state to persist the latest unread wrap transition cue (`wrapped last→first` / `wrapped first→last`).
+    - Updated `jumpUnreadByStep(...)` to store wrap cue output from `getUnreadJumpWrapStatusCue(...)` on each unread jump.
+    - Appended persisted wrap cue text to `unreadNavigationHint` copy when present, which automatically flows through `unreadNavigationHintAriaLabel` via `getStatusAriaLabelWithShortcutChips(...)`.
+    - Added reset effect to clear stale wrap cue state when unread-thread set becomes empty.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (44/44)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 04:31 KST — unread jump wrap-around status wording (offset lane)
 - Scope: frontend integration follow-up to make unread navigation feedback explicit when cycling across list boundaries.
 - Change:

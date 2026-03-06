@@ -259,6 +259,7 @@ function App() {
   const [threadRootJumpHint, setThreadRootJumpHint] = useState<string | null>(null)
   const [threadBoundaryJumpHint, setThreadBoundaryJumpHint] = useState<string | null>(null)
   const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
+  const [unreadNavigationWrapCue, setUnreadNavigationWrapCue] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
 
@@ -2130,7 +2131,7 @@ function App() {
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}`
+      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}${unreadNavigationWrapCue ? ` • ${unreadNavigationWrapCue}` : ''}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationHintAriaLabel = useMemo(
@@ -2154,6 +2155,13 @@ function App() {
     ],
   )
 
+  useEffect(() => {
+    if (unreadThreadIds.length > 0) {
+      return
+    }
+    setUnreadNavigationWrapCue(null)
+  }, [unreadThreadIds.length])
+
   const jumpUnreadByStep = useCallback(
     (step: 1 | -1, sourceKey: 'U' | 'N' | 'P') => {
       if (!unreadThreadIds.length) {
@@ -2172,6 +2180,7 @@ function App() {
       const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
       const boundaryDirection = step > 0 ? 'first' : 'last'
       const wrapCue = getUnreadJumpWrapStatusCue(step, currentIndex, nextIndex)
+      setUnreadNavigationWrapCue(wrapCue)
       setThreadBoundaryJumpHint(
         `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}${wrapCue ? ` · ${wrapCue}` : ''} · ${getBoundaryDirectionStatusCue(boundaryDirection)}.`
       )
