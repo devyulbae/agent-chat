@@ -74,7 +74,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/⌥/gu, 'option+')
     .replace(/⌃/gu, 'ctrl+')
     .replace(/⇧/gu, 'shift+')
-    .replace(/↩/gu, 'enter')
+    .replace(/[↩⏎]/gu, 'enter')
     .replace(/page[\s-]?up/gu, 'pageup')
     .replace(/page[\s-]?down/gu, 'pagedown')
     .replace(/pg\.?[\s-]?up/gu, 'pgup')
@@ -117,6 +117,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     '/': 'Slash',
     '↵': 'Enter',
     '⌤': 'Enter',
+    '⏎': 'Enter',
   }
 
   if (aliasMap[normalizedShortcut]) {
@@ -234,7 +235,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const comboMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|escape|esc|slash|\/|↵|⌤)$/i,
+    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|escape|esc|slash|\/|↵|⌤|⏎)$/i,
   )
   if (!comboMatch?.groups) {
     return shortcut
@@ -262,6 +263,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     slash: 'Slash',
     '↵': 'Enter',
     '⌤': 'Enter',
+    '⏎': 'Enter',
   }
   const normalizedKey = normalizedKeyAliasMap[keyAlias]
   if (!normalizedKey) {
