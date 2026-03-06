@@ -98,6 +98,14 @@ export function getUnreadNavigationHintAriaLabel(
     return baseAriaLabel
   }
 
+  const normalizedBaseAriaLabel = baseAriaLabel.toLowerCase()
+  if (
+    (wrapCue && normalizedBaseAriaLabel.includes(wrapCue.toLowerCase())) ||
+    normalizedBaseAriaLabel.includes(wrapCueAriaLabel.toLowerCase())
+  ) {
+    return baseAriaLabel
+  }
+
   return `${baseAriaLabel} ${wrapCueAriaLabel}`
 }
 

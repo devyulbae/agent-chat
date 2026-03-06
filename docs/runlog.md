@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 07:31 KST — unread wrap cue aria narration dedupe guard (offset lane)
+- Scope: frontend integration + API contract sync follow-up to avoid repeated unread wrap narration when status aria labels already include wrap cues.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Updated `getUnreadNavigationHintAriaLabel(...)` to no-op when base aria label already contains either the raw wrap cue token (`wrapped last→first` / `wrapped first→last`) or the expanded wrap cue aria sentence.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for both dedupe paths (raw wrap cue text already present and expanded aria cue already present).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (62/62)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 07:12 KST — shortcut legend click-toggle status chip extraction lock (offset lane)
 - Scope: frontend integration + parser contract sync follow-up to lock shown/hidden click-toggle live status rendering for the thread shortcut legend.
 - Change:

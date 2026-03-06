@@ -162,6 +162,21 @@ describe('threadHintParsers', () => {
       )
     })
 
+    it('does not append duplicate wrap cue narration when base aria already contains wrap cue text', () => {
+      expect(
+        getUnreadNavigationHintAriaLabel(
+          'Unread threads: 3 • U/N next • P previous • wrapped last→first',
+          'wrapped last→first',
+        ),
+      ).toBe('Unread threads: 3 • U/N next • P previous • wrapped last→first')
+      expect(
+        getUnreadNavigationHintAriaLabel(
+          'Unread threads: 3. Unread wrap cue: wrapped from first unread thread to last unread thread.',
+          'wrapped first→last',
+        ),
+      ).toBe('Unread threads: 3. Unread wrap cue: wrapped from first unread thread to last unread thread.')
+    })
+
     it('returns base aria label when wrap cue is absent/unknown or base label is empty', () => {
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', null)).toBe('Unread threads: 3.')
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', 'wrapped')).toBe('Unread threads: 3.')
