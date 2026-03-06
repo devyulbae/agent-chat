@@ -102,6 +102,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Shift+PageDown')).toBe('⇧PgDn')
       expect(getThreadShortcutBadge('Shift+G')).toBe('⇧G')
       expect(getThreadShortcutBadge('Shift+R')).toBe('⇧R')
+      expect(getThreadShortcutBadge('Shift+U')).toBe('⇧U')
       expect(getThreadShortcutBadge('Shift+Enter')).toBe('⇧↵')
       expect(getThreadShortcutBadge('Home')).toBe('Home')
       expect(getThreadShortcutBadge('End')).toBe('End')
@@ -124,6 +125,7 @@ describe('threadHintParsers', () => {
     it('maps shortcuts to human-readable tooltip labels', () => {
       expect(getThreadShortcutTooltip('Shift+PageUp')).toBe('Shift + PageUp')
       expect(getThreadShortcutTooltip('Shift+R')).toBe('Shift + R')
+      expect(getThreadShortcutTooltip('Shift+U')).toBe('Shift + U')
       expect(getThreadShortcutTooltip('Shift+Enter')).toBe('Shift + Enter')
       expect(getThreadShortcutTooltip('PageDown')).toBe('PageDown')
       expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')

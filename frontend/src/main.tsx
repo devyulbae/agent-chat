@@ -2032,7 +2032,13 @@ function App() {
     }
     const currentIndex = unreadThreadIds.findIndex((threadId) => threadId === selectedThreadId)
     const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % unreadThreadIds.length : 0
-    selectThread(unreadThreadIds[nextIndex])
+    const targetThreadId = unreadThreadIds[nextIndex]
+    selectThread(targetThreadId)
+
+    const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
+    setThreadBoundaryJumpHint(
+      `Jumped to next unread thread (U) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}.`
+    )
   }, [unreadThreadIds, selectedThreadId, selectThread])
 
   const moveVisibleThreadSelection = useCallback(
@@ -2314,6 +2320,7 @@ function App() {
     setLastSeenByThread(nextLastSeenByThread)
     setLastSeenCountByThread(nextLastSeenCountByThread)
     setUnseenThreadKeys([])
+    setThreadBoundaryJumpHint(`Cleared unread markers (Shift+U) · ${unreadThreadIds.length} thread(s).`)
   }, [
     lastSeenByThread,
     lastSeenCountByThread,
