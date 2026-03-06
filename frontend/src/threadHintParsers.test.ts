@@ -13,6 +13,7 @@ import {
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadFilterResetHint,
+  getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
@@ -87,6 +88,13 @@ describe('threadHintParsers', () => {
   describe('getThreadShortcutLegendDismissControlCopy', () => {
     it('returns explicit dismiss shortcut copy', () => {
       expect(getThreadShortcutLegendDismissControlCopy()).toBe('Esc')
+    })
+  })
+
+  describe('getThreadShortcutLegendButtonAriaKeyshortcuts', () => {
+    it('advertises only the active shortcut for assistive metadata', () => {
+      expect(getThreadShortcutLegendButtonAriaKeyshortcuts(false)).toBe('Shift+Slash')
+      expect(getThreadShortcutLegendButtonAriaKeyshortcuts(true)).toBe('Escape')
     })
   })
 

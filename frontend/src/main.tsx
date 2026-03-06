@@ -7,6 +7,7 @@ import {
   getBoundaryDirectionStatusCue,
   getHintShortcutSource,
   getThreadFilterResetHint,
+  getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
@@ -2794,7 +2795,7 @@ function App() {
                   ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
                   : `Show thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`
               }
-              aria-keyshortcuts="Shift+Slash,Escape"
+              aria-keyshortcuts={getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcutLegend)}
               aria-expanded={showThreadShortcutLegend}
               aria-controls="thread-shortcut-legend"
             >

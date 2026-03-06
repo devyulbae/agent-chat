@@ -23,6 +23,10 @@ export function getThreadShortcutLegendDismissControlCopy(): string {
   return 'Esc'
 }
 
+export function getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcutLegend: boolean): string {
+  return showThreadShortcutLegend ? 'Escape' : 'Shift+Slash'
+}
+
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
     return 'Reset thread view filters from filter input focus (Shift+Esc).'

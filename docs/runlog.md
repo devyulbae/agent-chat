@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 06:03 KST — shortcut legend aria-keyshortcuts active-state parity (boost lane)
+- Scope: chat thread UX wiring accessibility polish so the shortcut legend toggle button advertises only the currently actionable keyboard shortcut.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcutLegend)` helper.
+    - Returns `Shift+Slash` when legend is hidden (open action) and `Escape` when legend is visible (dismiss action).
+  - `frontend/src/main.tsx`
+    - Replaced static `aria-keyshortcuts="Shift+Slash,Escape"` on the legend toggle button with the new active-state helper.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression test ensuring active-state keyshortcuts metadata switches between `Shift+Slash` and `Escape`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (35/35)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+
 ## 2026-03-07 05:52 KST — shortcut legend aria-controls wiring parity (offset lane)
 - Scope: frontend integration accessibility follow-up so the legend toggle explicitly references the controlled legend region.
 - Change:
