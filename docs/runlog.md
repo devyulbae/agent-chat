@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 05:32 KST — shortcut legend toggle copy/metadata fallback parity (offset lane)
+- Scope: frontend integration follow-up to keep shortcut legend toggle button copy and accessibility metadata aligned with accepted `?` / `Shift+/` key paths.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getThreadShortcutLegendToggleControlCopy()` helper returning canonical toggle shortcut copy (`? / Shift+/`).
+  - `frontend/src/main.tsx`
+    - Updated shortcut legend toggle button `title` + `aria-label` to use canonical helper copy.
+    - Added `aria-keyshortcuts="Shift+Slash"` to advertise keyboard shortcut metadata for assistive tech.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression test coverage for the canonical legend-toggle control copy helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (48/48)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `7789554` — `[fix] sync shortcut legend toggle copy with key fallback metadata`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 05:24 KST — thread shortcut legend toggle key fallback normalization (boost lane)
 - Scope: chat thread UX wiring hardening for keyboard layout/event variance while keeping the same shortcut behavior.
 - Change:
