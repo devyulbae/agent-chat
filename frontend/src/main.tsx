@@ -2603,6 +2603,7 @@ function App() {
           type="button"
           onClick={() => jumpUnreadByStep(-1, 'P')}
           disabled={unreadThreadIds.length === 0}
+          title={unreadNavigationPreviousControlCopy}
           aria-keyshortcuts="P"
         >
           Prev unread
@@ -2611,6 +2612,7 @@ function App() {
           type="button"
           onClick={jumpToNextUnread}
           disabled={unreadThreadIds.length === 0}
+          title={unreadNavigationNextControlCopy}
           aria-keyshortcuts="U N"
         >
           Next unread

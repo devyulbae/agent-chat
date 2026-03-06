@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 03:23 KST — unread prev/next button title wiring parity (boost lane)
+- Scope: chat thread UX wiring polish to keep unread navigation button hover copy aligned with helper-row shortcut chip tokens.
+- Change:
+  - `frontend/src/main.tsx`
+    - Wired `Prev unread` button `title` to shared `unreadNavigationPreviousControlCopy`.
+    - Wired `Next unread` button `title` to shared `unreadNavigationNextControlCopy`.
+    - This keeps button hover affordances in lockstep with chip-derived helper copy (`P previous`, `U/N next`) and avoids copy drift.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- API contract checks: covered by repo pytest gate (audit + credentials contracts passed).
+- Next action: wire unread "Undo" affordance into the same shortcut-chip/title semantics path (if/when an undo shortcut is introduced) so post-clear recovery guidance remains source-driven.
+
 ## 2026-03-07 03:11 KST — unread helper next/previous tokens use chip badge copy (offset lane)
 - Scope: frontend integration polish to keep unread helper text tokens (`U/N`, `P`) sourced from shared shortcut chip badge presentation rather than hard-coded key text.
 - Change:
