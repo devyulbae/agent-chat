@@ -6,7 +6,6 @@ import {
   getHintShortcutSource,
 } from './threadHintParsers'
 import {
-  getShortcutChipPropsFromHint,
   getShortcutChipPropsFromSource,
   getStatusAriaLabelWithShortcutChip,
   getStatusAriaLabelWithShortcutChips,
@@ -1616,8 +1615,8 @@ function App() {
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
   const boundaryJumpShortcutChipPresentation = useMemo(
-    () => getShortcutChipPropsFromHint(threadBoundaryJumpHint, 'boundary jump', 'thread-jump'),
-    [threadBoundaryJumpHint],
+    () => getShortcutChipPropsFromSource(boundaryJumpSourceShortcut, 'boundary jump', 'thread-jump'),
+    [boundaryJumpSourceShortcut],
   )
 
   const boundaryJumpDirectionChipPresentation = useMemo(() => {
@@ -1648,8 +1647,8 @@ function App() {
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
   const rootJumpShortcutChipPresentation = useMemo(
-    () => getShortcutChipPropsFromHint(threadRootJumpHint, 'root jump', 'thread-jump'),
-    [threadRootJumpHint],
+    () => getShortcutChipPropsFromSource(rootJumpSourceShortcut, 'root jump', 'thread-jump'),
+    [rootJumpSourceShortcut],
   )
 
   const rootJumpStatusAriaLabel = useMemo(
@@ -1657,14 +1656,21 @@ function App() {
     [rootJumpShortcutChipPresentation, threadRootJumpHint],
   )
 
-  const filterJumpShortcutChipPresentation = useMemo(
-    () => getShortcutChipPropsFromHint(threadFilterJumpHint, 'filter jump', 'filter-jump'),
+  const filterJumpSourceShortcut = useMemo(
+    () => getHintShortcutSource(threadFilterJumpHint),
     [threadFilterJumpHint],
   )
 
+  const filterJumpShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource(filterJumpSourceShortcut, 'filter jump', 'filter-jump'),
+    [filterJumpSourceShortcut],
+  )
+
+  const threadCopySourceShortcut = useMemo(() => getHintShortcutSource(threadCopyHint), [threadCopyHint])
+
   const threadCopyShortcutChipPresentation = useMemo(
-    () => getShortcutChipPropsFromHint(threadCopyHint, 'thread copy', 'thread-jump'),
-    [threadCopyHint],
+    () => getShortcutChipPropsFromSource(threadCopySourceShortcut, 'thread copy', 'thread-jump'),
+    [threadCopySourceShortcut],
   )
 
   const threadCopyStatusAriaLabel = useMemo(

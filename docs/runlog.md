@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-06 22:43 KST — status chip wiring switched to parsed source path (boost lane)
+- Scope: chat thread UX wiring cleanup to converge status chip derivation on source-based helper path.
+- Change:
+  - `frontend/src/main.tsx`
+    - Switched boundary jump status chip derivation from `getShortcutChipPropsFromHint(...)` to `getShortcutChipPropsFromSource(...)` using pre-parsed `boundaryJumpSourceShortcut`.
+    - Switched root jump status chip derivation to source-based path via `rootJumpSourceShortcut`.
+    - Added `filterJumpSourceShortcut` and `threadCopySourceShortcut` memoized parsers and wired filter/copy status chips through source-based helper.
+    - Removed now-unused `getShortcutChipPropsFromHint` import from main thread view.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: wire shortcut chips into the thread-filter helper hint row (currently plain text) so live help copy and status lanes share the same chip presentation affordance.
+
 ## 2026-03-06 22:31 KST — unread navigation shortcut chip parity via source-based wiring (offset lane)
 - Scope: frontend integration follow-up to apply source-based shortcut chip wiring to remaining explicit helper text (unread navigation hint row).
 - Change:
