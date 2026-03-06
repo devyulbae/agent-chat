@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-06 21:43 KST — status aria-label whitespace normalization dedupe (boost lane)
+- Scope: chat thread UX wiring accessibility polish for status aria-label composition.
+- Change:
+  - `frontend/src/threadHintChips.tsx`
+    - Normalized chip aria-label payloads (`trim` + internal whitespace collapse) before dedupe in `getStatusAriaLabelWithShortcutChips(...)`.
+    - Filtered blank aria-label payloads after normalization.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression test verifying whitespace-variant duplicate aria-labels collapse to a single spoken segment.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (12/12)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: apply the same aria-label normalization strategy to shortcut parser outputs so tooltip copy and status copy stay canonical from a single source.
+
 ## 2026-03-06 21:31 KST — status aria-label duplicate chip dedupe (offset lane)
 - Scope: frontend integration accessibility polish to prevent repeated shortcut aria copy in combined status rows.
 - Change:

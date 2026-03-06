@@ -100,6 +100,25 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
       'Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump). Boundary direction cue: toward first visible thread',
     )
   })
+
+  it('normalizes whitespace before deduplicating aria-labels', () => {
+    expect(
+      getStatusAriaLabelWithShortcutChips('Recovered to first visible thread (Shift+PageUp) · Root · 1/9.', [
+        {
+          badge: '⇧PgUp',
+          title: 'Shift + PageUp boundary jump',
+          ariaLabel: 'Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).',
+          context: 'thread-jump',
+        },
+        {
+          badge: '⇧PgUp duplicate',
+          title: 'Duplicate Shift + PageUp boundary jump',
+          ariaLabel: '  Shortcut badge ⇧PgUp:   Shift + PageUp (boundary jump).  ',
+          context: 'thread-jump',
+        },
+      ]),
+    ).toBe('Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).')
+  })
 })
 
 describe('getShortcutChipPropsFromHint', () => {
