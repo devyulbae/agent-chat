@@ -1,5 +1,30 @@
 # Run Log
 
+## 2026-03-06 15:16 KST — Agent Chat parallel offset cycle
+- Delta: Extracted shortcut-chip copy composition into shared parser helper to keep frontend hint-chip title/aria text centralized and regression-covered for Ctrl/Control boundary shortcuts.
+  - Frontend: moved `buildShortcutChipCopy(...)` from `frontend/src/main.tsx` into `frontend/src/threadHintParsers.ts` and reused the shared import in thread hint rendering.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with focused assertions for deterministic Ctrl/Control boundary chip copy (`Ctrl+PgUp`, `Control+PgDn`) title/aria output.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 14 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add a tiny helper-level assertion matrix for root/filter jump chip intents so all shortcut-chip contexts stay centralized in `threadHintParsers`.
+
+## 2026-03-06 15:05 KST — Agent Chat implementation cycle
+- Delta: Enabled parser-normalized Ctrl/Control boundary aliases to render explicit shortcut chips in thread hint UX.
+  - Frontend: updated `frontend/src/threadHintParsers.ts` badge/tooltip mappings for `Ctrl+PageUp`, `Ctrl+PageDown`, `Control+PageUp`, and `Control+PageDown`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with focused badge/tooltip assertions for Ctrl/Control page shortcuts.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npx vite build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `c7b514e` (pushed to `main`)
+- Next action: add a tiny UI-level thread hint render regression test to assert Ctrl/Control shortcut chips are actually displayed (not just parser-mapped) when boundary hints include compact `ctrl+pgup/pgdn` aliases.
+
 ## 2026-03-06 14:50 KST — Agent Chat parallel offset cycle
 - Delta: Added lowercase Ctrl/Control compact-alias regression coverage for thread hint shortcut source parsing.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(ctrl+pgup confirmed)` to `Ctrl+PageUp` and `(control+pgdn confirmed)` to `Control+PageDown`.

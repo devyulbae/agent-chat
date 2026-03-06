@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
+  buildShortcutChipCopy,
   getBoundaryDirectionBadge,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
@@ -83,19 +84,6 @@ type ShortcutChipProps = {
   title: string
   ariaLabel: string
   context: ShortcutChipContext
-}
-
-type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump'
-
-function buildShortcutChipCopy(
-  badge: string,
-  shortcutText: string,
-  intent: ShortcutChipIntent,
-): { title: string; ariaLabel: string } {
-  return {
-    title: `${shortcutText} ${intent}`,
-    ariaLabel: `Shortcut badge ${badge}: ${shortcutText} (${intent}).`,
-  }
 }
 
 function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {

@@ -1,4 +1,5 @@
 export type BoundaryDirection = 'first' | 'last'
+export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump'
 
 export function getBoundaryDirectionLabel(direction: BoundaryDirection): string {
   return direction === 'first' ? 'first visible thread' : 'last visible thread'
@@ -159,4 +160,15 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
   }
 
   return tooltipByShortcut[normalizedShortcut] ?? null
+}
+
+export function buildShortcutChipCopy(
+  badge: string,
+  shortcutText: string,
+  intent: ShortcutChipIntent,
+): { title: string; ariaLabel: string } {
+  return {
+    title: `${shortcutText} ${intent}`,
+    ariaLabel: `Shortcut badge ${badge}: ${shortcutText} (${intent}).`,
+  }
 }

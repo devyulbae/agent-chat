@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  buildShortcutChipCopy,
   getBoundaryDirectionBadge,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
@@ -178,6 +179,19 @@ describe('threadHintParsers', () => {
     it('returns null for unknown or empty shortcut source', () => {
       expect(getThreadShortcutTooltip('Shift+Unknown')).toBeNull()
       expect(getThreadShortcutTooltip(null)).toBeNull()
+    })
+  })
+
+  describe('buildShortcutChipCopy', () => {
+    it('builds deterministic title/aria text for Ctrl boundary chips', () => {
+      expect(buildShortcutChipCopy('Ctrl+PgUp', 'Ctrl + PageUp', 'boundary jump')).toEqual({
+        title: 'Ctrl + PageUp boundary jump',
+        ariaLabel: 'Shortcut badge Ctrl+PgUp: Ctrl + PageUp (boundary jump).',
+      })
+      expect(buildShortcutChipCopy('Control+PgDn', 'Control + PageDown', 'boundary jump')).toEqual({
+        title: 'Control + PageDown boundary jump',
+        ariaLabel: 'Shortcut badge Control+PgDn: Control + PageDown (boundary jump).',
+      })
     })
   })
 })
