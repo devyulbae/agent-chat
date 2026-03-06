@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 14:24 KST — Agent Chat implementation cycle
+- Delta: Added compact alias-regression coverage for non-shift boundary shortcuts in frontend hint parser tests.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(PgUp confirmed)` / `(PgDn confirmed)` to canonical `PageUp` / `PageDown` outputs.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add focused parser regression coverage ensuring lowercase compact aliases (`pgup` / `pgdn`) normalize identically to maintain hint-source badge parity.
+
 ## 2026-03-06 14:12 KST — Agent Chat parallel offset cycle
 - Delta: Added focused alias-normalization regression coverage for `Shift+PgDn` so parser output stays canonical across compact boundary shortcut copy.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `Jumped to last visible thread (Shift+PgDn confirmed).` to `Shift+PageDown`.

@@ -82,6 +82,12 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to last visible thread (Shift+PgDn confirmed).')).toBe(
         'Shift+PageDown',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (PgUp confirmed).')).toBe(
+        'PageUp',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (PgDn confirmed).')).toBe(
+        'PageDown',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
     })
