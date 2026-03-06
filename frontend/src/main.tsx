@@ -491,7 +491,7 @@ function App() {
   }, [])
 
   const jumpToRootThreadContext = useCallback(
-    (source: 'Shift+Home' | 'Shift+R' | 'button' = 'button') => {
+    (source: 'Shift+Home' | 'Shift+R' | 'R' | 'button' = 'button') => {
       const alreadyAtRoot = selectedThreadId === null
       const targetLabel = 'Root'
       const rootPositionHint = showRootThreadInList ? ` · 1/${visibleThreadIds.length}` : ''
@@ -1653,14 +1653,18 @@ function App() {
     }
 
     const rootShortcutSourceHelp =
-      rootJumpSourceShortcut === 'Shift+Home' || rootJumpSourceShortcut === 'Shift+R'
-        ? `${rootJumpSourceShortcut} keeps active filters while jumping to root context.`
+      rootJumpSourceShortcut === 'Shift+Home' ||
+      rootJumpSourceShortcut === 'Shift+R' ||
+      rootJumpSourceShortcut === 'R'
+        ? rootJumpSourceShortcut === 'R'
+          ? 'R jumps directly to root context while preserving active filters.'
+          : `${rootJumpSourceShortcut} keeps active filters while jumping to root context.`
         : null
 
     const rootDirectionHelp =
       rootJumpSourceShortcut === 'Shift+Home'
         ? 'Direction: hard jump to Root thread.'
-        : rootJumpSourceShortcut === 'Shift+R'
+        : rootJumpSourceShortcut === 'Shift+R' || rootJumpSourceShortcut === 'R'
           ? 'Direction: root context recall.'
           : null
 
@@ -2046,6 +2050,28 @@ function App() {
       if (event.defaultPrevented || event.repeat) {
         return
       }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'r') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      jumpToRootThreadContext('R')
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [jumpToRootThreadContext])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
       if (event.metaKey || event.ctrlKey || event.altKey || !event.shiftKey) {
         return
       }
@@ -2343,7 +2369,7 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • C to focus composer • Shift+Home (or Shift+R) jump root • Shift+PgUp/Shift+PgDn jump first/last visible
+          Enter to send • Shift+Enter newline • Esc (empty) to return to root • C to focus composer • R / Shift+Home / Shift+R jump root • Shift+PgUp/Shift+PgDn jump first/last visible
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
@@ -2356,10 +2382,10 @@ function App() {
         <button
           type="button"
           onClick={() => jumpToRootThreadContext('button')}
-          title="Shift+Home (or Shift+R) · Root hints show 1/N where N is currently visible filtered threads"
-          aria-keyshortcuts="Shift+Home Shift+R"
+          title="R or Shift+Home (or Shift+R) · Root hints show 1/N where N is currently visible filtered threads"
+          aria-keyshortcuts="R Shift+Home Shift+R"
         >
-          Jump root (⇧Home/⇧R)
+          Jump root (R/⇧Home/⇧R)
         </button>
         <button
           type="button"

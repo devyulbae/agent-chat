@@ -39,6 +39,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Enter) · Root · 1/9.')).toBe(
         'Enter',
       )
+      expect(getHintShortcutSource('Jumped to root thread (R) · Root · 1/9.')).toBe('R')
     })
 
     it('normalizes no-op "confirmed" suffix to keep shortcut badges stable', () => {
@@ -99,6 +100,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('ArrowDown')).toBe('↓')
       expect(getThreadShortcutBadge('Enter')).toBe('↵')
       expect(getThreadShortcutBadge('G')).toBe('G')
+      expect(getThreadShortcutBadge('R')).toBe('R')
     })
 
     it('returns null for unknown or empty shortcut source', () => {
@@ -116,6 +118,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')
       expect(getThreadShortcutTooltip('Enter')).toBe('Enter')
       expect(getThreadShortcutTooltip('G')).toBe('G')
+      expect(getThreadShortcutTooltip('R')).toBe('R')
     })
 
     it('returns null for unknown or empty shortcut source', () => {
