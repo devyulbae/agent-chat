@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 05:08 KST — thread shortcut legend toggle wiring (boost lane)
+- Scope: chat thread UX wiring (discoverability for existing keyboard controls without changing behavior).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `showThreadShortcutLegend` UI state.
+    - Added `?` global shortcut (non-editable contexts) to toggle thread shortcut legend visibility.
+    - Added `Show shortcuts` / `Hide shortcuts` toggle button in the thread filter control row.
+    - Added inline shortcut legend summary row (J/K/arrow movement, boundary jumps, unread controls, root jump, filter/composer focus, copy).
+- Verification:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+
 ## 2026-03-07 04:52 KST — unread wrap cue mirrored in unread hint aria path (offset lane)
 - Scope: frontend integration follow-up so assistive unread-navigation hint output mirrors unread jump wrap-around transitions.
 - Change:

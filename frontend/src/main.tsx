@@ -259,6 +259,7 @@ function App() {
   const [threadRootJumpHint, setThreadRootJumpHint] = useState<string | null>(null)
   const [threadBoundaryJumpHint, setThreadBoundaryJumpHint] = useState<string | null>(null)
   const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
+  const [showThreadShortcutLegend, setShowThreadShortcutLegend] = useState(false)
   const [unreadNavigationWrapCue, setUnreadNavigationWrapCue] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
@@ -2032,6 +2033,28 @@ function App() {
       if (event.defaultPrevented || event.repeat) {
         return
       }
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+      if (event.key !== '?') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      setShowThreadShortcutLegend((current) => !current)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
         return
       }
@@ -2732,6 +2755,14 @@ function App() {
             >
               Reset view
             </button>
+            <button
+              type="button"
+              onClick={() => setShowThreadShortcutLegend((current) => !current)}
+              title="Toggle thread shortcut legend (?)"
+              aria-expanded={showThreadShortcutLegend}
+            >
+              {showThreadShortcutLegend ? 'Hide shortcuts' : 'Show shortcuts'}
+            </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
               focus/jump/reset shortcuts · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
@@ -2870,6 +2901,14 @@ function App() {
               >
                 {renderShortcutChipPresentation(filterJumpShortcutChipPresentation)}
                 {threadFilterJumpHint}
+              </small>
+            )}
+            {showThreadShortcutLegend && (
+              <small style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+                <strong>Thread shortcuts:</strong>
+                J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · U/N next unread · P previous unread ·
+                Shift+U clear unread · R/Shift+Home jump root · / focus filter · C focus composer ·
+                Y copy selected
               </small>
             )}
           </div>
