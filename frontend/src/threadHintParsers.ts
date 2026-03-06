@@ -33,6 +33,8 @@ function normalizeShortcutAlias(shortcut: string): string {
     .toLowerCase()
     .replace(/^⇧\s*\+/u, 'shift+')
     .replace(/^⌃\s*\+/u, 'ctrl+')
+    .replace(/^⌥\s*\+/u, 'option+')
+    .replace(/^⌘\s*\+/u, 'cmd+')
 
   const aliasMap: Record<string, string> = {
     pgup: 'PageUp',
@@ -109,6 +111,14 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'ctrl+pagedown': 'Ctrl+PgDn',
     'control+pageup': 'Control+PgUp',
     'control+pagedown': 'Control+PgDn',
+    'option+pageup': 'Option+PgUp',
+    'option+pagedown': 'Option+PgDn',
+    'cmd+pageup': 'Cmd+PgUp',
+    'cmd+pagedown': 'Cmd+PgDn',
+    'command+pageup': 'Command+PgUp',
+    'command+pagedown': 'Command+PgDn',
+    'meta+pageup': 'Meta+PgUp',
+    'meta+pagedown': 'Meta+PgDn',
     home: 'Home',
     end: 'End',
     pageup: 'PgUp',
@@ -147,6 +157,14 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'ctrl+pagedown': 'Ctrl + PageDown',
     'control+pageup': 'Control + PageUp',
     'control+pagedown': 'Control + PageDown',
+    'option+pageup': 'Option + PageUp',
+    'option+pagedown': 'Option + PageDown',
+    'cmd+pageup': 'Cmd + PageUp',
+    'cmd+pagedown': 'Cmd + PageDown',
+    'command+pageup': 'Command + PageUp',
+    'command+pagedown': 'Command + PageDown',
+    'meta+pageup': 'Meta + PageUp',
+    'meta+pagedown': 'Meta + PageDown',
     home: 'Home',
     end: 'End',
     pageup: 'PageUp',

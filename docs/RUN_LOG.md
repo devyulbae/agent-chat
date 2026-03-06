@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 15:31 KST — Agent Chat parallel offset cycle
+- Delta: Extended thread shortcut alias normalization + chip mappings for macOS modifier glyphs so frontend hint chips stay canonical across platform-style shortcut copy.
+  - Frontend parser: updated `frontend/src/threadHintParsers.ts` to normalize `⌥+...` → `Option+...` and `⌘+...` → `Cmd+...` before PgUp/PgDn canonicalization.
+  - Frontend mappings: added badge/tooltip coverage for Option/Cmd (plus explicit Command/Meta aliases) page-boundary shortcuts so parsed aliases can render visible chips.
+  - Frontend tests: expanded `frontend/src/threadHintParsers.test.ts` with glyph alias extraction assertions (`⌥+PgUp`, `⌘+PgDn`) and badge/tooltip mapping expectations for `Option/Cmd/Command/Meta` page shortcuts.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 14 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add normalization + mapping parity for word-form compact aliases (`opt+pgup`, `cmd+pgdn`) if those variants appear in hint copy.
+
 ## 2026-03-06 15:16 KST — Agent Chat parallel offset cycle
 - Delta: Extracted shortcut-chip copy composition into shared parser helper to keep frontend hint-chip title/aria text centralized and regression-covered for Ctrl/Control boundary shortcuts.
   - Frontend: moved `buildShortcutChipCopy(...)` from `frontend/src/main.tsx` into `frontend/src/threadHintParsers.ts` and reused the shared import in thread hint rendering.

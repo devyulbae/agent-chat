@@ -113,6 +113,12 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to last visible thread (⇧+PgDn confirmed).')).toBe(
         'Shift+PageDown',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (⌥+PgUp confirmed).')).toBe(
+        'Option+PageUp',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (⌘+PgDn confirmed).')).toBe(
+        'Cmd+PageDown',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
     })
@@ -148,6 +154,10 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Shift+Enter')).toBe('⇧↵')
       expect(getThreadShortcutBadge('Ctrl+PageUp')).toBe('Ctrl+PgUp')
       expect(getThreadShortcutBadge('Control+PageDown')).toBe('Control+PgDn')
+      expect(getThreadShortcutBadge('Option+PageUp')).toBe('Option+PgUp')
+      expect(getThreadShortcutBadge('Cmd+PageDown')).toBe('Cmd+PgDn')
+      expect(getThreadShortcutBadge('Command+PageUp')).toBe('Command+PgUp')
+      expect(getThreadShortcutBadge('Meta+PageDown')).toBe('Meta+PgDn')
       expect(getThreadShortcutBadge('Home')).toBe('Home')
       expect(getThreadShortcutBadge('End')).toBe('End')
       expect(getThreadShortcutBadge('PageUp')).toBe('PgUp')
@@ -175,6 +185,10 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Shift+Enter')).toBe('Shift + Enter')
       expect(getThreadShortcutTooltip('Ctrl+PageUp')).toBe('Ctrl + PageUp')
       expect(getThreadShortcutTooltip('Control+PageDown')).toBe('Control + PageDown')
+      expect(getThreadShortcutTooltip('Option+PageUp')).toBe('Option + PageUp')
+      expect(getThreadShortcutTooltip('Cmd+PageDown')).toBe('Cmd + PageDown')
+      expect(getThreadShortcutTooltip('Command+PageUp')).toBe('Command + PageUp')
+      expect(getThreadShortcutTooltip('Meta+PageDown')).toBe('Meta + PageDown')
       expect(getThreadShortcutTooltip('PageDown')).toBe('PageDown')
       expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')
       expect(getThreadShortcutTooltip('Enter')).toBe('Enter')
