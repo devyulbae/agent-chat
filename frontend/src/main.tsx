@@ -519,8 +519,7 @@ function App() {
     [selectThread, selectedThreadId, showRootThreadInList, visibleThreadIds.length]
   )
 
-  const copySelectedThreadLabel = useCallback(
-    async (source: 'button' | 'shortcut' = 'button') => {
+  const copySelectedThreadLabel = useCallback(async () => {
       const threadLabel = selectedThreadId ?? 'root'
       if (!navigator.clipboard?.writeText) {
         setThreadCopyHint('Clipboard API unavailable in this browser context.')
@@ -529,9 +528,7 @@ function App() {
 
       try {
         await navigator.clipboard.writeText(threadLabel)
-        setThreadCopyHint(
-          source === 'shortcut' ? `Copied thread (Y) · ${threadLabel}.` : `Copied thread: ${threadLabel}`
-        )
+        setThreadCopyHint(`Copied thread (Y) · ${threadLabel}.`)
       } catch {
         setThreadCopyHint('Failed to copy thread label.')
       }
@@ -1829,7 +1826,7 @@ function App() {
         return
       }
       event.preventDefault()
-      void copySelectedThreadLabel('shortcut')
+      void copySelectedThreadLabel()
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -2526,7 +2523,8 @@ function App() {
             <button
               type="button"
               onClick={() => void copySelectedThreadLabel()}
-              title="Copy selected thread label"
+              title="Copy selected thread label (Y)"
+              aria-keyshortcuts="Y"
             >
               Copy selected
             </button>

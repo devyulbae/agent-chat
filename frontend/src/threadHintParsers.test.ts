@@ -48,6 +48,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to root thread (R) · Root · 1/9.')).toBe('R')
       expect(getHintShortcutSource('Jumped to next unread thread (N) · t-9 · 1/3.')).toBe('N')
       expect(getHintShortcutSource('Jumped to previous unread thread (P) · t-4 · 3/3.')).toBe('P')
+      expect(getHintShortcutSource('Copied thread (Y) · root.')).toBe('Y')
     })
 
     it('normalizes no-op "confirmed" suffix to keep shortcut badges stable', () => {
