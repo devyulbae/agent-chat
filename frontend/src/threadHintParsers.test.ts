@@ -14,6 +14,7 @@ import {
   getShortcutChipPresentationFromHint,
   getThreadFilterResetHint,
   getUnreadJumpWrapStatusCue,
+  isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
@@ -45,6 +46,21 @@ describe('threadHintParsers', () => {
       expect(getThreadFilterResetHint('input')).toBe(
         'Reset thread view filters from filter input focus (Shift+Esc).',
       )
+    })
+  })
+
+  describe('isThreadShortcutLegendToggleKey', () => {
+    it('accepts question-mark key events directly', () => {
+      expect(isThreadShortcutLegendToggleKey('?', false)).toBe(true)
+    })
+
+    it('accepts slash + shift fallback key events', () => {
+      expect(isThreadShortcutLegendToggleKey('/', true)).toBe(true)
+    })
+
+    it('rejects non-matching key combinations', () => {
+      expect(isThreadShortcutLegendToggleKey('/', false)).toBe(false)
+      expect(isThreadShortcutLegendToggleKey('k', true)).toBe(false)
     })
   })
 

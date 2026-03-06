@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 05:24 KST — thread shortcut legend toggle key fallback normalization (boost lane)
+- Scope: chat thread UX wiring hardening for keyboard layout/event variance while keeping the same shortcut behavior.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `isThreadShortcutLegendToggleKey(key, shiftKey)` helper.
+    - Legend toggle now accepts both direct `?` key events and `Shift + /` fallback events.
+  - `frontend/src/main.tsx`
+    - Replaced direct `event.key === '?'` check with shared helper call.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added unit coverage for accepted (`?`, `Shift + /`) and rejected key combinations.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (30 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+
 ## 2026-03-07 05:08 KST — thread shortcut legend toggle wiring (boost lane)
 - Scope: chat thread UX wiring (discoverability for existing keyboard controls without changing behavior).
 - Change:

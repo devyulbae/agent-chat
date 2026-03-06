@@ -3,6 +3,14 @@ export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump' |
 export type ThreadFilterResetSource = 'input'
 export type UnreadJumpStep = 1 | -1
 
+export function isThreadShortcutLegendToggleKey(key: string, shiftKey: boolean): boolean {
+  if (key === '?') {
+    return true
+  }
+
+  return key === '/' && shiftKey
+}
+
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
     return 'Reset thread view filters from filter input focus (Shift+Esc).'

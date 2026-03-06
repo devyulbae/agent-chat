@@ -8,6 +8,7 @@ import {
   getHintShortcutSource,
   getThreadFilterResetHint,
   getUnreadJumpWrapStatusCue,
+  isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
 import {
   getShortcutChipPropsFromHint,
@@ -2036,7 +2037,7 @@ function App() {
       if (event.metaKey || event.ctrlKey || event.altKey) {
         return
       }
-      if (event.key !== '?') {
+      if (!isThreadShortcutLegendToggleKey(event.key, event.shiftKey)) {
         return
       }
       if (isEditableElement(event.target)) {
