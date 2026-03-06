@@ -17,6 +17,12 @@ import {
   renderShortcutChipPresentation,
   type ShortcutChipProps,
 } from './threadHintChips'
+import {
+  AUDIT_EVENTS_LIMIT_MAX,
+  clampAuditEventLimit,
+  clampCredentialExpiringWindowHours,
+  normalizeAuditOffset,
+} from './apiContracts'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -68,8 +74,6 @@ type AuditEvent = {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
-const MIN_EXPIRING_WINDOW_HOURS = 1
-const MAX_EXPIRING_WINDOW_HOURS = 24 * 30
 
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
@@ -215,12 +219,6 @@ function toIsoFromDatetimeLocal(value: string): string | null {
   return parsed.toISOString()
 }
 
-function clampExpiringWindowHours(value: number): number {
-  if (!Number.isFinite(value)) {
-    return 24
-  }
-  return Math.min(MAX_EXPIRING_WINDOW_HOURS, Math.max(MIN_EXPIRING_WINDOW_HOURS, Math.trunc(value)))
-}
 
 function isEditableElement(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
@@ -687,7 +685,7 @@ function App() {
       if (credentialFilter !== 'all') {
         params.set('token_status', credentialFilter)
       }
-      params.set('expiring_within_hours', String(clampExpiringWindowHours(expiringWithinHours)))
+      params.set('expiring_within_hours', String(clampCredentialExpiringWindowHours(expiringWithinHours)))
 
       const query = params.toString()
       const url = `${API_BASE}/credentials${query ? `?${query}` : ''}`
@@ -769,10 +767,12 @@ function App() {
         setCredentialAuditOlderPageFailureAt(null)
       }
 
+      const boundedLimit = clampAuditEventLimit(limit)
+      const boundedOffset = normalizeAuditOffset(offset)
       const params = new URLSearchParams({
         entity_type: 'credential',
-        limit: String(limit),
-        offset: String(offset),
+        limit: String(boundedLimit),
+        offset: String(boundedOffset),
       })
       if (credentialId) {
         params.set('entity_id', credentialId)
@@ -797,7 +797,7 @@ function App() {
           throw new Error(`Failed to load audit trail (${response.status})`)
         }
         const payload = (await response.json()) as AuditEvent[]
-        setCredentialAuditHasMore(payload.length === limit)
+        setCredentialAuditHasMore(payload.length === boundedLimit)
         if (append) {
           setCredentialAuditPagingAnnouncement(
             payload.length > 0
@@ -2998,8 +2998,8 @@ function App() {
         <input
           id="expiring-hours"
           type="number"
-          min={MIN_EXPIRING_WINDOW_HOURS}
-          max={MAX_EXPIRING_WINDOW_HOURS}
+          min={1}
+          max={24 * 30}
           value={expiringWithinHours}
           onChange={(event) => {
             const raw = event.target.value
@@ -3007,9 +3007,9 @@ function App() {
               setExpiringWithinHours(24)
               return
             }
-            setExpiringWithinHours(clampExpiringWindowHours(Number(raw)))
+            setExpiringWithinHours(clampCredentialExpiringWindowHours(Number(raw)))
           }}
-          onBlur={() => setExpiringWithinHours((current) => clampExpiringWindowHours(current))}
+          onBlur={() => setExpiringWithinHours((current) => clampCredentialExpiringWindowHours(current))}
         />
 
         <button type="button" onClick={() => void loadCredentials()}>
@@ -3298,12 +3298,12 @@ function App() {
         <select
           id="credential-audit-limit"
           value={String(auditLimit)}
-          onChange={(event) => setAuditLimit(Number(event.target.value))}
+          onChange={(event) => setAuditLimit(clampAuditEventLimit(Number(event.target.value)))}
           title="Maximum number of latest events to fetch"
         >
           <option value="20">20</option>
           <option value="50">50</option>
-          <option value="100">100</option>
+          <option value={String(AUDIT_EVENTS_LIMIT_MAX)}>{AUDIT_EVENTS_LIMIT_MAX}</option>
         </select>
 
         <label htmlFor="credential-audit-select">Audit trail credential:</label>
