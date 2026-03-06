@@ -1972,6 +1972,36 @@ function App() {
       ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • Shift+U clear`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
+  const unreadNavigationNextShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('U', 'boundary jump', 'thread-jump'),
+    [],
+  )
+
+  const unreadNavigationNextAltShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('N', 'boundary jump', 'thread-jump'),
+    [],
+  )
+
+  const unreadNavigationPreviousShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('P', 'boundary jump', 'thread-jump'),
+    [],
+  )
+
+  const unreadNavigationHintAriaLabel = useMemo(
+    () =>
+      getStatusAriaLabelWithShortcutChips(unreadNavigationHint, [
+        unreadNavigationNextShortcutChipPresentation,
+        unreadNavigationNextAltShortcutChipPresentation,
+        unreadNavigationPreviousShortcutChipPresentation,
+      ]),
+    [
+      unreadNavigationHint,
+      unreadNavigationNextAltShortcutChipPresentation,
+      unreadNavigationNextShortcutChipPresentation,
+      unreadNavigationPreviousShortcutChipPresentation,
+    ],
+  )
+
   const jumpUnreadByStep = useCallback(
     (step: 1 | -1, sourceKey: 'U' | 'N' | 'P') => {
       if (!unreadThreadIds.length) {
@@ -2475,7 +2505,19 @@ function App() {
             </button>
           </small>
         )}
-        <small style={{ color: unreadThreadIds.length > 0 ? '#555' : '#777' }}>{unreadNavigationHint}</small>
+        <small
+          aria-label={unreadNavigationHintAriaLabel}
+          style={{ color: unreadThreadIds.length > 0 ? '#555' : '#777' }}
+        >
+          {unreadThreadIds.length > 0 && (
+            <>
+              {renderShortcutChipPresentation(unreadNavigationNextShortcutChipPresentation)}
+              {renderShortcutChipPresentation(unreadNavigationNextAltShortcutChipPresentation)}
+              {renderShortcutChipPresentation(unreadNavigationPreviousShortcutChipPresentation)}
+            </>
+          )}
+          {unreadNavigationHint}
+        </small>
       </div>
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}

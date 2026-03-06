@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-06 22:31 KST — unread navigation shortcut chip parity via source-based wiring (offset lane)
+- Scope: frontend integration follow-up to apply source-based shortcut chip wiring to remaining explicit helper text (unread navigation hint row).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added explicit source-based shortcut chip presentations for unread navigation keys: `U`, `N`, and `P` via `getShortcutChipPropsFromSource(...)`.
+    - Composed unread navigation aria-label with `getStatusAriaLabelWithShortcutChips(...)` so spoken hint text now includes canonical chip semantics from shared helpers.
+    - Rendered unread navigation chips inline ahead of unread hint copy only when unread threads exist.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
 ## 2026-03-06 22:26 KST — hidden-selection recovery shortcut chip wiring (boost lane)
 - Scope: chat thread UX wiring accessibility/consistency for hidden-selection recovery hints.
 - Change:
