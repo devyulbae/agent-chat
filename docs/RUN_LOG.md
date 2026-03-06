@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 16:22 KST — Agent Chat implementation cycle
+- Delta: Added centralized shortcut-chip copy intent coverage for root/filter thread UX hints.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` `buildShortcutChipCopy` suite to assert deterministic `title` + `ariaLabel` output across all intent variants (`boundary jump`, `root jump`, `filter jump`).
+  - Scope kept frontend-only regression coverage (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 14 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add a tiny thread hint render test in `frontend/src/main.test.tsx` to verify root/filter shortcut chips consume the shared `buildShortcutChipCopy(...)` helper end-to-end.
+
 ## 2026-03-06 15:31 KST — Agent Chat parallel offset cycle
 - Delta: Extended thread shortcut alias normalization + chip mappings for macOS modifier glyphs so frontend hint chips stay canonical across platform-style shortcut copy.
   - Frontend parser: updated `frontend/src/threadHintParsers.ts` to normalize `⌥+...` → `Option+...` and `⌘+...` → `Cmd+...` before PgUp/PgDn canonicalization.
@@ -1919,3 +1931,18 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: wire parser normalization for additional macOS glyph modifiers (`⌥`/`⌘`) used in hint copy so future shortcut chips remain canonical across platforms.
+
+## 2026-03-06 16:05 KST — Agent Chat implementation cycle
+- Delta: Expanded thread hint shortcut normalization to handle chained macOS modifier glyphs so parser-driven shortcut chips stay canonical for multi-modifier boundary hints.
+  - Frontend parser: `normalizeShortcutAlias(...)` now normalizes repeated glyph modifiers (`⌘`, `⌥`, `⌃`, `⇧`) into canonical token chains and supports multi-modifier `...+PgUp/PgDn` combos.
+  - Frontend parser: `getHintShortcutSource(...)` shortcut detection now accepts chained modifiers (e.g., `Cmd+Shift+PageUp`) instead of only single-modifier shortcuts.
+  - Frontend mapping: added badge/tooltip support for `Cmd+Shift+PageUp/PageDown`, `Command+Shift+PageUp/PageDown`, and `Option+Shift+PageUp/PageDown`.
+  - Frontend tests: added coverage for compact glyph chain inputs (`⌘⇧PgUp`, `⌥⇧PgDn`) plus new badge/tooltip mapping assertions.
+  - Scope: chat thread UX wiring parser+tests only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (14 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `0a7543c` (pushed to `main`)
+- Next action: wire parser extraction for optional hyphenated key aliases in hint copy (e.g., `Page-Up`/`Page-Down`) so shortcut chips remain stable if copy variants are introduced.

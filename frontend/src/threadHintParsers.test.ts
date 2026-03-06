@@ -245,7 +245,7 @@ describe('threadHintParsers', () => {
   })
 
   describe('buildShortcutChipCopy', () => {
-    it('builds deterministic title/aria text for Ctrl boundary chips', () => {
+    it('builds deterministic title/aria text across shortcut intents', () => {
       expect(buildShortcutChipCopy('Ctrl+PgUp', 'Ctrl + PageUp', 'boundary jump')).toEqual({
         title: 'Ctrl + PageUp boundary jump',
         ariaLabel: 'Shortcut badge Ctrl+PgUp: Ctrl + PageUp (boundary jump).',
@@ -253,6 +253,14 @@ describe('threadHintParsers', () => {
       expect(buildShortcutChipCopy('Control+PgDn', 'Control + PageDown', 'boundary jump')).toEqual({
         title: 'Control + PageDown boundary jump',
         ariaLabel: 'Shortcut badge Control+PgDn: Control + PageDown (boundary jump).',
+      })
+      expect(buildShortcutChipCopy('⇧R', 'Shift + R', 'root jump')).toEqual({
+        title: 'Shift + R root jump',
+        ariaLabel: 'Shortcut badge ⇧R: Shift + R (root jump).',
+      })
+      expect(buildShortcutChipCopy('⇧U', 'Shift + U', 'filter jump')).toEqual({
+        title: 'Shift + U filter jump',
+        ariaLabel: 'Shortcut badge ⇧U: Shift + U (filter jump).',
       })
     })
   })
