@@ -4,6 +4,7 @@ import {
   getBoundaryDirectionChipPresentation,
   getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
+  getBoundaryDirectionStatusCue,
   getHintShortcutSource,
   getThreadFilterResetHint,
 } from './threadHintParsers'
@@ -601,7 +602,7 @@ function App() {
 
       if (selectedWasHiddenByFilter) {
         setThreadBoundaryJumpHint(
-          `Recovered to ${boundaryLabel} visible thread (${source}) · ${targetLabel} · ${positionHint}.`
+          `Recovered to ${boundaryLabel} visible thread (${source}) · ${targetLabel} · ${positionHint} · ${getBoundaryDirectionStatusCue(boundary)}.`
         )
         setThreadFilterJumpHint(null)
         return
@@ -2184,7 +2185,7 @@ function App() {
         alreadyAtTarget
           ? `Already at only visible thread (${sourceKey} confirmed) · ${targetLabel} · ${positionHint}.`
           : recoveredFromHiddenSelection
-            ? `Recovered hidden selection (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+            ? `Recovered hidden selection (${sourceKey}) · ${targetLabel} · ${positionHint} · ${getBoundaryDirectionStatusCue(step > 0 ? 'first' : 'last')}.`
             : `Moved to ${directionLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
       )
     },
@@ -2221,7 +2222,7 @@ function App() {
         alreadyAtBoundary
           ? `Already at ${boundaryLabel} visible thread (${sourceKey} confirmed) · ${targetLabel} · ${positionHint}.`
           : recoveredFromHiddenSelection
-            ? `Recovered to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
+            ? `Recovered to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint} · ${getBoundaryDirectionStatusCue(boundary)}.`
             : `Jumped to ${boundaryLabel} visible thread (${sourceKey}) · ${targetLabel} · ${positionHint}.`
       )
     },

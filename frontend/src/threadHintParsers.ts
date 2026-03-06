@@ -18,6 +18,10 @@ export function getBoundaryDirectionBadge(direction: BoundaryDirection): string 
   return direction === 'first' ? '↖ first' : '↘ last'
 }
 
+export function getBoundaryDirectionStatusCue(direction: BoundaryDirection): string {
+  return `direction ${getBoundaryDirectionBadge(direction)}`
+}
+
 export function getBoundaryDirectionTooltip(direction: BoundaryDirection): string {
   return `Boundary direction: toward ${getBoundaryDirectionLabel(direction)}`
 }

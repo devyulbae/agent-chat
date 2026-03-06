@@ -664,3 +664,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `df76fd3` — `[fix] clarify Shift+Esc filter-reset feedback from input focus`
   - Push: `main -> origin/main` ✅
 - Next action: wire explicit boundary direction cues (`↖ first` / `↘ last`) into hidden-selection recovery status text so recovery hints communicate direction semantics even without chip rendering.
+
+## 2026-03-07 03:43 KST — hidden-selection recovery direction cue copy in boundary status (boost lane)
+- Scope: chat thread UX wiring (explicit direction semantics in hidden-selection recovery status text).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getBoundaryDirectionStatusCue(direction)` helper to reuse canonical direction copy (`direction ↖ first` / `direction ↘ last`).
+  - `frontend/src/main.tsx`
+    - Appended direction cue copy to hidden-selection recovery boundary status messages for:
+      - filter-input Enter/Shift+Enter recovery,
+      - J/K/Arrow hidden-selection recovery,
+      - Home/End/PageUp/PageDown/G boundary recovery.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression assertions for `getBoundaryDirectionStatusCue` outputs.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (41 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: surface boundary direction chip (`↖ first` / `↘ last`) in unread navigation status hints (`U/N/P`) for parity with visible-thread boundary feedback.

@@ -7,6 +7,7 @@ import {
   getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
+  getBoundaryDirectionStatusCue,
   getBoundaryJumpStatusAriaLabel,
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
@@ -372,6 +373,8 @@ describe('threadHintParsers', () => {
       expect(getBoundaryDirectionBadge('last')).toBe('↘ last')
       expect(getBoundaryDirectionLabel('first')).toBe('first visible thread')
       expect(getBoundaryDirectionLabel('last')).toBe('last visible thread')
+      expect(getBoundaryDirectionStatusCue('first')).toBe('direction ↖ first')
+      expect(getBoundaryDirectionStatusCue('last')).toBe('direction ↘ last')
       expect(getBoundaryDirectionTooltip('first')).toBe('Boundary direction: toward first visible thread')
       expect(getBoundaryDirectionTooltip('last')).toBe('Boundary direction: toward last visible thread')
     })
