@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 08:51 KST — unread wrap live-region interaction regression for backward wrap (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete live-region wrap narration coverage for both unread wrap directions.
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Kept existing `N` (last→first) wrap narration de-duplication interaction regression.
+    - Added complementary `P` (first→last) interaction regression asserting:
+      - boundary jump aria includes backward wrap narration text
+      - unread navigation aria remains wrap-cue suppressed
+      - exactly one live-region aria output includes `Unread wrap cue:`
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (2/2)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 08:33 KST — unread wrap live-region single-narration regression coverage (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock unread wrap narration dedupe across boundary and unread-navigation live status regions.
 - Change:
