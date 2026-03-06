@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-07 02:24 KST — unread navigation Shift+U chip wiring parity (boost lane)
+- Scope: chat thread UX wiring polish so unread helper status rows visually/aria-advertise the existing `Shift+U clear` shortcut, not just `U/N/P` navigation.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `unreadNavigationClearShortcutChipPresentation` (`Shift+U`) via shared source-based chip helper.
+    - Included the clear chip in unread helper row rendering.
+    - Included the clear chip in unread helper status aria-label composition for accessibility parity.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added source-mapping regression assertion for `Shift+U` (`⇧U` badge, tooltip/title, aria-label).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (40/40)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `44bd4fe` — `[feat] add Shift+U shortcut chip to unread navigation hint`
+  - Push: `main -> origin/main` ✅
+- Next action: chip-wire the `Shift+U` affordance into the "Clear all unread markers" button `title` copy format for exact badge/text parity with unread helper row chips.
+
 ## 2026-03-07 02:12 KST — Shift+Esc filter reset status feedback from input focus (offset lane)
 - Scope: frontend integration polish so keyboard reset (`Shift+Esc`) inside the thread filter input announces explicit status feedback instead of silently clearing.
 - Change:
