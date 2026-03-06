@@ -1,5 +1,28 @@
 # Run Log
 
+## 2026-03-06 13:05 KST — Agent Chat implementation cycle
+- Delta: Hardened thread hint shortcut parsing to normalize compact alias/symbol sources in chat thread UX status hints.
+  - Frontend: updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now normalizes `Shift+PgUp`/`Shift+PgDn` aliases and symbolic shortcuts (`↓`, `↵`) into canonical parser outputs used by existing badge/tooltip helpers.
+  - Frontend tests: added focused regression coverage in `frontend/src/threadHintParsers.test.ts` for alias + symbol normalization paths.
+  - Scope kept frontend-only (thread hint parsing/wiring; no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: wire an ultra-light frontend status hint test for boundary/filter chip rendering that verifies normalized aliases still resolve to visible shortcut badges in the UI.
+
+## 2026-03-06 12:53 KST — Agent Chat parallel offset cycle
+- Delta: Extracted shared shortcut-chip style constants in `frontend/src/main.tsx` to remove duplicated inline chip style objects across root/boundary/filter jump status hints.
+  - Added `THREAD_SHORTCUT_CHIP_BASE_STYLE` for common badge layout/typography (`display`, `marginRight`, `padding`, radius, font size, letter spacing).
+  - Added context border map `THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT` to keep visual parity for thread-jump chips (`#97b6f4`) and filter-jump chips (`#d0d7de`) while centralizing style ownership.
+  - Rewired all shortcut-related chips (root jump, boundary jump source, boundary direction cue, filter jump) to consume shared constants.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 12 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `7c6ae45` (pushed to `main`)
+- Next action: extract a tiny `ShortcutChip` presentational helper component so chip `title`/`aria-label` wiring is also deduplicated alongside style constants.
+
 ## 2026-03-06 12:32 KST — Agent Chat parallel offset cycle
 - Delta: Added aria-label parity for shortcut status chips so screen readers announce compact badge glyphs with full shortcut text consistently.
   - Updated `frontend/src/main.tsx` with shared `getShortcutChipAriaLabel(...)` helper for shortcut chip announcements.

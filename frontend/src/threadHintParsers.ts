@@ -23,6 +23,32 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
   return null
 }
 
+function normalizeShortcutAlias(shortcut: string): string {
+  const normalizedShortcut = shortcut.toLowerCase()
+  const aliasMap: Record<string, string> = {
+    pgup: 'PageUp',
+    pgdn: 'PageDown',
+    '↑': 'ArrowUp',
+    '↓': 'ArrowDown',
+    '↵': 'Enter',
+  }
+
+  if (aliasMap[normalizedShortcut]) {
+    return aliasMap[normalizedShortcut]
+  }
+
+  const comboMatch = normalizedShortcut.match(/^(?<modifier>[a-z]+)\+(?<key>pgup|pgdn)$/i)
+  if (!comboMatch?.groups) {
+    return shortcut
+  }
+
+  const modifier = comboMatch.groups.modifier
+  const keyAlias = comboMatch.groups.key
+  const normalizedKey = keyAlias === 'pgup' ? 'PageUp' : 'PageDown'
+  const normalizedModifier = modifier.charAt(0).toUpperCase() + modifier.slice(1)
+  return `${normalizedModifier}+${normalizedKey}`
+}
+
 export function getHintShortcutSource(hint: string | null): string | null {
   if (!hint) {
     return null
@@ -37,11 +63,13 @@ export function getHintShortcutSource(hint: string | null): string | null {
   }
 
   const normalizedSegments = parenthesizedSegments.map((segment) =>
-    segment
-      .replace(/^.*?:\s*/u, '')
-      .replace(/\s+confirmed$/i, '')
-      .replace(/\s*\+\s*/g, '+')
-      .trim(),
+    normalizeShortcutAlias(
+      segment
+        .replace(/^.*?:\s*/u, '')
+        .replace(/\s+confirmed$/i, '')
+        .replace(/\s*\+\s*/g, '+')
+        .trim(),
+    ),
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>

@@ -68,6 +68,14 @@ describe('threadHintParsers', () => {
       ).toBe('Shift+Home')
     })
 
+    it('normalizes compact aliases and symbolic shortcuts', () => {
+      expect(getHintShortcutSource('Jumped to first visible thread (Shift+PgUp confirmed).')).toBe(
+        'Shift+PageUp',
+      )
+      expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')
+      expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
+    })
+
     it('returns null when shortcut source does not exist', () => {
       expect(getHintShortcutSource('Jumped to first visible thread.')).toBeNull()
       expect(getHintShortcutSource('Jumped to first visible thread (C++ parser note).')).toBeNull()
