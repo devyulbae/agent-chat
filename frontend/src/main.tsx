@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
-  buildShortcutChipCopy,
   getBoundaryDirectionBadge,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
+  getShortcutChipPresentationFromHint,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
 } from './threadHintParsers'
@@ -1682,42 +1682,20 @@ function App() {
     [rootJumpSourceShortcut],
   )
 
-  const rootJumpShortcutChipCopy = useMemo(() => {
-    if (!rootJumpShiftShortcutBadge || !rootJumpSourceShortcut) {
-      return null
-    }
-    return buildShortcutChipCopy(
-      rootJumpShiftShortcutBadge,
-      rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut,
-      'root jump',
-    )
-  }, [rootJumpShiftShortcutBadge, rootJumpSourceShortcut, rootJumpSourceShortcutTooltip])
+  const rootJumpShortcutChipCopy = useMemo(
+    () => getShortcutChipPresentationFromHint(threadRootJumpHint, 'root jump')?.copy ?? null,
+    [threadRootJumpHint],
+  )
 
-  const boundaryJumpShortcutChipCopy = useMemo(() => {
-    if (!boundaryJumpSourceShortcutBadge || !boundaryJumpSourceShortcut) {
-      return null
-    }
-    return buildShortcutChipCopy(
-      boundaryJumpSourceShortcutBadge,
-      boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut,
-      'boundary jump',
-    )
-  }, [boundaryJumpSourceShortcut, boundaryJumpSourceShortcutBadge, boundaryJumpSourceShortcutTooltip])
+  const boundaryJumpShortcutChipCopy = useMemo(
+    () => getShortcutChipPresentationFromHint(threadBoundaryJumpHint, 'boundary jump')?.copy ?? null,
+    [threadBoundaryJumpHint],
+  )
 
-  const filterJumpShortcutChipCopy = useMemo(() => {
-    if (!threadFilterJumpSourceShortcutBadge || !threadFilterJumpSourceShortcut) {
-      return null
-    }
-    return buildShortcutChipCopy(
-      threadFilterJumpSourceShortcutBadge,
-      threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut,
-      'filter jump',
-    )
-  }, [
-    threadFilterJumpSourceShortcut,
-    threadFilterJumpSourceShortcutBadge,
-    threadFilterJumpSourceShortcutTooltip,
-  ])
+  const filterJumpShortcutChipCopy = useMemo(
+    () => getShortcutChipPresentationFromHint(threadFilterJumpHint, 'filter jump')?.copy ?? null,
+    [threadFilterJumpHint],
+  )
 
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {

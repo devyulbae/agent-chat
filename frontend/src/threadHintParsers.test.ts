@@ -7,6 +7,7 @@ import {
   getBoundaryDirectionLabel,
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
+  getShortcutChipPresentationFromHint,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
 } from './threadHintParsers'
@@ -262,6 +263,50 @@ describe('threadHintParsers', () => {
         title: 'Shift + U filter jump',
         ariaLabel: 'Shortcut badge ⇧U: Shift + U (filter jump).',
       })
+    })
+  })
+
+  describe('getShortcutChipPresentationFromHint', () => {
+    it('builds root/filter chip presentation end-to-end from hint copy', () => {
+      expect(
+        getShortcutChipPresentationFromHint(
+          'Jumped to root thread (Shift+R confirmed) · Root · 1/9.',
+          'root jump',
+        ),
+      ).toEqual({
+        source: 'Shift+R',
+        badge: '⇧R',
+        tooltip: 'Shift + R',
+        copy: {
+          title: 'Shift + R root jump',
+          ariaLabel: 'Shortcut badge ⇧R: Shift + R (root jump).',
+        },
+      })
+
+      expect(
+        getShortcutChipPresentationFromHint(
+          'Jumped to first visible filtered thread (Shift+U confirmed).',
+          'filter jump',
+        ),
+      ).toEqual({
+        source: 'Shift+U',
+        badge: '⇧U',
+        tooltip: 'Shift + U',
+        copy: {
+          title: 'Shift + U filter jump',
+          ariaLabel: 'Shortcut badge ⇧U: Shift + U (filter jump).',
+        },
+      })
+    })
+
+    it('returns null when hint does not resolve to a known badge', () => {
+      expect(getShortcutChipPresentationFromHint('Jumped to first visible thread.', 'boundary jump')).toBeNull()
+      expect(
+        getShortcutChipPresentationFromHint(
+          'Jumped to first visible thread (Shift+Unknown confirmed).',
+          'boundary jump',
+        ),
+      ).toBeNull()
     })
   })
 })

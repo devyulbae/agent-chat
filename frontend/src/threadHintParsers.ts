@@ -230,3 +230,33 @@ export function buildShortcutChipCopy(
     ariaLabel: `Shortcut badge ${badge}: ${shortcutText} (${intent}).`,
   }
 }
+
+export type ShortcutChipPresentation = {
+  source: string
+  badge: string
+  tooltip: string
+  copy: { title: string; ariaLabel: string }
+}
+
+export function getShortcutChipPresentationFromHint(
+  hint: string | null,
+  intent: ShortcutChipIntent,
+): ShortcutChipPresentation | null {
+  const source = getHintShortcutSource(hint)
+  if (!source) {
+    return null
+  }
+
+  const badge = getThreadShortcutBadge(source)
+  if (!badge) {
+    return null
+  }
+
+  const tooltip = getThreadShortcutTooltip(source) ?? source
+  return {
+    source,
+    badge,
+    tooltip,
+    copy: buildShortcutChipCopy(badge, tooltip, intent),
+  }
+}
