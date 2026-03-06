@@ -1,5 +1,14 @@
 # Run Log
 
+## 2026-03-06 09:30 KST — Agent Chat parallel offset cycle
+- Delta: Added explicit screen-reader label for the new boundary direction cue badge in `frontend/src/main.tsx`.
+  - Updated boundary direction badge rendering (`↖ first` / `↘ last`) to include `aria-label` text (`Boundary direction cue: toward first/last visible thread`).
+  - Preserves compact visual badge while making direction intent explicit for assistive technologies.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add a compact hidden-selection direction cue badge alongside `Selection: hidden/N (...)` to keep recovery direction visible in the same status row.
+
 ## 2026-03-06 08:50 KST — Agent Chat parallel offset cycle
 - Delta: Added direction-aware root-jump helper suffix parity for `Shift+Home`/`Shift+R` in `frontend/src/main.tsx`.
   - Extended `rootJumpHintHelp` to append source-aware guidance when root hints come from shift shortcuts (`Shift+Home` / `Shift+R`).

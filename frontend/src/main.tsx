@@ -2504,6 +2504,7 @@ function App() {
                 {boundaryJumpDirectionCue && (
                   <span
                     title={`Boundary direction: toward ${boundaryJumpDirectionCue} visible thread`}
+                    aria-label={`Boundary direction cue: toward ${boundaryJumpDirectionCue} visible thread`}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
