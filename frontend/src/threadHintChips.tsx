@@ -88,6 +88,7 @@ export function getStatusAriaLabelWithShortcutChips(
   const chipAriaLabels = presentations
     .filter((presentation): presentation is ShortcutChipProps => Boolean(presentation))
     .map((presentation) => presentation.ariaLabel)
+    .filter((ariaLabel, index, labels) => labels.indexOf(ariaLabel) === index)
 
   if (!chipAriaLabels.length) {
     return hint

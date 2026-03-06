@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-06 21:31 KST — status aria-label duplicate chip dedupe (offset lane)
+- Scope: frontend integration accessibility polish to prevent repeated shortcut aria copy in combined status rows.
+- Change:
+  - `frontend/src/threadHintChips.tsx`
+    - Updated `getStatusAriaLabelWithShortcutChips(...)` to deduplicate repeated chip aria-label segments while preserving first-seen order.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression test verifying duplicate chip aria-label payloads collapse to a single spoken segment while retaining remaining chip order.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (11/11)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
 ## 2026-03-06 21:13 KST — root/boundary status aria-label composition sync (offset lane)
 - Scope: frontend integration follow-up to finish shared status aria-label composition across all thread status lanes.
 - Change:
