@@ -216,6 +216,19 @@ function isEditableElement(target: EventTarget | null): boolean {
   return target.isContentEditable
 }
 
+function getBoundaryDirectionFromHint(hint: string | null): 'first' | 'last' | null {
+  if (!hint) {
+    return null
+  }
+  if (hint.includes(' first visible thread')) {
+    return 'first'
+  }
+  if (hint.includes(' last visible thread')) {
+    return 'last'
+  }
+  return null
+}
+
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1592,18 +1605,10 @@ function App() {
         ? '⇧PgDn'
         : null
 
-  const boundaryJumpDirectionCue = useMemo(() => {
-    if (!threadBoundaryJumpHint) {
-      return null
-    }
-    if (threadBoundaryJumpHint.includes(' first visible thread')) {
-      return 'first'
-    }
-    if (threadBoundaryJumpHint.includes(' last visible thread')) {
-      return 'last'
-    }
-    return null
-  }, [threadBoundaryJumpHint])
+  const boundaryJumpDirectionCue = useMemo(
+    () => getBoundaryDirectionFromHint(threadBoundaryJumpHint),
+    [threadBoundaryJumpHint]
+  )
 
   const boundaryJumpStatusAriaLabel = useMemo(() => {
     if (!threadBoundaryJumpHint) {
@@ -1676,10 +1681,11 @@ function App() {
         ? `${boundaryJumpSourceShortcut} keeps active filters while jumping to boundary.`
         : null
 
+    const boundaryDirection = getBoundaryDirectionFromHint(threadBoundaryJumpHint)
     const boundaryDirectionHelp =
-      threadBoundaryJumpHint.includes(' first visible thread')
+      boundaryDirection === 'first'
         ? 'Direction: toward first visible.'
-        : threadBoundaryJumpHint.includes(' last visible thread')
+        : boundaryDirection === 'last'
           ? 'Direction: toward last visible.'
           : null
 

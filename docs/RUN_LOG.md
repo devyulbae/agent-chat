@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 10:08 KST — Agent Chat implementation cycle
+- Delta: Extracted boundary-direction parsing into a tiny pure helper in `frontend/src/main.tsx`.
+  - Added `getBoundaryDirectionFromHint(hint)` returning `first`/`last`/`null`.
+  - Rewired `boundaryJumpDirectionCue` to consume the helper, removing duplicated string parsing logic.
+  - Reused the same helper for boundary helper microcopy (`Direction: toward first/last visible.`), keeping direction semantics centralized for future unit tests.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: move `getBoundaryDirectionFromHint` into a tiny frontend utility module and add a focused unit-level regression test matrix for boundary hint parsing.
+
 ## 2026-03-06 09:30 KST — Agent Chat parallel offset cycle
 - Delta: Added explicit screen-reader label for the new boundary direction cue badge in `frontend/src/main.tsx`.
   - Updated boundary direction badge rendering (`↖ first` / `↘ last`) to include `aria-label` text (`Boundary direction cue: toward first/last visible thread`).
