@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 05:52 KST — shortcut legend aria-controls wiring parity (offset lane)
+- Scope: frontend integration accessibility follow-up so the legend toggle explicitly references the controlled legend region.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `aria-controls="thread-shortcut-legend"` to the Show/Hide shortcuts toggle button.
+    - Added `id="thread-shortcut-legend"` on the rendered shortcut legend block so control relationship is explicit for assistive tech.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 05:32 KST — shortcut legend toggle copy/metadata fallback parity (offset lane)
 - Scope: frontend integration follow-up to keep shortcut legend toggle button copy and accessibility metadata aligned with accepted `?` / `Shift+/` key paths.
 - Change:

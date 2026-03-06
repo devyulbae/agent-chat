@@ -2796,6 +2796,7 @@ function App() {
               }
               aria-keyshortcuts="Shift+Slash,Escape"
               aria-expanded={showThreadShortcutLegend}
+              aria-controls="thread-shortcut-legend"
             >
               {showThreadShortcutLegend ? 'Hide shortcuts' : 'Show shortcuts'}
             </button>
@@ -2940,7 +2941,10 @@ function App() {
               </small>
             )}
             {showThreadShortcutLegend && (
-              <small style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
+              <small
+                id="thread-shortcut-legend"
+                style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
+              >
                 <strong>Thread shortcuts:</strong>
                 J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · U/N next unread · P previous unread ·
                 Shift+U clear unread · R/Shift+Home jump root · / focus filter · C focus composer ·
