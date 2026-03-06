@@ -117,11 +117,21 @@ export function getUnreadNavigationWrapCueForAria(
   wrapCue: string | null,
   boundaryJumpHint: string | null,
   boundaryJumpSourceShortcut: string | null,
+  boundaryJumpAriaLabel?: string,
 ): string | null {
-  const shouldSuppressWrapCueAria =
-    Boolean(boundaryJumpHint) && isUnreadNavigationShortcutSource(boundaryJumpSourceShortcut)
+  if (!isUnreadNavigationShortcutSource(boundaryJumpSourceShortcut)) {
+    return wrapCue
+  }
 
-  return shouldSuppressWrapCueAria ? null : wrapCue
+  const wrapCueAriaLabel = getUnreadJumpWrapStatusCueAriaLabel(wrapCue)
+  const normalizedBoundaryJumpAriaLabel = boundaryJumpAriaLabel?.toLowerCase() ?? ''
+
+  const boundaryStatusAlreadyNarratesWrapCue =
+    Boolean(boundaryJumpHint) ||
+    (Boolean(wrapCue) && normalizedBoundaryJumpAriaLabel.includes(wrapCue.toLowerCase())) ||
+    (Boolean(wrapCueAriaLabel) && normalizedBoundaryJumpAriaLabel.includes(wrapCueAriaLabel.toLowerCase()))
+
+  return boundaryStatusAlreadyNarratesWrapCue ? null : wrapCue
 }
 
 export function getUnreadBoundaryJumpStatusAriaLabel(

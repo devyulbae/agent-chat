@@ -2238,11 +2238,13 @@ function App() {
       unreadNavigationWrapCue,
       threadBoundaryJumpHint,
       boundaryJumpSourceShortcut,
+      boundaryJumpStatusAriaLabel,
     )
 
     return getUnreadNavigationHintAriaLabel(shortcutComposedAriaLabel, navigationWrapCueAria)
   }, [
     boundaryJumpSourceShortcut,
+    boundaryJumpStatusAriaLabel,
     threadBoundaryJumpHint,
     unreadNavigationClearShortcutChipPresentation,
     unreadNavigationHint,

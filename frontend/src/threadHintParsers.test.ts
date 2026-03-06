@@ -226,6 +226,17 @@ describe('threadHintParsers', () => {
         'wrapped first→last',
       )
     })
+
+    it('suppresses wrap cue aria when unread boundary aria already carries wrap narration', () => {
+      expect(
+        getUnreadNavigationWrapCueForAria(
+          'wrapped last→first',
+          null,
+          'N',
+          'Jumped to next unread thread (N) · t-9 · 1/3. Unread wrap cue: wrapped from last unread thread to first unread thread.',
+        ),
+      ).toBeNull()
+    })
   })
 
   describe('getUnreadBoundaryJumpStatusAriaLabel', () => {

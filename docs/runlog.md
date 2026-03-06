@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 08:24 KST — unread wrap cue aria suppression fallback via boundary status aria (boost lane)
+- Scope: chat thread UX wiring accessibility dedupe guard so unread navigation live region avoids repeating wrap narration when boundary status aria already carries it.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Extended `getUnreadNavigationWrapCueForAria(...)` with optional boundary status aria-label input.
+    - Added suppression path when unread boundary aria already includes either raw wrap cue text or expanded wrap-cue aria sentence.
+  - `frontend/src/main.tsx`
+    - Passed `boundaryJumpStatusAriaLabel` into unread navigation wrap-cue suppression helper.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for boundary-hint-absent case where boundary aria already narrates wrap cue (returns `null` for nav wrap cue aria).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (48/48)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a focused frontend interaction test that simulates an unread wrap jump and asserts exactly one live-region message includes wrap narration across boundary + unread hint lanes.
+
 ## 2026-03-07 08:12 KST — unread wrap cue aria suppression helper extraction (offset lane)
 - Scope: frontend integration + API contract sync follow-up to keep unread wrap aria suppression logic centralized and parser-testable.
 - Change:
