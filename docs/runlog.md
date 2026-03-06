@@ -378,3 +378,26 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add parser coverage for compact no-plus aliases that include `Home`/`End` targets (e.g., `CmdShiftHome`, `OptionShiftEnd`) to keep boundary/root hint chips canonical if copy drifts.
+
+## 2026-03-07 00:25 KST — modifier+Home/End shortcut chip mapping parity (boost lane)
+- Scope: chat thread UX wiring follow-up so parsed Home/End modifier shortcuts render chips/tooltips instead of falling back to plain text.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Extended `getThreadShortcutBadge(...)` mappings to include modifier+Home/End variants (Ctrl/Control/Option/Cmd/Command/Meta, plus supported Shift combinations).
+    - Extended `getThreadShortcutTooltip(...)` with matching human-readable labels for the same Home/End variants.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added alias-parser regression coverage for compact no-plus Home/End forms (`CmdHome`, `CmdEnd`, `CtrlShiftHome`).
+    - Added badge/tooltip coverage for newly mapped Home/End modifier combos.
+- Verification:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (23 passed)
+
+### Blocker
+- Initial frontend targeted test command used an incorrect path filter from within `frontend/`:
+  - `npm test -- --run frontend/src/threadHintParsers.test.ts` ❌ (No test files found)
+
+### Next fix action
+- Use repo-relative path from frontend cwd:
+  - `npm test -- --run src/threadHintParsers.test.ts`

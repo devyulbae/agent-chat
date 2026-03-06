@@ -248,8 +248,17 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (CmdUpArrow confirmed).')).toBe(
         'Cmd+ArrowUp',
       )
+      expect(getHintShortcutSource('Recovered to first visible thread (CmdHome confirmed).')).toBe(
+        'Cmd+Home',
+      )
+      expect(getHintShortcutSource('Recovered to last visible thread (CmdEnd confirmed).')).toBe(
+        'Cmd+End',
+      )
       expect(getHintShortcutSource('Recovered to first visible thread (CtrlArrowUp confirmed).')).toBe(
         'Ctrl+ArrowUp',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (CtrlShiftHome confirmed).')).toBe(
+        'Ctrl+Shift+Home',
       )
       expect(getHintShortcutSource('Recovered to last visible thread (Option+Down Arrow confirmed).')).toBe(
         'Option+ArrowDown',
@@ -407,17 +416,23 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Ctrl+PageUp')).toBe('Ctrl+PgUp')
       expect(getThreadShortcutBadge('Ctrl+ArrowUp')).toBe('Ctrl+↑')
       expect(getThreadShortcutBadge('Ctrl+ArrowLeft')).toBe('Ctrl+←')
+      expect(getThreadShortcutBadge('Ctrl+Home')).toBe('Ctrl+Home')
+      expect(getThreadShortcutBadge('Ctrl+Shift+End')).toBe('Ctrl+⇧End')
       expect(getThreadShortcutBadge('Control+PageDown')).toBe('Control+PgDn')
       expect(getThreadShortcutBadge('Control+ArrowDown')).toBe('Control+↓')
       expect(getThreadShortcutBadge('Control+ArrowRight')).toBe('Control+→')
       expect(getThreadShortcutBadge('Option+PageUp')).toBe('Option+PgUp')
       expect(getThreadShortcutBadge('Option+ArrowDown')).toBe('Option+↓')
       expect(getThreadShortcutBadge('Option+ArrowLeft')).toBe('Option+←')
+      expect(getThreadShortcutBadge('Option+Home')).toBe('Option+Home')
       expect(getThreadShortcutBadge('Option+Shift+PageDown')).toBe('Option+⇧PgDn')
+      expect(getThreadShortcutBadge('Option+Shift+Home')).toBe('Option+⇧Home')
       expect(getThreadShortcutBadge('Cmd+PageDown')).toBe('Cmd+PgDn')
       expect(getThreadShortcutBadge('Cmd+ArrowUp')).toBe('Cmd+↑')
       expect(getThreadShortcutBadge('Cmd+ArrowRight')).toBe('Cmd+→')
+      expect(getThreadShortcutBadge('Cmd+End')).toBe('Cmd+End')
       expect(getThreadShortcutBadge('Cmd+Shift+PageUp')).toBe('Cmd+⇧PgUp')
+      expect(getThreadShortcutBadge('Cmd+Shift+Home')).toBe('Cmd+⇧Home')
       expect(getThreadShortcutBadge('Command+PageUp')).toBe('Command+PgUp')
       expect(getThreadShortcutBadge('Command+ArrowDown')).toBe('Command+↓')
       expect(getThreadShortcutBadge('Command+ArrowLeft')).toBe('Command+←')
@@ -425,6 +440,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Meta+PageDown')).toBe('Meta+PgDn')
       expect(getThreadShortcutBadge('Meta+ArrowUp')).toBe('Meta+↑')
       expect(getThreadShortcutBadge('Meta+ArrowLeft')).toBe('Meta+←')
+      expect(getThreadShortcutBadge('Meta+Home')).toBe('Meta+Home')
+      expect(getThreadShortcutBadge('Meta+Shift+End')).toBe('Meta+⇧End')
       expect(getThreadShortcutBadge('Home')).toBe('Home')
       expect(getThreadShortcutBadge('End')).toBe('End')
       expect(getThreadShortcutBadge('PageUp')).toBe('PgUp')
@@ -461,17 +478,23 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Ctrl+PageUp')).toBe('Ctrl + PageUp')
       expect(getThreadShortcutTooltip('Ctrl+ArrowUp')).toBe('Ctrl + Arrow Up')
       expect(getThreadShortcutTooltip('Ctrl+ArrowLeft')).toBe('Ctrl + Arrow Left')
+      expect(getThreadShortcutTooltip('Ctrl+Home')).toBe('Ctrl + Home')
+      expect(getThreadShortcutTooltip('Ctrl+Shift+End')).toBe('Ctrl + Shift + End')
       expect(getThreadShortcutTooltip('Control+PageDown')).toBe('Control + PageDown')
       expect(getThreadShortcutTooltip('Control+ArrowDown')).toBe('Control + Arrow Down')
       expect(getThreadShortcutTooltip('Control+ArrowRight')).toBe('Control + Arrow Right')
       expect(getThreadShortcutTooltip('Option+PageUp')).toBe('Option + PageUp')
       expect(getThreadShortcutTooltip('Option+ArrowDown')).toBe('Option + Arrow Down')
       expect(getThreadShortcutTooltip('Option+ArrowLeft')).toBe('Option + Arrow Left')
+      expect(getThreadShortcutTooltip('Option+Home')).toBe('Option + Home')
       expect(getThreadShortcutTooltip('Option+Shift+PageDown')).toBe('Option + Shift + PageDown')
+      expect(getThreadShortcutTooltip('Option+Shift+Home')).toBe('Option + Shift + Home')
       expect(getThreadShortcutTooltip('Cmd+PageDown')).toBe('Cmd + PageDown')
       expect(getThreadShortcutTooltip('Cmd+ArrowUp')).toBe('Cmd + Arrow Up')
       expect(getThreadShortcutTooltip('Cmd+ArrowRight')).toBe('Cmd + Arrow Right')
+      expect(getThreadShortcutTooltip('Cmd+End')).toBe('Cmd + End')
       expect(getThreadShortcutTooltip('Cmd+Shift+PageUp')).toBe('Cmd + Shift + PageUp')
+      expect(getThreadShortcutTooltip('Cmd+Shift+Home')).toBe('Cmd + Shift + Home')
       expect(getThreadShortcutTooltip('Command+PageUp')).toBe('Command + PageUp')
       expect(getThreadShortcutTooltip('Command+ArrowDown')).toBe('Command + Arrow Down')
       expect(getThreadShortcutTooltip('Command+ArrowLeft')).toBe('Command + Arrow Left')
@@ -479,6 +502,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Meta+PageDown')).toBe('Meta + PageDown')
       expect(getThreadShortcutTooltip('Meta+ArrowUp')).toBe('Meta + Arrow Up')
       expect(getThreadShortcutTooltip('Meta+ArrowLeft')).toBe('Meta + Arrow Left')
+      expect(getThreadShortcutTooltip('Meta+Home')).toBe('Meta + Home')
+      expect(getThreadShortcutTooltip('Meta+Shift+End')).toBe('Meta + Shift + End')
       expect(getThreadShortcutTooltip('PageDown')).toBe('PageDown')
       expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')
       expect(getThreadShortcutTooltip('ArrowLeft')).toBe('Arrow Left')
