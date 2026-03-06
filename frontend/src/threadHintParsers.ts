@@ -27,6 +27,12 @@ export function getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcut
   return showThreadShortcutLegend ? 'Escape' : 'Shift+Slash'
 }
 
+export function getThreadShortcutLegendToggleStatusHint(showThreadShortcutLegend: boolean): string {
+  return showThreadShortcutLegend
+    ? `Thread shortcut legend shown (${getThreadShortcutLegendToggleControlCopy()}).`
+    : `Thread shortcut legend hidden (${getThreadShortcutLegendDismissControlCopy()}).`
+}
+
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
     return 'Reset thread view filters from filter input focus (Shift+Esc).'

@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 06:32 KST — keyboard legend toggle live status hint (offset lane)
+- Scope: frontend integration + accessibility feedback parity so keyboard-driven shortcut legend visibility changes announce a concise live status cue.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getThreadShortcutLegendToggleStatusHint(showThreadShortcutLegend)` helper for canonical shown/hidden status copy tied to existing toggle/dismiss shortcut helpers.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for shown/hidden status copy output.
+  - `frontend/src/main.tsx`
+    - Added `threadShortcutLegendToggleHint` transient status state.
+    - Wired keyboard handlers (`?`/`Shift+/` toggle and `Esc` dismiss) to set legend visibility status hints.
+    - Added short-lived `role="status"` / `aria-live="polite"` rendered status hint with shortcut chip + aria-label composition.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 06:24 KST — legend dismiss-key alias parity for Esc events (boost lane)
 - Scope: chat thread UX wiring keyboard-event resilience so shortcut legend dismiss handling accepts `Esc` alias events in addition to canonical `Escape`.
 - Change:

@@ -10,6 +10,7 @@ import {
   getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
+  getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
@@ -263,6 +264,7 @@ function App() {
   const [threadBoundaryJumpHint, setThreadBoundaryJumpHint] = useState<string | null>(null)
   const [threadCopyHint, setThreadCopyHint] = useState<string | null>(null)
   const [showThreadShortcutLegend, setShowThreadShortcutLegend] = useState(false)
+  const [threadShortcutLegendToggleHint, setThreadShortcutLegendToggleHint] = useState<string | null>(null)
   const [unreadNavigationWrapCue, setUnreadNavigationWrapCue] = useState<string | null>(null)
   const [unreadClearUndoSnapshot, setUnreadClearUndoSnapshot] =
     useState<UnreadClearUndoSnapshot | null>(null)
@@ -1737,6 +1739,20 @@ function App() {
     [threadCopyHint, threadCopyShortcutChipPresentation],
   )
 
+  const threadShortcutLegendToggleShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromHint(threadShortcutLegendToggleHint, 'filter jump', 'thread-jump'),
+    [threadShortcutLegendToggleHint],
+  )
+
+  const threadShortcutLegendToggleStatusAriaLabel = useMemo(
+    () =>
+      getStatusAriaLabelWithShortcutChip(
+        threadShortcutLegendToggleHint,
+        threadShortcutLegendToggleShortcutChipPresentation,
+      ),
+    [threadShortcutLegendToggleHint, threadShortcutLegendToggleShortcutChipPresentation],
+  )
+
   const composerHintShortcutChipPresentations = useMemo(
     () => [
       getShortcutChipPropsFromSource('Enter', 'filter jump', 'filter-jump'),
@@ -1977,6 +1993,16 @@ function App() {
   }, [threadCopyHint])
 
   useEffect(() => {
+    if (!threadShortcutLegendToggleHint) {
+      return
+    }
+    const timeoutId = window.setTimeout(() => {
+      setThreadShortcutLegendToggleHint(null)
+    }, 1500)
+    return () => window.clearTimeout(timeoutId)
+  }, [threadShortcutLegendToggleHint])
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat) {
         return
@@ -2048,7 +2074,11 @@ function App() {
         return
       }
       event.preventDefault()
-      setShowThreadShortcutLegend((current) => !current)
+      setShowThreadShortcutLegend((current) => {
+        const nextVisibility = !current
+        setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(nextVisibility))
+        return nextVisibility
+      })
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -2071,6 +2101,7 @@ function App() {
       }
       event.preventDefault()
       setShowThreadShortcutLegend(false)
+      setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(false))
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -2927,6 +2958,17 @@ function App() {
               >
                 {renderShortcutChipPresentation(threadCopyShortcutChipPresentation)}
                 {threadCopyHint}
+              </small>
+            )}
+            {threadShortcutLegendToggleHint && (
+              <small
+                aria-live="polite"
+                role="status"
+                aria-label={threadShortcutLegendToggleStatusAriaLabel}
+                style={{ color: '#1f4b99' }}
+              >
+                {renderShortcutChipPresentation(threadShortcutLegendToggleShortcutChipPresentation)}
+                {threadShortcutLegendToggleHint}
               </small>
             )}
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}

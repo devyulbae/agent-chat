@@ -16,6 +16,7 @@ import {
   getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
+  getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
@@ -96,6 +97,17 @@ describe('threadHintParsers', () => {
     it('advertises only the active shortcut for assistive metadata', () => {
       expect(getThreadShortcutLegendButtonAriaKeyshortcuts(false)).toBe('Shift+Slash')
       expect(getThreadShortcutLegendButtonAriaKeyshortcuts(true)).toBe('Escape')
+    })
+  })
+
+  describe('getThreadShortcutLegendToggleStatusHint', () => {
+    it('returns status copy for keyboard toggles and dismissals', () => {
+      expect(getThreadShortcutLegendToggleStatusHint(true)).toBe(
+        'Thread shortcut legend shown (? / Shift+/).',
+      )
+      expect(getThreadShortcutLegendToggleStatusHint(false)).toBe(
+        'Thread shortcut legend hidden (Esc).',
+      )
     })
   })
 
