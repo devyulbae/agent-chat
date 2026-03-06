@@ -37,6 +37,9 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/⇧/gu, 'shift+')
     .replace(/page[\s-]?up/gu, 'pageup')
     .replace(/page[\s-]?down/gu, 'pagedown')
+    .replace(/pg[\s-]?up/gu, 'pgup')
+    .replace(/pg[\s-]?down/gu, 'pgdn')
+    .replace(/pg[\s-]?dn/gu, 'pgdn')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 

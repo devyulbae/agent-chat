@@ -1958,3 +1958,16 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `0a7543c` (pushed to `main`)
 - Next action: wire parser extraction for optional hyphenated key aliases in hint copy (e.g., `Page-Up`/`Page-Down`) so shortcut chips remain stable if copy variants are introduced.
+
+## 2026-03-06 16:44 KST — Agent Chat implementation cycle
+- Delta: Added parser normalization for hyphenated `Pg-Up`/`Pg-Dn` shortcut aliases so thread hint chips stay canonical when compact copy variants appear.
+  - Frontend parser: `normalizeShortcutAlias(...)` now normalizes `pg-up`/`pg dn` variants (including `Pg-Dn`) to canonical `PgUp`/`PgDn` aliases before final shortcut mapping.
+  - Frontend tests: expanded `frontend/src/threadHintParsers.test.ts` compact-alias coverage for `Shift+Pg-Up`, `Shift+Pg-Dn`, `Pg-Up`, and `Pg-Dn`.
+  - Scope: chat thread UX wiring parser+tests only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (16 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: extract a tiny shared helper for shortcut chip style props/title wiring so root/boundary/filter chip render blocks in `main.tsx` avoid duplicated inline composition logic.
