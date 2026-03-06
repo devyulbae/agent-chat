@@ -1,5 +1,30 @@
 # Run Log
 
+## 2026-03-06 17:32 KST — Agent Chat parallel offset cycle
+- Delta: Consolidated boundary-direction cue parsing + chip composition into a single parser-level integration helper so `main.tsx` consumes one memoized payload instead of separate cue/presentation steps.
+  - Frontend parser: added `getBoundaryDirectionChipPresentationFromHint(...)` in `frontend/src/threadHintParsers.ts` to derive `first`/`last` intent and build badge/title/aria copy in one call.
+  - Frontend wiring: updated `frontend/src/main.tsx` boundary direction chip memo to consume the new helper directly, removing separate direction-cue derivation glue.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with hint→chip presentation coverage for first/last boundary hints and non-boundary/null fallback behavior.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 20 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add a parser-level helper that returns full boundary jump status presentation (`aria` + optional direction chip payload) so `main.tsx` can consume one contract for boundary status semantics end-to-end.
+
+## 2026-03-06 17:27 KST — Agent Chat implementation cycle
+- Delta: Extracted boundary-direction chip rendering into a shared helper in `frontend/src/main.tsx` so all thread shortcut chips now flow through the same composition path.
+  - Added `renderShortcutChipPresentation(...)` to consume chip payloads directly and reuse `ShortcutChip` wiring (`badge`/`title`/`ariaLabel`/`context`) without inline JSX duplication.
+  - Updated `boundaryJumpDirectionChipPresentation` memo to include `context: 'thread-jump'`, then switched boundary status rendering to the shared helper.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 19 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `b03a424` (pushed to `main`)
+- Next action: extract a tiny parser-level helper for boundary direction cue intent (`first`/`last`) + chip presentation in one call so `main.tsx` can consume one memoized payload instead of separate cue + presentation steps.
+
 ## 2026-03-06 17:12 KST — Agent Chat parallel offset cycle
 - Delta: Centralized boundary status-line aria-label composition in parser helpers so boundary direction cue wording stays consistent between status announcements and direction chip a11y copy.
   - Frontend parser: added `getBoundaryJumpStatusAriaLabel(...)` in `frontend/src/threadHintParsers.ts`, reusing `getBoundaryDirectionChipPresentation(...)` for shared direction-cue phrasing.

@@ -4,6 +4,7 @@ import {
   buildShortcutChipCopy,
   getBoundaryDirectionBadge,
   getBoundaryDirectionChipPresentation,
+  getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
   getBoundaryJumpStatusAriaLabel,
@@ -203,6 +204,29 @@ describe('threadHintParsers', () => {
         title: 'Boundary direction: toward last visible thread',
         ariaLabel: 'Boundary direction cue: toward last visible thread',
       })
+    })
+
+    it('derives direction chip presentation directly from boundary hint copy', () => {
+      expect(
+        getBoundaryDirectionChipPresentationFromHint(
+          'Recovered to first visible thread (Shift+PageUp) · Root · 1/9.',
+        ),
+      ).toEqual({
+        badge: '↖ first',
+        title: 'Boundary direction: toward first visible thread',
+        ariaLabel: 'Boundary direction cue: toward first visible thread',
+      })
+      expect(
+        getBoundaryDirectionChipPresentationFromHint(
+          'Recovered to last visible thread (Shift+PageDown) · t-9 · 9/9.',
+        ),
+      ).toEqual({
+        badge: '↘ last',
+        title: 'Boundary direction: toward last visible thread',
+        ariaLabel: 'Boundary direction cue: toward last visible thread',
+      })
+      expect(getBoundaryDirectionChipPresentationFromHint('Jumped to root thread (Shift+R).')).toBeNull()
+      expect(getBoundaryDirectionChipPresentationFromHint(null)).toBeNull()
     })
   })
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
-  getBoundaryDirectionChipPresentation,
+  getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
   getBoundaryJumpStatusAriaLabel,
   getHintShortcutSource,
@@ -1673,21 +1673,17 @@ function App() {
     [boundaryJumpSourceShortcut],
   )
 
-  const boundaryJumpDirectionCue = useMemo(
-    () => getBoundaryDirectionFromHint(threadBoundaryJumpHint),
-    [threadBoundaryJumpHint]
-  )
-
   const boundaryJumpDirectionChipPresentation = useMemo(() => {
-    if (!boundaryJumpDirectionCue) {
+    const directionChipPresentation = getBoundaryDirectionChipPresentationFromHint(threadBoundaryJumpHint)
+    if (!directionChipPresentation) {
       return null
     }
 
     return {
-      ...getBoundaryDirectionChipPresentation(boundaryJumpDirectionCue),
+      ...directionChipPresentation,
       context: 'thread-jump' as const,
     }
-  }, [boundaryJumpDirectionCue])
+  }, [threadBoundaryJumpHint])
 
   const threadFilterJumpSourceShortcut = useMemo(
     () => getHintShortcutSource(threadFilterJumpHint),
