@@ -2319,10 +2319,16 @@ function App() {
           type="button"
           onClick={() => jumpToRootThreadContext('button')}
           title="Shift+Home (or Shift+R) · Root hints show 1/N where N is currently visible filtered threads"
+          aria-keyshortcuts="Shift+Home Shift+R"
         >
-          Jump root
+          Jump root (⇧Home/⇧R)
         </button>
-        <button type="button" onClick={jumpToNextUnread} disabled={unreadThreadIds.length === 0}>
+        <button
+          type="button"
+          onClick={jumpToNextUnread}
+          disabled={unreadThreadIds.length === 0}
+          aria-keyshortcuts="U"
+        >
           Jump to next unread
         </button>
         <button
@@ -2330,6 +2336,7 @@ function App() {
           onClick={clearAllUnreadMarkers}
           disabled={unreadThreadIds.length === 0}
           title="Shift+U"
+          aria-keyshortcuts="Shift+U"
         >
           Clear all unread markers
         </button>
