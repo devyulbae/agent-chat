@@ -155,6 +155,12 @@ describe('getShortcutChipPropsFromSource', () => {
       ariaLabel: 'Shortcut badge ↑: Arrow Up (boundary jump).',
       context: 'thread-jump',
     })
+    expect(getShortcutChipPropsFromSource('ArrowDown', 'filter jump', 'filter-jump')).toEqual({
+      badge: '↓',
+      title: 'Arrow Down filter jump',
+      ariaLabel: 'Shortcut badge ↓: Arrow Down (filter jump).',
+      context: 'filter-jump',
+    })
     expect(getShortcutChipPropsFromSource('PageUp', 'boundary jump', 'thread-jump')).toEqual({
       badge: 'PgUp',
       title: 'PageUp boundary jump',
