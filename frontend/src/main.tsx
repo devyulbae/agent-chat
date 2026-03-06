@@ -1558,14 +1558,16 @@ function App() {
 
   const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
   const selectedVisibleThreadHiddenByFilter =
-    selectedThreadId !== null && selectedVisibleThreadIndex < 0 && visibleThreadIds.length > 0
+    selectedVisibleThreadIndex < 0 &&
+    visibleThreadIds.length > 0 &&
+    (selectedThreadId !== null || !showRootThreadInList)
   const selectedVisibleThreadLabel =
     selectedVisibleThreadIndex >= 0
       ? visibleThreadIds[selectedVisibleThreadIndex] === null
         ? 'Root'
         : visibleThreadIds[selectedVisibleThreadIndex]
       : selectedVisibleThreadHiddenByFilter
-        ? `${selectedThreadId} (hidden by current filters)`
+        ? `${selectedThreadId === null ? 'Root' : selectedThreadId} (hidden by current filters)`
         : 'none'
   const selectedVisibleThreadPositionLabel =
     selectedVisibleThreadHiddenByFilter && selectedThreadId !== null
