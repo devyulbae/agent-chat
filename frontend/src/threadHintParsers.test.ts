@@ -320,6 +320,10 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Shift Return/Enter confirmed).')).toBe(
         'Shift+Enter',
       )
+      expect(getHintShortcutSource('Focused filter input (/) · type to filter.')).toBe('Slash')
+      expect(getHintShortcutSource('Cleared filter (Esc).')).toBe('Escape')
+      expect(getHintShortcutSource('Reset view (Shift+Esc).')).toBe('Shift+Escape')
+      expect(getHintShortcutSource('Focused filter input (forward-slash).')).toBe('Slash')
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+PageUp.).')).toBe(
         'Shift+PageUp',
       )
@@ -419,6 +423,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Shift+R')).toBe('⇧R')
       expect(getThreadShortcutBadge('Shift+U')).toBe('⇧U')
       expect(getThreadShortcutBadge('Shift+Enter')).toBe('⇧↵')
+      expect(getThreadShortcutBadge('Shift+Escape')).toBe('⇧Esc')
       expect(getThreadShortcutBadge('Ctrl+PageUp')).toBe('Ctrl+PgUp')
       expect(getThreadShortcutBadge('Ctrl+ArrowUp')).toBe('Ctrl+↑')
       expect(getThreadShortcutBadge('Ctrl+ArrowLeft')).toBe('Ctrl+←')
@@ -459,6 +464,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('ArrowLeft')).toBe('←')
       expect(getThreadShortcutBadge('ArrowRight')).toBe('→')
       expect(getThreadShortcutBadge('Enter')).toBe('↵')
+      expect(getThreadShortcutBadge('Escape')).toBe('Esc')
+      expect(getThreadShortcutBadge('Slash')).toBe('/')
       expect(getThreadShortcutBadge('G')).toBe('G')
       expect(getThreadShortcutBadge('N')).toBe('N')
       expect(getThreadShortcutBadge('P')).toBe('P')
@@ -483,6 +490,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Shift+R')).toBe('Shift + R')
       expect(getThreadShortcutTooltip('Shift+U')).toBe('Shift + U')
       expect(getThreadShortcutTooltip('Shift+Enter')).toBe('Shift + Enter')
+      expect(getThreadShortcutTooltip('Shift+Escape')).toBe('Shift + Escape')
       expect(getThreadShortcutTooltip('Ctrl+PageUp')).toBe('Ctrl + PageUp')
       expect(getThreadShortcutTooltip('Ctrl+ArrowUp')).toBe('Ctrl + Arrow Up')
       expect(getThreadShortcutTooltip('Ctrl+ArrowLeft')).toBe('Ctrl + Arrow Left')
@@ -519,6 +527,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('ArrowLeft')).toBe('Arrow Left')
       expect(getThreadShortcutTooltip('ArrowRight')).toBe('Arrow Right')
       expect(getThreadShortcutTooltip('Enter')).toBe('Enter')
+      expect(getThreadShortcutTooltip('Escape')).toBe('Escape')
+      expect(getThreadShortcutTooltip('Slash')).toBe('Slash')
       expect(getThreadShortcutTooltip('G')).toBe('G')
       expect(getThreadShortcutTooltip('N')).toBe('N')
       expect(getThreadShortcutTooltip('P')).toBe('P')

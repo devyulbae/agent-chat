@@ -1701,8 +1701,11 @@ function App() {
 
   const threadFilterHintShortcutChipPresentations = useMemo(
     () => [
+      getShortcutChipPropsFromSource('Slash', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('Enter', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('Shift+Enter', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Escape', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Shift+Escape', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('J', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Home', 'boundary jump', 'thread-jump'),
@@ -2604,7 +2607,7 @@ function App() {
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
-              / to focus · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries · Esc clears filter · Shift+Esc resets view · J/K or ↑/↓ move selection (recovers hidden selection to first/last visible)
+              focus/jump/reset shortcuts · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries · J/K or ↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input

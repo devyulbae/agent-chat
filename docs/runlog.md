@@ -1,5 +1,26 @@
 # Runlog
 
+## 2026-03-07 00:45 KST — thread-filter slash/escape helper chip wiring (boost lane)
+- Scope: chat thread UX wiring parity so filter helper row no longer mixes plain-text-only slash/escape guidance while other shortcuts are chip-backed.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added shortcut alias normalization + parsing for `Escape`/`Esc` and `Slash`/`/`/`forward-slash`, including combo support for `Shift+Esc`.
+    - Added badge/tooltip mappings for `Escape`, `Shift+Escape`, and `Slash`.
+  - `frontend/src/main.tsx`
+    - Added chip rendering for `Slash`, `Escape`, and `Shift+Escape` in `threadFilterHintShortcutChipPresentations`.
+    - Simplified helper sentence to avoid duplicating chip-rendered slash/escape text.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added parser regression coverage for `(/)`, `(Esc)`, `(Shift+Esc)`, and `(forward-slash)` normalization.
+    - Added badge/tooltip mapping assertions for `Escape`, `Shift+Escape`, and `Slash`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added source-mapping assertions for `Slash`, `Escape`, and `Shift+Escape` chip props in filter-jump context.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (39/39)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: chip-wire any remaining plain-text-only helper shortcuts in thread list controls (if any) so status/help rows stay fully source-driven.
+
 ## 2026-03-07 00:31 KST — meta+shift PgUp/PgDn chip mapping parity (offset lane)
 - Scope: frontend integration + parser contract sync follow-up so `Meta+Shift` PageUp/PageDown aliases render canonical chip badges/tooltips instead of falling back to plain text.
 - Change:

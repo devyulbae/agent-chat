@@ -91,6 +91,8 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/\breturn\s*\/\s*enter\b/gu, 'enter')
     .replace(/\b(return|enter)[\s-]+key\b/gu, '$1')
     .replace(/\breturn\b/gu, 'enter')
+    .replace(/\besc(?:ape)?\b/gu, 'escape')
+    .replace(/forward[\s-]?slash/gu, 'slash')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 
@@ -108,6 +110,10 @@ function normalizeShortcutAlias(shortcut: string): string {
     '←': 'ArrowLeft',
     '→': 'ArrowRight',
     enter: 'Enter',
+    escape: 'Escape',
+    esc: 'Escape',
+    slash: 'Slash',
+    '/': 'Slash',
     '↵': 'Enter',
     '⌤': 'Enter',
   }
@@ -117,7 +123,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const spaceSeparatedComboMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:(?:shift|ctrl|control|alt|option|opt|cmd|command|meta)\s+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
+    /^(?<modifiers>(?:(?:shift|ctrl|control|alt|option|opt|cmd|command|meta)\s+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter|escape|esc|slash)$/i,
   )
   if (spaceSeparatedComboMatch?.groups) {
     const spaceSeparatedKeyAlias = spaceSeparatedComboMatch.groups.key.toLowerCase()
@@ -133,6 +139,9 @@ function normalizeShortcutAlias(shortcut: string): string {
       home: 'Home',
       end: 'End',
       enter: 'Enter',
+      escape: 'Escape',
+      esc: 'Escape',
+      slash: 'Slash',
     }
     const spaceSeparatedModifierAliasMap: Record<string, string> = {
       ctrl: 'Ctrl',
@@ -170,6 +179,9 @@ function normalizeShortcutAlias(shortcut: string): string {
     home: 'Home',
     end: 'End',
     enter: 'Enter',
+    escape: 'Escape',
+    esc: 'Escape',
+    slash: 'Slash',
   }
   const compactModifierAliasMap: Record<string, string> = {
     ctrl: 'Ctrl',
@@ -187,7 +199,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   )
 
   const compactComboMatch = normalizedShortcut.match(
-    /^(?<modifier>shift|ctrl|control|alt|option|opt|cmd|command|meta)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
+    /^(?<modifier>shift|ctrl|control|alt|option|opt|cmd|command|meta)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter|escape|esc|slash)$/i,
   )
   if (compactComboMatch?.groups) {
     const compactKey = compactNavKeyAliasMap[compactComboMatch.groups.key.toLowerCase()]
@@ -198,7 +210,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const compactMultiModifierMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:shift|ctrl|control|alt|option|opt|cmd|command|meta){2,})(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
+    /^(?<modifiers>(?:shift|ctrl|control|alt|option|opt|cmd|command|meta){2,})(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter|escape|esc|slash)$/i,
   )
   if (compactMultiModifierMatch?.groups) {
     const compactKey = compactNavKeyAliasMap[compactMultiModifierMatch.groups.key.toLowerCase()]
@@ -221,7 +233,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const comboMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|↵|⌤)$/i,
+    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|escape|esc|slash|\/|↵|⌤)$/i,
   )
   if (!comboMatch?.groups) {
     return shortcut
@@ -244,6 +256,9 @@ function normalizeShortcutAlias(shortcut: string): string {
     home: 'Home',
     end: 'End',
     enter: 'Enter',
+    escape: 'Escape',
+    esc: 'Escape',
+    slash: 'Slash',
     '↵': 'Enter',
     '⌤': 'Enter',
   }
@@ -297,7 +312,7 @@ export function getHintShortcutSource(hint: string | null): string | null {
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>
-    /^(?:(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+)+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|enter|g|j|k|u|n|p|y|c|r)$/i.test(
+    /^(?:(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+)+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|enter|escape|slash|g|j|k|u|n|p|y|c|r)$/i.test(
       segment,
     ),
   )
@@ -324,6 +339,7 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'shift+r': '⇧R',
     'shift+u': '⇧U',
     'shift+enter': '⇧↵',
+    'shift+escape': '⇧Esc',
     'ctrl+pageup': 'Ctrl+PgUp',
     'ctrl+pagedown': 'Ctrl+PgDn',
     'ctrl+arrowup': 'Ctrl+↑',
@@ -401,6 +417,8 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     arrowleft: '←',
     arrowright: '→',
     enter: '↵',
+    escape: 'Esc',
+    slash: '/',
     g: 'G',
     j: 'J',
     k: 'K',
@@ -434,6 +452,7 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'shift+r': 'Shift + R',
     'shift+u': 'Shift + U',
     'shift+enter': 'Shift + Enter',
+    'shift+escape': 'Shift + Escape',
     'ctrl+pageup': 'Ctrl + PageUp',
     'ctrl+pagedown': 'Ctrl + PageDown',
     'ctrl+arrowup': 'Ctrl + Arrow Up',
@@ -511,6 +530,8 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     arrowleft: 'Arrow Left',
     arrowright: 'Arrow Right',
     enter: 'Enter',
+    escape: 'Escape',
+    slash: 'Slash',
     g: 'G',
     j: 'J',
     k: 'K',

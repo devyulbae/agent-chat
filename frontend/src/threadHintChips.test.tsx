@@ -167,6 +167,24 @@ describe('getShortcutChipPropsFromSource', () => {
       ariaLabel: 'Shortcut badge PgDn: PageDown (boundary jump).',
       context: 'thread-jump',
     })
+    expect(getShortcutChipPropsFromSource('Slash', 'filter jump', 'filter-jump')).toEqual({
+      badge: '/',
+      title: 'Slash filter jump',
+      ariaLabel: 'Shortcut badge /: Slash (filter jump).',
+      context: 'filter-jump',
+    })
+    expect(getShortcutChipPropsFromSource('Escape', 'filter jump', 'filter-jump')).toEqual({
+      badge: 'Esc',
+      title: 'Escape filter jump',
+      ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
+      context: 'filter-jump',
+    })
+    expect(getShortcutChipPropsFromSource('Shift+Escape', 'filter jump', 'filter-jump')).toEqual({
+      badge: '⇧Esc',
+      title: 'Shift + Escape filter jump',
+      ariaLabel: 'Shortcut badge ⇧Esc: Shift + Escape (filter jump).',
+      context: 'filter-jump',
+    })
   })
 
   it('returns null for unknown shortcut source', () => {
