@@ -5,9 +5,12 @@ import {
   getBoundaryDirectionFromHint,
   getBoundaryJumpStatusAriaLabel,
   getHintShortcutSource,
-  getShortcutChipPresentationFromHint,
 } from './threadHintParsers'
-import { renderShortcutChipPresentation, type ShortcutChipProps } from './threadHintChips'
+import {
+  getShortcutChipPropsFromHint,
+  renderShortcutChipPresentation,
+  type ShortcutChipProps,
+} from './threadHintChips'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -1591,19 +1594,10 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
-  const boundaryJumpShortcutChipPresentation = useMemo(() => {
-    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadBoundaryJumpHint, 'boundary jump')
-    if (!shortcutChipPresentation) {
-      return null
-    }
-
-    return {
-      badge: shortcutChipPresentation.badge,
-      title: shortcutChipPresentation.copy.title,
-      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
-      context: 'thread-jump' as const,
-    }
-  }, [threadBoundaryJumpHint])
+  const boundaryJumpShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromHint(threadBoundaryJumpHint, 'boundary jump', 'thread-jump'),
+    [threadBoundaryJumpHint],
+  )
 
   const boundaryJumpDirectionChipPresentation = useMemo(() => {
     const directionChipPresentation = getBoundaryDirectionChipPresentationFromHint(threadBoundaryJumpHint)
@@ -1624,33 +1618,15 @@ function App() {
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
-  const rootJumpShortcutChipPresentation = useMemo(() => {
-    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadRootJumpHint, 'root jump')
-    if (!shortcutChipPresentation) {
-      return null
-    }
+  const rootJumpShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromHint(threadRootJumpHint, 'root jump', 'thread-jump'),
+    [threadRootJumpHint],
+  )
 
-    return {
-      badge: shortcutChipPresentation.badge,
-      title: shortcutChipPresentation.copy.title,
-      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
-      context: 'thread-jump' as const,
-    }
-  }, [threadRootJumpHint])
-
-  const filterJumpShortcutChipPresentation = useMemo(() => {
-    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadFilterJumpHint, 'filter jump')
-    if (!shortcutChipPresentation) {
-      return null
-    }
-
-    return {
-      badge: shortcutChipPresentation.badge,
-      title: shortcutChipPresentation.copy.title,
-      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
-      context: 'filter-jump' as const,
-    }
-  }, [threadFilterJumpHint])
+  const filterJumpShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromHint(threadFilterJumpHint, 'filter jump', 'filter-jump'),
+    [threadFilterJumpHint],
+  )
 
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {

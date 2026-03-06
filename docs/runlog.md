@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-06 20:23 KST — thread shortcut chip props wiring helper (offset lane)
+- Scope: chat thread UX wiring cleanup for shortcut status chip derivation.
+- Change:
+  - Added `getShortcutChipPropsFromHint(...)` in `frontend/src/threadHintChips.tsx` to centralize hint→chip prop mapping (badge/title/aria/context).
+  - Updated `frontend/src/main.tsx` boundary/root/filter shortcut chip hooks to consume the shared helper.
+  - Extended `frontend/src/threadHintChips.test.tsx` with mapping coverage for thread-jump context, filter-jump context, and unknown shortcuts.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (5/5)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: wire thread copy hint into the shared shortcut chip presentation path so copy confirmations get consistent badge + aria behavior.
+
 ## 2026-03-06 20:14 KST — thread shortcut chip UI render regression harness (offset lane)
 - Scope: frontend integration + contract-sync guardrails for shared shortcut chip presentation path.
 - Change:

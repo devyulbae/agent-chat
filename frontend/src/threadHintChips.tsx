@@ -1,4 +1,8 @@
 import React from 'react'
+import {
+  getShortcutChipPresentationFromHint,
+  type ShortcutChipIntent,
+} from './threadHintParsers'
 
 const THREAD_SHORTCUT_CHIP_BASE_STYLE: React.CSSProperties = {
   display: 'inline-block',
@@ -21,6 +25,24 @@ export type ShortcutChipProps = {
   title: string
   ariaLabel: string
   context: ShortcutChipContext
+}
+
+export function getShortcutChipPropsFromHint(
+  hint: string | null,
+  intent: ShortcutChipIntent,
+  context: ShortcutChipContext,
+): ShortcutChipProps | null {
+  const shortcutChipPresentation = getShortcutChipPresentationFromHint(hint, intent)
+  if (!shortcutChipPresentation) {
+    return null
+  }
+
+  return {
+    badge: shortcutChipPresentation.badge,
+    title: shortcutChipPresentation.copy.title,
+    ariaLabel: shortcutChipPresentation.copy.ariaLabel,
+    context,
+  }
 }
 
 export function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
