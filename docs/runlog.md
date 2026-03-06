@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-06 22:11 KST — trailing punctuation normalization for parsed shortcut sources (offset lane)
+- Scope: frontend integration + parser contract hardening so shortcut-chip extraction remains stable when shortcut tokens include punctuation inside parenthesized hint copy.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - In `getHintShortcutSource(...)`, strip trailing punctuation (`.,;:!?`) from parenthesized shortcut segments before alias normalization.
+    - This keeps sources like `(Shift+PageUp.)` and `(Shift+PageDown,)` contract-compatible with existing badge/tooltip mappings.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for trailing punctuation variants to verify normalization to `Shift+PageUp` / `Shift+PageDown`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (34/34)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
 ## 2026-03-06 21:52 KST — shared aria-label text canonicalization for shortcut chips (offset lane)
 - Scope: frontend integration + API contract sync follow-up to keep shortcut status copy and tooltip-derived aria text canonical from one source.
 - Change:

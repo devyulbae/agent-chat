@@ -265,6 +265,7 @@ export function getHintShortcutSource(hint: string | null): string | null {
       segment
         .replace(/^.*?:\s*/u, '')
         .replace(/\s+confirmed$/i, '')
+        .replace(/[\s.,;:!?]+$/u, '')
         .replace(/\s*\+\s*/g, '+')
         .trim(),
     ),

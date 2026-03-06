@@ -262,6 +262,12 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Shift Return/Enter confirmed).')).toBe(
         'Shift+Enter',
       )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift+PageUp.).')).toBe(
+        'Shift+PageUp',
+      )
+      expect(getHintShortcutSource('Recovered to last visible thread (Shift+PageDown,).')).toBe(
+        'Shift+PageDown',
+      )
     })
 
     it('returns null when shortcut source does not exist', () => {
