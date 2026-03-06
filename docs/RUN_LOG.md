@@ -1,5 +1,29 @@
 # Run Log
 
+## 2026-03-07 01:52 KST — Agent Chat parallel offset cycle
+- Delta: Added bracketed key-label normalization coverage for thread hint shortcut parsing so frontend shortcut chips stay canonical when hint copy emits forms like `[Return]`, `Shift+[Return]`, or `key Enter`.
+  - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to strip bracket wrappers and lightweight `key`/`shortcut` labels before existing alias canonicalization.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `[Return]`, `[Enter] confirmed`, `key Enter`, `shortcut: [Return]`, and `Shift+[Return]` extraction coverage (`Enter` / `Shift+Enter`).
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (23 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add parser normalization coverage for optional wrapped arrow aliases (e.g., `[Up Arrow]`, `key: ArrowDown`) if hint copy starts emitting bracketed arrow-key labels.
+
+## 2026-03-07 01:42 KST — Agent Chat implementation cycle
+- Delta: Normalized additional macOS return-symbol variants in thread hint parsing so Enter shortcut chips remain canonical when hints use `⏎` glyph forms.
+  - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to normalize `⏎` alongside existing return aliases and accept it in modifier-combo key parsing.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `⏎`, `Shift+⏎`, and `Cmd+⏎` extraction coverage (`Enter` / `Shift+Enter` / `Cmd+Enter`).
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check /Users/sybae/code/agent-chat` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (23 passed)
+- Commit: `36c798a` (pushed to `main`)
+- Next action: add parser normalization coverage for `Enter/Return` key-name variants with optional surrounding brackets/labels (if hint copy begins emitting forms like `[Return]` or `key: Enter`).
+
 ## 2026-03-06 20:43 KST — Agent Chat implementation cycle
 - Delta: Added macOS return-arrow glyph alias normalization for thread hint shortcut parsing so return-style hint copy resolves to existing Enter chip semantics.
   - Frontend parser: `normalizeShortcutAlias(...)` now rewrites `↩` to `enter` before shortcut-key canonicalization in `frontend/src/threadHintParsers.ts`.

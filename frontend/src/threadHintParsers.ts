@@ -70,6 +70,9 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
 function normalizeShortcutAlias(shortcut: string): string {
   const normalizedShortcut = shortcut
     .toLowerCase()
+    .replace(/^\s*\[([^\]]+)\]\s*$/u, '$1')
+    .replace(/[\[\]]/gu, '')
+    .replace(/^\s*(?:key|shortcut)\b\s*[:=\-]?\s*/u, '')
     .replace(/⌘/gu, 'cmd+')
     .replace(/⌥/gu, 'option+')
     .replace(/⌃/gu, 'ctrl+')
