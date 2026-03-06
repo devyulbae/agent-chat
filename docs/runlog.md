@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 03:03 KST — unread clear button title uses chip badge token (boost lane)
+- Scope: chat thread UX wiring polish to keep unread clear control title/hint copy aligned with shared shortcut chip badge formatting.
+- Change:
+  - `frontend/src/main.tsx`
+    - Switched `unreadNavigationClearControlCopy` from hard-coded `Shift+U clear` to chip-derived badge copy (`⇧U clear`) with fallback.
+    - Reordered unread navigation helper copy construction so both helper text and clear button `title` reuse the same chip-backed token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: chip-wire `U/N/P` unread helper text tokens to render with badge glyph parity (`U/N` + `P`) while preserving concise helper copy.
+
 ## 2026-03-07 02:52 KST — hidden-selection recovery text direction cue sync (offset lane)
 - Scope: frontend integration polish so hidden-selection recovery status copy communicates explicit boundary direction semantics even when chip badges are not visually parsed.
 - Change:

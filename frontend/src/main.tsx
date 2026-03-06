@@ -2076,13 +2076,6 @@ function App() {
       .map((thread) => thread.thread_id)
   }, [threads, unseenThreadKeys])
 
-  const unreadNavigationClearControlCopy = 'Shift+U clear'
-
-  const unreadNavigationHint =
-    unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • ${unreadNavigationClearControlCopy}`
-      : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
-
   const unreadNavigationNextShortcutChipPresentation = useMemo(
     () => getShortcutChipPropsFromSource('U', 'boundary jump', 'thread-jump'),
     [],
@@ -2102,6 +2095,15 @@ function App() {
     () => getShortcutChipPropsFromSource('Shift+U', 'boundary jump', 'thread-jump'),
     [],
   )
+
+  const unreadNavigationClearControlCopy = unreadNavigationClearShortcutChipPresentation
+    ? `${unreadNavigationClearShortcutChipPresentation.badge} clear`
+    : 'Shift+U clear'
+
+  const unreadNavigationHint =
+    unreadThreadIds.length > 0
+      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • ${unreadNavigationClearControlCopy}`
+      : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationHintAriaLabel = useMemo(
     () =>
