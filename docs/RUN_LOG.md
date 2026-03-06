@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 18:34 KST — Agent Chat parallel offset cycle
+- Delta: Added left/right arrow shortcut normalization + chip presentation parity in frontend thread hint parser so horizontal-navigation hint copy now stays contract-synced with existing up/down badge/tooltip rendering.
+  - Frontend parser: extended `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` with `ArrowLeft`/`ArrowRight` aliases (including `Left Arrow`/`Right Arrow`, hyphenated forms, and symbolic `←`/`→`) plus compact forms like `CmdRightArrow`.
+  - Frontend parser: expanded shortcut-source detection and badge/tooltip mappings for `Shift/Ctrl/Control/Option/Cmd/Command/Meta + ArrowLeft/ArrowRight` and single-key `ArrowLeft`/`ArrowRight` sources.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` extraction/badge/tooltip coverage for left/right combinations and symbol aliases.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 20 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add compact no-plus coverage for modifier+enter aliases (e.g., `CmdEnter` / `ShiftEnter`) if emitted hint copy starts using those forms.
+
 ## 2026-03-06 18:23 KST — Agent Chat implementation cycle
 - Delta: Added compact no-plus modifier+arrow alias normalization in frontend thread hint parsing so chip source extraction remains canonical when hint copy emits forms like `CmdUpArrow` and `OptDownArrow`.
   - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` with compact modifier-key pattern handling (`<modifier><key>` without `+`) for arrow/page/home/end/enter aliases.
