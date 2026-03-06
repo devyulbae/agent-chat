@@ -7,6 +7,7 @@ import {
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
 } from './threadHintParsers'
+import { renderShortcutChipPresentation, type ShortcutChipProps } from './threadHintChips'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -60,60 +61,6 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
 const MIN_EXPIRING_WINDOW_HOURS = 1
 const MAX_EXPIRING_WINDOW_HOURS = 24 * 30
-const THREAD_SHORTCUT_CHIP_BASE_STYLE: React.CSSProperties = {
-  display: 'inline-block',
-  marginRight: 6,
-  padding: '0 4px',
-  borderRadius: 6,
-  fontSize: '0.75rem',
-  letterSpacing: '0.02em',
-}
-const THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT: Record<'thread-jump' | 'filter-jump', string> = {
-  'thread-jump': '1px solid #97b6f4',
-  'filter-jump': '1px solid #d0d7de',
-}
-
-
-type ShortcutChipContext = 'thread-jump' | 'filter-jump'
-
-type ShortcutChipProps = {
-  badge: string
-  title: string
-  ariaLabel: string
-  context: ShortcutChipContext
-}
-
-function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
-  return (
-    <span
-      title={title}
-      aria-label={ariaLabel}
-      style={{
-        ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
-        border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT[context],
-      }}
-    >
-      {badge}
-    </span>
-  )
-}
-
-function renderShortcutChipPresentation(
-  presentation: ShortcutChipProps | null,
-): React.JSX.Element | null {
-  if (!presentation) {
-    return null
-  }
-
-  return (
-    <ShortcutChip
-      badge={presentation.badge}
-      title={presentation.title}
-      ariaLabel={presentation.ariaLabel}
-      context={presentation.context}
-    />
-  )
-}
 
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)

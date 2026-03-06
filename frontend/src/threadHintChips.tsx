@@ -1,0 +1,56 @@
+import React from 'react'
+
+const THREAD_SHORTCUT_CHIP_BASE_STYLE: React.CSSProperties = {
+  display: 'inline-block',
+  marginRight: 6,
+  padding: '0 4px',
+  borderRadius: 6,
+  fontSize: '0.75rem',
+  letterSpacing: '0.02em',
+}
+
+const THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT: Record<'thread-jump' | 'filter-jump', string> = {
+  'thread-jump': '1px solid #97b6f4',
+  'filter-jump': '1px solid #d0d7de',
+}
+
+export type ShortcutChipContext = 'thread-jump' | 'filter-jump'
+
+export type ShortcutChipProps = {
+  badge: string
+  title: string
+  ariaLabel: string
+  context: ShortcutChipContext
+}
+
+export function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
+  return (
+    <span
+      title={title}
+      aria-label={ariaLabel}
+      style={{
+        ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+        border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT[context],
+      }}
+    >
+      {badge}
+    </span>
+  )
+}
+
+export function renderShortcutChipPresentation(
+  presentation: ShortcutChipProps | null,
+): React.JSX.Element | null {
+  if (!presentation) {
+    return null
+  }
+
+  return (
+    <ShortcutChip
+      badge={presentation.badge}
+      title={presentation.title}
+      ariaLabel={presentation.ariaLabel}
+      context={presentation.context}
+    />
+  )
+}

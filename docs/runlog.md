@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-06 20:14 KST — thread shortcut chip UI render regression harness (offset lane)
+- Scope: frontend integration + contract-sync guardrails for shared shortcut chip presentation path.
+- Change:
+  - Added `frontend/src/threadHintChips.tsx` to host shared `ShortcutChip` + `renderShortcutChipPresentation(...)` rendering contract used by thread status hint rows.
+  - Updated `frontend/src/main.tsx` to consume the shared chip renderer module (no behavior change intended).
+  - Added `frontend/src/threadHintChips.test.tsx` UI-level regression coverage:
+    - null parser payload returns no chip render.
+    - parser-derived payload renders badge/title/aria-label + context border styling through the shared path.
+- Verification:
+  - `cd frontend && npm test -- --run` ✅ (22/22)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend files/contracts were not touched).
+
 ## 2026-03-06 19:32 KST — boundary jump status chip presentation sync (offset lane)
 - Scope: frontend integration cleanup to align boundary jump status rendering with parsed shortcut chip presentation contract.
 - Change:
