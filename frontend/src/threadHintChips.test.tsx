@@ -195,4 +195,8 @@ describe('getShortcutChipPropsFromHint', () => {
   it('returns null when hint has no known shortcut', () => {
     expect(getShortcutChipPropsFromHint('Jumped to root thread (Mouse click).', 'root jump', 'thread-jump')).toBeNull()
   })
+
+  it('returns null for thread copy hints triggered by button click copy source', () => {
+    expect(getShortcutChipPropsFromHint('Copied thread (button) · root.', 'thread copy', 'thread-jump')).toBeNull()
+  })
 })
