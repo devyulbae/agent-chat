@@ -1707,6 +1707,8 @@ function App() {
       getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Home', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('End', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('PageUp', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('PageDown', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('G', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Shift+G', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Shift+PageUp', 'boundary jump', 'thread-jump'),
@@ -2602,7 +2604,7 @@ function App() {
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
-              / to focus · Enter/Shift+Enter jump first/last visible result · Esc clears filter · Shift+Esc resets view · J/K or ↑/↓ move selection (recovers hidden selection to first/last visible)
+              / to focus · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries · Esc clears filter · Shift+Esc resets view · J/K or ↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
