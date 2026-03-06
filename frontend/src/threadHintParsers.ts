@@ -37,7 +37,11 @@ export function getHintShortcutSource(hint: string | null): string | null {
   }
 
   const normalizedSegments = parenthesizedSegments.map((segment) =>
-    segment.replace(/^.*?:\s*/u, '').replace(/\s+confirmed$/i, '').trim(),
+    segment
+      .replace(/^.*?:\s*/u, '')
+      .replace(/\s+confirmed$/i, '')
+      .replace(/\s*\+\s*/g, '+')
+      .trim(),
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>

@@ -41,6 +41,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Already at first visible thread (Shift+PageUp confirmed).')).toBe(
         'Shift+PageUp',
       )
+      expect(getHintShortcutSource('Already at first visible thread (Shift + PageUp confirmed).')).toBe(
+        'Shift+PageUp',
+      )
     })
 
     it('handles nested and multiple parenthesized hint segments robustly', () => {

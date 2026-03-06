@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 11:31 KST — Agent Chat parallel offset cycle
+- Delta: Hardened thread hint shortcut-source normalization for spaced modifier tokens in frontend parser helpers.
+  - Updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now normalizes optional spacing around `+` (e.g., `Shift + PageUp` → `Shift+PageUp`) before shortcut detection.
+  - Added regression assertion in `frontend/src/threadHintParsers.test.ts` to verify spaced-form shortcuts still resolve and render compact shortcut badges.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 8 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: add a focused UI-level render test around boundary/root status rows so parser `null` outputs are explicitly proven to suppress shortcut pills.
+
 ## 2026-03-06 11:12 KST — Agent Chat parallel offset cycle
 - Delta: Hardened thread hint shortcut-source parsing for nested/multi-parenthesis hint copy in frontend parser helpers.
   - Updated `getHintShortcutSource(...)` in `frontend/src/threadHintParsers.ts` to scan all parenthesized segments, prefer shortcut-like segments, and normalize `confirmed` + `source:` prefixed forms.
