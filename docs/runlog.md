@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 00:11 KST — compact Home/End no-plus alias parser coverage (offset lane)
+- Scope: frontend integration + parser contract sync follow-up to prevent compact no-plus Home/End modifier alias drift from breaking shortcut chip extraction.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added compact multi-modifier regression coverage for Home/End targets:
+      - `CmdShiftHome` and `⌘⇧Home` → `Cmd+Shift+Home`
+      - `OptionShiftEnd` and `⌥⇧End` → `Option+Shift+End`
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-06 23:32 KST — hidden-selection inline recovery hint chip/aria sync (offset lane)
 - Scope: frontend integration follow-up to keep hidden-selection recovery helper text on the same source-based shortcut chip + status aria composition path.
 - Change:

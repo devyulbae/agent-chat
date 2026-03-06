@@ -194,11 +194,23 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to first visible thread (CmdShiftPgUp confirmed).')).toBe(
         'Cmd+Shift+PageUp',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (CmdShiftHome confirmed).')).toBe(
+        'Cmd+Shift+Home',
+      )
+      expect(getHintShortcutSource('Jumped to first visible thread (⌘⇧Home confirmed).')).toBe(
+        'Cmd+Shift+Home',
+      )
       expect(getHintShortcutSource('Jumped to last visible thread (⌥⇧PgDn confirmed).')).toBe(
         'Option+Shift+PageDown',
       )
       expect(getHintShortcutSource('Jumped to last visible thread (OptionShiftPgDn confirmed).')).toBe(
         'Option+Shift+PageDown',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (OptionShiftEnd confirmed).')).toBe(
+        'Option+Shift+End',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (⌥⇧End confirmed).')).toBe(
+        'Option+Shift+End',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+↑ confirmed).')).toBe(
         'Shift+ArrowUp',
