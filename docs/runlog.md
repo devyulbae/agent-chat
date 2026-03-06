@@ -1022,3 +1022,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a small frontend interaction test that exercises one unread wrap transition and asserts only one live-region aria message includes wrap narration.
+
+## 2026-03-07 08:43 KST — unread wrap live-region interaction regression test (boost lane)
+- Scope: chat thread UX wiring (lock one-wrap narration invariant across boundary + unread navigation live regions).
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added focused interaction regression covering one unread wrap transition (`N`, last→first) and asserting only one aria live-region message includes `Unread wrap cue:` narration.
+    - Verifies wrap narration stays on boundary jump aria while unread-navigation aria remains de-duplicated.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (1 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add the complementary `P` (first→last) interaction regression so both unread wrap directions are pinned at the live-region boundary.
