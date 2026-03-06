@@ -2944,6 +2944,8 @@ function App() {
             {showThreadShortcutLegend && (
               <small
                 id="thread-shortcut-legend"
+                role="region"
+                aria-label="Thread keyboard shortcuts"
                 style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
               >
                 <strong>Thread shortcuts:</strong>
