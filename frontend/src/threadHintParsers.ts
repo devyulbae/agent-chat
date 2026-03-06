@@ -45,7 +45,7 @@ export function getHintShortcutSource(hint: string | null): string | null {
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>
-    /^(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|g|j|k|u|y|c)$/i.test(
+    /^(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|enter|g|j|k|u|y|c)$/i.test(
       segment,
     ),
   )
@@ -66,12 +66,14 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'shift+pagedown': '⇧PgDn',
     'shift+g': '⇧G',
     'shift+r': '⇧R',
+    'shift+enter': '⇧↵',
     home: 'Home',
     end: 'End',
     pageup: 'PgUp',
     pagedown: 'PgDn',
     arrowup: '↑',
     arrowdown: '↓',
+    enter: '↵',
     g: 'G',
     j: 'J',
     k: 'K',
@@ -96,12 +98,14 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'shift+pagedown': 'Shift + PageDown',
     'shift+g': 'Shift + G',
     'shift+r': 'Shift + R',
+    'shift+enter': 'Shift + Enter',
     home: 'Home',
     end: 'End',
     pageup: 'PageUp',
     pagedown: 'PageDown',
     arrowup: 'Arrow Up',
     arrowdown: 'Arrow Down',
+    enter: 'Enter',
     g: 'G',
     j: 'J',
     k: 'K',

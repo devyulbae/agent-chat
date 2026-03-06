@@ -1606,6 +1606,21 @@ function App() {
     [threadBoundaryJumpHint]
   )
 
+  const threadFilterJumpSourceShortcut = useMemo(
+    () => getHintShortcutSource(threadFilterJumpHint),
+    [threadFilterJumpHint],
+  )
+
+  const threadFilterJumpSourceShortcutBadge = useMemo(
+    () => getThreadShortcutBadge(threadFilterJumpSourceShortcut),
+    [threadFilterJumpSourceShortcut],
+  )
+
+  const threadFilterJumpSourceShortcutTooltip = useMemo(
+    () => getThreadShortcutTooltip(threadFilterJumpSourceShortcut),
+    [threadFilterJumpSourceShortcut],
+  )
+
   const boundaryJumpStatusAriaLabel = useMemo(() => {
     if (!threadBoundaryJumpHint) {
       return undefined
@@ -2556,7 +2571,27 @@ function App() {
               </small>
             )}
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
-            {threadFilterJumpHint && <small style={{ color: '#666' }}>{threadFilterJumpHint}</small>}
+            {threadFilterJumpHint && (
+              <small style={{ color: '#666' }}>
+                {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && (
+                  <span
+                    title={`${threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut} filter jump`}
+                    style={{
+                      display: 'inline-block',
+                      marginRight: 6,
+                      padding: '0 4px',
+                      border: '1px solid #d0d7de',
+                      borderRadius: 6,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {threadFilterJumpSourceShortcutBadge}
+                  </span>
+                )}
+                {threadFilterJumpHint}
+              </small>
+            )}
           </div>
           {threadLoading && <p>Loading threads…</p>}
           {!threadLoading && (

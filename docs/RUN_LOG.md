@@ -1691,3 +1691,17 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add helper-level mapping for human-readable shortcut tooltip text (not just compact badges) and wire it into boundary/root hint chip `title` strings for clearer discoverability.
+
+## 2026-03-06 12:22 KST — Agent Chat implementation cycle
+- Delta: Added shortcut badge wiring for filter-jump status hints so Enter-based recover actions are visibly discoverable in thread UX.
+  - Frontend: expanded `getHintShortcutSource(...)` to recognize `Enter` alongside existing shortcut families.
+  - Frontend: expanded `getThreadShortcutBadge(...)` / `getThreadShortcutTooltip(...)` mappings with `Enter` and `Shift+Enter` labels.
+  - Frontend: updated `frontend/src/main.tsx` to render parser-driven shortcut badge chips for `threadFilterJumpHint` (matching existing root/boundary hint chip UX).
+  - Frontend tests: added Enter extraction + badge/tooltip mapping coverage in `frontend/src/threadHintParsers.test.ts`.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add a tiny helper for standardized shortcut-chip styles to remove duplicated inline style objects across root/boundary/filter hint chips.
