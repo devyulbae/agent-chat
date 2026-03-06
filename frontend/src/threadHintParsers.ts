@@ -13,6 +13,22 @@ export function getBoundaryDirectionTooltip(direction: BoundaryDirection): strin
   return `Boundary direction: toward ${getBoundaryDirectionLabel(direction)}`
 }
 
+export type BoundaryDirectionChipPresentation = {
+  badge: string
+  title: string
+  ariaLabel: string
+}
+
+export function getBoundaryDirectionChipPresentation(
+  direction: BoundaryDirection,
+): BoundaryDirectionChipPresentation {
+  return {
+    badge: getBoundaryDirectionBadge(direction),
+    title: getBoundaryDirectionTooltip(direction),
+    ariaLabel: `Boundary direction cue: toward ${getBoundaryDirectionLabel(direction)}`,
+  }
+}
+
 export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirection | null {
   if (!hint) {
     return null

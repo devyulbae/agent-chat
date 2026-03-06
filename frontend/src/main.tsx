@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
-  getBoundaryDirectionBadge,
+  getBoundaryDirectionChipPresentation,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
-  getBoundaryDirectionTooltip,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadShortcutBadge,
@@ -1662,6 +1661,14 @@ function App() {
     [threadBoundaryJumpHint]
   )
 
+  const boundaryJumpDirectionChipPresentation = useMemo(
+    () =>
+      boundaryJumpDirectionCue
+        ? getBoundaryDirectionChipPresentation(boundaryJumpDirectionCue)
+        : null,
+    [boundaryJumpDirectionCue],
+  )
+
   const threadFilterJumpSourceShortcut = useMemo(
     () => getHintShortcutSource(threadFilterJumpHint),
     [threadFilterJumpHint],
@@ -2614,11 +2621,11 @@ function App() {
                 style={{ color: '#1f4b99' }}
               >
                 {renderShortcutChip(boundaryJumpSourceShortcutBadge, boundaryJumpShortcutChipCopy, 'thread-jump')}
-                {boundaryJumpDirectionCue && (
+                {boundaryJumpDirectionChipPresentation && (
                   <ShortcutChip
-                    badge={getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
-                    title={getBoundaryDirectionTooltip(boundaryJumpDirectionCue)}
-                    ariaLabel={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
+                    badge={boundaryJumpDirectionChipPresentation.badge}
+                    title={boundaryJumpDirectionChipPresentation.title}
+                    ariaLabel={boundaryJumpDirectionChipPresentation.ariaLabel}
                     context="thread-jump"
                   />
                 )}

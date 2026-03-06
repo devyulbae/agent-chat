@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildShortcutChipCopy,
   getBoundaryDirectionBadge,
+  getBoundaryDirectionChipPresentation,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
   getBoundaryDirectionTooltip,
@@ -188,6 +189,19 @@ describe('threadHintParsers', () => {
       expect(getBoundaryDirectionLabel('last')).toBe('last visible thread')
       expect(getBoundaryDirectionTooltip('first')).toBe('Boundary direction: toward first visible thread')
       expect(getBoundaryDirectionTooltip('last')).toBe('Boundary direction: toward last visible thread')
+    })
+
+    it('builds deterministic chip presentation payload for direction cues', () => {
+      expect(getBoundaryDirectionChipPresentation('first')).toEqual({
+        badge: '↖ first',
+        title: 'Boundary direction: toward first visible thread',
+        ariaLabel: 'Boundary direction cue: toward first visible thread',
+      })
+      expect(getBoundaryDirectionChipPresentation('last')).toEqual({
+        badge: '↘ last',
+        title: 'Boundary direction: toward last visible thread',
+        ariaLabel: 'Boundary direction cue: toward last visible thread',
+      })
     })
   })
 

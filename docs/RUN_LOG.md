@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-06 17:05 KST — Agent Chat implementation cycle
+- Delta: Extracted boundary-direction shortcut chip composition into a shared parser helper so the thread boundary hint row no longer duplicates badge/title/aria wiring inline.
+  - Frontend parser: added `getBoundaryDirectionChipPresentation(...)` + `BoundaryDirectionChipPresentation` in `frontend/src/threadHintParsers.ts`.
+  - Frontend wiring: updated `frontend/src/main.tsx` to consume the helper via memoized `boundaryJumpDirectionChipPresentation` when rendering boundary direction chips.
+  - Frontend tests: expanded `frontend/src/threadHintParsers.test.ts` with deterministic presentation payload assertions for `first`/`last` direction cues.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 17 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: centralize boundary status-line aria-label composition into `threadHintParsers` so direction-cue wording and status announcement copy share one helper contract.
+
 ## 2026-03-06 16:33 KST — Agent Chat parallel offset cycle
 - Delta: Unified thread hint shortcut-chip presentation derivation into one parser-level integration helper so root/boundary/filter chips share the same source→badge→tooltip→copy contract.
   - Frontend parser: added `getShortcutChipPresentationFromHint(...)` + `ShortcutChipPresentation` in `frontend/src/threadHintParsers.ts` to build chip-ready payloads from hint text in one place.
