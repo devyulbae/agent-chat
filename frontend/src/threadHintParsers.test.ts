@@ -1,0 +1,51 @@
+import { describe, expect, it } from 'vitest'
+
+import {
+  getBoundaryDirectionBadge,
+  getBoundaryDirectionFromHint,
+  getBoundaryDirectionLabel,
+  getHintShortcutSource,
+} from './threadHintParsers'
+
+describe('threadHintParsers', () => {
+  describe('getBoundaryDirectionFromHint', () => {
+    it('detects first boundary direction with punctuation/case variance', () => {
+      expect(getBoundaryDirectionFromHint('Recovered to FIRST visible thread (Shift+PageUp).')).toBe(
+        'first',
+      )
+    })
+
+    it('detects last boundary direction with surrounding words', () => {
+      expect(getBoundaryDirectionFromHint('Already at last visible thread (Shift+PageDown) confirmed.')).toBe(
+        'last',
+      )
+    })
+
+    it('returns null for non-boundary hints', () => {
+      expect(getBoundaryDirectionFromHint('Jumped to root thread (Shift+R).')).toBeNull()
+      expect(getBoundaryDirectionFromHint(null)).toBeNull()
+    })
+  })
+
+  describe('getHintShortcutSource', () => {
+    it('extracts first parenthesized shortcut token', () => {
+      expect(getHintShortcutSource('Jumped to first visible thread (Shift+PageUp).')).toBe(
+        'Shift+PageUp',
+      )
+    })
+
+    it('returns null when shortcut source does not exist', () => {
+      expect(getHintShortcutSource('Jumped to first visible thread.')).toBeNull()
+      expect(getHintShortcutSource(null)).toBeNull()
+    })
+  })
+
+  describe('direction helpers', () => {
+    it('returns compact badge and label for first/last directions', () => {
+      expect(getBoundaryDirectionBadge('first')).toBe('↖ first')
+      expect(getBoundaryDirectionBadge('last')).toBe('↘ last')
+      expect(getBoundaryDirectionLabel('first')).toBe('first visible thread')
+      expect(getBoundaryDirectionLabel('last')).toBe('last visible thread')
+    })
+  })
+})
