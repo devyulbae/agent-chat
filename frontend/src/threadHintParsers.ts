@@ -29,6 +29,19 @@ export function getBoundaryDirectionChipPresentation(
   }
 }
 
+export function getBoundaryJumpStatusAriaLabel(hint: string | null): string | undefined {
+  if (!hint) {
+    return undefined
+  }
+
+  const direction = getBoundaryDirectionFromHint(hint)
+  if (!direction) {
+    return hint
+  }
+
+  return `${hint} ${getBoundaryDirectionChipPresentation(direction).ariaLabel}.`
+}
+
 export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirection | null {
   if (!hint) {
     return null

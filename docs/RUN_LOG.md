@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 17:12 KST — Agent Chat parallel offset cycle
+- Delta: Centralized boundary status-line aria-label composition in parser helpers so boundary direction cue wording stays consistent between status announcements and direction chip a11y copy.
+  - Frontend parser: added `getBoundaryJumpStatusAriaLabel(...)` in `frontend/src/threadHintParsers.ts`, reusing `getBoundaryDirectionChipPresentation(...)` for shared direction-cue phrasing.
+  - Frontend wiring: updated `frontend/src/main.tsx` to consume parser-level aria-label composition instead of inline direction sentence assembly.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with boundary-status aria-label coverage for first/last boundary hints plus non-boundary/null fallback behavior.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 19 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: replace duplicated boundary-help copy classification in `main.tsx` with a parser-level boundary hint intent helper to keep status/help semantics contract-synced.
+
 ## 2026-03-06 17:05 KST — Agent Chat implementation cycle
 - Delta: Extracted boundary-direction shortcut chip composition into a shared parser helper so the thread boundary hint row no longer duplicates badge/title/aria wiring inline.
   - Frontend parser: added `getBoundaryDirectionChipPresentation(...)` + `BoundaryDirectionChipPresentation` in `frontend/src/threadHintParsers.ts`.

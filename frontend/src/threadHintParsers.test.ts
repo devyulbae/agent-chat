@@ -6,6 +6,7 @@ import {
   getBoundaryDirectionChipPresentation,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
+  getBoundaryJumpStatusAriaLabel,
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
@@ -202,6 +203,28 @@ describe('threadHintParsers', () => {
         title: 'Boundary direction: toward last visible thread',
         ariaLabel: 'Boundary direction cue: toward last visible thread',
       })
+    })
+  })
+
+  describe('getBoundaryJumpStatusAriaLabel', () => {
+    it('appends direction cue aria wording for boundary hints', () => {
+      expect(
+        getBoundaryJumpStatusAriaLabel('Recovered to first visible thread (Shift+PageUp) · Root · 1/9.'),
+      ).toBe(
+        'Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Boundary direction cue: toward first visible thread.',
+      )
+      expect(
+        getBoundaryJumpStatusAriaLabel('Recovered to last visible thread (Shift+PageDown) · t-9 · 9/9.'),
+      ).toBe(
+        'Recovered to last visible thread (Shift+PageDown) · t-9 · 9/9. Boundary direction cue: toward last visible thread.',
+      )
+    })
+
+    it('returns hint-only label for non-boundary copy and undefined for empty hints', () => {
+      expect(getBoundaryJumpStatusAriaLabel('Jumped to next unread thread (U) · Root · 1/3.')).toBe(
+        'Jumped to next unread thread (U) · Root · 1/3.',
+      )
+      expect(getBoundaryJumpStatusAriaLabel(null)).toBeUndefined()
     })
   })
 

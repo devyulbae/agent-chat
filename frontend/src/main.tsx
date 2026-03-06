@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import {
   getBoundaryDirectionChipPresentation,
   getBoundaryDirectionFromHint,
-  getBoundaryDirectionLabel,
+  getBoundaryJumpStatusAriaLabel,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadShortcutBadge,
@@ -1684,15 +1684,10 @@ function App() {
     [threadFilterJumpSourceShortcut],
   )
 
-  const boundaryJumpStatusAriaLabel = useMemo(() => {
-    if (!threadBoundaryJumpHint) {
-      return undefined
-    }
-    const directionCueText = boundaryJumpDirectionCue
-      ? `Direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}.`
-      : null
-    return [threadBoundaryJumpHint, directionCueText].filter(Boolean).join(' ')
-  }, [boundaryJumpDirectionCue, threadBoundaryJumpHint])
+  const boundaryJumpStatusAriaLabel = useMemo(
+    () => getBoundaryJumpStatusAriaLabel(threadBoundaryJumpHint),
+    [threadBoundaryJumpHint],
+  )
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
