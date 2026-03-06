@@ -1,5 +1,30 @@
 # Runlog
 
+## 2026-03-06 22:26 KST — hidden-selection recovery shortcut chip wiring (boost lane)
+- Scope: chat thread UX wiring accessibility/consistency for hidden-selection recovery hints.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getShortcutChipPresentationFromSource(...)` so shortcut-chip presentation can be built directly from explicit shortcut tokens (without hint parsing).
+    - Kept `getShortcutChipPresentationFromHint(...)` as a thin wrapper on top of source-based builder.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added coverage for source-based chip presentation success/fallback behavior.
+  - `frontend/src/threadHintChips.tsx`
+    - Added `getShortcutChipPropsFromSource(...)` helper for UI wiring that already has explicit shortcut sources.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression tests for source-based chip prop mapping and unknown-source fallback.
+  - `frontend/src/main.tsx`
+    - Wired hidden-selection recovery tip (`J/K or ↑/↓`) to render explicit `J` + `K` shortcut chips via source-based helper.
+    - Added status semantics (`role="status"`, `aria-live="polite"`) and composed aria-label via shared multi-chip helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (38/38)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `fa9fe81` — `[feat] add explicit source-based shortcut chip wiring for recovery hints`
+  - Push: `main -> origin/main` ✅
+- Next action: apply source-based chip helper to any remaining explicit shortcut helper text (non-parenthesized hints) so all thread status/help rows share one chip rendering path.
+
 ## 2026-03-06 22:11 KST — trailing punctuation normalization for parsed shortcut sources (offset lane)
 - Scope: frontend integration + parser contract hardening so shortcut-chip extraction remains stable when shortcut tokens include punctuation inside parenthesized hint copy.
 - Change:
