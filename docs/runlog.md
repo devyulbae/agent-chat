@@ -1,5 +1,34 @@
 # Runlog
 
+## 2026-03-07 01:12 KST — composer helper shortcut chips via source-based path (offset lane)
+- Scope: frontend integration follow-up to remove remaining plain-text-only composer shortcut guidance and keep helper copy on shared shortcut chip presentation wiring.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `composerHintShortcutChipPresentations` memo using `getShortcutChipPropsFromSource(...)` for composer helper shortcuts: `Enter`, `Shift+Enter`, `Escape`, `C`, `R`, `Shift+Home`, `Shift+R`, `Shift+PageUp`, `Shift+PageDown`.
+    - Updated composer helper `<small>` row to render chip badges through `renderShortcutChipPresentation(...)` and replaced raw key-list text with concise semantic helper copy.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+## 2026-03-07 01:03 KST — thread-filter helper arrow-key chip wiring (boost lane)
+- Scope: chat thread UX wiring polish so helper hint row fully chip-renders the movement shortcuts already described in copy.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added source-based helper chips for `ArrowUp` and `ArrowDown` in `threadFilterHintShortcutChipPresentations`.
+    - Tightened helper sentence from `J/K or ↑/↓` to `J/K/↑/↓` to align with chip-rendered shortcut tokens.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression assertion that `ArrowDown` maps correctly in `filter-jump` context (`↓` badge, tooltip/title, aria-label).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (39/39)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `ab0c842` — `[feat] add arrow-key chips to thread filter helper hints`
+  - Push: `main -> origin/main` ✅
+- Next action: chip-wire any remaining plain-text-only composer shortcut guidance (`Esc`, `C`, `R`, `Shift+Home`, `Shift+R`, `Shift+PgUp`, `Shift+PgDn`) into the shared source-based hint chip path for parity with thread filter/status hints.
+
 ## 2026-03-07 00:52 KST — fwd-slash alias normalization for filter shortcut parser (offset lane)
 - Scope: frontend integration + parser contract sync follow-up to keep filter-focus shortcut chips resilient to abbreviated slash wording in helper/status copy.
 - Change:

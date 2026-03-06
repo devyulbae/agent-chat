@@ -1699,6 +1699,21 @@ function App() {
     [threadCopyHint, threadCopyShortcutChipPresentation],
   )
 
+  const composerHintShortcutChipPresentations = useMemo(
+    () => [
+      getShortcutChipPropsFromSource('Enter', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Shift+Enter', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Escape', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('C', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('R', 'root jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+Home', 'root jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+R', 'root jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+PageUp', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+PageDown', 'boundary jump', 'thread-jump'),
+    ].filter((chip): chip is ShortcutChipProps => chip !== null),
+    [],
+  )
+
   const threadFilterHintShortcutChipPresentations = useMemo(
     () => [
       getShortcutChipPropsFromSource('Slash', 'filter jump', 'filter-jump'),
@@ -2504,7 +2519,8 @@ function App() {
           style={{ minWidth: 260, resize: 'vertical' }}
         />
         <small style={{ color: 'dimgray' }}>
-          Enter to send • Shift+Enter newline • Esc (empty) to return to root • C to focus composer • R / Shift+Home / Shift+R jump root • Shift+PgUp/Shift+PgDn jump first/last visible
+          {composerHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
+          send/newline/root/focus/root jump/first-last visible helpers
         </small>
         <button type="button" onClick={() => void submitMessage()} disabled={composerSubmitting}>
           {composerSubmitting ? 'Sending…' : selectedThreadId ? 'Reply to thread' : 'Send root message'}
