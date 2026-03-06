@@ -236,6 +236,12 @@ describe('getShortcutChipPropsFromSource', () => {
       ariaLabel: 'Shortcut badge ⇧Esc: Shift + Escape (filter jump).',
       context: 'filter-jump',
     })
+    expect(getShortcutChipPropsFromSource('Shift+U', 'boundary jump', 'thread-jump')).toEqual({
+      badge: '⇧U',
+      title: 'Shift + U boundary jump',
+      ariaLabel: 'Shortcut badge ⇧U: Shift + U (boundary jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('returns null for unknown shortcut source', () => {

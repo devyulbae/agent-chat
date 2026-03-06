@@ -2095,14 +2095,21 @@ function App() {
     [],
   )
 
+  const unreadNavigationClearShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('Shift+U', 'boundary jump', 'thread-jump'),
+    [],
+  )
+
   const unreadNavigationHintAriaLabel = useMemo(
     () =>
       getStatusAriaLabelWithShortcutChips(unreadNavigationHint, [
         unreadNavigationNextShortcutChipPresentation,
         unreadNavigationNextAltShortcutChipPresentation,
         unreadNavigationPreviousShortcutChipPresentation,
+        unreadNavigationClearShortcutChipPresentation,
       ]),
     [
+      unreadNavigationClearShortcutChipPresentation,
       unreadNavigationHint,
       unreadNavigationNextAltShortcutChipPresentation,
       unreadNavigationNextShortcutChipPresentation,
@@ -2623,6 +2630,7 @@ function App() {
               {renderShortcutChipPresentation(unreadNavigationNextShortcutChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationNextAltShortcutChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationPreviousShortcutChipPresentation)}
+              {renderShortcutChipPresentation(unreadNavigationClearShortcutChipPresentation)}
             </>
           )}
           {unreadNavigationHint}
