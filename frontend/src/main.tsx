@@ -2169,8 +2169,9 @@ function App() {
 
       const directionLabel = step > 0 ? 'next' : 'previous'
       const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
+      const boundaryDirection = step > 0 ? 'first' : 'last'
       setThreadBoundaryJumpHint(
-        `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}.`
+        `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length} · ${getBoundaryDirectionStatusCue(boundaryDirection)}.`
       )
     },
     [unreadThreadIds, selectedThreadId, selectThread],

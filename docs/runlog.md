@@ -709,3 +709,15 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: surface boundary direction chip (`↖ first` / `↘ last`) in unread navigation status hints (`U/N/P`) for parity with visible-thread boundary feedback.
+
+## 2026-03-07 04:22 KST — unread navigation boundary direction cue in status hint (boost lane)
+- Scope: chat thread UX wiring (U/N/P unread jump feedback parity with boundary direction semantics).
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated unread jump status message (`jumpUnreadByStep`) to append canonical boundary direction cue copy via `getBoundaryDirectionStatusCue`.
+    - `U`/`N` now advertise `direction ↖ first`; `P` advertises `direction ↘ last` in jump feedback.
+- Verification:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add explicit wrap-around wording to unread jump status feedback when selection cycles from last→first or first→last.
