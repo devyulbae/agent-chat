@@ -77,17 +77,28 @@ export function renderShortcutChipPresentation(
   )
 }
 
-export function getStatusAriaLabelWithShortcutChip(
+export function getStatusAriaLabelWithShortcutChips(
   hint: string | null,
-  presentation: ShortcutChipProps | null,
+  presentations: Array<ShortcutChipProps | null>,
 ): string | undefined {
   if (!hint) {
     return undefined
   }
 
-  if (!presentation) {
+  const chipAriaLabels = presentations
+    .filter((presentation): presentation is ShortcutChipProps => Boolean(presentation))
+    .map((presentation) => presentation.ariaLabel)
+
+  if (!chipAriaLabels.length) {
     return hint
   }
 
-  return `${hint} ${presentation.ariaLabel}`
+  return `${hint} ${chipAriaLabels.join(' ')}`
+}
+
+export function getStatusAriaLabelWithShortcutChip(
+  hint: string | null,
+  presentation: ShortcutChipProps | null,
+): string | undefined {
+  return getStatusAriaLabelWithShortcutChips(hint, [presentation])
 }

@@ -3,12 +3,12 @@ import { createRoot } from 'react-dom/client'
 import {
   getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
-  getBoundaryJumpStatusAriaLabel,
   getHintShortcutSource,
 } from './threadHintParsers'
 import {
   getShortcutChipPropsFromHint,
   getStatusAriaLabelWithShortcutChip,
+  getStatusAriaLabelWithShortcutChips,
   renderShortcutChipPresentation,
   type ShortcutChipProps,
 } from './threadHintChips'
@@ -1610,8 +1610,16 @@ function App() {
   }, [threadBoundaryJumpHint])
 
   const boundaryJumpStatusAriaLabel = useMemo(
-    () => getBoundaryJumpStatusAriaLabel(threadBoundaryJumpHint),
-    [threadBoundaryJumpHint],
+    () =>
+      getStatusAriaLabelWithShortcutChips(threadBoundaryJumpHint, [
+        boundaryJumpShortcutChipPresentation,
+        boundaryJumpDirectionChipPresentation,
+      ]),
+    [
+      boundaryJumpDirectionChipPresentation,
+      boundaryJumpShortcutChipPresentation,
+      threadBoundaryJumpHint,
+    ],
   )
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
@@ -1619,6 +1627,11 @@ function App() {
   const rootJumpShortcutChipPresentation = useMemo(
     () => getShortcutChipPropsFromHint(threadRootJumpHint, 'root jump', 'thread-jump'),
     [threadRootJumpHint],
+  )
+
+  const rootJumpStatusAriaLabel = useMemo(
+    () => getStatusAriaLabelWithShortcutChip(threadRootJumpHint, rootJumpShortcutChipPresentation),
+    [rootJumpShortcutChipPresentation, threadRootJumpHint],
   )
 
   const filterJumpShortcutChipPresentation = useMemo(
@@ -2543,6 +2556,7 @@ function App() {
               <small
                 aria-live="polite"
                 role="status"
+                aria-label={rootJumpStatusAriaLabel}
                 title={
                   threadRootJumpHint.includes(' · 1/')
                     ? 'In root hints, N in 1/N is the number of currently visible threads after filters.'

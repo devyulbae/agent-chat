@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-06 21:13 KST — root/boundary status aria-label composition sync (offset lane)
+- Scope: frontend integration follow-up to finish shared status aria-label composition across all thread status lanes.
+- Change:
+  - `frontend/src/threadHintChips.tsx`
+    - Added `getStatusAriaLabelWithShortcutChips(...)` to compose status aria-label text from multiple shortcut chip presentations in order.
+    - Kept `getStatusAriaLabelWithShortcutChip(...)` as a thin wrapper for single-chip callers.
+  - `frontend/src/main.tsx`
+    - Switched boundary status aria-label generation to the shared multi-chip helper, composing both shortcut chip + direction chip aria text in one path.
+    - Wired root jump status row to use shared aria-label composition (`aria-label` now mirrors hint + root shortcut chip semantics).
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression coverage for multi-chip aria-label composition ordering.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (30/30)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
 ## 2026-03-06 21:04 KST — status aria-label wiring for filter/copy shortcut chips (boost lane)
 - Scope: chat thread UX wiring accessibility parity for shortcut-chip-backed status hints.
 - Change:

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getShortcutChipPropsFromHint,
   getStatusAriaLabelWithShortcutChip,
+  getStatusAriaLabelWithShortcutChips,
   renderShortcutChipPresentation,
 } from './threadHintChips'
 
@@ -48,6 +49,29 @@ describe('getStatusAriaLabelWithShortcutChip', () => {
         context: 'thread-jump',
       }),
     ).toBe('Copied thread (Y) · root. Shortcut badge Y: Y (thread copy).')
+  })
+})
+
+describe('getStatusAriaLabelWithShortcutChips', () => {
+  it('appends all chip aria-labels in order for multi-chip statuses', () => {
+    expect(
+      getStatusAriaLabelWithShortcutChips('Recovered to first visible thread (Shift+PageUp) · Root · 1/9.', [
+        {
+          badge: '⇧PgUp',
+          title: 'Shift + PageUp boundary jump',
+          ariaLabel: 'Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).',
+          context: 'thread-jump',
+        },
+        {
+          badge: '↖ first',
+          title: 'Boundary direction: toward first visible thread',
+          ariaLabel: 'Boundary direction cue: toward first visible thread',
+          context: 'thread-jump',
+        },
+      ]),
+    ).toBe(
+      'Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump). Boundary direction cue: toward first visible thread',
+    )
   })
 })
 
