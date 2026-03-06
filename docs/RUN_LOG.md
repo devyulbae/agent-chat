@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 12:14 KST — Agent Chat parallel offset cycle
+- Delta: Added human-readable shortcut tooltip mapping for thread jump status chips to improve frontend discoverability.
+  - Updated `frontend/src/threadHintParsers.ts` with new `getThreadShortcutTooltip(...)` helper that maps parsed shortcut sources to readable labels (`Shift + PageUp`, `Arrow Up`, etc.) in one shared place.
+  - Updated `frontend/src/main.tsx` boundary/root shortcut chip titles to consume the helper (`... root jump` / `... boundary jump`) instead of raw parser strings.
+  - Extended `frontend/src/threadHintParsers.test.ts` with focused tooltip mapping regression coverage (known shortcuts + unknown/null fallback).
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 12 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `eea9ec4` (pushed to `main`)
+- Next action: add compact aria-label parity for shortcut chips so screen readers announce both badge glyph and full shortcut label consistently.
+
 ## 2026-03-06 11:52 KST — Agent Chat parallel offset cycle
 - Delta: Added explicit boundary-source badge rendering for non-shift keyboard jumps in thread status hints.
   - Updated `frontend/src/main.tsx` boundary source badge mapping so parser-recognized single-key sources now render visible pills: `Home`, `End`, `PgUp`, `PgDn`, and `G` (alongside existing `⇧PgUp` / `⇧PgDn`).
