@@ -1528,3 +1528,13 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `10288db` (pushed to `main`)
 - Next action: add a tiny regression test (frontend unit-level string helper extraction) for boundary direction parsing to avoid future drift in first/last cue copy.
+
+## 2026-03-06 09:51 KST — Agent Chat parallel offset cycle
+- Delta: Added an explicit screen-reader announcement for server-side audit source filter badges.
+  - Frontend: added `auditApiSourceFiltersAriaLabel` in `frontend/src/main.tsx`.
+  - UI/a11y + API contract sync: the `API filters:` badge now exposes a polite `aria-live` + `aria-label` announcement that reads full backend-applied query filters (`provider`, `label`, `action`, `event_type`) instead of potentially truncated chip text.
+  - Scope: frontend credential-audit integration only (API schema unchanged).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: pending
+- Next action: extract boundary-direction parsing into a tiny pure helper for future unit-level regression coverage.

@@ -1029,6 +1029,15 @@ function App() {
     return sourceParts
   }, [auditActionFilter, auditEventTypeFilter, auditLabelFilter, auditProviderFilter])
 
+  const auditApiSourceFiltersAriaLabel = useMemo(() => {
+    if (auditApiSourceFilterParts.length === 0) {
+      return ''
+    }
+
+    const fullLabels = auditApiSourceFilterParts.map((part) => part.fullLabel).join(', ')
+    return `API source filters applied by backend audit endpoint: ${fullLabels}.`
+  }, [auditApiSourceFilterParts])
+
   const isAuditResultCapped =
     !credentialAuditLoading && !credentialAuditError && credentialAuditHasMore
 
@@ -3042,6 +3051,8 @@ function App() {
         {auditApiSourceFilterParts.length > 0 && (
           <span
             title="Provider/label/action/event_type filters are applied server-side by GET /audit-events."
+            aria-live="polite"
+            aria-label={auditApiSourceFiltersAriaLabel}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
