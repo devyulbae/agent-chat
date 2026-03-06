@@ -1894,3 +1894,16 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `e2fd664` (pushed to `main`)
 - Next action: add parser badge/tooltip coverage for `Shift+End` (already emitted by boundary hints) so end-boundary shortcuts also render consistent compact chips.
+
+## 2026-03-06 15:23 KST — Agent Chat implementation cycle
+- Delta: Extended thread hint shortcut parsing to normalize symbolic modifier aliases so keyboard-source chips stay stable when hints include glyph-style shortcuts.
+  - Frontend: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to normalize `⇧+...` → `Shift+...` and `⌃+...` → `Ctrl+...` before PgUp/PgDn canonicalization.
+  - Frontend tests: added coverage in `frontend/src/threadHintParsers.test.ts` for `⌃+PgUp` → `Ctrl+PageUp` and `⇧+PgDn` → `Shift+PageDown` extraction.
+  - Scope: chat thread UX wiring parser/tests only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (14 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: wire parser normalization for additional macOS glyph modifiers (`⌥`/`⌘`) used in hint copy so future shortcut chips remain canonical across platforms.

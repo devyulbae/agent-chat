@@ -29,7 +29,11 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
 }
 
 function normalizeShortcutAlias(shortcut: string): string {
-  const normalizedShortcut = shortcut.toLowerCase()
+  const normalizedShortcut = shortcut
+    .toLowerCase()
+    .replace(/^⇧\s*\+/u, 'shift+')
+    .replace(/^⌃\s*\+/u, 'ctrl+')
+
   const aliasMap: Record<string, string> = {
     pgup: 'PageUp',
     pgdn: 'PageDown',
