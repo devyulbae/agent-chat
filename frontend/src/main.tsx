@@ -117,6 +117,23 @@ function renderShortcutChip(
   return <ShortcutChip badge={badge} title={copy.title} ariaLabel={copy.ariaLabel} context={context} />
 }
 
+function renderShortcutChipPresentation(
+  presentation: ShortcutChipProps | null,
+): React.JSX.Element | null {
+  if (!presentation) {
+    return null
+  }
+
+  return (
+    <ShortcutChip
+      badge={presentation.badge}
+      title={presentation.title}
+      ariaLabel={presentation.ariaLabel}
+      context={presentation.context}
+    />
+  )
+}
+
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
   const normalizedApiBase = API_BASE.replace(/\/+$/, '')
@@ -1661,13 +1678,16 @@ function App() {
     [threadBoundaryJumpHint]
   )
 
-  const boundaryJumpDirectionChipPresentation = useMemo(
-    () =>
-      boundaryJumpDirectionCue
-        ? getBoundaryDirectionChipPresentation(boundaryJumpDirectionCue)
-        : null,
-    [boundaryJumpDirectionCue],
-  )
+  const boundaryJumpDirectionChipPresentation = useMemo(() => {
+    if (!boundaryJumpDirectionCue) {
+      return null
+    }
+
+    return {
+      ...getBoundaryDirectionChipPresentation(boundaryJumpDirectionCue),
+      context: 'thread-jump' as const,
+    }
+  }, [boundaryJumpDirectionCue])
 
   const threadFilterJumpSourceShortcut = useMemo(
     () => getHintShortcutSource(threadFilterJumpHint),
@@ -2616,14 +2636,7 @@ function App() {
                 style={{ color: '#1f4b99' }}
               >
                 {renderShortcutChip(boundaryJumpSourceShortcutBadge, boundaryJumpShortcutChipCopy, 'thread-jump')}
-                {boundaryJumpDirectionChipPresentation && (
-                  <ShortcutChip
-                    badge={boundaryJumpDirectionChipPresentation.badge}
-                    title={boundaryJumpDirectionChipPresentation.title}
-                    ariaLabel={boundaryJumpDirectionChipPresentation.ariaLabel}
-                    context="thread-jump"
-                  />
-                )}
+                {renderShortcutChipPresentation(boundaryJumpDirectionChipPresentation)}
                 {threadBoundaryJumpHint}
               </small>
             )}
