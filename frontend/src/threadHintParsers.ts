@@ -56,7 +56,12 @@ function normalizeShortcutAlias(shortcut: string): string {
   const modifier = comboMatch.groups.modifier
   const keyAlias = comboMatch.groups.key
   const normalizedKey = keyAlias === 'pgup' ? 'PageUp' : 'PageDown'
-  const normalizedModifier = modifier.charAt(0).toUpperCase() + modifier.slice(1)
+  const normalizedModifierAliasMap: Record<string, string> = {
+    opt: 'Option',
+    cmd: 'Cmd',
+  }
+  const normalizedModifier =
+    normalizedModifierAliasMap[modifier] ?? modifier.charAt(0).toUpperCase() + modifier.slice(1)
   return `${normalizedModifier}+${normalizedKey}`
 }
 
