@@ -884,3 +884,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: expose wrap-around cue text in unread navigation hint aria-label helper path so assistive output mirrors status hint transitions.
+
+## 2026-03-07 06:52 KST — unread navigation wrap cue aria helper wiring (offset lane)
+- Scope: frontend integration + API contract sync lane (assistive parity for unread wrap transitions).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getUnreadNavigationHintAriaLabel(baseAriaLabel, wrapCue)` helper so unread wrap cue aria copy is appended through a shared parser helper path.
+  - `frontend/src/main.tsx`
+    - Switched unread navigation hint aria-label composition to use `getUnreadNavigationHintAriaLabel(...)` instead of inline wrap-cue concatenation.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for unread navigation aria helper append/no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (40 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: thread this helper through any remaining unread status aria builders so wrap cue semantics stay centralized across future unread hint variants.

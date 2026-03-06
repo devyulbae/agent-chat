@@ -85,6 +85,22 @@ export function getUnreadJumpWrapStatusCueAriaLabel(wrapCue: string | null): str
   return null
 }
 
+export function getUnreadNavigationHintAriaLabel(
+  baseAriaLabel: string | undefined,
+  wrapCue: string | null,
+): string | undefined {
+  if (!baseAriaLabel) {
+    return baseAriaLabel
+  }
+
+  const wrapCueAriaLabel = getUnreadJumpWrapStatusCueAriaLabel(wrapCue)
+  if (!wrapCueAriaLabel) {
+    return baseAriaLabel
+  }
+
+  return `${baseAriaLabel} ${wrapCueAriaLabel}`
+}
+
 export function getBoundaryDirectionTooltip(direction: BoundaryDirection): string {
   return `Boundary direction: toward ${getBoundaryDirectionLabel(direction)}`
 }

@@ -12,7 +12,7 @@ import {
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
-  getUnreadJumpWrapStatusCueAriaLabel,
+  getUnreadNavigationHintAriaLabel,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
@@ -2226,12 +2226,7 @@ function App() {
       unreadNavigationClearShortcutChipPresentation,
     ])
 
-    const wrapCueAriaLabel = getUnreadJumpWrapStatusCueAriaLabel(unreadNavigationWrapCue)
-    if (!shortcutComposedAriaLabel || !wrapCueAriaLabel) {
-      return shortcutComposedAriaLabel
-    }
-
-    return `${shortcutComposedAriaLabel} ${wrapCueAriaLabel}`
+    return getUnreadNavigationHintAriaLabel(shortcutComposedAriaLabel, unreadNavigationWrapCue)
   }, [
     unreadNavigationClearShortcutChipPresentation,
     unreadNavigationHint,

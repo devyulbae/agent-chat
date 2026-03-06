@@ -19,6 +19,7 @@ import {
   getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
   getUnreadJumpWrapStatusCueAriaLabel,
+  getUnreadNavigationHintAriaLabel,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
@@ -141,6 +142,22 @@ describe('threadHintParsers', () => {
     it('returns null for empty or unrecognized cues', () => {
       expect(getUnreadJumpWrapStatusCueAriaLabel(null)).toBeNull()
       expect(getUnreadJumpWrapStatusCueAriaLabel('wrapped')).toBeNull()
+    })
+  })
+
+  describe('getUnreadNavigationHintAriaLabel', () => {
+    it('appends wrap cue aria copy to composed unread navigation aria labels', () => {
+      expect(
+        getUnreadNavigationHintAriaLabel('Unread threads: 3 • U/N next • P previous.', 'wrapped last→first'),
+      ).toBe(
+        'Unread threads: 3 • U/N next • P previous. Unread wrap cue: wrapped from last unread thread to first unread thread.',
+      )
+    })
+
+    it('returns base aria label when wrap cue is absent/unknown or base label is empty', () => {
+      expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', null)).toBe('Unread threads: 3.')
+      expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', 'wrapped')).toBe('Unread threads: 3.')
+      expect(getUnreadNavigationHintAriaLabel(undefined, 'wrapped first→last')).toBeUndefined()
     })
   })
 
