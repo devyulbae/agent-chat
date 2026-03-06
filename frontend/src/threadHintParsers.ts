@@ -223,7 +223,7 @@ export function getHintShortcutSource(hint: string | null): string | null {
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>
-    /^(?:(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+)+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|enter|g|j|k|u|y|c|r)$/i.test(
+    /^(?:(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+)+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|enter|g|j|k|u|n|p|y|c|r)$/i.test(
       segment,
     ),
   )
@@ -305,6 +305,8 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     j: 'J',
     k: 'K',
     u: 'U',
+    n: 'N',
+    p: 'P',
     y: 'Y',
     c: 'C',
     r: 'R',
@@ -387,6 +389,8 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     j: 'J',
     k: 'K',
     u: 'U',
+    n: 'N',
+    p: 'P',
     y: 'Y',
     c: 'C',
     r: 'R',

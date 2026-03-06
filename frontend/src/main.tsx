@@ -2024,23 +2024,35 @@ function App() {
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • Press U to jump • Shift+U to clear`
+      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • Shift+U clear`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
-  const jumpToNextUnread = useCallback(() => {
-    if (!unreadThreadIds.length) {
-      return
-    }
-    const currentIndex = unreadThreadIds.findIndex((threadId) => threadId === selectedThreadId)
-    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % unreadThreadIds.length : 0
-    const targetThreadId = unreadThreadIds[nextIndex]
-    selectThread(targetThreadId)
+  const jumpUnreadByStep = useCallback(
+    (step: 1 | -1, sourceKey: 'U' | 'N' | 'P') => {
+      if (!unreadThreadIds.length) {
+        return
+      }
+      const currentIndex = unreadThreadIds.findIndex((threadId) => threadId === selectedThreadId)
+      const fallbackIndex = step > 0 ? 0 : unreadThreadIds.length - 1
+      const nextIndex =
+        currentIndex >= 0
+          ? (currentIndex + step + unreadThreadIds.length) % unreadThreadIds.length
+          : fallbackIndex
+      const targetThreadId = unreadThreadIds[nextIndex]
+      selectThread(targetThreadId)
 
-    const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
-    setThreadBoundaryJumpHint(
-      `Jumped to next unread thread (U) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}.`
-    )
-  }, [unreadThreadIds, selectedThreadId, selectThread])
+      const directionLabel = step > 0 ? 'next' : 'previous'
+      const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
+      setThreadBoundaryJumpHint(
+        `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}.`
+      )
+    },
+    [unreadThreadIds, selectedThreadId, selectThread],
+  )
+
+  const jumpToNextUnread = useCallback(() => {
+    jumpUnreadByStep(1, 'U')
+  }, [jumpUnreadByStep])
 
   const moveVisibleThreadSelection = useCallback(
     (step: 1 | -1, sourceKey: 'J' | 'K' | 'ArrowDown' | 'ArrowUp') => {
@@ -2119,7 +2131,8 @@ function App() {
       if (event.shiftKey) {
         return
       }
-      if (event.key.toLowerCase() !== 'u') {
+      const key = event.key.toLowerCase()
+      if (key !== 'u' && key !== 'n' && key !== 'p') {
         return
       }
       if (isEditableElement(event.target)) {
@@ -2129,12 +2142,16 @@ function App() {
         return
       }
       event.preventDefault()
-      jumpToNextUnread()
+      if (key === 'p') {
+        jumpUnreadByStep(-1, 'P')
+        return
+      }
+      jumpUnreadByStep(1, key === 'n' ? 'N' : 'U')
     }
 
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [jumpToNextUnread, unreadThreadIds.length])
+  }, [jumpUnreadByStep, unreadThreadIds.length])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -2481,11 +2498,19 @@ function App() {
         </button>
         <button
           type="button"
+          onClick={() => jumpUnreadByStep(-1, 'P')}
+          disabled={unreadThreadIds.length === 0}
+          aria-keyshortcuts="P"
+        >
+          Prev unread
+        </button>
+        <button
+          type="button"
           onClick={jumpToNextUnread}
           disabled={unreadThreadIds.length === 0}
-          aria-keyshortcuts="U"
+          aria-keyshortcuts="U N"
         >
-          Jump to next unread
+          Next unread
         </button>
         <button
           type="button"

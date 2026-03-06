@@ -46,6 +46,8 @@ describe('threadHintParsers', () => {
         'Enter',
       )
       expect(getHintShortcutSource('Jumped to root thread (R) · Root · 1/9.')).toBe('R')
+      expect(getHintShortcutSource('Jumped to next unread thread (N) · t-9 · 1/3.')).toBe('N')
+      expect(getHintShortcutSource('Jumped to previous unread thread (P) · t-4 · 3/3.')).toBe('P')
     })
 
     it('normalizes no-op "confirmed" suffix to keep shortcut badges stable', () => {
@@ -340,6 +342,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('ArrowRight')).toBe('→')
       expect(getThreadShortcutBadge('Enter')).toBe('↵')
       expect(getThreadShortcutBadge('G')).toBe('G')
+      expect(getThreadShortcutBadge('N')).toBe('N')
+      expect(getThreadShortcutBadge('P')).toBe('P')
       expect(getThreadShortcutBadge('R')).toBe('R')
     })
 
@@ -388,6 +392,8 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('ArrowRight')).toBe('Arrow Right')
       expect(getThreadShortcutTooltip('Enter')).toBe('Enter')
       expect(getThreadShortcutTooltip('G')).toBe('G')
+      expect(getThreadShortcutTooltip('N')).toBe('N')
+      expect(getThreadShortcutTooltip('P')).toBe('P')
       expect(getThreadShortcutTooltip('R')).toBe('R')
     })
 
