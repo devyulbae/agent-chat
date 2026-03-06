@@ -111,6 +111,48 @@ function normalizeShortcutAlias(shortcut: string): string {
     return aliasMap[normalizedShortcut]
   }
 
+  const spaceSeparatedComboMatch = normalizedShortcut.match(
+    /^(?<modifiers>(?:(?:shift|ctrl|control|alt|option|opt|cmd|command|meta)\s+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
+  )
+  if (spaceSeparatedComboMatch?.groups) {
+    const spaceSeparatedKeyAlias = spaceSeparatedComboMatch.groups.key.toLowerCase()
+    const spaceSeparatedKeyAliasMap: Record<string, string> = {
+      pgup: 'PageUp',
+      pageup: 'PageUp',
+      pgdn: 'PageDown',
+      pagedown: 'PageDown',
+      arrowup: 'ArrowUp',
+      arrowdown: 'ArrowDown',
+      arrowleft: 'ArrowLeft',
+      arrowright: 'ArrowRight',
+      home: 'Home',
+      end: 'End',
+      enter: 'Enter',
+    }
+    const spaceSeparatedModifierAliasMap: Record<string, string> = {
+      ctrl: 'Ctrl',
+      control: 'Control',
+      alt: 'Alt',
+      option: 'Option',
+      opt: 'Option',
+      cmd: 'Cmd',
+      command: 'Command',
+      meta: 'Meta',
+      shift: 'Shift',
+    }
+
+    const spaceSeparatedKey = spaceSeparatedKeyAliasMap[spaceSeparatedKeyAlias]
+    const spaceSeparatedModifiers = spaceSeparatedComboMatch.groups.modifiers
+      .trim()
+      .split(/\s+/)
+      .map((modifier) => spaceSeparatedModifierAliasMap[modifier.toLowerCase()])
+      .filter((modifier): modifier is string => Boolean(modifier))
+
+    if (spaceSeparatedKey && spaceSeparatedModifiers.length > 0) {
+      return `${spaceSeparatedModifiers.join('+')}+${spaceSeparatedKey}`
+    }
+  }
+
   const compactComboMatch = normalizedShortcut.match(
     /^(?<modifier>shift|ctrl|control|alt|option|opt|cmd|command|meta)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
   )

@@ -179,8 +179,14 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+Up Arrow confirmed).')).toBe(
         'Shift+ArrowUp',
       )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift Up Arrow confirmed).')).toBe(
+        'Shift+ArrowUp',
+      )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+Up-Arrow confirmed).')).toBe(
         'Shift+ArrowUp',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (Cmd Shift Up Arrow confirmed).')).toBe(
+        'Cmd+Shift+ArrowUp',
       )
       expect(getHintShortcutSource('Recovered to last visible thread (⇧+↓ confirmed).')).toBe(
         'Shift+ArrowDown',
@@ -188,8 +194,14 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to last visible thread (Shift+Down Arrow confirmed).')).toBe(
         'Shift+ArrowDown',
       )
+      expect(getHintShortcutSource('Recovered to last visible thread (Shift Down Arrow confirmed).')).toBe(
+        'Shift+ArrowDown',
+      )
       expect(getHintShortcutSource('Recovered to last visible thread (Shift+Down-Arrow confirmed).')).toBe(
         'Shift+ArrowDown',
+      )
+      expect(getHintShortcutSource('Recovered to last visible thread (Option Shift Down Arrow confirmed).')).toBe(
+        'Option+Shift+ArrowDown',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (⌘+Up Arrow confirmed).')).toBe(
         'Cmd+ArrowUp',
