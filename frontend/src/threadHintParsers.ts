@@ -101,6 +101,23 @@ export function getUnreadNavigationHintAriaLabel(
   return `${baseAriaLabel} ${wrapCueAriaLabel}`
 }
 
+export function getUnreadBoundaryJumpStatusAriaLabel(
+  baseAriaLabel: string | undefined,
+  shortcutSource: string | null,
+  wrapCue: string | null,
+): string | undefined {
+  if (!baseAriaLabel) {
+    return baseAriaLabel
+  }
+
+  const isUnreadShortcut = shortcutSource === 'U' || shortcutSource === 'N' || shortcutSource === 'P'
+  if (!isUnreadShortcut) {
+    return baseAriaLabel
+  }
+
+  return getUnreadNavigationHintAriaLabel(baseAriaLabel, wrapCue)
+}
+
 export function getBoundaryDirectionTooltip(direction: BoundaryDirection): string {
   return `Boundary direction: toward ${getBoundaryDirectionLabel(direction)}`
 }

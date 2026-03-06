@@ -17,6 +17,7 @@ import {
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
+  getUnreadBoundaryJumpStatusAriaLabel,
   getUnreadJumpWrapStatusCue,
   getUnreadJumpWrapStatusCueAriaLabel,
   getUnreadNavigationHintAriaLabel,
@@ -165,6 +166,39 @@ describe('threadHintParsers', () => {
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', null)).toBe('Unread threads: 3.')
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', 'wrapped')).toBe('Unread threads: 3.')
       expect(getUnreadNavigationHintAriaLabel(undefined, 'wrapped first→last')).toBeUndefined()
+    })
+  })
+
+  describe('getUnreadBoundaryJumpStatusAriaLabel', () => {
+    it('appends wrap cue aria wording for U/N/P boundary status hints', () => {
+      expect(
+        getUnreadBoundaryJumpStatusAriaLabel(
+          'Jumped to next unread thread (N) · t-9 · 1/3.',
+          'N',
+          'wrapped last→first',
+        ),
+      ).toBe(
+        'Jumped to next unread thread (N) · t-9 · 1/3. Unread wrap cue: wrapped from last unread thread to first unread thread.',
+      )
+      expect(
+        getUnreadBoundaryJumpStatusAriaLabel(
+          'Jumped to previous unread thread (P) · t-2 · 3/3.',
+          'P',
+          'wrapped first→last',
+        ),
+      ).toBe(
+        'Jumped to previous unread thread (P) · t-2 · 3/3. Unread wrap cue: wrapped from first unread thread to last unread thread.',
+      )
+    })
+
+    it('returns original aria label for non-unread sources, empty labels, or empty cue', () => {
+      expect(
+        getUnreadBoundaryJumpStatusAriaLabel('Recovered to first visible thread (J) · Root · 1/9.', 'J', 'wrapped last→first'),
+      ).toBe('Recovered to first visible thread (J) · Root · 1/9.')
+      expect(
+        getUnreadBoundaryJumpStatusAriaLabel('Jumped to next unread thread (U) · Root · 1/3.', 'U', null),
+      ).toBe('Jumped to next unread thread (U) · Root · 1/3.')
+      expect(getUnreadBoundaryJumpStatusAriaLabel(undefined, 'U', 'wrapped last→first')).toBeUndefined()
     })
   })
 

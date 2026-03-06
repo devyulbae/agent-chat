@@ -11,6 +11,7 @@ import {
   getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
+  getUnreadBoundaryJumpStatusAriaLabel,
   getUnreadJumpWrapStatusCue,
   getUnreadNavigationHintAriaLabel,
   isThreadShortcutLegendDismissKey,
@@ -1695,18 +1696,24 @@ function App() {
     }
   }, [threadBoundaryJumpHint])
 
-  const boundaryJumpStatusAriaLabel = useMemo(
-    () =>
-      getStatusAriaLabelWithShortcutChips(threadBoundaryJumpHint, [
-        boundaryJumpShortcutChipPresentation,
-        boundaryJumpDirectionChipPresentation,
-      ]),
-    [
-      boundaryJumpDirectionChipPresentation,
+  const boundaryJumpStatusAriaLabel = useMemo(() => {
+    const composedAriaLabel = getStatusAriaLabelWithShortcutChips(threadBoundaryJumpHint, [
       boundaryJumpShortcutChipPresentation,
-      threadBoundaryJumpHint,
-    ],
-  )
+      boundaryJumpDirectionChipPresentation,
+    ])
+
+    return getUnreadBoundaryJumpStatusAriaLabel(
+      composedAriaLabel,
+      boundaryJumpSourceShortcut,
+      unreadNavigationWrapCue,
+    )
+  }, [
+    boundaryJumpDirectionChipPresentation,
+    boundaryJumpShortcutChipPresentation,
+    boundaryJumpSourceShortcut,
+    threadBoundaryJumpHint,
+    unreadNavigationWrapCue,
+  ])
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
