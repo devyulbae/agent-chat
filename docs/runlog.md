@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 06:11 KST — shortcut legend controlled-region a11y labeling (offset lane)
+- Scope: frontend integration accessibility polish so the shortcut legend toggle's controlled element exposes an explicit landmark label for assistive tech navigation.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `role="region"` and `aria-label="Thread keyboard shortcuts"` to the `id="thread-shortcut-legend"` block.
+    - Keeps existing `aria-controls="thread-shortcut-legend"` wiring but gives the controlled target a named region semantic.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `cbdc8d0` — `[fix] label thread shortcut legend as controlled a11y region`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 06:03 KST — shortcut legend aria-keyshortcuts active-state parity (boost lane)
 - Scope: chat thread UX wiring accessibility polish so the shortcut legend toggle button advertises only the currently actionable keyboard shortcut.
 - Change:
