@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 14:03 KST — Agent Chat implementation cycle
+- Delta: Added focused Shift+Home regression coverage for thread hint shortcut UX helper parity.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(Shift+Home confirmed)` hints to `Shift+Home`.
+  - Frontend tests: added explicit Shift+Home mapping expectations for both `getThreadShortcutBadge(...)` (`⇧Home`) and `getThreadShortcutTooltip(...)` (`Shift + Home`).
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Commit: `c322309` (pushed to `main`)
+- Next action: add focused parser regression coverage for `Shift+PgDn` alias normalization parity (`Shift+PageDown`) across source extraction + badge/tooltip helpers.
+
 ## 2026-03-06 13:51 KST — Agent Chat parallel offset cycle
 - Delta: Added explicit `Shift+End` parser-regression coverage to keep frontend shortcut chip mappings aligned with emitted boundary hint sources.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalization for `Shift+End confirmed` hint copy.
