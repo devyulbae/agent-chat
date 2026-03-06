@@ -31,10 +31,12 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
 function normalizeShortcutAlias(shortcut: string): string {
   const normalizedShortcut = shortcut
     .toLowerCase()
-    .replace(/^⇧\s*\+?/u, 'shift+')
-    .replace(/^⌃\s*\+?/u, 'ctrl+')
-    .replace(/^⌥\s*\+?/u, 'option+')
-    .replace(/^⌘\s*\+?/u, 'cmd+')
+    .replace(/⌘/gu, 'cmd+')
+    .replace(/⌥/gu, 'option+')
+    .replace(/⌃/gu, 'ctrl+')
+    .replace(/⇧/gu, 'shift+')
+    .replace(/\++/g, '+')
+    .replace(/^\+|\+$/g, '')
 
   const aliasMap: Record<string, string> = {
     pgup: 'PageUp',
@@ -48,21 +50,32 @@ function normalizeShortcutAlias(shortcut: string): string {
     return aliasMap[normalizedShortcut]
   }
 
-  const comboMatch = normalizedShortcut.match(/^(?<modifier>[a-z]+)\+(?<key>pgup|pgdn)$/i)
+  const comboMatch = normalizedShortcut.match(/^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn)$/i)
   if (!comboMatch?.groups) {
     return shortcut
   }
 
-  const modifier = comboMatch.groups.modifier
   const keyAlias = comboMatch.groups.key
   const normalizedKey = keyAlias === 'pgup' ? 'PageUp' : 'PageDown'
   const normalizedModifierAliasMap: Record<string, string> = {
+    ctrl: 'Ctrl',
+    control: 'Control',
+    alt: 'Alt',
+    option: 'Option',
     opt: 'Option',
     cmd: 'Cmd',
+    command: 'Command',
+    meta: 'Meta',
+    shift: 'Shift',
   }
-  const normalizedModifier =
-    normalizedModifierAliasMap[modifier] ?? modifier.charAt(0).toUpperCase() + modifier.slice(1)
-  return `${normalizedModifier}+${normalizedKey}`
+  const normalizedModifiers = comboMatch.groups.modifiers
+    .split('+')
+    .filter(Boolean)
+    .map((modifier) =>
+      normalizedModifierAliasMap[modifier] ?? modifier.charAt(0).toUpperCase() + modifier.slice(1),
+    )
+
+  return `${normalizedModifiers.join('+')}+${normalizedKey}`
 }
 
 export function getHintShortcutSource(hint: string | null): string | null {
@@ -89,7 +102,7 @@ export function getHintShortcutSource(hint: string | null): string | null {
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>
-    /^(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|enter|g|j|k|u|y|c|r)$/i.test(
+    /^(?:(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+)+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|enter|g|j|k|u|y|c|r)$/i.test(
       segment,
     ),
   )
@@ -118,10 +131,16 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'control+pagedown': 'Control+PgDn',
     'option+pageup': 'Option+PgUp',
     'option+pagedown': 'Option+PgDn',
+    'option+shift+pageup': 'Option+⇧PgUp',
+    'option+shift+pagedown': 'Option+⇧PgDn',
     'cmd+pageup': 'Cmd+PgUp',
     'cmd+pagedown': 'Cmd+PgDn',
+    'cmd+shift+pageup': 'Cmd+⇧PgUp',
+    'cmd+shift+pagedown': 'Cmd+⇧PgDn',
     'command+pageup': 'Command+PgUp',
     'command+pagedown': 'Command+PgDn',
+    'command+shift+pageup': 'Command+⇧PgUp',
+    'command+shift+pagedown': 'Command+⇧PgDn',
     'meta+pageup': 'Meta+PgUp',
     'meta+pagedown': 'Meta+PgDn',
     home: 'Home',
@@ -164,10 +183,16 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'control+pagedown': 'Control + PageDown',
     'option+pageup': 'Option + PageUp',
     'option+pagedown': 'Option + PageDown',
+    'option+shift+pageup': 'Option + Shift + PageUp',
+    'option+shift+pagedown': 'Option + Shift + PageDown',
     'cmd+pageup': 'Cmd + PageUp',
     'cmd+pagedown': 'Cmd + PageDown',
+    'cmd+shift+pageup': 'Cmd + Shift + PageUp',
+    'cmd+shift+pagedown': 'Cmd + Shift + PageDown',
     'command+pageup': 'Command + PageUp',
     'command+pagedown': 'Command + PageDown',
+    'command+shift+pageup': 'Command + Shift + PageUp',
+    'command+shift+pagedown': 'Command + Shift + PageDown',
     'meta+pageup': 'Meta + PageUp',
     'meta+pagedown': 'Meta + PageDown',
     home: 'Home',

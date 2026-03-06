@@ -137,6 +137,12 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to last visible thread (cmd+pgdn confirmed).')).toBe(
         'Cmd+PageDown',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (⌘⇧PgUp confirmed).')).toBe(
+        'Cmd+Shift+PageUp',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (⌥⇧PgDn confirmed).')).toBe(
+        'Option+Shift+PageDown',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
     })
@@ -173,8 +179,11 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Ctrl+PageUp')).toBe('Ctrl+PgUp')
       expect(getThreadShortcutBadge('Control+PageDown')).toBe('Control+PgDn')
       expect(getThreadShortcutBadge('Option+PageUp')).toBe('Option+PgUp')
+      expect(getThreadShortcutBadge('Option+Shift+PageDown')).toBe('Option+⇧PgDn')
       expect(getThreadShortcutBadge('Cmd+PageDown')).toBe('Cmd+PgDn')
+      expect(getThreadShortcutBadge('Cmd+Shift+PageUp')).toBe('Cmd+⇧PgUp')
       expect(getThreadShortcutBadge('Command+PageUp')).toBe('Command+PgUp')
+      expect(getThreadShortcutBadge('Command+Shift+PageDown')).toBe('Command+⇧PgDn')
       expect(getThreadShortcutBadge('Meta+PageDown')).toBe('Meta+PgDn')
       expect(getThreadShortcutBadge('Home')).toBe('Home')
       expect(getThreadShortcutBadge('End')).toBe('End')
@@ -204,8 +213,11 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Ctrl+PageUp')).toBe('Ctrl + PageUp')
       expect(getThreadShortcutTooltip('Control+PageDown')).toBe('Control + PageDown')
       expect(getThreadShortcutTooltip('Option+PageUp')).toBe('Option + PageUp')
+      expect(getThreadShortcutTooltip('Option+Shift+PageDown')).toBe('Option + Shift + PageDown')
       expect(getThreadShortcutTooltip('Cmd+PageDown')).toBe('Cmd + PageDown')
+      expect(getThreadShortcutTooltip('Cmd+Shift+PageUp')).toBe('Cmd + Shift + PageUp')
       expect(getThreadShortcutTooltip('Command+PageUp')).toBe('Command + PageUp')
+      expect(getThreadShortcutTooltip('Command+Shift+PageDown')).toBe('Command + Shift + PageDown')
       expect(getThreadShortcutTooltip('Meta+PageDown')).toBe('Meta + PageDown')
       expect(getThreadShortcutTooltip('PageDown')).toBe('PageDown')
       expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')
