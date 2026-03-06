@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-06 14:41 KST — Agent Chat implementation cycle
+- Delta: Added lowercase shift compact-alias regression coverage for thread hint shortcut source parsing.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(shift+pgup confirmed)` / `(shift+pgdn confirmed)` to canonical `Shift+PageUp` / `Shift+PageDown`.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add parser regression coverage for lowercase modifier aliases beyond shift (`ctrl+pgup` / `ctrl+pgdn`) so canonical modifier casing stays consistent across compact alias paths.
+
 ## 2026-03-06 14:31 KST — Agent Chat parallel offset cycle
 - Delta: Added lowercase compact alias regression coverage for thread hint shortcut source parsing.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(pgup confirmed)` and `(pgdn confirmed)` to canonical `PageUp` / `PageDown`.
