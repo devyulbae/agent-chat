@@ -4,6 +4,7 @@ import {
   getBoundaryDirectionBadge,
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
+  getBoundaryDirectionTooltip,
   getHintShortcutSource,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
@@ -2602,7 +2603,7 @@ function App() {
                 {boundaryJumpDirectionCue && (
                   <ShortcutChip
                     badge={getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
-                    title={`Boundary direction: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
+                    title={getBoundaryDirectionTooltip(boundaryJumpDirectionCue)}
                     ariaLabel={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
                     context="thread-jump"
                   />
