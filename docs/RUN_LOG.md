@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 14:12 KST — Agent Chat parallel offset cycle
+- Delta: Added focused alias-normalization regression coverage for `Shift+PgDn` so parser output stays canonical across compact boundary shortcut copy.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `Jumped to last visible thread (Shift+PgDn confirmed).` to `Shift+PageDown`.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `4f239ea` (pushed to `main`)
+- Next action: extend alias normalization coverage for non-shift compact forms (`PgUp`/`PgDn`) to keep single-key boundary-source parsing parity with shift-modified paths.
+
 ## 2026-03-06 14:03 KST — Agent Chat implementation cycle
 - Delta: Added focused Shift+Home regression coverage for thread hint shortcut UX helper parity.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(Shift+Home confirmed)` hints to `Shift+Home`.
