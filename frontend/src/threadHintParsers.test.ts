@@ -43,6 +43,20 @@ describe('threadHintParsers', () => {
       )
     })
 
+    it('handles nested and multiple parenthesized hint segments robustly', () => {
+      expect(
+        getHintShortcutSource(
+          'Recovered to first visible thread (boundary jump details) (Shift+PageUp confirmed).',
+        ),
+      ).toBe('Shift+PageUp')
+      expect(
+        getHintShortcutSource('Jumped to root thread (source: Shift+R confirmed) · Root.'),
+      ).toBe('Shift+R')
+      expect(
+        getHintShortcutSource('Jumped to root thread (source (Shift+Home confirmed)) · Root.'),
+      ).toBe('Shift+Home')
+    })
+
     it('returns null when shortcut source does not exist', () => {
       expect(getHintShortcutSource('Jumped to first visible thread.')).toBeNull()
       expect(getHintShortcutSource(null)).toBeNull()

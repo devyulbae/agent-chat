@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-06 11:12 KST — Agent Chat parallel offset cycle
+- Delta: Hardened thread hint shortcut-source parsing for nested/multi-parenthesis hint copy in frontend parser helpers.
+  - Updated `getHintShortcutSource(...)` in `frontend/src/threadHintParsers.ts` to scan all parenthesized segments, prefer shortcut-like segments, and normalize `confirmed` + `source:` prefixed forms.
+  - This keeps shortcut badge/source extraction stable when hint text contains extra context parentheses or nested source wrappers.
+  - Added focused regression tests in `frontend/src/threadHintParsers.test.ts` for:
+    - multiple parenthesized segments (`(details) (Shift+PageUp confirmed)`),
+    - prefixed source forms (`source: Shift+R confirmed`),
+    - nested parenthesis forms (`source (Shift+Home confirmed)`).
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 8 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: add parser regression coverage for non-shortcut parenthesized tokens that still include `+` symbols (e.g., non-keyboard copy) to verify shortcut detection remains intentionally scoped.
+
 ## 2026-03-06 10:41 KST — Agent Chat implementation cycle
 - Delta: Hardened boundary-direction hint parsing in `frontend/src/threadHintParsers.ts` to reduce brittle string-match drift in chat thread UX status cues.
   - Replaced strict substring checks (`" first visible thread"` / `" last visible thread"`) with normalized + word-boundary regex matching.

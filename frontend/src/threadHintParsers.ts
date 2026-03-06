@@ -28,10 +28,17 @@ export function getHintShortcutSource(hint: string | null): string | null {
     return null
   }
 
-  const extracted = hint.match(/\(([^)]+)\)/)?.[1]?.trim()
-  if (!extracted) {
+  const parenthesizedSegments = [...hint.matchAll(/\(([^()]*)\)/g)]
+    .map((match) => match[1]?.trim())
+    .filter((segment): segment is string => Boolean(segment))
+
+  if (parenthesizedSegments.length === 0) {
     return null
   }
 
-  return extracted.replace(/\s+confirmed$/i, '')
+  const shortcutLikeSegment =
+    parenthesizedSegments.find((segment) => /(?:^|\s|:)\w+\+\w+/i.test(segment)) ??
+    parenthesizedSegments[0]
+
+  return shortcutLikeSegment.replace(/^.*?:\s*/u, '').replace(/\s+confirmed$/i, '').trim()
 }
