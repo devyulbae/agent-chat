@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-06 23:11 KST — dotted Pg.Up/Pg.Dn alias normalization for helper hint drift (offset lane)
+- Scope: frontend integration + parser contract sync follow-up to keep helper-row shortcut chips canonical when copy drifts to dotted Pg. key variants.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Expanded `normalizeShortcutAlias(...)` Pg aliases to accept dotted forms (`Pg. Up`, `Pg. Dn`, `Shift+Pg. Up`, `Shift+Pg. Dn`) by broadening `pg` token normalization regex.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for dotted Pg variants across modified and unmodified shortcuts (`Pg. Up`, `Pg. Dn`, `Shift+Pg. Up`, `Shift+Pg. Dn`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-06 23:04 KST — thread filter helper hint chip wiring (boost lane)
 - Scope: chat thread UX wiring parity so thread-filter helper row shares shortcut chip affordance with status lanes.
 - Change:
