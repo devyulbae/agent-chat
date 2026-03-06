@@ -59,6 +59,8 @@ describe('threadHintParsers', () => {
 
     it('returns null when shortcut source does not exist', () => {
       expect(getHintShortcutSource('Jumped to first visible thread.')).toBeNull()
+      expect(getHintShortcutSource('Jumped to first visible thread (C++ parser note).')).toBeNull()
+      expect(getHintShortcutSource('Jumped to root thread (source: token+audit marker).')).toBeNull()
       expect(getHintShortcutSource(null)).toBeNull()
     })
   })

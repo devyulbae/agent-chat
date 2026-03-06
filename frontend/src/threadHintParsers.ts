@@ -36,9 +36,13 @@ export function getHintShortcutSource(hint: string | null): string | null {
     return null
   }
 
-  const shortcutLikeSegment =
-    parenthesizedSegments.find((segment) => /(?:^|\s|:)\w+\+\w+/i.test(segment)) ??
-    parenthesizedSegments[0]
+  const normalizedSegments = parenthesizedSegments.map((segment) =>
+    segment.replace(/^.*?:\s*/u, '').replace(/\s+confirmed$/i, '').trim(),
+  )
 
-  return shortcutLikeSegment.replace(/^.*?:\s*/u, '').replace(/\s+confirmed$/i, '').trim()
+  const shortcutLikeSegment = normalizedSegments.find((segment) =>
+    /\b(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*/i.test(segment),
+  )
+
+  return shortcutLikeSegment ?? null
 }
