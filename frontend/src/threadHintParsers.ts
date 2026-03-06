@@ -91,8 +91,11 @@ function normalizeShortcutAlias(shortcut: string): string {
     pgdn: 'PageDown',
     pageup: 'PageUp',
     pagedown: 'PageDown',
+    arrowup: 'ArrowUp',
+    arrowdown: 'ArrowDown',
     '↑': 'ArrowUp',
     '↓': 'ArrowDown',
+    enter: 'Enter',
     '↵': 'Enter',
   }
 

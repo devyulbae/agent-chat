@@ -190,6 +190,8 @@ describe('threadHintParsers', () => {
         'Shift+ArrowDown',
       )
       expect(getHintShortcutSource('Moved to next visible thread (↓).')).toBe('ArrowDown')
+      expect(getHintShortcutSource('Moved to next visible thread (Arrow Up).')).toBe('ArrowUp')
+      expect(getHintShortcutSource('Moved to previous visible thread (Arrow-Down).')).toBe('ArrowDown')
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
     })
 
