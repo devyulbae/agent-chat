@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 14:50 KST — Agent Chat parallel offset cycle
+- Delta: Added lowercase Ctrl/Control compact-alias regression coverage for thread hint shortcut source parsing.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(ctrl+pgup confirmed)` to `Ctrl+PageUp` and `(control+pgdn confirmed)` to `Control+PageDown`.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: extend shortcut badge/tooltip mapping coverage for Ctrl/Control variants if product UX decides non-shift modifiers should render visible chips.
+
 ## 2026-03-06 14:41 KST — Agent Chat implementation cycle
 - Delta: Added lowercase shift compact-alias regression coverage for thread hint shortcut source parsing.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(shift+pgup confirmed)` / `(shift+pgdn confirmed)` to canonical `Shift+PageUp` / `Shift+PageDown`.
