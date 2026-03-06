@@ -1641,43 +1641,43 @@ function App() {
         ? `${boundaryJumpSourceShortcut} keeps active filters while jumping to boundary.`
         : null
 
-    const shiftPageDirectionHelp =
-      boundaryJumpSourceShortcut === 'Shift+PageUp'
+    const boundaryDirectionHelp =
+      threadBoundaryJumpHint.includes(' first visible thread')
         ? 'Direction: toward first visible.'
-        : boundaryJumpSourceShortcut === 'Shift+PageDown'
+        : threadBoundaryJumpHint.includes(' last visible thread')
           ? 'Direction: toward last visible.'
           : null
 
-    const shiftPageHelpSuffix = [sourceShortcutHelp, shiftPageDirectionHelp].filter(Boolean).join(' ')
+    const boundaryJumpHelpSuffix = [sourceShortcutHelp, boundaryDirectionHelp].filter(Boolean).join(' ')
 
     if (threadBoundaryJumpHint.startsWith('Recovered to first visible thread')) {
       return `Recovered = hidden selection was restored to the first visible result.${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     if (threadBoundaryJumpHint.startsWith('Recovered to last visible thread')) {
       return `Recovered = hidden selection was restored to the last visible result.${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     if (threadBoundaryJumpHint.startsWith('Already at first visible thread')) {
       return `Already at first = no-op confirmation (selection did not move).${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     if (threadBoundaryJumpHint.startsWith('Already at last visible thread')) {
       return `Already at last = no-op confirmation (selection did not move).${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     if (threadBoundaryJumpHint.startsWith('Jumped to first visible thread')) {
       return `Jumped to first = normal boundary jump to the first visible result.${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     if (threadBoundaryJumpHint.startsWith('Jumped to last visible thread')) {
       return `Jumped to last = normal boundary jump to the last visible result.${
-        shiftPageHelpSuffix ? ` ${shiftPageHelpSuffix}` : ''
+        boundaryJumpHelpSuffix ? ` ${boundaryJumpHelpSuffix}` : ''
       }`
     }
     return null

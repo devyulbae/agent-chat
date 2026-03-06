@@ -1485,3 +1485,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add a short direction-aware microcopy suffix in the boundary hint helper (e.g., “toward first/last visible”) to match the new `⇧PgUp`/`⇧PgDn` badge clarity.
+
+## 2026-03-06 09:05 KST — Agent Chat implementation cycle
+- Delta: Added direction-aware boundary helper microcopy so first/last intent is always explicit in jump explainers.
+  - Frontend: updated `firstVisibleJumpHintHelp` in `frontend/src/main.tsx` to derive boundary direction from boundary hint text (`first visible thread` / `last visible thread`).
+  - UI: helper suffix now consistently appends `Direction: toward first visible.` or `Direction: toward last visible.` across recovered/already/jumped boundary states, while preserving Shift+Page filter-preserving guidance.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add compact direction cue text directly on boundary status line (outside helper) so users can see first/last intent even when helper copy is collapsed.
