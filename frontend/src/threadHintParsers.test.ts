@@ -272,6 +272,35 @@ describe('threadHintParsers', () => {
     })
   })
 
+  describe('unread wrap cue live-region composition', () => {
+    it('narrates wrap cue exactly once across boundary + unread navigation aria paths', () => {
+      const wrapCue = 'wrapped last→first'
+      const boundaryAria = getUnreadBoundaryJumpStatusAriaLabel(
+        'Jumped to next unread thread (N) · t-9 · 1/3.',
+        'N',
+        wrapCue,
+      )
+      const unreadNavigationWrapCue = getUnreadNavigationWrapCueForAria(
+        wrapCue,
+        null,
+        'N',
+        boundaryAria,
+      )
+      const unreadNavigationAria = getUnreadNavigationHintAriaLabel(
+        'Unread threads: 3 • U/N next • P previous.',
+        unreadNavigationWrapCue,
+      )
+
+      const wrapNarrationCount = [boundaryAria, unreadNavigationAria].reduce((count, label) => {
+        return count + (label?.match(/Unread wrap cue:/g)?.length ?? 0)
+      }, 0)
+
+      expect(wrapNarrationCount).toBe(1)
+      expect(boundaryAria).toContain('Unread wrap cue: wrapped from last unread thread to first unread thread.')
+      expect(unreadNavigationAria).toBe('Unread threads: 3 • U/N next • P previous.')
+    })
+  })
+
   describe('getHintShortcutSource', () => {
     it('extracts first parenthesized shortcut token', () => {
       expect(getHintShortcutSource('Jumped to first visible thread (Shift+PageUp).')).toBe(

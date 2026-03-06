@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 08:33 KST — unread wrap live-region single-narration regression coverage (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock unread wrap narration dedupe across boundary and unread-navigation live status regions.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused composition regression that simulates one unread wrap transition (`N` + `wrapped last→first`) across:
+      - boundary status aria (`getUnreadBoundaryJumpStatusAriaLabel`)
+      - unread navigation wrap suppression (`getUnreadNavigationWrapCueForAria`)
+      - unread navigation aria composition (`getUnreadNavigationHintAriaLabel`)
+    - Asserts wrap narration appears exactly once across both live-region aria outputs.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (67/67)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 08:24 KST — unread wrap cue aria suppression fallback via boundary status aria (boost lane)
 - Scope: chat thread UX wiring accessibility dedupe guard so unread navigation live region avoids repeating wrap narration when boundary status aria already carries it.
 - Change:
