@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-06 23:04 KST — thread filter helper hint chip wiring (boost lane)
+- Scope: chat thread UX wiring parity so thread-filter helper row shares shortcut chip affordance with status lanes.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `threadFilterHintShortcutChipPresentations` memo to build parser-backed chip props for helper-row shortcuts (`Enter`, `Shift+Enter`, `J`, `K`, `Home`, `End`, `G`, `Shift+G`, `Shift+PageUp`, `Shift+PageDown`, `Y`).
+    - Rendered helper-row shortcut chips inline in `thread-filter-hint` before explanatory text via `renderShortcutChipPresentation(...)`.
+    - Kept non-chip shortcuts (`/`, `Esc`, `Shift+Esc`) as text guidance.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `bbb3d1f` — `[feat] add shortcut chips to thread filter helper hint`
+  - Push: `main -> origin/main` ✅
+- Next action: add source-based chip coverage for helper-row non-letter navigation aliases (e.g., explicit `PgUp/PgDn` wording variants) so helper chips stay canonical if helper copy wording drifts.
+
 ## 2026-03-06 22:43 KST — status chip wiring switched to parsed source path (boost lane)
 - Scope: chat thread UX wiring cleanup to converge status chip derivation on source-based helper path.
 - Change:
