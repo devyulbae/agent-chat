@@ -229,6 +229,13 @@ function getBoundaryDirectionFromHint(hint: string | null): 'first' | 'last' | n
   return null
 }
 
+function getHintShortcutSource(hint: string | null): string | null {
+  if (!hint) {
+    return null
+  }
+  return hint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
+}
+
 function App() {
   const [graph, setGraph] = useState<OrganizationsGraph | null>(null)
   const [loading, setLoading] = useState(true)
@@ -1588,12 +1595,10 @@ function App() {
     ? 'Hidden selection recovery: J/K or ↑/↓ → first/last visible.'
     : null
 
-  const boundaryJumpSourceShortcut = useMemo(() => {
-    if (!threadBoundaryJumpHint) {
-      return null
-    }
-    return threadBoundaryJumpHint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
-  }, [threadBoundaryJumpHint])
+  const boundaryJumpSourceShortcut = useMemo(
+    () => getHintShortcutSource(threadBoundaryJumpHint),
+    [threadBoundaryJumpHint]
+  )
 
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
@@ -1623,12 +1628,7 @@ function App() {
     return [threadBoundaryJumpHint, directionCueText].filter(Boolean).join(' ')
   }, [boundaryJumpDirectionCue, threadBoundaryJumpHint])
 
-  const rootJumpSourceShortcut = useMemo(() => {
-    if (!threadRootJumpHint) {
-      return null
-    }
-    return threadRootJumpHint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
-  }, [threadRootJumpHint])
+  const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
   const rootJumpShiftShortcutBadge =
     rootJumpSourceShortcut === 'Shift+Home'

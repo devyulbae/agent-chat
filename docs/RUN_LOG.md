@@ -1550,3 +1550,12 @@
   - `cd frontend && npx vite build` ✅
 - Commit: pending
 - Next action: extract boundary-direction parsing into a tiny pure helper for future unit-level regression coverage.
+
+## 2026-03-06 10:13 KST — Agent Chat parallel offset cycle
+- Delta: Extracted reusable hint shortcut parser helper to reduce duplicate frontend parsing logic.
+  - Frontend: added `getHintShortcutSource(...)` in `frontend/src/main.tsx` and reused it for both boundary jump hint and root jump hint shortcut-source derivation.
+  - Scope: frontend integration refactor only; API contract unchanged.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: pending
+- Next action: add a minimal unit-testable helper module for boundary/source hint parsing so regression coverage can be added without spinning up full component tests.
