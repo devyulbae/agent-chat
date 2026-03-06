@@ -82,3 +82,33 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
 
   return badgeByShortcut[normalizedShortcut] ?? null
 }
+
+export function getThreadShortcutTooltip(shortcut: string | null): string | null {
+  if (!shortcut) {
+    return null
+  }
+
+  const normalizedShortcut = shortcut.toLowerCase()
+  const tooltipByShortcut: Record<string, string> = {
+    'shift+home': 'Shift + Home',
+    'shift+end': 'Shift + End',
+    'shift+pageup': 'Shift + PageUp',
+    'shift+pagedown': 'Shift + PageDown',
+    'shift+g': 'Shift + G',
+    'shift+r': 'Shift + R',
+    home: 'Home',
+    end: 'End',
+    pageup: 'PageUp',
+    pagedown: 'PageDown',
+    arrowup: 'Arrow Up',
+    arrowdown: 'Arrow Down',
+    g: 'G',
+    j: 'J',
+    k: 'K',
+    u: 'U',
+    y: 'Y',
+    c: 'C',
+  }
+
+  return tooltipByShortcut[normalizedShortcut] ?? null
+}

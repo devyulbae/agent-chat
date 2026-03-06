@@ -6,6 +6,7 @@ import {
   getBoundaryDirectionLabel,
   getHintShortcutSource,
   getThreadShortcutBadge,
+  getThreadShortcutTooltip,
 } from './threadHintParsers'
 
 type OrgType = 'freeform' | 'department' | 'squad'
@@ -1595,6 +1596,11 @@ function App() {
     [boundaryJumpSourceShortcut],
   )
 
+  const boundaryJumpSourceShortcutTooltip = useMemo(
+    () => getThreadShortcutTooltip(boundaryJumpSourceShortcut),
+    [boundaryJumpSourceShortcut],
+  )
+
   const boundaryJumpDirectionCue = useMemo(
     () => getBoundaryDirectionFromHint(threadBoundaryJumpHint),
     [threadBoundaryJumpHint]
@@ -1614,6 +1620,11 @@ function App() {
 
   const rootJumpShiftShortcutBadge = useMemo(
     () => getThreadShortcutBadge(rootJumpSourceShortcut),
+    [rootJumpSourceShortcut],
+  )
+
+  const rootJumpSourceShortcutTooltip = useMemo(
+    () => getThreadShortcutTooltip(rootJumpSourceShortcut),
     [rootJumpSourceShortcut],
   )
 
@@ -2469,7 +2480,7 @@ function App() {
               >
                 {rootJumpShiftShortcutBadge && (
                   <span
-                    title={`${rootJumpSourceShortcut} root jump`}
+                    title={`${rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut} root jump`}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
@@ -2500,7 +2511,7 @@ function App() {
               >
                 {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && (
                   <span
-                    title={`${boundaryJumpSourceShortcut} boundary jump`}
+                    title={`${boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut} boundary jump`}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,

@@ -6,6 +6,7 @@ import {
   getBoundaryDirectionLabel,
   getHintShortcutSource,
   getThreadShortcutBadge,
+  getThreadShortcutTooltip,
 } from './threadHintParsers'
 
 describe('threadHintParsers', () => {
@@ -98,6 +99,21 @@ describe('threadHintParsers', () => {
     it('returns null for unknown or empty shortcut source', () => {
       expect(getThreadShortcutBadge('Shift+Unknown')).toBeNull()
       expect(getThreadShortcutBadge(null)).toBeNull()
+    })
+  })
+
+  describe('getThreadShortcutTooltip', () => {
+    it('maps shortcuts to human-readable tooltip labels', () => {
+      expect(getThreadShortcutTooltip('Shift+PageUp')).toBe('Shift + PageUp')
+      expect(getThreadShortcutTooltip('Shift+R')).toBe('Shift + R')
+      expect(getThreadShortcutTooltip('PageDown')).toBe('PageDown')
+      expect(getThreadShortcutTooltip('ArrowUp')).toBe('Arrow Up')
+      expect(getThreadShortcutTooltip('G')).toBe('G')
+    })
+
+    it('returns null for unknown or empty shortcut source', () => {
+      expect(getThreadShortcutTooltip('Shift+Unknown')).toBeNull()
+      expect(getThreadShortcutTooltip(null)).toBeNull()
     })
   })
 })
