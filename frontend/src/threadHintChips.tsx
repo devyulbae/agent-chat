@@ -86,11 +86,22 @@ export function getStatusAriaLabelWithShortcutChips(
     return undefined
   }
 
-  const chipAriaLabels = presentations
+  const chipAriaLabels: string[] = []
+  const seenAriaLabels = new Set<string>()
+
+  presentations
     .filter((presentation): presentation is ShortcutChipProps => Boolean(presentation))
     .map((presentation) => normalizeAriaLabelText(presentation.ariaLabel))
     .filter((ariaLabel) => Boolean(ariaLabel))
-    .filter((ariaLabel, index, labels) => labels.indexOf(ariaLabel) === index)
+    .forEach((ariaLabel) => {
+      const dedupeKey = ariaLabel.toLowerCase()
+      if (seenAriaLabels.has(dedupeKey)) {
+        return
+      }
+
+      seenAriaLabels.add(dedupeKey)
+      chipAriaLabels.push(ariaLabel)
+    })
 
   if (!chipAriaLabels.length) {
     return hint
