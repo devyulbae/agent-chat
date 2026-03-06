@@ -1586,7 +1586,7 @@ function App() {
     ? 'Selection hidden by current filters → use “Jump to first visible”.'
     : null
   const selectedVisibleThreadShortcutRecoveryHint = selectedVisibleThreadHiddenByFilter
-    ? 'Tip: J/K or ↑/↓ will also recover to first/last visible thread.'
+    ? 'Tip: J/K/↑/↓ will also recover to first/last visible thread.'
     : null
   const selectedVisibleThreadInlineRecoveryHint = selectedVisibleThreadHiddenByFilter
     ? 'Hidden selection recovery: J/K or ↑/↓ → first/last visible.'
@@ -1618,15 +1618,11 @@ function App() {
   )
   const selectedVisibleThreadShortcutRecoveryStatusAriaLabel = useMemo(
     () =>
-      getStatusAriaLabelWithShortcutChips(selectedVisibleThreadShortcutRecoveryHint, [
-        selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
-        selectedVisibleThreadLastRecoveryShortcutChipPresentation,
-      ]),
-    [
-      selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
-      selectedVisibleThreadLastRecoveryShortcutChipPresentation,
-      selectedVisibleThreadShortcutRecoveryHint,
-    ],
+      getStatusAriaLabelWithShortcutChips(
+        selectedVisibleThreadShortcutRecoveryHint,
+        selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+      ),
+    [selectedVisibleThreadInlineRecoveryShortcutChipPresentations, selectedVisibleThreadShortcutRecoveryHint],
   )
 
   const boundaryJumpSourceShortcut = useMemo(
@@ -2688,8 +2684,9 @@ function App() {
                     aria-label={selectedVisibleThreadShortcutRecoveryStatusAriaLabel}
                     style={{ color: '#666' }}
                   >
-                    {renderShortcutChipPresentation(selectedVisibleThreadFirstRecoveryShortcutChipPresentation)}
-                    {renderShortcutChipPresentation(selectedVisibleThreadLastRecoveryShortcutChipPresentation)}
+                    {selectedVisibleThreadInlineRecoveryShortcutChipPresentations.map((chip) =>
+                      renderShortcutChipPresentation(chip),
+                    )}
                     {selectedVisibleThreadShortcutRecoveryHint}
                   </small>
                 )}

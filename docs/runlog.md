@@ -479,3 +479,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
 ### Next fix action
 - Use repo-relative path from frontend cwd:
   - `npm test -- --run src/threadHintParsers.test.ts`
+
+## 2026-03-07 01:23 KST — hidden-selection shortcut recovery hint chip parity (boost lane)
+- Scope: chat thread UX wiring polish for hidden-selection recovery accessibility copy/chips.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated hidden-selection shortcut helper copy to include arrow keys (`J/K/↑/↓`) for parity with supported recovery controls.
+    - Reused shared inline recovery chip list for shortcut recovery aria-label composition so J/K + Arrow chips are announced consistently.
+    - Rendered the same shared chip list in the shortcut recovery status row to avoid J/K-only visual drift.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression coverage asserting deterministic aria-label ordering for hidden-selection recovery chip sets (`J`, `K`, `↑`, `↓`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (17/17)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `4d363b7` — `[fix] align hidden-selection recovery hint chips with arrow keys`
+  - Push: `main -> origin/main` ✅
+- Next action: wire boundary direction chip cues into hidden-selection recovery statuses so first/last recovery messaging includes explicit direction semantics (`↖ first` / `↘ last`) alongside shortcut chips.
