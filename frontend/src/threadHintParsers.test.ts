@@ -34,6 +34,15 @@ describe('threadHintParsers', () => {
       )
     })
 
+    it('normalizes no-op "confirmed" suffix to keep shortcut badges stable', () => {
+      expect(getHintShortcutSource('Already at root thread (Shift+R confirmed) · Root.')).toBe(
+        'Shift+R',
+      )
+      expect(getHintShortcutSource('Already at first visible thread (Shift+PageUp confirmed).')).toBe(
+        'Shift+PageUp',
+      )
+    })
+
     it('returns null when shortcut source does not exist', () => {
       expect(getHintShortcutSource('Jumped to first visible thread.')).toBeNull()
       expect(getHintShortcutSource(null)).toBeNull()

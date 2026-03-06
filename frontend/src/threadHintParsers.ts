@@ -27,5 +27,11 @@ export function getHintShortcutSource(hint: string | null): string | null {
   if (!hint) {
     return null
   }
-  return hint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
+
+  const extracted = hint.match(/\(([^)]+)\)/)?.[1]?.trim()
+  if (!extracted) {
+    return null
+  }
+
+  return extracted.replace(/\s+confirmed$/i, '')
 }
