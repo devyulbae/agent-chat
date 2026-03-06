@@ -107,19 +107,31 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to first visible thread (⌃+PgUp confirmed).')).toBe(
         'Ctrl+PageUp',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (⌃PgUp confirmed).')).toBe(
+        'Ctrl+PageUp',
+      )
       expect(getHintShortcutSource('Jumped to last visible thread (control+pgdn confirmed).')).toBe(
         'Control+PageDown',
       )
       expect(getHintShortcutSource('Jumped to last visible thread (⇧+PgDn confirmed).')).toBe(
         'Shift+PageDown',
       )
+      expect(getHintShortcutSource('Jumped to last visible thread (⇧PgDn confirmed).')).toBe(
+        'Shift+PageDown',
+      )
       expect(getHintShortcutSource('Jumped to first visible thread (⌥+PgUp confirmed).')).toBe(
+        'Option+PageUp',
+      )
+      expect(getHintShortcutSource('Jumped to first visible thread (⌥PgUp confirmed).')).toBe(
         'Option+PageUp',
       )
       expect(getHintShortcutSource('Jumped to first visible thread (opt+pgup confirmed).')).toBe(
         'Option+PageUp',
       )
       expect(getHintShortcutSource('Jumped to last visible thread (⌘+PgDn confirmed).')).toBe(
+        'Cmd+PageDown',
+      )
+      expect(getHintShortcutSource('Jumped to last visible thread (⌘PgDn confirmed).')).toBe(
         'Cmd+PageDown',
       )
       expect(getHintShortcutSource('Jumped to last visible thread (cmd+pgdn confirmed).')).toBe(

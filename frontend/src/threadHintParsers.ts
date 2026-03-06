@@ -31,10 +31,10 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
 function normalizeShortcutAlias(shortcut: string): string {
   const normalizedShortcut = shortcut
     .toLowerCase()
-    .replace(/^⇧\s*\+/u, 'shift+')
-    .replace(/^⌃\s*\+/u, 'ctrl+')
-    .replace(/^⌥\s*\+/u, 'option+')
-    .replace(/^⌘\s*\+/u, 'cmd+')
+    .replace(/^⇧\s*\+?/u, 'shift+')
+    .replace(/^⌃\s*\+?/u, 'ctrl+')
+    .replace(/^⌥\s*\+?/u, 'option+')
+    .replace(/^⌘\s*\+?/u, 'cmd+')
 
   const aliasMap: Record<string, string> = {
     pgup: 'PageUp',
