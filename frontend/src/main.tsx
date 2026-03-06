@@ -86,6 +86,11 @@ type ShortcutChipProps = {
   context: ShortcutChipContext
 }
 
+type ShortcutChipCopy = {
+  title: string
+  ariaLabel: string
+}
+
 function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
   return (
     <span
@@ -99,6 +104,18 @@ function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): 
       {badge}
     </span>
   )
+}
+
+function renderShortcutChip(
+  badge: string | null,
+  copy: ShortcutChipCopy | null,
+  context: ShortcutChipContext,
+): React.JSX.Element | null {
+  if (!badge || !copy) {
+    return null
+  }
+
+  return <ShortcutChip badge={badge} title={copy.title} ariaLabel={copy.ariaLabel} context={context} />
 }
 
 function buildWebSocketChannelUrl(channelId: string): string {
@@ -2580,14 +2597,7 @@ function App() {
                 }
                 style={{ color: '#1f4b99' }}
               >
-                {rootJumpShiftShortcutBadge && rootJumpShortcutChipCopy && (
-                  <ShortcutChip
-                    badge={rootJumpShiftShortcutBadge}
-                    title={rootJumpShortcutChipCopy.title}
-                    ariaLabel={rootJumpShortcutChipCopy.ariaLabel}
-                    context="thread-jump"
-                  />
-                )}
+                {renderShortcutChip(rootJumpShiftShortcutBadge, rootJumpShortcutChipCopy, 'thread-jump')}
                 {threadRootJumpHint}
               </small>
             )}
@@ -2603,14 +2613,7 @@ function App() {
                 aria-label={boundaryJumpStatusAriaLabel}
                 style={{ color: '#1f4b99' }}
               >
-                {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && boundaryJumpShortcutChipCopy && (
-                  <ShortcutChip
-                    badge={boundaryJumpSourceShortcutBadge}
-                    title={boundaryJumpShortcutChipCopy.title}
-                    ariaLabel={boundaryJumpShortcutChipCopy.ariaLabel}
-                    context="thread-jump"
-                  />
-                )}
+                {renderShortcutChip(boundaryJumpSourceShortcutBadge, boundaryJumpShortcutChipCopy, 'thread-jump')}
                 {boundaryJumpDirectionCue && (
                   <ShortcutChip
                     badge={getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
@@ -2635,14 +2638,7 @@ function App() {
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && (
               <small style={{ color: '#666' }}>
-                {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && filterJumpShortcutChipCopy && (
-                  <ShortcutChip
-                    badge={threadFilterJumpSourceShortcutBadge}
-                    title={filterJumpShortcutChipCopy.title}
-                    ariaLabel={filterJumpShortcutChipCopy.ariaLabel}
-                    context="filter-jump"
-                  />
-                )}
+                {renderShortcutChip(threadFilterJumpSourceShortcutBadge, filterJumpShortcutChipCopy, 'filter-jump')}
                 {threadFilterJumpHint}
               </small>
             )}

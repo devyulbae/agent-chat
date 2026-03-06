@@ -1971,3 +1971,14 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: extract a tiny shared helper for shortcut chip style props/title wiring so root/boundary/filter chip render blocks in `main.tsx` avoid duplicated inline composition logic.
+
+## 2026-03-06 16:51 KST — Agent Chat parallel offset cycle
+- Delta: Extracted shared shortcut-chip rendering helper in thread controls so root/boundary/filter hint rails reuse the same badge/title/aria wiring path.
+  - Frontend: added `renderShortcutChip(...)` helper + `ShortcutChipCopy` type in `frontend/src/main.tsx`.
+  - Frontend: replaced duplicated `<ShortcutChip ... />` render blocks for root jump, boundary jump source, and filter jump hints with helper calls.
+  - Scope: frontend integration cleanup only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test` ✅ (16 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: extract boundary-direction chip composition (badge/title/aria) into a tiny helper to fully remove residual chip wiring duplication in `main.tsx`.
