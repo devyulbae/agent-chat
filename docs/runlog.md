@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 07:02 KST — shortcut legend click-toggle live status parity (boost lane)
+- Scope: chat thread UX wiring parity so pointer-triggered shortcut legend toggles emit the same transient live status hint already used by keyboard toggles.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated the Show/Hide shortcuts button `onClick` handler to set `threadShortcutLegendToggleHint` via `getThreadShortcutLegendToggleStatusHint(nextVisibility)` while toggling legend visibility.
+    - Keeps keyboard and pointer interactions aligned for assistive status feedback.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (57/57)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a focused frontend test to lock click-toggle live status rendering (shown/hidden) so this parity behavior is regression-proof.
+
 ## 2026-03-07 06:32 KST — keyboard legend toggle live status hint (offset lane)
 - Scope: frontend integration + accessibility feedback parity so keyboard-driven shortcut legend visibility changes announce a concise live status cue.
 - Change:

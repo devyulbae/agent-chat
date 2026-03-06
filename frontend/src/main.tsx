@@ -2817,7 +2817,13 @@ function App() {
             </button>
             <button
               type="button"
-              onClick={() => setShowThreadShortcutLegend((current) => !current)}
+              onClick={() =>
+                setShowThreadShortcutLegend((current) => {
+                  const nextVisibility = !current
+                  setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(nextVisibility))
+                  return nextVisibility
+                })
+              }
               title={
                 showThreadShortcutLegend
                   ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
