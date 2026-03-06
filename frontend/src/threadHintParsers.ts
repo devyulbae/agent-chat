@@ -1,6 +1,7 @@
 export type BoundaryDirection = 'first' | 'last'
 export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump' | 'thread copy'
 export type ThreadFilterResetSource = 'input'
+export type UnreadJumpStep = 1 | -1
 
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
@@ -20,6 +21,26 @@ export function getBoundaryDirectionBadge(direction: BoundaryDirection): string 
 
 export function getBoundaryDirectionStatusCue(direction: BoundaryDirection): string {
   return `direction ${getBoundaryDirectionBadge(direction)}`
+}
+
+export function getUnreadJumpWrapStatusCue(
+  step: UnreadJumpStep,
+  currentIndex: number,
+  nextIndex: number,
+): string | null {
+  if (currentIndex < 0) {
+    return null
+  }
+
+  if (step > 0 && nextIndex < currentIndex) {
+    return 'wrapped last→first'
+  }
+
+  if (step < 0 && nextIndex > currentIndex) {
+    return 'wrapped first→last'
+  }
+
+  return null
 }
 
 export function getBoundaryDirectionTooltip(direction: BoundaryDirection): string {

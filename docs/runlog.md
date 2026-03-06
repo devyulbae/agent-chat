@@ -735,3 +735,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add explicit wrap-around wording to unread jump status feedback when selection cycles from last→first or first→last.
+
+## 2026-03-07 04:43 KST — unread jump wrap cue helper extraction (boost lane)
+- Scope: chat thread UX wiring (unread navigation wrap-around status cue reuse).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getUnreadJumpWrapStatusCue(step, currentIndex, nextIndex)` helper to centralize wrap-around wording (`wrapped last→first` / `wrapped first→last`).
+  - `frontend/src/main.tsx`
+    - Replaced inline unread wrap detection logic in `jumpUnreadByStep` with the shared helper.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for forward wrap, backward wrap, and non-wrap/null cases.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (27 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: expose wrap-around cue text in unread navigation hint aria-label helper path so assistive output mirrors status hint transitions.

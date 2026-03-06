@@ -13,6 +13,7 @@ import {
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadFilterResetHint,
+  getUnreadJumpWrapStatusCue,
   getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
@@ -44,6 +45,22 @@ describe('threadHintParsers', () => {
       expect(getThreadFilterResetHint('input')).toBe(
         'Reset thread view filters from filter input focus (Shift+Esc).',
       )
+    })
+  })
+
+  describe('getUnreadJumpWrapStatusCue', () => {
+    it('returns forward wrap cue when next unread jump cycles last→first', () => {
+      expect(getUnreadJumpWrapStatusCue(1, 4, 0)).toBe('wrapped last→first')
+    })
+
+    it('returns backward wrap cue when previous unread jump cycles first→last', () => {
+      expect(getUnreadJumpWrapStatusCue(-1, 0, 4)).toBe('wrapped first→last')
+    })
+
+    it('returns null when there is no wrap-around transition', () => {
+      expect(getUnreadJumpWrapStatusCue(1, 1, 2)).toBeNull()
+      expect(getUnreadJumpWrapStatusCue(-1, 3, 2)).toBeNull()
+      expect(getUnreadJumpWrapStatusCue(1, -1, 0)).toBeNull()
     })
   })
 
