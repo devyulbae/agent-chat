@@ -1596,6 +1596,19 @@ function App() {
     return null
   }, [threadBoundaryJumpHint])
 
+  const boundaryJumpStatusAriaLabel = useMemo(() => {
+    if (!threadBoundaryJumpHint) {
+      return undefined
+    }
+    const directionCueText =
+      boundaryJumpDirectionCue === 'first'
+        ? 'Direction cue: toward first visible thread.'
+        : boundaryJumpDirectionCue === 'last'
+          ? 'Direction cue: toward last visible thread.'
+          : null
+    return [threadBoundaryJumpHint, directionCueText].filter(Boolean).join(' ')
+  }, [boundaryJumpDirectionCue, threadBoundaryJumpHint])
+
   const rootJumpSourceShortcut = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2484,7 +2497,12 @@ function App() {
               </small>
             )}
             {threadBoundaryJumpHint && (
-              <small aria-live="polite" role="status" style={{ color: '#1f4b99' }}>
+              <small
+                aria-live="polite"
+                role="status"
+                aria-label={boundaryJumpStatusAriaLabel}
+                style={{ color: '#1f4b99' }}
+              >
                 {boundaryJumpUsesShiftPageShortcut && boundaryJumpShiftShortcutBadge && (
                   <span
                     title={`${boundaryJumpSourceShortcut} boundary jump`}

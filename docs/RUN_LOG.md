@@ -1516,3 +1516,15 @@
   - `cd frontend && npx vite build` ✅
 - Commit: pending
 - Next action: add a11y label text on the new direction badge so screen readers announce direction intent explicitly.
+
+## 2026-03-06 09:42 KST — Agent Chat implementation cycle
+- Delta: Improved boundary jump accessibility by giving the status line a direction-aware screen reader label.
+  - Frontend: added `boundaryJumpStatusAriaLabel` in `frontend/src/main.tsx`.
+  - UI/a11y: boundary jump status (`role=status`) now exposes an `aria-label` that appends explicit first/last direction cue text, so assistive tech announces intent even when the visual badge glyphs are ambiguous.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `10288db` (pushed to `main`)
+- Next action: add a tiny regression test (frontend unit-level string helper extraction) for boundary direction parsing to avoid future drift in first/last cue copy.
