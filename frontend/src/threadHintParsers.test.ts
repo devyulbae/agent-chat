@@ -13,6 +13,7 @@ import {
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadFilterResetHint,
+  getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
   isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
@@ -61,6 +62,12 @@ describe('threadHintParsers', () => {
     it('rejects non-matching key combinations', () => {
       expect(isThreadShortcutLegendToggleKey('/', false)).toBe(false)
       expect(isThreadShortcutLegendToggleKey('k', true)).toBe(false)
+    })
+  })
+
+  describe('getThreadShortcutLegendToggleControlCopy', () => {
+    it('returns explicit primary/fallback toggle shortcut copy', () => {
+      expect(getThreadShortcutLegendToggleControlCopy()).toBe('? / Shift+/')
     })
   })
 

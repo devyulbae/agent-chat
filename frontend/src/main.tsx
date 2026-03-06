@@ -7,6 +7,7 @@ import {
   getBoundaryDirectionStatusCue,
   getHintShortcutSource,
   getThreadFilterResetHint,
+  getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
   isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
@@ -2759,7 +2760,9 @@ function App() {
             <button
               type="button"
               onClick={() => setShowThreadShortcutLegend((current) => !current)}
-              title="Toggle thread shortcut legend (?)"
+              title={`Toggle thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`}
+              aria-label={`Toggle thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`}
+              aria-keyshortcuts="Shift+Slash"
               aria-expanded={showThreadShortcutLegend}
             >
               {showThreadShortcutLegend ? 'Hide shortcuts' : 'Show shortcuts'}

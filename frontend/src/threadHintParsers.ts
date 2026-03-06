@@ -11,6 +11,10 @@ export function isThreadShortcutLegendToggleKey(key: string, shiftKey: boolean):
   return key === '/' && shiftKey
 }
 
+export function getThreadShortcutLegendToggleControlCopy(): string {
+  return '? / Shift+/'
+}
+
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
     return 'Reset thread view filters from filter input focus (Shift+Esc).'
