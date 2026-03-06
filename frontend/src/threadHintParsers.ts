@@ -1,5 +1,14 @@
 export type BoundaryDirection = 'first' | 'last'
 export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump' | 'thread copy'
+export type ThreadFilterResetSource = 'input'
+
+export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
+  if (source === 'input') {
+    return 'Reset thread view filters from filter input focus (Shift+Esc).'
+  }
+
+  return 'Reset thread view filters (Shift+Esc).'
+}
 
 export function getBoundaryDirectionLabel(direction: BoundaryDirection): string {
   return direction === 'first' ? 'first visible thread' : 'last visible thread'

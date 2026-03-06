@@ -5,6 +5,7 @@ import {
   getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
   getHintShortcutSource,
+  getThreadFilterResetHint,
 } from './threadHintParsers'
 import {
   getShortcutChipPropsFromHint,
@@ -644,7 +645,7 @@ function App() {
           setThreadFilterText('')
           setShowUnreadOnlyThreads(false)
           setIncludeRootInUnreadOnly(true)
-          setThreadFilterJumpHint('Reset thread view filters (Shift+Esc).')
+          setThreadFilterJumpHint(getThreadFilterResetHint('input'))
           return
         }
 

@@ -11,6 +11,7 @@ import {
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
+  getThreadFilterResetHint,
   getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
@@ -34,6 +35,14 @@ describe('threadHintParsers', () => {
     it('returns null for non-boundary hints', () => {
       expect(getBoundaryDirectionFromHint('Jumped to root thread (Shift+R).')).toBeNull()
       expect(getBoundaryDirectionFromHint(null)).toBeNull()
+    })
+  })
+
+  describe('getThreadFilterResetHint', () => {
+    it('returns explicit input-focus feedback copy for Shift+Esc resets', () => {
+      expect(getThreadFilterResetHint('input')).toBe(
+        'Reset thread view filters from filter input focus (Shift+Esc).',
+      )
     })
   })
 
