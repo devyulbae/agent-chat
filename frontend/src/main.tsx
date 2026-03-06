@@ -2106,6 +2106,12 @@ function App() {
   const unreadNavigationPreviousControlCopy = unreadNavigationPreviousShortcutChipPresentation
     ? `${unreadNavigationPreviousShortcutChipPresentation.badge} previous`
     : 'P previous'
+  const unreadNavigationPreviousControlAriaLabel =
+    `Jump to previous unread thread · ${unreadNavigationPreviousControlCopy}`
+  const unreadNavigationNextControlAriaLabel =
+    `Jump to next unread thread · ${unreadNavigationNextControlCopy}`
+  const unreadNavigationClearControlAriaLabel =
+    `Clear all unread thread markers · ${unreadNavigationClearControlCopy}`
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
@@ -2604,6 +2610,7 @@ function App() {
           onClick={() => jumpUnreadByStep(-1, 'P')}
           disabled={unreadThreadIds.length === 0}
           title={unreadNavigationPreviousControlCopy}
+          aria-label={unreadNavigationPreviousControlAriaLabel}
           aria-keyshortcuts="P"
         >
           Prev unread
@@ -2613,6 +2620,7 @@ function App() {
           onClick={jumpToNextUnread}
           disabled={unreadThreadIds.length === 0}
           title={unreadNavigationNextControlCopy}
+          aria-label={unreadNavigationNextControlAriaLabel}
           aria-keyshortcuts="U N"
         >
           Next unread
@@ -2622,6 +2630,7 @@ function App() {
           onClick={clearAllUnreadMarkers}
           disabled={unreadThreadIds.length === 0}
           title={unreadNavigationClearControlCopy}
+          aria-label={unreadNavigationClearControlAriaLabel}
           aria-keyshortcuts="Shift+U"
         >
           Clear all unread markers
