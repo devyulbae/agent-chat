@@ -51,6 +51,15 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('maps thread copy hints to chip props with thread-jump context', () => {
+    expect(getShortcutChipPropsFromHint('Copied thread (Y) · root.', 'thread copy', 'thread-jump')).toEqual({
+      badge: 'Y',
+      title: 'Y thread copy',
+      ariaLabel: 'Shortcut badge Y: Y (thread copy).',
+      context: 'thread-jump',
+    })
+  })
+
   it('returns null when hint has no known shortcut', () => {
     expect(getShortcutChipPropsFromHint('Jumped to root thread (Mouse click).', 'root jump', 'thread-jump')).toBeNull()
   })

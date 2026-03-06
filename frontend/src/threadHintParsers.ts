@@ -1,5 +1,5 @@
 export type BoundaryDirection = 'first' | 'last'
-export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump'
+export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump' | 'thread copy'
 
 export function getBoundaryDirectionLabel(direction: BoundaryDirection): string {
   return direction === 'first' ? 'first visible thread' : 'last visible thread'

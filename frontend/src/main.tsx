@@ -530,7 +530,7 @@ function App() {
       try {
         await navigator.clipboard.writeText(threadLabel)
         setThreadCopyHint(
-          source === 'shortcut' ? `Copied thread via Y: ${threadLabel}` : `Copied thread: ${threadLabel}`
+          source === 'shortcut' ? `Copied thread (Y) · ${threadLabel}.` : `Copied thread: ${threadLabel}`
         )
       } catch {
         setThreadCopyHint('Failed to copy thread label.')
@@ -1628,6 +1628,11 @@ function App() {
     [threadFilterJumpHint],
   )
 
+  const threadCopyShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromHint(threadCopyHint, 'thread copy', 'thread-jump'),
+    [threadCopyHint],
+  )
+
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2564,6 +2569,7 @@ function App() {
             )}
             {threadCopyHint && (
               <small aria-live="polite" role="status" style={{ color: '#666' }}>
+                {renderShortcutChipPresentation(threadCopyShortcutChipPresentation)}
                 {threadCopyHint}
               </small>
             )}

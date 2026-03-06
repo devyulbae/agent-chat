@@ -1,5 +1,30 @@
 # Runlog
 
+## 2026-03-06 20:31 KST — thread copy hint chip presentation sync (offset lane)
+- Scope: frontend integration polish to route thread copy status through shared shortcut chip presentation contract.
+- Change:
+  - Extended `ShortcutChipIntent` with `thread copy` in `frontend/src/threadHintParsers.ts`.
+  - Updated thread copy shortcut success hint in `frontend/src/main.tsx` to include canonical shortcut source `(Y)` for parser extraction.
+  - Wired thread copy status row in `frontend/src/main.tsx` to render chip via `getShortcutChipPropsFromHint(..., 'thread copy', 'thread-jump')` and `renderShortcutChipPresentation(...)`.
+  - Added regression coverage in `frontend/src/threadHintChips.test.tsx` for `Copied thread (Y) · ...` mapping.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (6/6)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
+
+## 2026-03-06 20:24 KST — cadence sync (project-controls)
+- Source check:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ❌ HTTP 401 Unauthorized (BasicAuth required; local BasicAuth env not present in current runtime).
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500 Internal Server Error.
+- Result: **no-op** (kept existing OpenClaw cron schedules unchanged; no destructive edits).
+- Mapped jobs kept as-is:
+  - `agentchat-build-cycle-40m` (`*/20 * * * *`)
+  - `agentchat-build-cycle-20m-offset` (`10-59/20 * * * *`)
+  - `startup-loop-day-30m` unchanged (core startup loop preserved).
+- Burst override: skipped (control payload unavailable).
+- Next action: recover project-controls auth/availability, then rerun level→cadence + trigger override sync.
+
 ## 2026-03-06 20:23 KST — thread shortcut chip props wiring helper (offset lane)
 - Scope: chat thread UX wiring cleanup for shortcut status chip derivation.
 - Change:
