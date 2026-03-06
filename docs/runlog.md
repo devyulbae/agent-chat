@@ -929,3 +929,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (40 passed)
   - `cd frontend && npm run build` ✅
 - Next action: thread this helper through any remaining unread status aria builders so wrap cue semantics stay centralized across future unread hint variants.
+
+## 2026-03-07 07:23 KST — unread boundary jump aria wrap cue wiring (boost lane)
+- Scope: chat thread UX wiring (centralize unread wrap cue semantics across boundary jump status aria output).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getUnreadBoundaryJumpStatusAriaLabel(baseAriaLabel, shortcutSource, wrapCue)`.
+    - Reused `getUnreadNavigationHintAriaLabel` so wrap cue aria copy is appended only for unread jump shortcuts (`U`/`N`/`P`).
+  - `frontend/src/main.tsx`
+    - Updated `boundaryJumpStatusAriaLabel` composition path to pass through `getUnreadBoundaryJumpStatusAriaLabel(...)` with current boundary shortcut source + unread wrap cue.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for unread boundary aria append path and non-unread/no-cue passthrough paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (43 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: dedupe unread wrap cue aria copy between unread hint and boundary status aria paths to prevent repeated narration when both status regions update in the same transition.
