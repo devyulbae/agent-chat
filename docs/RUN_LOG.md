@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 13:32 KST — Agent Chat parallel offset cycle
+- Delta: Extracted standardized shortcut-chip copy composition in `frontend/src/main.tsx` to keep title/aria-label wiring consistent across root/boundary/filter jump hints.
+  - Added pure `buildShortcutChipCopy(...)` helper with typed intent (`root jump` / `boundary jump` / `filter jump`) to generate canonical chip `title` and `aria-label` strings in one place.
+  - Replaced duplicated inline string templates for root-jump, boundary-jump, and filter-jump `ShortcutChip` render paths with memoized helper outputs.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: move `buildShortcutChipCopy(...)` into `threadHintParsers.ts` (or a tiny hint-chip utility module) so parsing + chip-copy helpers can be unit-tested together.
+
 ## 2026-03-06 13:13 KST — Agent Chat parallel offset cycle
 - Delta: Extracted a shared `ShortcutChip` presentational helper in `frontend/src/main.tsx` to deduplicate repeated shortcut badge JSX wiring across root/boundary/filter status hints.
   - Added typed `ShortcutChip` component (`badge`, `title`, `ariaLabel`, `context`) that centralizes style + border context mapping.
@@ -1756,3 +1766,17 @@
 - project-controls payload: `[]` (no project control rows).
 - Result: **no-op** cadence sync (kept current cron schedules unchanged).
 - Reason: no level directives found for `agentchat` / `appflowy-bridge`; burst override evaluation skipped (no controls/triggers present).
+
+## 2026-03-06 13:23 KST — Agent Chat implementation cycle
+- Delta: Centralized boundary-direction tooltip copy for chat thread jump hints to reduce duplicated UI strings and keep wording consistent.
+  - Frontend: added `getBoundaryDirectionTooltip(...)` in `frontend/src/threadHintParsers.ts`.
+  - Frontend: wired boundary direction chip title in `frontend/src/main.tsx` to use the new helper.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with tooltip helper assertions.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (13 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `fea3898` (pushed to `main`)
+- Next action: extract shared shortcut-chip aria-label/title composition into a small helper so root/boundary/filter hint render paths avoid duplicated string templates.

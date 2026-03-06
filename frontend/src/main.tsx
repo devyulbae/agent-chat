@@ -85,6 +85,19 @@ type ShortcutChipProps = {
   context: ShortcutChipContext
 }
 
+type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump'
+
+function buildShortcutChipCopy(
+  badge: string,
+  shortcutText: string,
+  intent: ShortcutChipIntent,
+): { title: string; ariaLabel: string } {
+  return {
+    title: `${shortcutText} ${intent}`,
+    ariaLabel: `Shortcut badge ${badge}: ${shortcutText} (${intent}).`,
+  }
+}
+
 function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
   return (
     <span
@@ -1681,9 +1694,42 @@ function App() {
     [rootJumpSourceShortcut],
   )
 
-  const getShortcutChipAriaLabel = useCallback((badge: string, shortcutText: string, context: string) => {
-    return `Shortcut badge ${badge}: ${shortcutText} (${context}).`
-  }, [])
+  const rootJumpShortcutChipCopy = useMemo(() => {
+    if (!rootJumpShiftShortcutBadge || !rootJumpSourceShortcut) {
+      return null
+    }
+    return buildShortcutChipCopy(
+      rootJumpShiftShortcutBadge,
+      rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut,
+      'root jump',
+    )
+  }, [rootJumpShiftShortcutBadge, rootJumpSourceShortcut, rootJumpSourceShortcutTooltip])
+
+  const boundaryJumpShortcutChipCopy = useMemo(() => {
+    if (!boundaryJumpSourceShortcutBadge || !boundaryJumpSourceShortcut) {
+      return null
+    }
+    return buildShortcutChipCopy(
+      boundaryJumpSourceShortcutBadge,
+      boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut,
+      'boundary jump',
+    )
+  }, [boundaryJumpSourceShortcut, boundaryJumpSourceShortcutBadge, boundaryJumpSourceShortcutTooltip])
+
+  const filterJumpShortcutChipCopy = useMemo(() => {
+    if (!threadFilterJumpSourceShortcutBadge || !threadFilterJumpSourceShortcut) {
+      return null
+    }
+    return buildShortcutChipCopy(
+      threadFilterJumpSourceShortcutBadge,
+      threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut,
+      'filter jump',
+    )
+  }, [
+    threadFilterJumpSourceShortcut,
+    threadFilterJumpSourceShortcutBadge,
+    threadFilterJumpSourceShortcutTooltip,
+  ])
 
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {
@@ -2561,15 +2607,11 @@ function App() {
                 }
                 style={{ color: '#1f4b99' }}
               >
-                {rootJumpShiftShortcutBadge && (
+                {rootJumpShiftShortcutBadge && rootJumpShortcutChipCopy && (
                   <ShortcutChip
                     badge={rootJumpShiftShortcutBadge}
-                    title={`${rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut} root jump`}
-                    ariaLabel={getShortcutChipAriaLabel(
-                      rootJumpShiftShortcutBadge,
-                      rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut ?? rootJumpShiftShortcutBadge,
-                      'root jump',
-                    )}
+                    title={rootJumpShortcutChipCopy.title}
+                    ariaLabel={rootJumpShortcutChipCopy.ariaLabel}
                     context="thread-jump"
                   />
                 )}
@@ -2588,15 +2630,11 @@ function App() {
                 aria-label={boundaryJumpStatusAriaLabel}
                 style={{ color: '#1f4b99' }}
               >
-                {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && (
+                {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && boundaryJumpShortcutChipCopy && (
                   <ShortcutChip
                     badge={boundaryJumpSourceShortcutBadge}
-                    title={`${boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut} boundary jump`}
-                    ariaLabel={getShortcutChipAriaLabel(
-                      boundaryJumpSourceShortcutBadge,
-                      boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut,
-                      'boundary jump',
-                    )}
+                    title={boundaryJumpShortcutChipCopy.title}
+                    ariaLabel={boundaryJumpShortcutChipCopy.ariaLabel}
                     context="thread-jump"
                   />
                 )}
@@ -2624,15 +2662,11 @@ function App() {
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && (
               <small style={{ color: '#666' }}>
-                {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && (
+                {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && filterJumpShortcutChipCopy && (
                   <ShortcutChip
                     badge={threadFilterJumpSourceShortcutBadge}
-                    title={`${threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut} filter jump`}
-                    ariaLabel={getShortcutChipAriaLabel(
-                      threadFilterJumpSourceShortcutBadge,
-                      threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut,
-                      'filter jump',
-                    )}
+                    title={filterJumpShortcutChipCopy.title}
+                    ariaLabel={filterJumpShortcutChipCopy.ariaLabel}
                     context="filter-jump"
                   />
                 )}
