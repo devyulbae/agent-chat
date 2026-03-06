@@ -6,8 +6,6 @@ import {
   getBoundaryJumpStatusAriaLabel,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
-  getThreadShortcutBadge,
-  getThreadShortcutTooltip,
 } from './threadHintParsers'
 
 type OrgType = 'freeform' | 'department' | 'squad'
@@ -85,11 +83,6 @@ type ShortcutChipProps = {
   context: ShortcutChipContext
 }
 
-type ShortcutChipCopy = {
-  title: string
-  ariaLabel: string
-}
-
 function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
   return (
     <span
@@ -103,18 +96,6 @@ function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): 
       {badge}
     </span>
   )
-}
-
-function renderShortcutChip(
-  badge: string | null,
-  copy: ShortcutChipCopy | null,
-  context: ShortcutChipContext,
-): React.JSX.Element | null {
-  if (!badge || !copy) {
-    return null
-  }
-
-  return <ShortcutChip badge={badge} title={copy.title} ariaLabel={copy.ariaLabel} context={context} />
 }
 
 function renderShortcutChipPresentation(
@@ -1689,21 +1670,6 @@ function App() {
     }
   }, [threadBoundaryJumpHint])
 
-  const threadFilterJumpSourceShortcut = useMemo(
-    () => getHintShortcutSource(threadFilterJumpHint),
-    [threadFilterJumpHint],
-  )
-
-  const threadFilterJumpSourceShortcutBadge = useMemo(
-    () => getThreadShortcutBadge(threadFilterJumpSourceShortcut),
-    [threadFilterJumpSourceShortcut],
-  )
-
-  const threadFilterJumpSourceShortcutTooltip = useMemo(
-    () => getThreadShortcutTooltip(threadFilterJumpSourceShortcut),
-    [threadFilterJumpSourceShortcut],
-  )
-
   const boundaryJumpStatusAriaLabel = useMemo(
     () => getBoundaryJumpStatusAriaLabel(threadBoundaryJumpHint),
     [threadBoundaryJumpHint],
@@ -1711,25 +1677,33 @@ function App() {
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
-  const rootJumpShiftShortcutBadge = useMemo(
-    () => getThreadShortcutBadge(rootJumpSourceShortcut),
-    [rootJumpSourceShortcut],
-  )
+  const rootJumpShortcutChipPresentation = useMemo(() => {
+    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadRootJumpHint, 'root jump')
+    if (!shortcutChipPresentation) {
+      return null
+    }
 
-  const rootJumpSourceShortcutTooltip = useMemo(
-    () => getThreadShortcutTooltip(rootJumpSourceShortcut),
-    [rootJumpSourceShortcut],
-  )
+    return {
+      badge: shortcutChipPresentation.badge,
+      title: shortcutChipPresentation.copy.title,
+      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
+      context: 'thread-jump' as const,
+    }
+  }, [threadRootJumpHint])
 
-  const rootJumpShortcutChipCopy = useMemo(
-    () => getShortcutChipPresentationFromHint(threadRootJumpHint, 'root jump')?.copy ?? null,
-    [threadRootJumpHint],
-  )
+  const filterJumpShortcutChipPresentation = useMemo(() => {
+    const shortcutChipPresentation = getShortcutChipPresentationFromHint(threadFilterJumpHint, 'filter jump')
+    if (!shortcutChipPresentation) {
+      return null
+    }
 
-  const filterJumpShortcutChipCopy = useMemo(
-    () => getShortcutChipPresentationFromHint(threadFilterJumpHint, 'filter jump')?.copy ?? null,
-    [threadFilterJumpHint],
-  )
+    return {
+      badge: shortcutChipPresentation.badge,
+      title: shortcutChipPresentation.copy.title,
+      ariaLabel: shortcutChipPresentation.copy.ariaLabel,
+      context: 'filter-jump' as const,
+    }
+  }, [threadFilterJumpHint])
 
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {
@@ -2639,7 +2613,7 @@ function App() {
                 }
                 style={{ color: '#1f4b99' }}
               >
-                {renderShortcutChip(rootJumpShiftShortcutBadge, rootJumpShortcutChipCopy, 'thread-jump')}
+                {renderShortcutChipPresentation(rootJumpShortcutChipPresentation)}
                 {threadRootJumpHint}
               </small>
             )}
@@ -2673,7 +2647,7 @@ function App() {
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && (
               <small style={{ color: '#666' }}>
-                {renderShortcutChip(threadFilterJumpSourceShortcutBadge, filterJumpShortcutChipCopy, 'filter-jump')}
+                {renderShortcutChipPresentation(filterJumpShortcutChipPresentation)}
                 {threadFilterJumpHint}
               </small>
             )}

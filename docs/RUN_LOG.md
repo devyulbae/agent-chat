@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-06 20:06 KST — Agent Chat implementation cycle
+- Delta: Wired root/filter shortcut chips to consume a single parser-derived presentation contract in thread status rendering.
+  - Frontend wiring: replaced split badge/copy composition in `frontend/src/main.tsx` with shared `getShortcutChipPresentationFromHint(...)` output for both root-jump and filter-jump status rows.
+  - Removed duplicate local chip-render path so thread status chips now consistently flow through `renderShortcutChipPresentation(...)` with explicit context (`thread-jump` / `filter-jump`).
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (20 passed)
+- Commit: pending
+- Next action: add a tiny UI-level regression test asserting root/filter status hints render chip badges through the shared presentation path (not legacy split badge/copy wiring).
+
 ## 2026-03-06 18:34 KST — Agent Chat parallel offset cycle
 - Delta: Added left/right arrow shortcut normalization + chip presentation parity in frontend thread hint parser so horizontal-navigation hint copy now stays contract-synced with existing up/down badge/tooltip rendering.
   - Frontend parser: extended `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` with `ArrowLeft`/`ArrowRight` aliases (including `Left Arrow`/`Right Arrow`, hyphenated forms, and symbolic `←`/`→`) plus compact forms like `CmdRightArrow`.
