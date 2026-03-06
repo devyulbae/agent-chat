@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 12:32 KST — Agent Chat parallel offset cycle
+- Delta: Added aria-label parity for shortcut status chips so screen readers announce compact badge glyphs with full shortcut text consistently.
+  - Updated `frontend/src/main.tsx` with shared `getShortcutChipAriaLabel(...)` helper for shortcut chip announcements.
+  - Applied explicit chip `aria-label` wiring on root-jump, boundary-jump, and filter-jump shortcut badges (e.g., `Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).`).
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 12 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: extract shared shortcut-chip visual style object/helper to remove duplicated inline chip styles across root/boundary/filter hint rows.
+
 ## 2026-03-06 12:14 KST — Agent Chat parallel offset cycle
 - Delta: Added human-readable shortcut tooltip mapping for thread jump status chips to improve frontend discoverability.
   - Updated `frontend/src/threadHintParsers.ts` with new `getThreadShortcutTooltip(...)` helper that maps parsed shortcut sources to readable labels (`Shift + PageUp`, `Arrow Up`, etc.) in one shared place.
@@ -1705,3 +1715,11 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add a tiny helper for standardized shortcut-chip styles to remove duplicated inline style objects across root/boundary/filter hint chips.
+
+## 2026-03-06 12:22 KST — Cadence sync (project-controls)
+- Source check:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200.
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500 (not needed; primary succeeded).
+- project-controls payload: `[]` (no project control rows).
+- Result: **no-op** cadence sync (kept current cron schedules unchanged).
+- Reason: no level directives found for `agentchat` / `appflowy-bridge`; burst override evaluation skipped (no controls/triggers present).

@@ -1643,6 +1643,10 @@ function App() {
     [rootJumpSourceShortcut],
   )
 
+  const getShortcutChipAriaLabel = useCallback((badge: string, shortcutText: string, context: string) => {
+    return `Shortcut badge ${badge}: ${shortcutText} (${context}).`
+  }, [])
+
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2496,6 +2500,11 @@ function App() {
                 {rootJumpShiftShortcutBadge && (
                   <span
                     title={`${rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut} root jump`}
+                    aria-label={getShortcutChipAriaLabel(
+                      rootJumpShiftShortcutBadge,
+                      rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut ?? rootJumpShiftShortcutBadge,
+                      'root jump',
+                    )}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
@@ -2527,6 +2536,11 @@ function App() {
                 {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && (
                   <span
                     title={`${boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut} boundary jump`}
+                    aria-label={getShortcutChipAriaLabel(
+                      boundaryJumpSourceShortcutBadge,
+                      boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut,
+                      'boundary jump',
+                    )}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
@@ -2576,6 +2590,11 @@ function App() {
                 {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && (
                   <span
                     title={`${threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut} filter jump`}
+                    aria-label={getShortcutChipAriaLabel(
+                      threadFilterJumpSourceShortcutBadge,
+                      threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut,
+                      'filter jump',
+                    )}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
