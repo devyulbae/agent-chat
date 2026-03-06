@@ -1583,6 +1583,19 @@ function App() {
         ? '⇧PgDn'
         : null
 
+  const boundaryJumpDirectionCue = useMemo(() => {
+    if (!threadBoundaryJumpHint) {
+      return null
+    }
+    if (threadBoundaryJumpHint.includes(' first visible thread')) {
+      return 'first'
+    }
+    if (threadBoundaryJumpHint.includes(' last visible thread')) {
+      return 'last'
+    }
+    return null
+  }, [threadBoundaryJumpHint])
+
   const rootJumpSourceShortcut = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2479,6 +2492,22 @@ function App() {
                     }}
                   >
                     {boundaryJumpShiftShortcutBadge}
+                  </span>
+                )}
+                {boundaryJumpDirectionCue && (
+                  <span
+                    title={`Boundary direction: toward ${boundaryJumpDirectionCue} visible thread`}
+                    style={{
+                      display: 'inline-block',
+                      marginRight: 6,
+                      padding: '0 4px',
+                      border: '1px solid #97b6f4',
+                      borderRadius: 6,
+                      fontSize: '0.75rem',
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {boundaryJumpDirectionCue === 'first' ? '↖ first' : '↘ last'}
                   </span>
                 )}
                 {threadBoundaryJumpHint}

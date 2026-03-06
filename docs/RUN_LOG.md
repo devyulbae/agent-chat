@@ -1497,3 +1497,13 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add compact direction cue text directly on boundary status line (outside helper) so users can see first/last intent even when helper copy is collapsed.
+
+## 2026-03-06 09:12 KST — Agent Chat parallel offset cycle
+- Delta: Added compact boundary-direction cue badge directly on the thread boundary status line.
+  - Frontend: introduced `boundaryJumpDirectionCue` in `frontend/src/main.tsx` to derive `first`/`last` intent from boundary hint text.
+  - UI: boundary status now shows a compact inline badge (`↖ first` / `↘ last`) before hint text, so direction remains visible even without reading helper copy.
+  - Scope: frontend thread UX only; API contract unchanged.
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Commit: pending
+- Next action: add a11y label text on the new direction badge so screen readers announce direction intent explicitly.
