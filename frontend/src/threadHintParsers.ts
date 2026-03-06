@@ -79,6 +79,8 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/pg[\s-]?up/gu, 'pgup')
     .replace(/pg[\s-]?down/gu, 'pgdn')
     .replace(/pg[\s-]?dn/gu, 'pgdn')
+    .replace(/arrow[\s-]?up/gu, 'arrowup')
+    .replace(/arrow[\s-]?down/gu, 'arrowdown')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 
@@ -97,14 +99,31 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const comboMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown)$/i,
+    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|↑|↓|home|end|enter|↵)$/i,
   )
   if (!comboMatch?.groups) {
     return shortcut
   }
 
   const keyAlias = comboMatch.groups.key.toLowerCase()
-  const normalizedKey = keyAlias === 'pgup' || keyAlias === 'pageup' ? 'PageUp' : 'PageDown'
+  const normalizedKeyAliasMap: Record<string, string> = {
+    pgup: 'PageUp',
+    pageup: 'PageUp',
+    pgdn: 'PageDown',
+    pagedown: 'PageDown',
+    arrowup: 'ArrowUp',
+    '↑': 'ArrowUp',
+    arrowdown: 'ArrowDown',
+    '↓': 'ArrowDown',
+    home: 'Home',
+    end: 'End',
+    enter: 'Enter',
+    '↵': 'Enter',
+  }
+  const normalizedKey = normalizedKeyAliasMap[keyAlias]
+  if (!normalizedKey) {
+    return shortcut
+  }
   const normalizedModifierAliasMap: Record<string, string> = {
     ctrl: 'Ctrl',
     control: 'Control',
@@ -169,6 +188,8 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'shift+end': '⇧End',
     'shift+pageup': '⇧PgUp',
     'shift+pagedown': '⇧PgDn',
+    'shift+arrowup': '⇧↑',
+    'shift+arrowdown': '⇧↓',
     'shift+g': '⇧G',
     'shift+r': '⇧R',
     'shift+u': '⇧U',
@@ -221,6 +242,8 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'shift+end': 'Shift + End',
     'shift+pageup': 'Shift + PageUp',
     'shift+pagedown': 'Shift + PageDown',
+    'shift+arrowup': 'Shift + Arrow Up',
+    'shift+arrowdown': 'Shift + Arrow Down',
     'shift+g': 'Shift + G',
     'shift+r': 'Shift + R',
     'shift+u': 'Shift + U',

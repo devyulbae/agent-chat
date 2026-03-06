@@ -2033,3 +2033,17 @@
   - `cd frontend && npm run build` ✅
 - Commit: pending
 - Next action: extract boundary-direction chip composition (badge/title/aria) into a tiny helper to fully remove residual chip wiring duplication in `main.tsx`.
+
+## 2026-03-06 17:43 KST — Agent Chat implementation cycle
+- Delta: Added thread hint parsing + chip display support for `Shift+ArrowUp/Shift+ArrowDown` boundary shortcut variants so keyboard hint chips remain stable when copy uses arrow glyph combos.
+  - Frontend parser: `normalizeShortcutAlias(...)` now normalizes `arrow-up/arrow-down` aliases and supports modifier combos targeting `ArrowUp`/`ArrowDown` (including symbolic `↑`/`↓`, plus `Home`/`End`/`Enter` combo normalization path).
+  - Frontend chip mappings: added compact badge + tooltip support for `Shift+ArrowUp` (`⇧↑`) and `Shift+ArrowDown` (`⇧↓`).
+  - Frontend tests: expanded parser extraction coverage for `Shift+↑` and `⇧+↓`, plus badge/tooltip mapping assertions for shift+arrow variants.
+  - Scope: chat thread UX wiring parser+tests only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (20 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: normalize parser extraction for wordy arrow aliases in hint copy (`Shift+Up Arrow` / `Shift+Down Arrow`) so future wording changes still resolve to the same shortcut chip.
