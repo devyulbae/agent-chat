@@ -8,6 +8,7 @@ import {
 } from './threadHintParsers'
 import {
   getShortcutChipPropsFromHint,
+  getStatusAriaLabelWithShortcutChip,
   renderShortcutChipPresentation,
   type ShortcutChipProps,
 } from './threadHintChips'
@@ -1630,6 +1631,16 @@ function App() {
     [threadCopyHint],
   )
 
+  const threadCopyStatusAriaLabel = useMemo(
+    () => getStatusAriaLabelWithShortcutChip(threadCopyHint, threadCopyShortcutChipPresentation),
+    [threadCopyHint, threadCopyShortcutChipPresentation],
+  )
+
+  const filterJumpStatusAriaLabel = useMemo(
+    () => getStatusAriaLabelWithShortcutChip(threadFilterJumpHint, filterJumpShortcutChipPresentation),
+    [threadFilterJumpHint, filterJumpShortcutChipPresentation],
+  )
+
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {
       return null
@@ -2566,14 +2577,24 @@ function App() {
               </small>
             )}
             {threadCopyHint && (
-              <small aria-live="polite" role="status" style={{ color: '#666' }}>
+              <small
+                aria-live="polite"
+                role="status"
+                aria-label={threadCopyStatusAriaLabel}
+                style={{ color: '#666' }}
+              >
                 {renderShortcutChipPresentation(threadCopyShortcutChipPresentation)}
                 {threadCopyHint}
               </small>
             )}
             {unreadRootOnlyHint && <small style={{ color: '#666' }}>{unreadRootOnlyHint}</small>}
             {threadFilterJumpHint && (
-              <small style={{ color: '#666' }}>
+              <small
+                aria-live="polite"
+                role="status"
+                aria-label={filterJumpStatusAriaLabel}
+                style={{ color: '#666' }}
+              >
                 {renderShortcutChipPresentation(filterJumpShortcutChipPresentation)}
                 {threadFilterJumpHint}
               </small>

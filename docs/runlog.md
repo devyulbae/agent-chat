@@ -1,5 +1,38 @@
 # Runlog
 
+## 2026-03-06 21:04 KST — status aria-label wiring for filter/copy shortcut chips (boost lane)
+- Scope: chat thread UX wiring accessibility parity for shortcut-chip-backed status hints.
+- Change:
+  - `frontend/src/threadHintChips.tsx`
+    - Added `getStatusAriaLabelWithShortcutChip(...)` helper to consistently append shortcut chip aria copy to status hints when chip metadata exists.
+  - `frontend/src/main.tsx`
+    - Wired thread copy status hint to use shared aria-label helper.
+    - Upgraded filter jump hint to live status semantics (`aria-live="polite"`, `role="status"`) and shared aria-label helper wiring.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression coverage for helper behavior: empty hint, no-chip fallback, and chip-appended aria text.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (9/9)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: extend shared status aria-label wiring to root/boundary hint rows so all thread status lanes use one accessibility composition path.
+
+## 2026-03-06 20:52 KST — copy-selected shortcut chip parity (offset lane)
+- Scope: frontend integration polish so copy-selected button feedback uses the same shortcut-chip contract as keyboard copy.
+- Change:
+  - `frontend/src/main.tsx`
+    - Unified copy success hint text to canonical shortcut form: `Copied thread (Y) · ...` for both button and keyboard paths.
+    - Added `aria-keyshortcuts="Y"` and updated button title to advertise the same shortcut on the copy-selected control.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression assertion that copy hint text (`Copied thread (Y) · ...`) resolves to shortcut source `Y`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (26/26)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+- Git:
+  - Commit: `dcc8f52` — `[fix] normalize copy button hint to reuse Y shortcut chip`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-06 20:31 KST — thread copy hint chip presentation sync (offset lane)
 - Scope: frontend integration polish to route thread copy status through shared shortcut chip presentation contract.
 - Change:

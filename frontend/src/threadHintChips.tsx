@@ -76,3 +76,18 @@ export function renderShortcutChipPresentation(
     />
   )
 }
+
+export function getStatusAriaLabelWithShortcutChip(
+  hint: string | null,
+  presentation: ShortcutChipProps | null,
+): string | undefined {
+  if (!hint) {
+    return undefined
+  }
+
+  if (!presentation) {
+    return hint
+  }
+
+  return `${hint} ${presentation.ariaLabel}`
+}

@@ -1,7 +1,11 @@
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { getShortcutChipPropsFromHint, renderShortcutChipPresentation } from './threadHintChips'
+import {
+  getShortcutChipPropsFromHint,
+  getStatusAriaLabelWithShortcutChip,
+  renderShortcutChipPresentation,
+} from './threadHintChips'
 
 describe('renderShortcutChipPresentation', () => {
   it('returns null when parser presentation payload is null', () => {
@@ -21,6 +25,29 @@ describe('renderShortcutChipPresentation', () => {
     expect(html).toContain('title="Shift + PageUp boundary jump"')
     expect(html).toContain('aria-label="Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump)."')
     expect(html).toContain('border:1px solid #97b6f4')
+  })
+})
+
+describe('getStatusAriaLabelWithShortcutChip', () => {
+  it('returns undefined when hint is empty', () => {
+    expect(getStatusAriaLabelWithShortcutChip(null, null)).toBeUndefined()
+  })
+
+  it('returns plain hint when chip presentation is missing', () => {
+    expect(getStatusAriaLabelWithShortcutChip('Jumped to first visible thread (Mouse click).', null)).toBe(
+      'Jumped to first visible thread (Mouse click).',
+    )
+  })
+
+  it('appends chip aria-label when chip presentation exists', () => {
+    expect(
+      getStatusAriaLabelWithShortcutChip('Copied thread (Y) · root.', {
+        badge: 'Y',
+        title: 'Y thread copy',
+        ariaLabel: 'Shortcut badge Y: Y (thread copy).',
+        context: 'thread-jump',
+      }),
+    ).toBe('Copied thread (Y) · root. Shortcut badge Y: Y (thread copy).')
   })
 })
 
