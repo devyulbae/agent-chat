@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 01:32 KST — hidden-selection recovery direction cue chips (offset lane)
+- Scope: frontend integration follow-up to include explicit boundary direction semantics in hidden-selection recovery statuses, aligning with existing boundary jump cue contract.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added first/last boundary direction chip presentations (`↖ first`, `↘ last`) to hidden-selection recovery chip sets.
+    - Wired hidden-selection inline + shortcut recovery aria-label composition through the combined shortcut + direction chip list.
+    - Updated both hidden-selection recovery status rows to render the shared combined chip list.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Extended hidden-selection recovery aria composition regression to cover deterministic inclusion of boundary direction cue labels.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (40/40)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 01:12 KST — composer helper shortcut chips via source-based path (offset lane)
 - Scope: frontend integration follow-up to remove remaining plain-text-only composer shortcut guidance and keep helper copy on shared shortcut chip presentation wiring.
 - Change:

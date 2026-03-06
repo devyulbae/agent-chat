@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
+  getBoundaryDirectionChipPresentation,
   getBoundaryDirectionChipPresentationFromHint,
   getBoundaryDirectionFromHint,
   getHintShortcutSource,
@@ -1599,6 +1600,19 @@ function App() {
     () => getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
     [],
   )
+  const selectedVisibleThreadRecoveryDirectionChipPresentations = useMemo(
+    () => [
+      {
+        ...getBoundaryDirectionChipPresentation('first'),
+        context: 'thread-jump' as const,
+      },
+      {
+        ...getBoundaryDirectionChipPresentation('last'),
+        context: 'thread-jump' as const,
+      },
+    ],
+    [],
+  )
   const selectedVisibleThreadInlineRecoveryShortcutChipPresentations = useMemo(
     () => [
       selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
@@ -1608,21 +1622,31 @@ function App() {
     ],
     [selectedVisibleThreadFirstRecoveryShortcutChipPresentation, selectedVisibleThreadLastRecoveryShortcutChipPresentation],
   )
+  const selectedVisibleThreadInlineRecoveryChipPresentations = useMemo(
+    () => [
+      ...selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+      ...selectedVisibleThreadRecoveryDirectionChipPresentations,
+    ],
+    [
+      selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+      selectedVisibleThreadRecoveryDirectionChipPresentations,
+    ],
+  )
   const selectedVisibleThreadInlineRecoveryAriaLabel = useMemo(
     () =>
       getStatusAriaLabelWithShortcutChips(
         selectedVisibleThreadInlineRecoveryHint,
-        selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+        selectedVisibleThreadInlineRecoveryChipPresentations,
       ),
-    [selectedVisibleThreadInlineRecoveryHint, selectedVisibleThreadInlineRecoveryShortcutChipPresentations],
+    [selectedVisibleThreadInlineRecoveryHint, selectedVisibleThreadInlineRecoveryChipPresentations],
   )
   const selectedVisibleThreadShortcutRecoveryStatusAriaLabel = useMemo(
     () =>
       getStatusAriaLabelWithShortcutChips(
         selectedVisibleThreadShortcutRecoveryHint,
-        selectedVisibleThreadInlineRecoveryShortcutChipPresentations,
+        selectedVisibleThreadInlineRecoveryChipPresentations,
       ),
-    [selectedVisibleThreadInlineRecoveryShortcutChipPresentations, selectedVisibleThreadShortcutRecoveryHint],
+    [selectedVisibleThreadInlineRecoveryChipPresentations, selectedVisibleThreadShortcutRecoveryHint],
   )
 
   const boundaryJumpSourceShortcut = useMemo(
@@ -2652,9 +2676,7 @@ function App() {
                 style={{ color: '#7a4b00' }}
                 title="Hidden selection recovers to boundary on next J/K or Arrow key."
               >
-                {selectedVisibleThreadInlineRecoveryShortcutChipPresentations.map((chip) =>
-                  renderShortcutChipPresentation(chip),
-                )}
+                {selectedVisibleThreadInlineRecoveryChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
                 {selectedVisibleThreadInlineRecoveryHint}
               </small>
             )}
@@ -2684,7 +2706,7 @@ function App() {
                     aria-label={selectedVisibleThreadShortcutRecoveryStatusAriaLabel}
                     style={{ color: '#666' }}
                   >
-                    {selectedVisibleThreadInlineRecoveryShortcutChipPresentations.map((chip) =>
+                    {selectedVisibleThreadInlineRecoveryChipPresentations.map((chip) =>
                       renderShortcutChipPresentation(chip),
                     )}
                     {selectedVisibleThreadShortcutRecoveryHint}

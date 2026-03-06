@@ -140,7 +140,7 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
     ).toBe('Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).')
   })
 
-  it('keeps hidden-selection recovery shortcut aria labels in deterministic J/K/Arrow order', () => {
+  it('keeps hidden-selection recovery aria labels deterministic with boundary direction cues', () => {
     expect(
       getStatusAriaLabelWithShortcutChips('Tip: J/K/↑/↓ will also recover to first/last visible thread.', [
         {
@@ -167,9 +167,21 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
           ariaLabel: 'Shortcut badge ↓: Arrow Down (boundary jump).',
           context: 'thread-jump',
         },
+        {
+          badge: '↖ first',
+          title: 'Boundary direction: toward first visible thread',
+          ariaLabel: 'Boundary direction cue: toward first visible thread',
+          context: 'thread-jump',
+        },
+        {
+          badge: '↘ last',
+          title: 'Boundary direction: toward last visible thread',
+          ariaLabel: 'Boundary direction cue: toward last visible thread',
+          context: 'thread-jump',
+        },
       ]),
     ).toBe(
-      'Tip: J/K/↑/↓ will also recover to first/last visible thread. Shortcut badge J: J (boundary jump). Shortcut badge K: K (boundary jump). Shortcut badge ↑: Arrow Up (boundary jump). Shortcut badge ↓: Arrow Down (boundary jump).',
+      'Tip: J/K/↑/↓ will also recover to first/last visible thread. Shortcut badge J: J (boundary jump). Shortcut badge K: K (boundary jump). Shortcut badge ↑: Arrow Up (boundary jump). Shortcut badge ↓: Arrow Down (boundary jump). Boundary direction cue: toward first visible thread Boundary direction cue: toward last visible thread',
     )
   })
 })
