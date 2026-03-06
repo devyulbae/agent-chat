@@ -2097,6 +2097,19 @@ function App() {
     [],
   )
 
+  const unreadNavigationToFirstDirectionChipPresentation = useMemo(
+    () => ({ ...getBoundaryDirectionChipPresentation('first'), context: 'thread-jump' as const }),
+    [],
+  )
+
+  const unreadNavigationToLastDirectionChipPresentation = useMemo(
+    () => ({ ...getBoundaryDirectionChipPresentation('last'), context: 'thread-jump' as const }),
+    [],
+  )
+
+  const unreadNavigationDirectionCueCopy =
+    `${unreadNavigationToFirstDirectionChipPresentation.badge} / ${unreadNavigationToLastDirectionChipPresentation.badge}`
+
   const unreadNavigationClearControlCopy = unreadNavigationClearShortcutChipPresentation
     ? `${unreadNavigationClearShortcutChipPresentation.badge} clear`
     : 'Shift+U clear'
@@ -2116,7 +2129,7 @@ function App() {
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationClearControlCopy}`
+      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationHintAriaLabel = useMemo(
@@ -2125,6 +2138,8 @@ function App() {
         unreadNavigationNextShortcutChipPresentation,
         unreadNavigationNextAltShortcutChipPresentation,
         unreadNavigationPreviousShortcutChipPresentation,
+        unreadNavigationToFirstDirectionChipPresentation,
+        unreadNavigationToLastDirectionChipPresentation,
         unreadNavigationClearShortcutChipPresentation,
       ]),
     [
@@ -2133,6 +2148,8 @@ function App() {
       unreadNavigationNextAltShortcutChipPresentation,
       unreadNavigationNextShortcutChipPresentation,
       unreadNavigationPreviousShortcutChipPresentation,
+      unreadNavigationToFirstDirectionChipPresentation,
+      unreadNavigationToLastDirectionChipPresentation,
     ],
   )
 
@@ -2654,6 +2671,8 @@ function App() {
               {renderShortcutChipPresentation(unreadNavigationNextShortcutChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationNextAltShortcutChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationPreviousShortcutChipPresentation)}
+              {renderShortcutChipPresentation(unreadNavigationToFirstDirectionChipPresentation)}
+              {renderShortcutChipPresentation(unreadNavigationToLastDirectionChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationClearShortcutChipPresentation)}
             </>
           )}

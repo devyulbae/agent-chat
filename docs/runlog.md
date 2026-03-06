@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 03:52 KST — unread navigation status boundary-direction chip parity (offset lane)
+- Scope: frontend integration follow-up to surface boundary direction cues in unread navigation status hints for parity with visible-thread boundary feedback.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added explicit unread navigation direction chip presentations from shared boundary direction helper:
+      - `↖ first`
+      - `↘ last`
+    - Wired those direction chips into unread navigation hint row rendering (alongside `U`, `N`, `P`, `Shift+U`).
+    - Extended unread navigation status hint copy with direction cue text (`↖ first / ↘ last`) so semantics remain visible even without chip parsing.
+    - Extended unread navigation status `aria-label` composition to include both direction chips via shared multi-chip aria helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 03:33 KST — unread navigation button aria-label/title parity (offset lane)
 - Scope: frontend integration accessibility polish so unread navigation controls expose the same chip-derived shortcut copy to assistive tech, not just hover titles.
 - Change:
