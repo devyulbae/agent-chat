@@ -107,6 +107,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     '→': 'ArrowRight',
     enter: 'Enter',
     '↵': 'Enter',
+    '⌤': 'Enter',
   }
 
   if (aliasMap[normalizedShortcut]) {
@@ -193,7 +194,7 @@ function normalizeShortcutAlias(shortcut: string): string {
   }
 
   const comboMatch = normalizedShortcut.match(
-    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|↵)$/i,
+    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|↑|↓|←|→|home|end|enter|↵|⌤)$/i,
   )
   if (!comboMatch?.groups) {
     return shortcut
@@ -217,6 +218,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     end: 'End',
     enter: 'Enter',
     '↵': 'Enter',
+    '⌤': 'Enter',
   }
   const normalizedKey = normalizedKeyAliasMap[keyAlias]
   if (!normalizedKey) {
