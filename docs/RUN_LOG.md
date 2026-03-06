@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 13:13 KST — Agent Chat parallel offset cycle
+- Delta: Extracted a shared `ShortcutChip` presentational helper in `frontend/src/main.tsx` to deduplicate repeated shortcut badge JSX wiring across root/boundary/filter status hints.
+  - Added typed `ShortcutChip` component (`badge`, `title`, `ariaLabel`, `context`) that centralizes style + border context mapping.
+  - Rewired root-jump, boundary source, boundary direction, and filter-jump hint chips to render via `ShortcutChip` instead of duplicated inline `<span>` style blocks.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: add a tiny UI-level regression test around thread hint rendering to verify shortcut chips stay suppressed when parser output is null.
+
 ## 2026-03-06 13:05 KST — Agent Chat implementation cycle
 - Delta: Hardened thread hint shortcut parsing to normalize compact alias/symbol sources in chat thread UX status hints.
   - Frontend: updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now normalizes `Shift+PgUp`/`Shift+PgDn` aliases and symbolic shortcuts (`↓`, `↵`) into canonical parser outputs used by existing badge/tooltip helpers.

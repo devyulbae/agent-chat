@@ -74,6 +74,31 @@ const THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT: Record<'thread-jump' | 'filter-jum
   'filter-jump': '1px solid #d0d7de',
 }
 
+
+type ShortcutChipContext = 'thread-jump' | 'filter-jump'
+
+type ShortcutChipProps = {
+  badge: string
+  title: string
+  ariaLabel: string
+  context: ShortcutChipContext
+}
+
+function ShortcutChip({ badge, title, ariaLabel, context }: ShortcutChipProps): React.JSX.Element {
+  return (
+    <span
+      title={title}
+      aria-label={ariaLabel}
+      style={{
+        ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
+        border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT[context],
+      }}
+    >
+      {badge}
+    </span>
+  )
+}
+
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
   const normalizedApiBase = API_BASE.replace(/\/+$/, '')
@@ -2536,20 +2561,16 @@ function App() {
                 style={{ color: '#1f4b99' }}
               >
                 {rootJumpShiftShortcutBadge && (
-                  <span
+                  <ShortcutChip
+                    badge={rootJumpShiftShortcutBadge}
                     title={`${rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut} root jump`}
-                    aria-label={getShortcutChipAriaLabel(
+                    ariaLabel={getShortcutChipAriaLabel(
                       rootJumpShiftShortcutBadge,
                       rootJumpSourceShortcutTooltip ?? rootJumpSourceShortcut ?? rootJumpShiftShortcutBadge,
                       'root jump',
                     )}
-                    style={{
-                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
-                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
-                    }}
-                  >
-                    {rootJumpShiftShortcutBadge}
-                  </span>
+                    context="thread-jump"
+                  />
                 )}
                 {threadRootJumpHint}
               </small>
@@ -2567,32 +2588,24 @@ function App() {
                 style={{ color: '#1f4b99' }}
               >
                 {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && (
-                  <span
+                  <ShortcutChip
+                    badge={boundaryJumpSourceShortcutBadge}
                     title={`${boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut} boundary jump`}
-                    aria-label={getShortcutChipAriaLabel(
+                    ariaLabel={getShortcutChipAriaLabel(
                       boundaryJumpSourceShortcutBadge,
                       boundaryJumpSourceShortcutTooltip ?? boundaryJumpSourceShortcut,
                       'boundary jump',
                     )}
-                    style={{
-                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
-                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
-                    }}
-                  >
-                    {boundaryJumpSourceShortcutBadge}
-                  </span>
+                    context="thread-jump"
+                  />
                 )}
                 {boundaryJumpDirectionCue && (
-                  <span
+                  <ShortcutChip
+                    badge={getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
                     title={`Boundary direction: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
-                    aria-label={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
-                    style={{
-                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
-                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['thread-jump'],
-                    }}
-                  >
-                    {getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
-                  </span>
+                    ariaLabel={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
+                    context="thread-jump"
+                  />
                 )}
                 {threadBoundaryJumpHint}
               </small>
@@ -2611,20 +2624,16 @@ function App() {
             {threadFilterJumpHint && (
               <small style={{ color: '#666' }}>
                 {threadFilterJumpSourceShortcut && threadFilterJumpSourceShortcutBadge && (
-                  <span
+                  <ShortcutChip
+                    badge={threadFilterJumpSourceShortcutBadge}
                     title={`${threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut} filter jump`}
-                    aria-label={getShortcutChipAriaLabel(
+                    ariaLabel={getShortcutChipAriaLabel(
                       threadFilterJumpSourceShortcutBadge,
                       threadFilterJumpSourceShortcutTooltip ?? threadFilterJumpSourceShortcut,
                       'filter jump',
                     )}
-                    style={{
-                      ...THREAD_SHORTCUT_CHIP_BASE_STYLE,
-                      border: THREAD_SHORTCUT_CHIP_BORDER_BY_CONTEXT['filter-jump'],
-                    }}
-                  >
-                    {threadFilterJumpSourceShortcutBadge}
-                  </span>
+                    context="filter-jump"
+                  />
                 )}
                 {threadFilterJumpHint}
               </small>
