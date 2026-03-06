@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 00:52 KST — fwd-slash alias normalization for filter shortcut parser (offset lane)
+- Scope: frontend integration + parser contract sync follow-up to keep filter-focus shortcut chips resilient to abbreviated slash wording in helper/status copy.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added shortcut alias normalization for `fwd-slash` variants (`fwd-slash`, `fwd slash`, `fwdslash`) to canonical `Slash`.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for the new `fwd-slash` alias family.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `c1f239b` — `[fix] normalize fwd-slash alias for filter shortcut hints`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 00:45 KST — thread-filter slash/escape helper chip wiring (boost lane)
 - Scope: chat thread UX wiring parity so filter helper row no longer mixes plain-text-only slash/escape guidance while other shortcuts are chip-backed.
 - Change:
