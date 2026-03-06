@@ -2170,8 +2170,12 @@ function App() {
       const directionLabel = step > 0 ? 'next' : 'previous'
       const targetLabel = targetThreadId === null ? 'Root' : targetThreadId
       const boundaryDirection = step > 0 ? 'first' : 'last'
+      const wrapped =
+        currentIndex >= 0 &&
+        ((step > 0 && nextIndex < currentIndex) || (step < 0 && nextIndex > currentIndex))
+      const wrapCue = wrapped ? (step > 0 ? 'wrapped last→first' : 'wrapped first→last') : null
       setThreadBoundaryJumpHint(
-        `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length} · ${getBoundaryDirectionStatusCue(boundaryDirection)}.`
+        `Jumped to ${directionLabel} unread thread (${sourceKey}) · ${targetLabel} · ${nextIndex + 1}/${unreadThreadIds.length}${wrapCue ? ` · ${wrapCue}` : ''} · ${getBoundaryDirectionStatusCue(boundaryDirection)}.`
       )
     },
     [unreadThreadIds, selectedThreadId, selectThread],

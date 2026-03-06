@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 04:31 KST — unread jump wrap-around status wording (offset lane)
+- Scope: frontend integration follow-up to make unread navigation feedback explicit when cycling across list boundaries.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated `jumpUnreadByStep` status hint copy to append wrap-around cues when selection cycles:
+      - forward wrap: `wrapped last→first`
+      - backward wrap: `wrapped first→last`
+    - Wrap cue is only included when an existing unread selection crosses the boundary; first jump from no selection remains unchanged.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+
 ## 2026-03-07 04:12 KST — clear-unread status hint uses chip badge token (offset lane)
 - Scope: frontend integration copy-sync polish so clear-unread status feedback stays aligned with shortcut chip badge formatting.
 - Change:
