@@ -15,6 +15,14 @@ export function getThreadShortcutLegendToggleControlCopy(): string {
   return '? / Shift+/'
 }
 
+export function isThreadShortcutLegendDismissKey(key: string): boolean {
+  return key === 'Escape'
+}
+
+export function getThreadShortcutLegendDismissControlCopy(): string {
+  return 'Esc'
+}
+
 export function getThreadFilterResetHint(source: ThreadFilterResetSource): string {
   if (source === 'input') {
     return 'Reset thread view filters from filter input focus (Shift+Esc).'

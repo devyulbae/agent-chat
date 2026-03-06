@@ -7,8 +7,10 @@ import {
   getBoundaryDirectionStatusCue,
   getHintShortcutSource,
   getThreadFilterResetHint,
+  getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
+  isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
 import {
@@ -2060,6 +2062,28 @@ function App() {
       if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
         return
       }
+      if (!isThreadShortcutLegendDismissKey(event.key)) {
+        return
+      }
+      if (!showThreadShortcutLegend || isEditableElement(event.target)) {
+        return
+      }
+      event.preventDefault()
+      setShowThreadShortcutLegend(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [showThreadShortcutLegend])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
       if (event.key !== '/') {
         return
       }
@@ -2760,9 +2784,17 @@ function App() {
             <button
               type="button"
               onClick={() => setShowThreadShortcutLegend((current) => !current)}
-              title={`Toggle thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`}
-              aria-label={`Toggle thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`}
-              aria-keyshortcuts="Shift+Slash"
+              title={
+                showThreadShortcutLegend
+                  ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
+                  : `Show thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`
+              }
+              aria-label={
+                showThreadShortcutLegend
+                  ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
+                  : `Show thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`
+              }
+              aria-keyshortcuts="Shift+Slash,Escape"
               aria-expanded={showThreadShortcutLegend}
             >
               {showThreadShortcutLegend ? 'Hide shortcuts' : 'Show shortcuts'}
@@ -2912,7 +2944,7 @@ function App() {
                 <strong>Thread shortcuts:</strong>
                 J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · U/N next unread · P previous unread ·
                 Shift+U clear unread · R/Shift+Home jump root · / focus filter · C focus composer ·
-                Y copy selected
+                Y copy selected · Esc close legend
               </small>
             )}
           </div>

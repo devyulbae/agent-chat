@@ -13,8 +13,10 @@ import {
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
   getThreadFilterResetHint,
+  getThreadShortcutLegendDismissControlCopy,
   getThreadShortcutLegendToggleControlCopy,
   getUnreadJumpWrapStatusCue,
+  isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
@@ -68,6 +70,23 @@ describe('threadHintParsers', () => {
   describe('getThreadShortcutLegendToggleControlCopy', () => {
     it('returns explicit primary/fallback toggle shortcut copy', () => {
       expect(getThreadShortcutLegendToggleControlCopy()).toBe('? / Shift+/')
+    })
+  })
+
+  describe('isThreadShortcutLegendDismissKey', () => {
+    it('accepts escape key for legend dismissal', () => {
+      expect(isThreadShortcutLegendDismissKey('Escape')).toBe(true)
+    })
+
+    it('rejects non-dismiss keys', () => {
+      expect(isThreadShortcutLegendDismissKey('?')).toBe(false)
+      expect(isThreadShortcutLegendDismissKey('/')).toBe(false)
+    })
+  })
+
+  describe('getThreadShortcutLegendDismissControlCopy', () => {
+    it('returns explicit dismiss shortcut copy', () => {
+      expect(getThreadShortcutLegendDismissControlCopy()).toBe('Esc')
     })
   })
 
