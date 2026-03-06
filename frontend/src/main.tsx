@@ -644,7 +644,7 @@ function App() {
           setThreadFilterText('')
           setShowUnreadOnlyThreads(false)
           setIncludeRootInUnreadOnly(true)
-          setThreadFilterJumpHint(null)
+          setThreadFilterJumpHint('Reset thread view filters (Shift+Esc).')
           return
         }
 
@@ -1919,7 +1919,21 @@ function App() {
   }, [])
 
   useEffect(() => {
-    setThreadFilterJumpHint(null)
+    setThreadFilterJumpHint((current) => {
+      if (!current) {
+        return null
+      }
+
+      const isResetHint = current.includes('(Shift+Esc)')
+      const isDefaultThreadViewState =
+        threadFilterText.trim().length === 0 && !showUnreadOnlyThreads && includeRootInUnreadOnly
+
+      if (isResetHint && isDefaultThreadViewState) {
+        return current
+      }
+
+      return null
+    })
   }, [includeRootInUnreadOnly, showUnreadOnlyThreads, threadFilterText])
 
   useEffect(() => {

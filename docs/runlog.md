@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 02:12 KST — Shift+Esc filter reset status feedback from input focus (offset lane)
+- Scope: frontend integration polish so keyboard reset (`Shift+Esc`) inside the thread filter input announces explicit status feedback instead of silently clearing.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated `handleThreadFilterKeyDown` so `Shift+Esc` now sets `threadFilterJumpHint` to `Reset thread view filters (Shift+Esc).` after clearing thread-view filters.
+    - Refined the filter-change hint-reset effect to preserve the reset status message when the thread view is already at the default state (empty filter, unread-only off, include-root on), while still clearing stale non-reset hints on subsequent filter changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (40/40)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 01:32 KST — hidden-selection recovery direction cue chips (offset lane)
 - Scope: frontend integration follow-up to include explicit boundary direction semantics in hidden-selection recovery statuses, aligning with existing boundary jump cue contract.
 - Change:
