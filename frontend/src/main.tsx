@@ -1589,12 +1589,22 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
-  const boundaryJumpShiftShortcutBadge =
+  const boundaryJumpSourceShortcutBadge =
     boundaryJumpSourceShortcut === 'Shift+PageUp'
       ? '⇧PgUp'
       : boundaryJumpSourceShortcut === 'Shift+PageDown'
         ? '⇧PgDn'
-        : null
+        : boundaryJumpSourceShortcut === 'Home'
+          ? 'Home'
+          : boundaryJumpSourceShortcut === 'End'
+            ? 'End'
+            : boundaryJumpSourceShortcut === 'PageUp'
+              ? 'PgUp'
+              : boundaryJumpSourceShortcut === 'PageDown'
+                ? 'PgDn'
+                : boundaryJumpSourceShortcut === 'G'
+                  ? 'G'
+                  : null
 
   const boundaryJumpDirectionCue = useMemo(
     () => getBoundaryDirectionFromHint(threadBoundaryJumpHint),
@@ -2501,7 +2511,7 @@ function App() {
                 aria-label={boundaryJumpStatusAriaLabel}
                 style={{ color: '#1f4b99' }}
               >
-                {boundaryJumpUsesShiftPageShortcut && boundaryJumpShiftShortcutBadge && (
+                {boundaryJumpSourceShortcut && boundaryJumpSourceShortcutBadge && (
                   <span
                     title={`${boundaryJumpSourceShortcut} boundary jump`}
                     style={{
@@ -2514,7 +2524,7 @@ function App() {
                       letterSpacing: '0.02em',
                     }}
                   >
-                    {boundaryJumpShiftShortcutBadge}
+                    {boundaryJumpSourceShortcutBadge}
                   </span>
                 )}
                 {boundaryJumpDirectionCue && (

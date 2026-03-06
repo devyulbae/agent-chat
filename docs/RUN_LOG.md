@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 11:52 KST — Agent Chat parallel offset cycle
+- Delta: Added explicit boundary-source badge rendering for non-shift keyboard jumps in thread status hints.
+  - Updated `frontend/src/main.tsx` boundary source badge mapping so parser-recognized single-key sources now render visible pills: `Home`, `End`, `PgUp`, `PgDn`, and `G` (alongside existing `⇧PgUp` / `⇧PgDn`).
+  - Updated boundary status line rendering to show source badge whenever a known shortcut source is present, not only Shift+Page variants.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 8 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: add a focused UI-level render regression test that verifies boundary status pills are suppressed when hint parser returns `null` source.
+
 ## 2026-03-06 11:31 KST — Agent Chat parallel offset cycle
 - Delta: Hardened thread hint shortcut-source normalization for spaced modifier tokens in frontend parser helpers.
   - Updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now normalizes optional spacing around `+` (e.g., `Shift + PageUp` → `Shift+PageUp`) before shortcut detection.
