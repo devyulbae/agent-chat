@@ -2075,9 +2075,11 @@ function App() {
       .map((thread) => thread.thread_id)
   }, [threads, unseenThreadKeys])
 
+  const unreadNavigationClearControlCopy = 'Shift+U clear'
+
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • Shift+U clear`
+      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • ${unreadNavigationClearControlCopy}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationNextShortcutChipPresentation = useMemo(
@@ -2607,7 +2609,7 @@ function App() {
           type="button"
           onClick={clearAllUnreadMarkers}
           disabled={unreadThreadIds.length === 0}
-          title="Shift+U"
+          title={unreadNavigationClearControlCopy}
           aria-keyshortcuts="Shift+U"
         >
           Clear all unread markers

@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 02:31 KST — clear-unread control title parity with helper chip copy (offset lane)
+- Scope: frontend integration polish to keep the Clear-all-unread button title text aligned with unread helper-row shortcut copy.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added shared copy constant `unreadNavigationClearControlCopy = 'Shift+U clear'`.
+    - Updated unread helper hint string to use the shared clear-control copy token.
+    - Updated "Clear all unread markers" button `title` to reuse the same shared copy token, ensuring button hover text and helper-row wording stay in sync.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (40/40)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 02:24 KST — unread navigation Shift+U chip wiring parity (boost lane)
 - Scope: chat thread UX wiring polish so unread helper status rows visually/aria-advertise the existing `Shift+U clear` shortcut, not just `U/N/P` navigation.
 - Change:
