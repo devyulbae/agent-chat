@@ -470,11 +470,10 @@ export type ShortcutChipPresentation = {
   copy: { title: string; ariaLabel: string }
 }
 
-export function getShortcutChipPresentationFromHint(
-  hint: string | null,
+export function getShortcutChipPresentationFromSource(
+  source: string | null,
   intent: ShortcutChipIntent,
 ): ShortcutChipPresentation | null {
-  const source = getHintShortcutSource(hint)
   if (!source) {
     return null
   }
@@ -491,4 +490,11 @@ export function getShortcutChipPresentationFromHint(
     tooltip,
     copy: buildShortcutChipCopy(badge, tooltip, intent),
   }
+}
+
+export function getShortcutChipPresentationFromHint(
+  hint: string | null,
+  intent: ShortcutChipIntent,
+): ShortcutChipPresentation | null {
+  return getShortcutChipPresentationFromSource(getHintShortcutSource(hint), intent)
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   getShortcutChipPresentationFromHint,
+  getShortcutChipPresentationFromSource,
   normalizeAriaLabelText,
   type ShortcutChipIntent,
 } from './threadHintParsers'
@@ -34,6 +35,24 @@ export function getShortcutChipPropsFromHint(
   context: ShortcutChipContext,
 ): ShortcutChipProps | null {
   const shortcutChipPresentation = getShortcutChipPresentationFromHint(hint, intent)
+  if (!shortcutChipPresentation) {
+    return null
+  }
+
+  return {
+    badge: shortcutChipPresentation.badge,
+    title: shortcutChipPresentation.copy.title,
+    ariaLabel: shortcutChipPresentation.copy.ariaLabel,
+    context,
+  }
+}
+
+export function getShortcutChipPropsFromSource(
+  source: string | null,
+  intent: ShortcutChipIntent,
+  context: ShortcutChipContext,
+): ShortcutChipProps | null {
+  const shortcutChipPresentation = getShortcutChipPresentationFromSource(source, intent)
   if (!shortcutChipPresentation) {
     return null
   }

@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import {
   getShortcutChipPropsFromHint,
+  getShortcutChipPropsFromSource,
   getStatusAriaLabelWithShortcutChip,
   getStatusAriaLabelWithShortcutChips,
   renderShortcutChipPresentation,
@@ -137,6 +138,21 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
         },
       ]),
     ).toBe('Recovered to first visible thread (Shift+PageUp) · Root · 1/9. Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).')
+  })
+})
+
+describe('getShortcutChipPropsFromSource', () => {
+  it('maps explicit shortcut source to chip props with context', () => {
+    expect(getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump')).toEqual({
+      badge: 'K',
+      title: 'K boundary jump',
+      ariaLabel: 'Shortcut badge K: K (boundary jump).',
+      context: 'thread-jump',
+    })
+  })
+
+  it('returns null for unknown shortcut source', () => {
+    expect(getShortcutChipPropsFromSource('Mouse click', 'boundary jump', 'thread-jump')).toBeNull()
   })
 })
 

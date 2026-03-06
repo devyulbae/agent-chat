@@ -7,6 +7,7 @@ import {
 } from './threadHintParsers'
 import {
   getShortcutChipPropsFromHint,
+  getShortcutChipPropsFromSource,
   getStatusAriaLabelWithShortcutChip,
   getStatusAriaLabelWithShortcutChips,
   renderShortcutChipPresentation,
@@ -1585,6 +1586,26 @@ function App() {
   const selectedVisibleThreadInlineRecoveryHint = selectedVisibleThreadHiddenByFilter
     ? 'Hidden selection recovery: J/K or ↑/↓ → first/last visible.'
     : null
+  const selectedVisibleThreadFirstRecoveryShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('J', 'boundary jump', 'thread-jump'),
+    [],
+  )
+  const selectedVisibleThreadLastRecoveryShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
+    [],
+  )
+  const selectedVisibleThreadShortcutRecoveryStatusAriaLabel = useMemo(
+    () =>
+      getStatusAriaLabelWithShortcutChips(selectedVisibleThreadShortcutRecoveryHint, [
+        selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
+        selectedVisibleThreadLastRecoveryShortcutChipPresentation,
+      ]),
+    [
+      selectedVisibleThreadFirstRecoveryShortcutChipPresentation,
+      selectedVisibleThreadLastRecoveryShortcutChipPresentation,
+      selectedVisibleThreadShortcutRecoveryHint,
+    ],
+  )
 
   const boundaryJumpSourceShortcut = useMemo(
     () => getHintShortcutSource(threadBoundaryJumpHint),
@@ -2542,7 +2563,16 @@ function App() {
                   <small style={{ color: '#666' }}>{selectedVisibleThreadRecoveryHint}</small>
                 )}
                 {selectedVisibleThreadShortcutRecoveryHint && (
-                  <small style={{ color: '#666' }}>{selectedVisibleThreadShortcutRecoveryHint}</small>
+                  <small
+                    aria-live="polite"
+                    role="status"
+                    aria-label={selectedVisibleThreadShortcutRecoveryStatusAriaLabel}
+                    style={{ color: '#666' }}
+                  >
+                    {renderShortcutChipPresentation(selectedVisibleThreadFirstRecoveryShortcutChipPresentation)}
+                    {renderShortcutChipPresentation(selectedVisibleThreadLastRecoveryShortcutChipPresentation)}
+                    {selectedVisibleThreadShortcutRecoveryHint}
+                  </small>
                 )}
               </>
             )}

@@ -11,6 +11,7 @@ import {
   getBoundaryDirectionTooltip,
   getHintShortcutSource,
   getShortcutChipPresentationFromHint,
+  getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
   normalizeAriaLabelText,
@@ -479,6 +480,25 @@ describe('threadHintParsers', () => {
         title: 'Shift + U filter jump',
         ariaLabel: 'Shortcut badge ⇧U: Shift + U (filter jump).',
       })
+    })
+  })
+
+  describe('getShortcutChipPresentationFromSource', () => {
+    it('builds chip presentation directly from normalized shortcut source', () => {
+      expect(getShortcutChipPresentationFromSource('J', 'boundary jump')).toEqual({
+        source: 'J',
+        badge: 'J',
+        tooltip: 'J',
+        copy: {
+          title: 'J boundary jump',
+          ariaLabel: 'Shortcut badge J: J (boundary jump).',
+        },
+      })
+    })
+
+    it('returns null when source has no known badge mapping', () => {
+      expect(getShortcutChipPresentationFromSource('Mouse click', 'boundary jump')).toBeNull()
+      expect(getShortcutChipPresentationFromSource(null, 'boundary jump')).toBeNull()
     })
   })
 
