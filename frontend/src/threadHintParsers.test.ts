@@ -13,6 +13,7 @@ import {
   getShortcutChipPresentationFromHint,
   getThreadShortcutBadge,
   getThreadShortcutTooltip,
+  normalizeAriaLabelText,
 } from './threadHintParsers'
 
 describe('threadHintParsers', () => {
@@ -443,6 +444,14 @@ describe('threadHintParsers', () => {
     it('returns null for unknown or empty shortcut source', () => {
       expect(getThreadShortcutTooltip('Shift+Unknown')).toBeNull()
       expect(getThreadShortcutTooltip(null)).toBeNull()
+    })
+  })
+
+  describe('normalizeAriaLabelText', () => {
+    it('trims and collapses internal whitespace for aria-label canonicalization', () => {
+      expect(normalizeAriaLabelText('  Shortcut  badge   ⇧PgUp:   Shift + PageUp (boundary jump).  ')).toBe(
+        'Shortcut badge ⇧PgUp: Shift + PageUp (boundary jump).',
+      )
     })
   })
 

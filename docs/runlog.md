@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-06 21:52 KST — shared aria-label text canonicalization for shortcut chips (offset lane)
+- Scope: frontend integration + API contract sync follow-up to keep shortcut status copy and tooltip-derived aria text canonical from one source.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `normalizeAriaLabelText(...)` helper to trim and collapse internal whitespace for aria-label text.
+    - Routed `buildShortcutChipCopy(...)` aria-label generation through the shared normalizer.
+  - `frontend/src/threadHintChips.tsx`
+    - Reused `normalizeAriaLabelText(...)` when composing multi-chip status aria-labels before dedupe.
+    - This keeps parser-emitted aria labels and status-composed aria labels aligned to the same canonical format.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression test proving whitespace canonicalization behavior.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (33/33)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts unchanged).
+
 ## 2026-03-06 21:43 KST — status aria-label whitespace normalization dedupe (boost lane)
 - Scope: chat thread UX wiring accessibility polish for status aria-label composition.
 - Change:

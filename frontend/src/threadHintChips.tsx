@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   getShortcutChipPresentationFromHint,
+  normalizeAriaLabelText,
   type ShortcutChipIntent,
 } from './threadHintParsers'
 
@@ -87,7 +88,7 @@ export function getStatusAriaLabelWithShortcutChips(
 
   const chipAriaLabels = presentations
     .filter((presentation): presentation is ShortcutChipProps => Boolean(presentation))
-    .map((presentation) => presentation.ariaLabel.trim().replace(/\s+/g, ' '))
+    .map((presentation) => normalizeAriaLabelText(presentation.ariaLabel))
     .filter((ariaLabel) => Boolean(ariaLabel))
     .filter((ariaLabel, index, labels) => labels.indexOf(ariaLabel) === index)
 

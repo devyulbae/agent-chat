@@ -447,6 +447,10 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
   return tooltipByShortcut[normalizedShortcut] ?? null
 }
 
+export function normalizeAriaLabelText(text: string): string {
+  return text.trim().replace(/\s+/g, ' ')
+}
+
 export function buildShortcutChipCopy(
   badge: string,
   shortcutText: string,
@@ -454,7 +458,7 @@ export function buildShortcutChipCopy(
 ): { title: string; ariaLabel: string } {
   return {
     title: `${shortcutText} ${intent}`,
-    ariaLabel: `Shortcut badge ${badge}: ${shortcutText} (${intent}).`,
+    ariaLabel: normalizeAriaLabelText(`Shortcut badge ${badge}: ${shortcutText} (${intent}).`),
   }
 }
 
