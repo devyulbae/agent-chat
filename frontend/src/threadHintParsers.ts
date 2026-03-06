@@ -35,12 +35,16 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/⌥/gu, 'option+')
     .replace(/⌃/gu, 'ctrl+')
     .replace(/⇧/gu, 'shift+')
+    .replace(/page[\s-]?up/gu, 'pageup')
+    .replace(/page[\s-]?down/gu, 'pagedown')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 
   const aliasMap: Record<string, string> = {
     pgup: 'PageUp',
     pgdn: 'PageDown',
+    pageup: 'PageUp',
+    pagedown: 'PageDown',
     '↑': 'ArrowUp',
     '↓': 'ArrowDown',
     '↵': 'Enter',
@@ -50,13 +54,15 @@ function normalizeShortcutAlias(shortcut: string): string {
     return aliasMap[normalizedShortcut]
   }
 
-  const comboMatch = normalizedShortcut.match(/^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn)$/i)
+  const comboMatch = normalizedShortcut.match(
+    /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown)$/i,
+  )
   if (!comboMatch?.groups) {
     return shortcut
   }
 
-  const keyAlias = comboMatch.groups.key
-  const normalizedKey = keyAlias === 'pgup' ? 'PageUp' : 'PageDown'
+  const keyAlias = comboMatch.groups.key.toLowerCase()
+  const normalizedKey = keyAlias === 'pgup' || keyAlias === 'pageup' ? 'PageUp' : 'PageDown'
   const normalizedModifierAliasMap: Record<string, string> = {
     ctrl: 'Ctrl',
     control: 'Control',
