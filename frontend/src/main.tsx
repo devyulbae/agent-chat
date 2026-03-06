@@ -2099,10 +2099,17 @@ function App() {
   const unreadNavigationClearControlCopy = unreadNavigationClearShortcutChipPresentation
     ? `${unreadNavigationClearShortcutChipPresentation.badge} clear`
     : 'Shift+U clear'
+  const unreadNavigationNextControlCopy =
+    unreadNavigationNextShortcutChipPresentation && unreadNavigationNextAltShortcutChipPresentation
+      ? `${unreadNavigationNextShortcutChipPresentation.badge}/${unreadNavigationNextAltShortcutChipPresentation.badge} next`
+      : 'U/N next'
+  const unreadNavigationPreviousControlCopy = unreadNavigationPreviousShortcutChipPresentation
+    ? `${unreadNavigationPreviousShortcutChipPresentation.badge} previous`
+    : 'P previous'
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • U/N next • P previous • ${unreadNavigationClearControlCopy}`
+      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationClearControlCopy}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationHintAriaLabel = useMemo(

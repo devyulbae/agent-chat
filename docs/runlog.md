@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 03:11 KST — unread helper next/previous tokens use chip badge copy (offset lane)
+- Scope: frontend integration polish to keep unread helper text tokens (`U/N`, `P`) sourced from shared shortcut chip badge presentation rather than hard-coded key text.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `unreadNavigationNextControlCopy` built from unread next/alt chip badges with `U/N next` fallback.
+    - Added `unreadNavigationPreviousControlCopy` built from unread previous chip badge with `P previous` fallback.
+    - Updated unread helper hint text to use these chip-derived control-copy tokens alongside the existing chip-derived clear token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 03:03 KST — unread clear button title uses chip badge token (boost lane)
 - Scope: chat thread UX wiring polish to keep unread clear control title/hint copy aligned with shared shortcut chip badge formatting.
 - Change:
