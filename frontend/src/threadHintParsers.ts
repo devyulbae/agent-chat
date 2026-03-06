@@ -52,3 +52,33 @@ export function getHintShortcutSource(hint: string | null): string | null {
 
   return shortcutLikeSegment ?? null
 }
+
+export function getThreadShortcutBadge(shortcut: string | null): string | null {
+  if (!shortcut) {
+    return null
+  }
+
+  const normalizedShortcut = shortcut.toLowerCase()
+  const badgeByShortcut: Record<string, string> = {
+    'shift+home': '⇧Home',
+    'shift+end': '⇧End',
+    'shift+pageup': '⇧PgUp',
+    'shift+pagedown': '⇧PgDn',
+    'shift+g': '⇧G',
+    'shift+r': '⇧R',
+    home: 'Home',
+    end: 'End',
+    pageup: 'PgUp',
+    pagedown: 'PgDn',
+    arrowup: '↑',
+    arrowdown: '↓',
+    g: 'G',
+    j: 'J',
+    k: 'K',
+    u: 'U',
+    y: 'Y',
+    c: 'C',
+  }
+
+  return badgeByShortcut[normalizedShortcut] ?? null
+}

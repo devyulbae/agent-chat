@@ -5,6 +5,7 @@ import {
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
   getHintShortcutSource,
+  getThreadShortcutBadge,
 } from './threadHintParsers'
 
 type OrgType = 'freeform' | 'department' | 'squad'
@@ -1589,22 +1590,10 @@ function App() {
   const boundaryJumpUsesShiftPageShortcut =
     boundaryJumpSourceShortcut === 'Shift+PageUp' || boundaryJumpSourceShortcut === 'Shift+PageDown'
 
-  const boundaryJumpSourceShortcutBadge =
-    boundaryJumpSourceShortcut === 'Shift+PageUp'
-      ? '⇧PgUp'
-      : boundaryJumpSourceShortcut === 'Shift+PageDown'
-        ? '⇧PgDn'
-        : boundaryJumpSourceShortcut === 'Home'
-          ? 'Home'
-          : boundaryJumpSourceShortcut === 'End'
-            ? 'End'
-            : boundaryJumpSourceShortcut === 'PageUp'
-              ? 'PgUp'
-              : boundaryJumpSourceShortcut === 'PageDown'
-                ? 'PgDn'
-                : boundaryJumpSourceShortcut === 'G'
-                  ? 'G'
-                  : null
+  const boundaryJumpSourceShortcutBadge = useMemo(
+    () => getThreadShortcutBadge(boundaryJumpSourceShortcut),
+    [boundaryJumpSourceShortcut],
+  )
 
   const boundaryJumpDirectionCue = useMemo(
     () => getBoundaryDirectionFromHint(threadBoundaryJumpHint),
@@ -1623,12 +1612,10 @@ function App() {
 
   const rootJumpSourceShortcut = useMemo(() => getHintShortcutSource(threadRootJumpHint), [threadRootJumpHint])
 
-  const rootJumpShiftShortcutBadge =
-    rootJumpSourceShortcut === 'Shift+Home'
-      ? '⇧Home'
-      : rootJumpSourceShortcut === 'Shift+R'
-        ? '⇧R'
-        : null
+  const rootJumpShiftShortcutBadge = useMemo(
+    () => getThreadShortcutBadge(rootJumpSourceShortcut),
+    [rootJumpSourceShortcut],
+  )
 
   const rootJumpHintHelp = useMemo(() => {
     if (!threadRootJumpHint) {

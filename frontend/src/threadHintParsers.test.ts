@@ -5,6 +5,7 @@ import {
   getBoundaryDirectionFromHint,
   getBoundaryDirectionLabel,
   getHintShortcutSource,
+  getThreadShortcutBadge,
 } from './threadHintParsers'
 
 describe('threadHintParsers', () => {
@@ -76,6 +77,27 @@ describe('threadHintParsers', () => {
       expect(getBoundaryDirectionBadge('last')).toBe('↘ last')
       expect(getBoundaryDirectionLabel('first')).toBe('first visible thread')
       expect(getBoundaryDirectionLabel('last')).toBe('last visible thread')
+    })
+  })
+
+  describe('getThreadShortcutBadge', () => {
+    it('maps common boundary/root shortcuts to compact badges', () => {
+      expect(getThreadShortcutBadge('Shift+PageUp')).toBe('⇧PgUp')
+      expect(getThreadShortcutBadge('Shift+PageDown')).toBe('⇧PgDn')
+      expect(getThreadShortcutBadge('Shift+G')).toBe('⇧G')
+      expect(getThreadShortcutBadge('Shift+R')).toBe('⇧R')
+      expect(getThreadShortcutBadge('Home')).toBe('Home')
+      expect(getThreadShortcutBadge('End')).toBe('End')
+      expect(getThreadShortcutBadge('PageUp')).toBe('PgUp')
+      expect(getThreadShortcutBadge('PageDown')).toBe('PgDn')
+      expect(getThreadShortcutBadge('ArrowUp')).toBe('↑')
+      expect(getThreadShortcutBadge('ArrowDown')).toBe('↓')
+      expect(getThreadShortcutBadge('G')).toBe('G')
+    })
+
+    it('returns null for unknown or empty shortcut source', () => {
+      expect(getThreadShortcutBadge('Shift+Unknown')).toBeNull()
+      expect(getThreadShortcutBadge(null)).toBeNull()
     })
   })
 })

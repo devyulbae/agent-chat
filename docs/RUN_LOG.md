@@ -1666,3 +1666,16 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Commit: pending
 - Next action: wire parser-recognized single-key sources into explicit UI badges/tooltips for boundary hints (Home/End/PageUp/PageDown/G) so source cues are visible, not just parsed.
+
+## 2026-03-06 12:05 KST — Agent Chat implementation cycle
+- Delta: Wired parser-backed shortcut badges into thread jump status hints so parsed single-key shortcuts are now explicitly surfaced in the chat thread UX.
+  - Frontend: added `getThreadShortcutBadge(...)` in `frontend/src/threadHintParsers.ts` to centralize compact badge mapping for boundary/root shortcuts (e.g., `Home`, `End`, `PgUp/PgDn`, `G`, `Shift+G`, `Shift+R`).
+  - Frontend: updated `frontend/src/main.tsx` to consume `getThreadShortcutBadge(...)` for both boundary jump and root jump status badges (replacing inline conditional chains).
+  - Frontend tests: expanded `frontend/src/threadHintParsers.test.ts` with badge mapping coverage and unknown/null fallback assertions.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add helper-level mapping for human-readable shortcut tooltip text (not just compact badges) and wire it into boundary/root hint chip `title` strings for clearer discoverability.
