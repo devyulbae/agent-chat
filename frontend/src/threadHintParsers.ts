@@ -45,7 +45,9 @@ export function getHintShortcutSource(hint: string | null): string | null {
   )
 
   const shortcutLikeSegment = normalizedSegments.find((segment) =>
-    /\b(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*/i.test(segment),
+    /^(?:(?:shift|ctrl|control|alt|option|cmd|command|meta)\+[a-z0-9][\w-]*|home|end|pageup|pagedown|arrowup|arrowdown|g|j|k|u|y|c)$/i.test(
+      segment,
+    ),
   )
 
   return shortcutLikeSegment ?? null

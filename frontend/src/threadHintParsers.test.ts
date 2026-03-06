@@ -32,6 +32,8 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to first visible thread (Shift+PageUp).')).toBe(
         'Shift+PageUp',
       )
+      expect(getHintShortcutSource('Jumped to first visible thread (Home).')).toBe('Home')
+      expect(getHintShortcutSource('Jumped to first visible thread (G).')).toBe('G')
     })
 
     it('normalizes no-op "confirmed" suffix to keep shortcut badges stable', () => {

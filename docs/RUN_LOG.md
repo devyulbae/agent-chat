@@ -10,6 +10,19 @@
   - `cd frontend && npm run build` ✅
 - Next action: add a focused UI-level render test around boundary/root status rows so parser `null` outputs are explicitly proven to suppress shortcut pills.
 
+## 2026-03-06 11:23 KST — Agent Chat implementation cycle
+- Delta: Tightened thread hint shortcut-source parsing scope to ignore non-keyboard `+` tokens while preserving existing Shift-based UX hint wiring.
+  - Updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now returns a source only when normalized parenthesized segments match known keyboard-modifier patterns (`Shift/Ctrl/Alt/Cmd/Meta + key`).
+  - Prevents false shortcut badge extraction from non-shortcut segments like `C++` or generic `token+audit` metadata.
+  - Added regression cases in `frontend/src/threadHintParsers.test.ts` to assert null extraction for non-shortcut plus-sign segments.
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+  - `cd frontend && npm test -- --run` ✅ (vitest: 8 passed)
+- Commit: `e1a2b69` (pushed to `main`)
+- Next action: add a tiny UI-level fallback test around boundary/root hint badge rendering to confirm parser `null` outputs suppress shortcut pills without regressing helper copy.
+
 ## 2026-03-06 11:12 KST — Agent Chat parallel offset cycle
 - Delta: Hardened thread hint shortcut-source parsing for nested/multi-parenthesis hint copy in frontend parser helpers.
   - Updated `getHintShortcutSource(...)` in `frontend/src/threadHintParsers.ts` to scan all parenthesized segments, prefer shortcut-like segments, and normalize `confirmed` + `source:` prefixed forms.
@@ -1631,3 +1644,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `86f5935` (pushed to `main`)
 - Next action: extend parser tests with edge cases for nested/multiple parentheses in hint copy so shortcut-source extraction remains robust to future microcopy changes.
+
+## 2026-03-06 11:41 KST — Agent Chat implementation cycle
+- Delta: Expanded thread hint shortcut parsing coverage for non-modifier boundary/navigation keys used in chat thread UX wiring.
+  - Frontend: updated `frontend/src/threadHintParsers.ts` so `getHintShortcutSource(...)` now recognizes single-key sources (e.g., `Home`, `End`, `PageUp`, `PageDown`, `G`, `J`, `K`, `U`, `Y`, `C`) in addition to modifier combos.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with assertions for `(Home)` and `(G)` extraction.
+  - Scope: frontend parser + tests only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Commit: pending
+- Next action: wire parser-recognized single-key sources into explicit UI badges/tooltips for boundary hints (Home/End/PageUp/PageDown/G) so source cues are visible, not just parsed.
