@@ -331,3 +331,38 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Commit: `c1e439e`
 - Next action: wire filter-hidden recovery inline hint to shared shortcut chip presentation + aria-label path (replace plain text-only recovery hint with chip-backed status text).
+
+## 2026-03-06 23:43 KST — thread-filter helper PgUp/PgDn chip parity (boost lane)
+- Scope: chat thread UX wiring polish so helper-row shortcut chips cover non-letter boundary navigation shortcuts already supported by key handlers.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `PageUp` and `PageDown` shortcut chips to `threadFilterHintShortcutChipPresentations`.
+    - Updated helper hint copy to explicitly advertise `Home/End/PgUp/PgDn` boundary jumps.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Extended source-mapping regression to assert `PageUp`/`PageDown` chip props (`PgUp`/`PgDn` badges, titles, aria-labels) via `getShortcutChipPropsFromSource(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `be829fa` — `[feat] add PgUp/PgDn helper chips for thread filter hints`
+  - Push: `main -> origin/main` ✅
+- Next action: add focused parser regression coverage for compact/no-plus modifier+navigation aliases in helper/status hint text (e.g., `ShiftPgUp`, `ShiftPgDn`) to keep chip extraction resilient to copy drift.
+
+## 2026-03-07 00:03 KST — compact no-plus multi-modifier shortcut alias parsing (boost lane)
+- Scope: chat thread UX wiring parser resilience for helper/status shortcut copy drift.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added compact multi-modifier alias parsing for navigation keys without `+` separators (e.g., `CmdShiftPgUp`, `OptionShiftPgDn`).
+    - Reused shared modifier/key alias maps so compact parsing now supports one-modifier and multi-modifier compact variants through the same canonical outputs.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for no-plus aliases: `ShiftPgUp`, `ShiftPgDn`, `CmdShiftPgUp`, and `OptionShiftPgDn`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add parser coverage for compact no-plus aliases that include `Home`/`End` targets (e.g., `CmdShiftHome`, `OptionShiftEnd`) to keep boundary/root hint chips canonical if copy drifts.

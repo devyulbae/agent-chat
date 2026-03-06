@@ -158,40 +158,65 @@ function normalizeShortcutAlias(shortcut: string): string {
     }
   }
 
+  const compactNavKeyAliasMap: Record<string, string> = {
+    pgup: 'PageUp',
+    pageup: 'PageUp',
+    pgdn: 'PageDown',
+    pagedown: 'PageDown',
+    arrowup: 'ArrowUp',
+    arrowdown: 'ArrowDown',
+    arrowleft: 'ArrowLeft',
+    arrowright: 'ArrowRight',
+    home: 'Home',
+    end: 'End',
+    enter: 'Enter',
+  }
+  const compactModifierAliasMap: Record<string, string> = {
+    ctrl: 'Ctrl',
+    control: 'Control',
+    alt: 'Alt',
+    option: 'Option',
+    opt: 'Option',
+    cmd: 'Cmd',
+    command: 'Command',
+    meta: 'Meta',
+    shift: 'Shift',
+  }
+  const compactModifierTokens = Object.keys(compactModifierAliasMap).sort(
+    (left, right) => right.length - left.length,
+  )
+
   const compactComboMatch = normalizedShortcut.match(
     /^(?<modifier>shift|ctrl|control|alt|option|opt|cmd|command|meta)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
   )
   if (compactComboMatch?.groups) {
-    const compactKeyAlias = compactComboMatch.groups.key.toLowerCase()
-    const compactKeyAliasMap: Record<string, string> = {
-      pgup: 'PageUp',
-      pageup: 'PageUp',
-      pgdn: 'PageDown',
-      pagedown: 'PageDown',
-      arrowup: 'ArrowUp',
-      arrowdown: 'ArrowDown',
-      arrowleft: 'ArrowLeft',
-      arrowright: 'ArrowRight',
-      home: 'Home',
-      end: 'End',
-      enter: 'Enter',
-    }
-    const compactModifierAliasMap: Record<string, string> = {
-      ctrl: 'Ctrl',
-      control: 'Control',
-      alt: 'Alt',
-      option: 'Option',
-      opt: 'Option',
-      cmd: 'Cmd',
-      command: 'Command',
-      meta: 'Meta',
-      shift: 'Shift',
-    }
-
-    const compactKey = compactKeyAliasMap[compactKeyAlias]
+    const compactKey = compactNavKeyAliasMap[compactComboMatch.groups.key.toLowerCase()]
     const compactModifier = compactModifierAliasMap[compactComboMatch.groups.modifier.toLowerCase()]
     if (compactKey && compactModifier) {
       return `${compactModifier}+${compactKey}`
+    }
+  }
+
+  const compactMultiModifierMatch = normalizedShortcut.match(
+    /^(?<modifiers>(?:shift|ctrl|control|alt|option|opt|cmd|command|meta){2,})(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|arrowleft|arrowright|home|end|enter)$/i,
+  )
+  if (compactMultiModifierMatch?.groups) {
+    const compactKey = compactNavKeyAliasMap[compactMultiModifierMatch.groups.key.toLowerCase()]
+    const compactModifiers: string[] = []
+    let remainingModifiers = compactMultiModifierMatch.groups.modifiers.toLowerCase()
+
+    while (remainingModifiers.length > 0) {
+      const matchedModifier = compactModifierTokens.find((token) => remainingModifiers.startsWith(token))
+      if (!matchedModifier) {
+        compactModifiers.length = 0
+        break
+      }
+      compactModifiers.push(compactModifierAliasMap[matchedModifier])
+      remainingModifiers = remainingModifiers.slice(matchedModifier.length)
+    }
+
+    if (compactKey && compactModifiers.length > 1) {
+      return `${compactModifiers.join('+')}+${compactKey}`
     }
   }
 
