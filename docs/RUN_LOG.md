@@ -1,5 +1,27 @@
 # Run Log
 
+## 2026-03-07 07:50 KST — Agent Chat parallel offset cycle
+- Delta: Added left/right bracketed arrow-alias regression coverage in frontend thread hint parsing so horizontal shortcut chips remain canonical when hint copy emits wrapped variants.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `[Left Arrow] confirmed` → `ArrowLeft` and `key: [ArrowRight]` → `ArrowRight` extraction assertions.
+  - Scope kept frontend-only (chat thread UX hint parser coverage; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (44 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add parser regression coverage for bracketed modifier+horizontal-arrow variants (e.g., `Shift+[Left Arrow]`, `key: [Cmd+ArrowRight]`) to keep wrapped-combo alias paths contract-safe.
+
+## 2026-03-07 07:42 KST — Agent Chat implementation cycle
+- Delta: Added bracketed arrow-alias regression coverage in frontend thread hint parsing so shortcut chips stay canonical when hint copy emits wrapped arrow labels.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `[Up Arrow] confirmed` → `ArrowUp` and `key: [ArrowDown]` → `ArrowDown` extraction assertions.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check /Users/sybae/code/agent-chat` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (44 passed)
+- Commit: `04def38` (pushed to `main`)
+- Next action: add parser regression coverage for wrapped left/right arrow variants (e.g., `[Left Arrow]`, `key: [ArrowRight]`) to keep horizontal movement hint aliases contract-safe.
+
 ## 2026-03-07 01:52 KST — Agent Chat parallel offset cycle
 - Delta: Added bracketed key-label normalization coverage for thread hint shortcut parsing so frontend shortcut chips stay canonical when hint copy emits forms like `[Return]`, `Shift+[Return]`, or `key Enter`.
   - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to strip bracket wrappers and lightweight `key`/`shortcut` labels before existing alias canonicalization.
