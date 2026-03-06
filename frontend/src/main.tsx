@@ -12,6 +12,7 @@ import {
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
+  getUnreadJumpWrapStatusCueAriaLabel,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
@@ -2215,26 +2216,32 @@ function App() {
       ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}${unreadNavigationWrapCue ? ` • ${unreadNavigationWrapCue}` : ''}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
-  const unreadNavigationHintAriaLabel = useMemo(
-    () =>
-      getStatusAriaLabelWithShortcutChips(unreadNavigationHint, [
-        unreadNavigationNextShortcutChipPresentation,
-        unreadNavigationNextAltShortcutChipPresentation,
-        unreadNavigationPreviousShortcutChipPresentation,
-        unreadNavigationToFirstDirectionChipPresentation,
-        unreadNavigationToLastDirectionChipPresentation,
-        unreadNavigationClearShortcutChipPresentation,
-      ]),
-    [
-      unreadNavigationClearShortcutChipPresentation,
-      unreadNavigationHint,
-      unreadNavigationNextAltShortcutChipPresentation,
+  const unreadNavigationHintAriaLabel = useMemo(() => {
+    const shortcutComposedAriaLabel = getStatusAriaLabelWithShortcutChips(unreadNavigationHint, [
       unreadNavigationNextShortcutChipPresentation,
+      unreadNavigationNextAltShortcutChipPresentation,
       unreadNavigationPreviousShortcutChipPresentation,
       unreadNavigationToFirstDirectionChipPresentation,
       unreadNavigationToLastDirectionChipPresentation,
-    ],
-  )
+      unreadNavigationClearShortcutChipPresentation,
+    ])
+
+    const wrapCueAriaLabel = getUnreadJumpWrapStatusCueAriaLabel(unreadNavigationWrapCue)
+    if (!shortcutComposedAriaLabel || !wrapCueAriaLabel) {
+      return shortcutComposedAriaLabel
+    }
+
+    return `${shortcutComposedAriaLabel} ${wrapCueAriaLabel}`
+  }, [
+    unreadNavigationClearShortcutChipPresentation,
+    unreadNavigationHint,
+    unreadNavigationNextAltShortcutChipPresentation,
+    unreadNavigationNextShortcutChipPresentation,
+    unreadNavigationPreviousShortcutChipPresentation,
+    unreadNavigationToFirstDirectionChipPresentation,
+    unreadNavigationToLastDirectionChipPresentation,
+    unreadNavigationWrapCue,
+  ])
 
   useEffect(() => {
     if (unreadThreadIds.length > 0) {

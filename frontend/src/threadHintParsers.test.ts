@@ -18,6 +18,7 @@ import {
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadJumpWrapStatusCue,
+  getUnreadJumpWrapStatusCueAriaLabel,
   isThreadShortcutLegendDismissKey,
   isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
@@ -124,6 +125,22 @@ describe('threadHintParsers', () => {
       expect(getUnreadJumpWrapStatusCue(1, 1, 2)).toBeNull()
       expect(getUnreadJumpWrapStatusCue(-1, 3, 2)).toBeNull()
       expect(getUnreadJumpWrapStatusCue(1, -1, 0)).toBeNull()
+    })
+  })
+
+  describe('getUnreadJumpWrapStatusCueAriaLabel', () => {
+    it('maps wrap cues to explicit unread wrap aria wording', () => {
+      expect(getUnreadJumpWrapStatusCueAriaLabel('wrapped last→first')).toBe(
+        'Unread wrap cue: wrapped from last unread thread to first unread thread.',
+      )
+      expect(getUnreadJumpWrapStatusCueAriaLabel('wrapped first→last')).toBe(
+        'Unread wrap cue: wrapped from first unread thread to last unread thread.',
+      )
+    })
+
+    it('returns null for empty or unrecognized cues', () => {
+      expect(getUnreadJumpWrapStatusCueAriaLabel(null)).toBeNull()
+      expect(getUnreadJumpWrapStatusCueAriaLabel('wrapped')).toBeNull()
     })
   })
 

@@ -73,6 +73,18 @@ export function getUnreadJumpWrapStatusCue(
   return null
 }
 
+export function getUnreadJumpWrapStatusCueAriaLabel(wrapCue: string | null): string | null {
+  if (wrapCue === 'wrapped last→first') {
+    return 'Unread wrap cue: wrapped from last unread thread to first unread thread.'
+  }
+
+  if (wrapCue === 'wrapped first→last') {
+    return 'Unread wrap cue: wrapped from first unread thread to last unread thread.'
+  }
+
+  return null
+}
+
 export function getBoundaryDirectionTooltip(direction: BoundaryDirection): string {
   return `Boundary direction: toward ${getBoundaryDirectionLabel(direction)}`
 }
