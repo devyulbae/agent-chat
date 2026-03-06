@@ -113,6 +113,13 @@ describe('threadHintParsers', () => {
     })
   })
 
+  describe('thread shortcut legend status hint shortcut extraction', () => {
+    it('normalizes click-toggle shown/hide status shortcut sources for chip rendering', () => {
+      expect(getHintShortcutSource('Thread shortcut legend shown (? / Shift+/).')).toBe('Slash')
+      expect(getHintShortcutSource('Thread shortcut legend hidden (Esc).')).toBe('Escape')
+    })
+  })
+
   describe('getUnreadJumpWrapStatusCue', () => {
     it('returns forward wrap cue when next unread jump cycles last→first', () => {
       expect(getUnreadJumpWrapStatusCue(1, 4, 0)).toBe('wrapped last→first')

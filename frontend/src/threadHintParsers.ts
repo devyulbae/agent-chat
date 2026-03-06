@@ -187,8 +187,11 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/\b(return|enter)[\s-]+key\b/gu, '$1')
     .replace(/\breturn\b/gu, 'enter')
     .replace(/\besc(?:ape)?\b/gu, 'escape')
+    .replace(/\?\s*\/\s*shift\s*\+\s*\//gu, 'slash')
+    .replace(/shift\s*\+\s*\//gu, 'shift+slash')
     .replace(/forward[\s-]?slash/gu, 'slash')
     .replace(/\bfwd[\s-]?slash\b/gu, 'slash')
+    .replace(/\?/gu, 'slash')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 
@@ -438,6 +441,7 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     'shift+u': '⇧U',
     'shift+enter': '⇧↵',
     'shift+escape': '⇧Esc',
+    'shift+slash': '⇧/',
     'ctrl+pageup': 'Ctrl+PgUp',
     'ctrl+pagedown': 'Ctrl+PgDn',
     'ctrl+arrowup': 'Ctrl+↑',
@@ -551,6 +555,7 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     'shift+u': 'Shift + U',
     'shift+enter': 'Shift + Enter',
     'shift+escape': 'Shift + Escape',
+    'shift+slash': 'Shift + Slash',
     'ctrl+pageup': 'Ctrl + PageUp',
     'ctrl+pagedown': 'Ctrl + PageDown',
     'ctrl+arrowup': 'Ctrl + Arrow Up',

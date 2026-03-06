@@ -285,6 +285,25 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('maps shortcut legend click-toggle status hints to chip props', () => {
+    expect(
+      getShortcutChipPropsFromHint('Thread shortcut legend shown (? / Shift+/).', 'filter jump', 'thread-jump'),
+    ).toEqual({
+      badge: '/',
+      title: 'Slash filter jump',
+      ariaLabel: 'Shortcut badge /: Slash (filter jump).',
+      context: 'thread-jump',
+    })
+    expect(
+      getShortcutChipPropsFromHint('Thread shortcut legend hidden (Esc).', 'filter jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'Esc',
+      title: 'Escape filter jump',
+      ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('returns null when hint has no known shortcut', () => {
     expect(getShortcutChipPropsFromHint('Jumped to root thread (Mouse click).', 'root jump', 'thread-jump')).toBeNull()
   })

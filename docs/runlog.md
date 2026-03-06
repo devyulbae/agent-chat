@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 07:12 KST — shortcut legend click-toggle status chip extraction lock (offset lane)
+- Scope: frontend integration + parser contract sync follow-up to lock shown/hidden click-toggle live status rendering for the thread shortcut legend.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Extended shortcut alias normalization to treat `? / Shift+/` toggle copy as canonical slash shortcut source.
+    - Added `Shift+Slash` badge/tooltip mappings so slash-combo variants stay chip-compatible.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused regression coverage that shown/hidden legend status hints normalize to parseable shortcut sources (`Slash` / `Escape`).
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused chip-props regression for legend click-toggle status hints:
+      - `Thread shortcut legend shown (? / Shift+/).` → slash chip props
+      - `Thread shortcut legend hidden (Esc).` → escape chip props
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (59/59)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 07:02 KST — shortcut legend click-toggle live status parity (boost lane)
 - Scope: chat thread UX wiring parity so pointer-triggered shortcut legend toggles emit the same transient live status hint already used by keyboard toggles.
 - Change:
