@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 14:31 KST — Agent Chat parallel offset cycle
+- Delta: Added lowercase compact alias regression coverage for thread hint shortcut source parsing.
+  - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(pgup confirmed)` and `(pgdn confirmed)` to canonical `PageUp` / `PageDown`.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `bfa73f4` (pushed to `main`)
+- Next action: add parser regression coverage for lowercase shift aliases (`shift+pgup` / `shift+pgdn`) to keep modifier-path normalization parity with compact non-shift forms.
+
 ## 2026-03-06 14:24 KST — Agent Chat implementation cycle
 - Delta: Added compact alias-regression coverage for non-shift boundary shortcuts in frontend hint parser tests.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalizes `(PgUp confirmed)` / `(PgDn confirmed)` to canonical `PageUp` / `PageDown` outputs.
