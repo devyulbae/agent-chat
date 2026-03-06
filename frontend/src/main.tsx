@@ -639,10 +639,18 @@ function App() {
   const handleThreadFilterKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Escape') {
+        event.preventDefault()
+        if (event.shiftKey) {
+          setThreadFilterText('')
+          setShowUnreadOnlyThreads(false)
+          setIncludeRootInUnreadOnly(true)
+          setThreadFilterJumpHint(null)
+          return
+        }
+
         if (!threadFilterText) {
           return
         }
-        event.preventDefault()
         setThreadFilterText('')
         setThreadFilterJumpHint(null)
         return

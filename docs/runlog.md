@@ -512,3 +512,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `4d363b7` — `[fix] align hidden-selection recovery hint chips with arrow keys`
   - Push: `main -> origin/main` ✅
 - Next action: wire boundary direction chip cues into hidden-selection recovery statuses so first/last recovery messaging includes explicit direction semantics (`↖ first` / `↘ last`) alongside shortcut chips.
+
+## 2026-03-07 02:03 KST — thread-filter Shift+Esc reset wiring (boost lane)
+- Scope: chat thread UX wiring (filter input keyboard parity).
+- Change:
+  - `frontend/src/main.tsx`
+    - Wired `Shift+Escape` inside the thread filter input handler so users can reset filter text + unread toggles even while the input is focused.
+    - Kept plain `Escape` behavior unchanged (clear filter text only).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (40 passed)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add lightweight filter-status feedback copy when `Shift+Esc` resets view from input focus so the action is explicitly announced.
