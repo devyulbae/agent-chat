@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-06 13:51 KST — Agent Chat parallel offset cycle
+- Delta: Added explicit `Shift+End` parser-regression coverage to keep frontend shortcut chip mappings aligned with emitted boundary hint sources.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` to assert `getHintShortcutSource(...)` normalization for `Shift+End confirmed` hint copy.
+  - Frontend tests: added `Shift+End` expectations for both `getThreadShortcutBadge(...)` (`⇧End`) and `getThreadShortcutTooltip(...)` (`Shift + End`) mappings.
+  - Scope kept frontend-only test coverage (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 13 passed)
+  - `cd frontend && npm run build` ✅
+- Next action: add focused parser coverage for `Shift+Home` badge/tooltip parity in the same helper suite so first/last shift-boundary mappings stay equally regression-safe.
+
 ## 2026-03-06 13:32 KST — Agent Chat parallel offset cycle
 - Delta: Extracted standardized shortcut-chip copy composition in `frontend/src/main.tsx` to keep title/aria-label wiring consistent across root/boundary/filter jump hints.
   - Added pure `buildShortcutChipCopy(...)` helper with typed intent (`root jump` / `boundary jump` / `filter jump`) to generate canonical chip `title` and `aria-label` strings in one place.
@@ -1780,3 +1790,18 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `fea3898` (pushed to `main`)
 - Next action: extract shared shortcut-chip aria-label/title composition into a small helper so root/boundary/filter hint render paths avoid duplicated string templates.
+
+## 2026-03-06 13:44 KST — Agent Chat implementation cycle
+- Delta: Wired unread navigation shortcuts into visible thread-jump hints so `U`/`Shift+U` actions provide immediate feedback in the same UX hint rail used by other thread shortcuts.
+  - Frontend: `jumpToNextUnread()` now sets `threadBoundaryJumpHint` with source `(U)`, selected target label, and position index.
+  - Frontend: `clearAllUnreadMarkers()` now sets `threadBoundaryJumpHint` with source `(Shift+U)` and cleared thread count.
+  - Frontend parser: added `Shift+U` support to `getThreadShortcutBadge(...)` and `getThreadShortcutTooltip(...)`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+U` badge/tooltip assertions.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test` ✅ (13 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `e2fd664` (pushed to `main`)
+- Next action: add parser badge/tooltip coverage for `Shift+End` (already emitted by boundary hints) so end-boundary shortcuts also render consistent compact chips.

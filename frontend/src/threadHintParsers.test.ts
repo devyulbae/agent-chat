@@ -53,6 +53,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Already at first visible thread (Shift + PageUp confirmed).')).toBe(
         'Shift+PageUp',
       )
+      expect(getHintShortcutSource('Already at last visible thread (Shift+End confirmed).')).toBe(
+        'Shift+End',
+      )
     })
 
     it('handles nested and multiple parenthesized hint segments robustly', () => {
@@ -100,6 +103,7 @@ describe('threadHintParsers', () => {
     it('maps common boundary/root shortcuts to compact badges', () => {
       expect(getThreadShortcutBadge('Shift+PageUp')).toBe('⇧PgUp')
       expect(getThreadShortcutBadge('Shift+PageDown')).toBe('⇧PgDn')
+      expect(getThreadShortcutBadge('Shift+End')).toBe('⇧End')
       expect(getThreadShortcutBadge('Shift+G')).toBe('⇧G')
       expect(getThreadShortcutBadge('Shift+R')).toBe('⇧R')
       expect(getThreadShortcutBadge('Shift+U')).toBe('⇧U')
@@ -124,6 +128,7 @@ describe('threadHintParsers', () => {
   describe('getThreadShortcutTooltip', () => {
     it('maps shortcuts to human-readable tooltip labels', () => {
       expect(getThreadShortcutTooltip('Shift+PageUp')).toBe('Shift + PageUp')
+      expect(getThreadShortcutTooltip('Shift+End')).toBe('Shift + End')
       expect(getThreadShortcutTooltip('Shift+R')).toBe('Shift + R')
       expect(getThreadShortcutTooltip('Shift+U')).toBe('Shift + U')
       expect(getThreadShortcutTooltip('Shift+Enter')).toBe('Shift + Enter')
