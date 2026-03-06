@@ -6,6 +6,7 @@ import {
   getHintShortcutSource,
 } from './threadHintParsers'
 import {
+  getShortcutChipPropsFromHint,
   getShortcutChipPropsFromSource,
   getStatusAriaLabelWithShortcutChip,
   getStatusAriaLabelWithShortcutChips,
@@ -1666,11 +1667,9 @@ function App() {
     [filterJumpSourceShortcut],
   )
 
-  const threadCopySourceShortcut = useMemo(() => getHintShortcutSource(threadCopyHint), [threadCopyHint])
-
   const threadCopyShortcutChipPresentation = useMemo(
-    () => getShortcutChipPropsFromSource(threadCopySourceShortcut, 'thread copy', 'thread-jump'),
-    [threadCopySourceShortcut],
+    () => getShortcutChipPropsFromHint(threadCopyHint, 'thread copy', 'thread-jump'),
+    [threadCopyHint],
   )
 
   const threadCopyStatusAriaLabel = useMemo(

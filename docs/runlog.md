@@ -259,3 +259,14 @@ Backend API contract checks are currently blocked by missing backend dependencie
 2. Re-run contract checks:
    - `backend/.venv/bin/pytest -q backend/tests/test_audit_api_contract.py backend/tests/test_credentials_api_contract.py`
 3. If green, proceed with commit/push for this lane change.
+
+## 2026-03-06 22:51 KST — thread copy hint parser-path chip sync (offset lane)
+- Scope: frontend integration follow-up to keep thread-copy status chip behavior aligned with shared hint parser contract.
+- Change:
+  - `frontend/src/main.tsx`
+  - Switched thread-copy chip derivation from `getHintShortcutSource(...) + getShortcutChipPropsFromSource(...)` to direct `getShortcutChipPropsFromHint(...)` wiring.
+  - This keeps copy confirmations on the same hint→presentation path already used for normalized shortcut extraction and aria-label composition.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (15/15)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files were not touched).
