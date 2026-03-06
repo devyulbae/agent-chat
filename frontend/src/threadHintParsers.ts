@@ -12,10 +12,12 @@ export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirec
   if (!hint) {
     return null
   }
-  if (hint.includes(' first visible thread')) {
+
+  const normalizedHint = hint.toLowerCase()
+  if (/\bfirst visible thread\b/.test(normalizedHint)) {
     return 'first'
   }
-  if (hint.includes(' last visible thread')) {
+  if (/\blast visible thread\b/.test(normalizedHint)) {
     return 'last'
   }
   return null

@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 10:41 KST — Agent Chat implementation cycle
+- Delta: Hardened boundary-direction hint parsing in `frontend/src/threadHintParsers.ts` to reduce brittle string-match drift in chat thread UX status cues.
+  - Replaced strict substring checks (`" first visible thread"` / `" last visible thread"`) with normalized + word-boundary regex matching.
+  - Direction detection now remains stable even when hint copy punctuation/casing shifts, while preserving existing `first`/`last` outputs consumed by badge/aria/helper wiring.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+  - `cd frontend && npx vite build` ✅
+- Next action: add focused parser-level tests for `threadHintParsers` (boundary direction + shortcut source) so this normalization behavior is regression-protected.
+
 ## 2026-03-06 10:08 KST — Agent Chat implementation cycle
 - Delta: Extracted boundary-direction parsing into a tiny pure helper in `frontend/src/main.tsx`.
   - Added `getBoundaryDirectionFromHint(hint)` returning `first`/`last`/`null`.
