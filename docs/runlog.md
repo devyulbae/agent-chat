@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 06:24 KST — legend dismiss-key alias parity for Esc events (boost lane)
+- Scope: chat thread UX wiring keyboard-event resilience so shortcut legend dismiss handling accepts `Esc` alias events in addition to canonical `Escape`.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Updated `isThreadShortcutLegendDismissKey(...)` to accept both `'Escape'` and `'Esc'` values.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended legend dismiss-key regression to assert both aliases are accepted.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (35/35)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: wire a concise live status hint when toggling the shortcut legend from keyboard (`?`/`Esc`) so visibility changes are explicitly announced for assistive users.
+
 ## 2026-03-07 06:11 KST — shortcut legend controlled-region a11y labeling (offset lane)
 - Scope: frontend integration accessibility polish so the shortcut legend toggle's controlled element exposes an explicit landmark label for assistive tech navigation.
 - Change:

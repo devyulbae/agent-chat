@@ -75,8 +75,9 @@ describe('threadHintParsers', () => {
   })
 
   describe('isThreadShortcutLegendDismissKey', () => {
-    it('accepts escape key for legend dismissal', () => {
+    it('accepts escape aliases for legend dismissal', () => {
       expect(isThreadShortcutLegendDismissKey('Escape')).toBe(true)
+      expect(isThreadShortcutLegendDismissKey('Esc')).toBe(true)
     })
 
     it('rejects non-dismiss keys', () => {

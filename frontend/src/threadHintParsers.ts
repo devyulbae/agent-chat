@@ -16,7 +16,7 @@ export function getThreadShortcutLegendToggleControlCopy(): string {
 }
 
 export function isThreadShortcutLegendDismissKey(key: string): boolean {
-  return key === 'Escape'
+  return key === 'Escape' || key === 'Esc'
 }
 
 export function getThreadShortcutLegendDismissControlCopy(): string {
