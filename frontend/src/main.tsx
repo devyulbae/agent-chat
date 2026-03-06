@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import { getBoundaryDirectionFromHint, getHintShortcutSource } from './threadHintParsers'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -214,26 +215,6 @@ function isEditableElement(target: EventTarget | null): boolean {
     return true
   }
   return target.isContentEditable
-}
-
-function getBoundaryDirectionFromHint(hint: string | null): 'first' | 'last' | null {
-  if (!hint) {
-    return null
-  }
-  if (hint.includes(' first visible thread')) {
-    return 'first'
-  }
-  if (hint.includes(' last visible thread')) {
-    return 'last'
-  }
-  return null
-}
-
-function getHintShortcutSource(hint: string | null): string | null {
-  if (!hint) {
-    return null
-  }
-  return hint.match(/\(([^)]+)\)/)?.[1]?.trim() ?? null
 }
 
 function App() {

@@ -1559,3 +1559,15 @@
   - `cd frontend && npx vite build` ✅
 - Commit: pending
 - Next action: add a minimal unit-testable helper module for boundary/source hint parsing so regression coverage can be added without spinning up full component tests.
+
+## 2026-03-06 10:24 KST — Agent Chat implementation cycle
+- Delta: Extracted thread hint parsing into a dedicated helper module for cleaner thread UX wiring.
+  - Frontend: added `frontend/src/threadHintParsers.ts` with pure helpers `getBoundaryDirectionFromHint(...)` and `getHintShortcutSource(...)`.
+  - Frontend: updated `frontend/src/main.tsx` to import and reuse these helpers, removing inline duplicate parsing logic.
+  - Scope: chat thread UX wiring only (no backend/API changes).
+- Quality gates:
+  - `/Users/sybae/code/agent-chat/venv/bin/black backend` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: add focused unit tests for `threadHintParsers` (boundary direction + shortcut source parsing) so boundary hint microcopy regressions are caught early.
