@@ -142,7 +142,7 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
 
   it('keeps hidden-selection recovery aria labels deterministic with boundary direction cues', () => {
     expect(
-      getStatusAriaLabelWithShortcutChips('Tip: J/K/↑/↓ will also recover to first/last visible thread.', [
+      getStatusAriaLabelWithShortcutChips('Tip: J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread.', [
         {
           badge: 'J',
           title: 'J boundary jump',
@@ -181,7 +181,7 @@ describe('getStatusAriaLabelWithShortcutChips', () => {
         },
       ]),
     ).toBe(
-      'Tip: J/K/↑/↓ will also recover to first/last visible thread. Shortcut badge J: J (boundary jump). Shortcut badge K: K (boundary jump). Shortcut badge ↑: Arrow Up (boundary jump). Shortcut badge ↓: Arrow Down (boundary jump). Boundary direction cue: toward first visible thread Boundary direction cue: toward last visible thread',
+      'Tip: J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread. Shortcut badge J: J (boundary jump). Shortcut badge K: K (boundary jump). Shortcut badge ↑: Arrow Up (boundary jump). Shortcut badge ↓: Arrow Down (boundary jump). Boundary direction cue: toward first visible thread Boundary direction cue: toward last visible thread',
     )
   })
 })

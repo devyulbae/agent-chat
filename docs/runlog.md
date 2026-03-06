@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 02:52 KST — hidden-selection recovery text direction cue sync (offset lane)
+- Scope: frontend integration polish so hidden-selection recovery status copy communicates explicit boundary direction semantics even when chip badges are not visually parsed.
+- Change:
+  - `frontend/src/main.tsx`
+    - Updated hidden-selection recovery helper/status copy to include explicit direction cues: `↖ first / ↘ last`.
+    - Keeps existing chip-backed rendering unchanged while making plain text self-descriptive.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Updated deterministic hidden-selection recovery aria-label regression to match the new cue-inclusive hint text.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 02:31 KST — clear-unread control title parity with helper chip copy (offset lane)
 - Scope: frontend integration polish to keep the Clear-all-unread button title text aligned with unread helper-row shortcut copy.
 - Change:
@@ -568,3 +581,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Next action: add lightweight filter-status feedback copy when `Shift+Esc` resets view from input focus so the action is explicitly announced.
+
+## 2026-03-07 02:44 KST — Shift+Esc input-focus reset feedback copy (boost lane)
+- Scope: chat thread UX wiring (explicit status feedback when Shift+Esc resets filters from the thread filter input).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getThreadFilterResetHint('input')` helper to centralize reset feedback copy for filter-jump status messaging.
+  - `frontend/src/main.tsx`
+    - Switched filter input `Shift+Escape` path to use the helper so status text explicitly references input focus.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression test asserting explicit input-focus reset copy.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (24 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `df76fd3` — `[fix] clarify Shift+Esc filter-reset feedback from input focus`
+  - Push: `main -> origin/main` ✅
+- Next action: wire explicit boundary direction cues (`↖ first` / `↘ last`) into hidden-selection recovery status text so recovery hints communicate direction semantics even without chip rendering.
