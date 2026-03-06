@@ -93,6 +93,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/\breturn\b/gu, 'enter')
     .replace(/\besc(?:ape)?\b/gu, 'escape')
     .replace(/forward[\s-]?slash/gu, 'slash')
+    .replace(/\bfwd[\s-]?slash\b/gu, 'slash')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')
 

@@ -324,6 +324,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Cleared filter (Esc).')).toBe('Escape')
       expect(getHintShortcutSource('Reset view (Shift+Esc).')).toBe('Shift+Escape')
       expect(getHintShortcutSource('Focused filter input (forward-slash).')).toBe('Slash')
+      expect(getHintShortcutSource('Focused filter input (fwd-slash).')).toBe('Slash')
+      expect(getHintShortcutSource('Focused filter input (fwd slash).')).toBe('Slash')
+      expect(getHintShortcutSource('Focused filter input (fwdslash).')).toBe('Slash')
       expect(getHintShortcutSource('Recovered to first visible thread (Shift+PageUp.).')).toBe(
         'Shift+PageUp',
       )
