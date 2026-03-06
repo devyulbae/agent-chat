@@ -1677,6 +1677,23 @@ function App() {
     [threadCopyHint, threadCopyShortcutChipPresentation],
   )
 
+  const threadFilterHintShortcutChipPresentations = useMemo(
+    () => [
+      getShortcutChipPropsFromSource('Enter', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Shift+Enter', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('J', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Home', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('End', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('G', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+G', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+PageUp', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+PageDown', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Y', 'thread copy', 'thread-jump'),
+    ].filter((chip): chip is ShortcutChipProps => chip !== null),
+    [],
+  )
+
   const filterJumpStatusAriaLabel = useMemo(
     () => getStatusAriaLabelWithShortcutChip(threadFilterJumpHint, filterJumpShortcutChipPresentation),
     [threadFilterJumpHint, filterJumpShortcutChipPresentation],
@@ -2562,7 +2579,8 @@ function App() {
               Reset view
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
-              / to focus · Enter/Shift+Enter to jump first/last visible result · Esc to clear · Shift+Esc to reset view · J/K or ↑/↓ to move selection (recovers hidden selection to first/last visible) · Home/End (or PgUp/PgDn) to jump first/last · G/Shift+G to jump first/last visible fast · Shift+PgUp/Shift+PgDn to jump first/last while keeping filters · Y to copy selected
+              {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
+              / to focus · Enter/Shift+Enter jump first/last visible result · Esc clears filter · Shift+Esc resets view · J/K or ↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
