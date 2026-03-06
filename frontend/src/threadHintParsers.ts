@@ -103,6 +103,41 @@ function normalizeShortcutAlias(shortcut: string): string {
     return aliasMap[normalizedShortcut]
   }
 
+  const compactComboMatch = normalizedShortcut.match(
+    /^(?<modifier>shift|ctrl|control|alt|option|opt|cmd|command|meta)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|home|end|enter)$/i,
+  )
+  if (compactComboMatch?.groups) {
+    const compactKeyAlias = compactComboMatch.groups.key.toLowerCase()
+    const compactKeyAliasMap: Record<string, string> = {
+      pgup: 'PageUp',
+      pageup: 'PageUp',
+      pgdn: 'PageDown',
+      pagedown: 'PageDown',
+      arrowup: 'ArrowUp',
+      arrowdown: 'ArrowDown',
+      home: 'Home',
+      end: 'End',
+      enter: 'Enter',
+    }
+    const compactModifierAliasMap: Record<string, string> = {
+      ctrl: 'Ctrl',
+      control: 'Control',
+      alt: 'Alt',
+      option: 'Option',
+      opt: 'Option',
+      cmd: 'Cmd',
+      command: 'Command',
+      meta: 'Meta',
+      shift: 'Shift',
+    }
+
+    const compactKey = compactKeyAliasMap[compactKeyAlias]
+    const compactModifier = compactModifierAliasMap[compactComboMatch.groups.modifier.toLowerCase()]
+    if (compactKey && compactModifier) {
+      return `${compactModifier}+${compactKey}`
+    }
+  }
+
   const comboMatch = normalizedShortcut.match(
     /^(?<modifiers>(?:[a-z]+\+)+)(?<key>pgup|pgdn|pageup|pagedown|arrowup|arrowdown|↑|↓|home|end|enter|↵)$/i,
   )

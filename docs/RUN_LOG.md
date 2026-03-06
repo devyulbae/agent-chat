@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-06 18:23 KST — Agent Chat implementation cycle
+- Delta: Added compact no-plus modifier+arrow alias normalization in frontend thread hint parsing so chip source extraction remains canonical when hint copy emits forms like `CmdUpArrow` and `OptDownArrow`.
+  - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` with compact modifier-key pattern handling (`<modifier><key>` without `+`) for arrow/page/home/end/enter aliases.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` to lock canonical extraction for `CmdUpArrow`, `CtrlArrowUp`, and `OptDownArrow` hint variants.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 20 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `ae46841` (pushed to `main`)
+- Next action: add compact no-plus coverage for modifier+page aliases (`CmdPgUp` / `OptPgDn`) to keep compact-form parity across boundary jump and arrow jump hint sources.
+
 ## 2026-03-06 18:12 KST — Agent Chat parallel offset cycle
 - Delta: Extended frontend thread shortcut chip mappings for modifier+arrow variants so parser-normalized `Cmd/Ctrl/Option/Control/Meta + ArrowUp/ArrowDown` sources now render explicit badges/tooltips instead of dropping chip presentation.
   - Frontend parser: expanded `getThreadShortcutBadge(...)`/`getThreadShortcutTooltip(...)` mappings in `frontend/src/threadHintParsers.ts` for modifier+arrow combos.
