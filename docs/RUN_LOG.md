@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-06 16:33 KST — Agent Chat parallel offset cycle
+- Delta: Unified thread hint shortcut-chip presentation derivation into one parser-level integration helper so root/boundary/filter chips share the same source→badge→tooltip→copy contract.
+  - Frontend parser: added `getShortcutChipPresentationFromHint(...)` + `ShortcutChipPresentation` in `frontend/src/threadHintParsers.ts` to build chip-ready payloads from hint text in one place.
+  - Frontend wiring: updated `frontend/src/main.tsx` root/boundary/filter chip copy memos to consume the new helper, reducing duplicated glue logic.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with end-to-end root/filter presentation assertions and null fallback coverage.
+  - Scope kept frontend-only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (vitest: 16 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `84b0502` (pushed to `main`)
+- Next action: add one focused integration-level UI render regression test (when jsdom/RTL harness is available) to assert root/filter hint rows actually consume `getShortcutChipPresentationFromHint(...)` output in rendered `title`/`aria-label` attributes.
+
 ## 2026-03-06 16:22 KST — Agent Chat implementation cycle
 - Delta: Added centralized shortcut-chip copy intent coverage for root/filter thread UX hints.
   - Frontend tests: updated `frontend/src/threadHintParsers.test.ts` `buildShortcutChipCopy` suite to assert deterministic `title` + `ariaLabel` output across all intent variants (`boundary jump`, `root jump`, `filter jump`).
