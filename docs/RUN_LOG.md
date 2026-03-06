@@ -2094,3 +2094,16 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `492a7a7` (pushed to `main`)
 - Next action: normalize parser extraction for wordy arrow aliases in hint copy (`Shift+Up Arrow` / `Shift+Down Arrow`) so future wording changes still resolve to the same shortcut chip.
+
+## 2026-03-06 18:52 KST — Agent Chat parallel offset cycle
+- Delta: Normalized space-separated modifier arrow aliases in boundary hint shortcut parsing so copy variants without `+` separators still resolve to canonical chip shortcuts.
+  - Frontend parser: `normalizeShortcutAlias(...)` now handles space-separated modifier chains (for example `Shift Up Arrow`, `Cmd Shift Up Arrow`, `Option Shift Down Arrow`) and converts them to canonical forms like `Shift+ArrowUp`, `Cmd+Shift+ArrowUp`, and `Option+Shift+ArrowDown`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` coverage for spaced modifier arrow variants across up/down boundary hint copy.
+  - Scope: frontend parser integration hardening only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (20 passed)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: `3a569c8` (pushed to `main`)
+- Next action: add parser normalization for optional `Return` alias alongside `Enter` so macOS-oriented hint wording still maps to the same shortcut chip.
