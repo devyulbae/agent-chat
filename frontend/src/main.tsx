@@ -15,6 +15,7 @@ import {
   getUnreadJumpWrapStatusCue,
   getUnreadNavigationHintAriaLabel,
   isThreadShortcutLegendDismissKey,
+  isUnreadNavigationShortcutSource,
   isThreadShortcutLegendToggleKey,
 } from './threadHintParsers'
 import {
@@ -2233,8 +2234,14 @@ function App() {
       unreadNavigationClearShortcutChipPresentation,
     ])
 
-    return getUnreadNavigationHintAriaLabel(shortcutComposedAriaLabel, unreadNavigationWrapCue)
+    const shouldSuppressWrapCueAria =
+      Boolean(threadBoundaryJumpHint) && isUnreadNavigationShortcutSource(boundaryJumpSourceShortcut)
+    const navigationWrapCueAria = shouldSuppressWrapCueAria ? null : unreadNavigationWrapCue
+
+    return getUnreadNavigationHintAriaLabel(shortcutComposedAriaLabel, navigationWrapCueAria)
   }, [
+    boundaryJumpSourceShortcut,
+    threadBoundaryJumpHint,
     unreadNavigationClearShortcutChipPresentation,
     unreadNavigationHint,
     unreadNavigationNextAltShortcutChipPresentation,

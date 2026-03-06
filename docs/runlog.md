@@ -958,3 +958,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: dedupe unread wrap cue aria copy between unread hint and boundary status aria paths to prevent repeated narration when both status regions update in the same transition.
+
+## 2026-03-07 08:07 KST — unread wrap aria de-duplication between boundary + nav status (boost lane)
+- Scope: chat thread UX wiring (avoid repeated screen-reader wrap narration when unread jump updates both status regions).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `isUnreadNavigationShortcutSource(shortcutSource)` helper to centralize U/N/P shortcut detection.
+    - Reused the helper in `getUnreadBoundaryJumpStatusAriaLabel` for unread shortcut gating.
+  - `frontend/src/main.tsx`
+    - Suppressed unread navigation wrap-cue aria append while an unread boundary jump status hint (`U`/`N`/`P`) is active, so wrap narration is spoken once per transition instead of twice.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression coverage for `isUnreadNavigationShortcutSource` detection paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (45 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a small frontend interaction test that exercises one unread wrap transition and asserts only one live-region aria message includes wrap narration.

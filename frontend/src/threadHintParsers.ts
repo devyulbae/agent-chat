@@ -109,6 +109,10 @@ export function getUnreadNavigationHintAriaLabel(
   return `${baseAriaLabel} ${wrapCueAriaLabel}`
 }
 
+export function isUnreadNavigationShortcutSource(shortcutSource: string | null): boolean {
+  return shortcutSource === 'U' || shortcutSource === 'N' || shortcutSource === 'P'
+}
+
 export function getUnreadBoundaryJumpStatusAriaLabel(
   baseAriaLabel: string | undefined,
   shortcutSource: string | null,
@@ -118,8 +122,7 @@ export function getUnreadBoundaryJumpStatusAriaLabel(
     return baseAriaLabel
   }
 
-  const isUnreadShortcut = shortcutSource === 'U' || shortcutSource === 'N' || shortcutSource === 'P'
-  if (!isUnreadShortcut) {
+  if (!isUnreadNavigationShortcutSource(shortcutSource)) {
     return baseAriaLabel
   }
 

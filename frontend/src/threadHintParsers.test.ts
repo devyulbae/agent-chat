@@ -22,6 +22,7 @@ import {
   getUnreadJumpWrapStatusCueAriaLabel,
   getUnreadNavigationHintAriaLabel,
   isThreadShortcutLegendDismissKey,
+  isUnreadNavigationShortcutSource,
   isThreadShortcutLegendToggleKey,
   getShortcutChipPresentationFromSource,
   getThreadShortcutBadge,
@@ -181,6 +182,16 @@ describe('threadHintParsers', () => {
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', null)).toBe('Unread threads: 3.')
       expect(getUnreadNavigationHintAriaLabel('Unread threads: 3.', 'wrapped')).toBe('Unread threads: 3.')
       expect(getUnreadNavigationHintAriaLabel(undefined, 'wrapped first→last')).toBeUndefined()
+    })
+  })
+
+  describe('isUnreadNavigationShortcutSource', () => {
+    it('identifies unread navigation shortcuts', () => {
+      expect(isUnreadNavigationShortcutSource('U')).toBe(true)
+      expect(isUnreadNavigationShortcutSource('N')).toBe(true)
+      expect(isUnreadNavigationShortcutSource('P')).toBe(true)
+      expect(isUnreadNavigationShortcutSource('J')).toBe(false)
+      expect(isUnreadNavigationShortcutSource(null)).toBe(false)
     })
   })
 
