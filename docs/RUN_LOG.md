@@ -1571,3 +1571,12 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: add focused unit tests for `threadHintParsers` (boundary direction + shortcut source parsing) so boundary hint microcopy regressions are caught early.
+
+## 2026-03-06 10:30 KST — Agent Chat parallel offset cycle
+- Delta: Centralized boundary direction copy + badge rendering helpers in `frontend/src/threadHintParsers.ts` and reused them from `frontend/src/main.tsx`.
+  - Added `getBoundaryDirectionLabel(...)` and `getBoundaryDirectionBadge(...)` pure helpers.
+  - Rewired boundary status `aria-label`, tooltip title, and visual badge text to consume shared helpers instead of inline duplicated first/last string branches.
+  - Scope kept frontend-only (thread boundary UX copy consistency; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npx vite build` ✅
+- Next action: add focused parser-level tests for `threadHintParsers` direction/shortcut helpers so first/last cue copy stays regression-safe.

@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { getBoundaryDirectionFromHint, getHintShortcutSource } from './threadHintParsers'
+import {
+  getBoundaryDirectionBadge,
+  getBoundaryDirectionFromHint,
+  getBoundaryDirectionLabel,
+  getHintShortcutSource,
+} from './threadHintParsers'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -1600,12 +1605,9 @@ function App() {
     if (!threadBoundaryJumpHint) {
       return undefined
     }
-    const directionCueText =
-      boundaryJumpDirectionCue === 'first'
-        ? 'Direction cue: toward first visible thread.'
-        : boundaryJumpDirectionCue === 'last'
-          ? 'Direction cue: toward last visible thread.'
-          : null
+    const directionCueText = boundaryJumpDirectionCue
+      ? `Direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}.`
+      : null
     return [threadBoundaryJumpHint, directionCueText].filter(Boolean).join(' ')
   }, [boundaryJumpDirectionCue, threadBoundaryJumpHint])
 
@@ -2517,8 +2519,8 @@ function App() {
                 )}
                 {boundaryJumpDirectionCue && (
                   <span
-                    title={`Boundary direction: toward ${boundaryJumpDirectionCue} visible thread`}
-                    aria-label={`Boundary direction cue: toward ${boundaryJumpDirectionCue} visible thread`}
+                    title={`Boundary direction: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
+                    aria-label={`Boundary direction cue: toward ${getBoundaryDirectionLabel(boundaryJumpDirectionCue)}`}
                     style={{
                       display: 'inline-block',
                       marginRight: 6,
@@ -2529,7 +2531,7 @@ function App() {
                       letterSpacing: '0.02em',
                     }}
                   >
-                    {boundaryJumpDirectionCue === 'first' ? '↖ first' : '↘ last'}
+                    {getBoundaryDirectionBadge(boundaryJumpDirectionCue)}
                   </span>
                 )}
                 {threadBoundaryJumpHint}

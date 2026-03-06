@@ -1,5 +1,13 @@
 export type BoundaryDirection = 'first' | 'last'
 
+export function getBoundaryDirectionLabel(direction: BoundaryDirection): string {
+  return direction === 'first' ? 'first visible thread' : 'last visible thread'
+}
+
+export function getBoundaryDirectionBadge(direction: BoundaryDirection): string {
+  return direction === 'first' ? '↖ first' : '↘ last'
+}
+
 export function getBoundaryDirectionFromHint(hint: string | null): BoundaryDirection | null {
   if (!hint) {
     return null
