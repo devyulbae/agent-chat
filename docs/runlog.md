@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-08 02:11 KST — hidden Esc alias editable-target dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete editable-target parity at keyboard dispatch layer for hidden `Esc` alias paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch-level regression asserting hidden legend + `Esc` alias remains a no-op when `isEditableTarget=true`.
+    - Locked dispatch contract expectations for editable-target alias path: `handled=false`, `nextVisibility=false`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (22/22)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `f2c87ca` — `[test] lock hidden Esc alias editable-target dispatch no-op`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact dispatch no-op parity regression for hidden canonical `Escape` when `isEditableTarget=true` to keep alias + canonical editable-target guard rails mirrored at the same dispatch layer.
+
 ## 2026-03-08 01:51 KST — hidden Escape editable-target render-state no-op lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete hidden canonical `Escape` event-gate mirror coverage on render-state paths.
 - Change:
