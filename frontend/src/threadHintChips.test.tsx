@@ -8,6 +8,7 @@ import {
   getStatusAriaLabelWithShortcutChips,
   renderShortcutChipPresentation,
 } from './threadHintChips'
+import { getThreadShortcutLegendPresentation } from './main'
 
 describe('renderShortcutChipPresentation', () => {
   it('returns null when parser presentation payload is null', () => {
@@ -823,6 +824,24 @@ describe('getShortcutChipPropsFromHint', () => {
       'Thread shortcut legend shown (slash key / SHIFT+/). Shortcut badge /: Slash (filter jump).',
     )
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>/<')
+  })
+
+  it('keeps lifecycle status hint chip mapping aligned with main legend presentation states', () => {
+    const shownLifecycleHint = getThreadShortcutLegendPresentation(true).statusHint
+    const hiddenLifecycleHint = getThreadShortcutLegendPresentation(false).statusHint
+
+    const shownChip = getShortcutChipPropsFromHint(shownLifecycleHint, 'filter jump', 'thread-jump')
+    const hiddenChip = getShortcutChipPropsFromHint(hiddenLifecycleHint, 'filter jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(shownLifecycleHint, shownChip)).toBe(
+      'Thread shortcut legend shown (? / Shift+/). Shortcut badge /: Slash (filter jump).',
+    )
+    expect(getStatusAriaLabelWithShortcutChip(hiddenLifecycleHint, hiddenChip)).toBe(
+      'Thread shortcut legend hidden (Esc). Shortcut badge Esc: Escape (filter jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(shownChip)}</>)).toContain('>/<')
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(hiddenChip)}</>)).toContain('>Esc<')
   })
 
   it('returns null when hint has no known shortcut', () => {

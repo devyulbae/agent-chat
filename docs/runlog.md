@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 19:31 KST — legend lifecycle status-hint chip composition lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin parser→chip status-row composition against `main.tsx` legend lifecycle presentation output.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Imported `getThreadShortcutLegendPresentation(...)` from `main.tsx` and added focused regression composing lifecycle status hints directly from presentation states.
+    - Added assertions that:
+      - shown lifecycle hint (`Thread shortcut legend shown (? / Shift+/).`) maps to canonical slash chip aria/render output.
+      - hidden lifecycle hint (`Thread shortcut legend hidden (Esc).`) maps to canonical escape chip aria/render output.
+    - Locks helper-driven lifecycle status copy and hint-chip semantics in one integration lane to prevent parser/render drift.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a narrow DOM-level keyboard interaction regression (`?` then `Esc`) asserting legend region visibility and live status-chip rendering transition end-to-end.
+
 ## 2026-03-07 19:22 KST — legend lifecycle control-copy stability lock in main integration harness (boost lane)
 - Scope: chat thread UX wiring regression hardening for legend presentation metadata/copy coupling in `main.tsx` lifecycle helper.
 - Change:
