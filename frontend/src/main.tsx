@@ -33,6 +33,7 @@ import {
   clampAuditEventLimit,
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
+  type CredentialAuditEventsQueryParamsInput,
 } from './apiContracts'
 import {
   getSelectedVisibleThreadButtonRecoveryHint,
@@ -237,6 +238,12 @@ function toIsoFromDatetimeLocal(value: string): string | null {
   return parsed.toISOString()
 }
 
+export function buildCredentialAuditEventsRequestUrl(
+  input: CredentialAuditEventsQueryParamsInput,
+): string {
+  const params = buildCredentialAuditEventsQueryParams(input)
+  return `${API_BASE}/audit-events?${params.toString()}`
+}
 
 type ThreadShortcutLegendPresentation = {
   buttonAriaKeyshortcuts: string
@@ -894,7 +901,7 @@ function App() {
 
       const boundedLimit = clampAuditEventLimit(limit)
       const boundedOffset = normalizeAuditOffset(offset)
-      const params = buildCredentialAuditEventsQueryParams({
+      const requestUrl = buildCredentialAuditEventsRequestUrl({
         credentialId,
         action,
         eventType,
@@ -905,7 +912,7 @@ function App() {
       })
 
       try {
-        const response = await fetch(`${API_BASE}/audit-events?${params.toString()}`, { signal })
+        const response = await fetch(requestUrl, { signal })
         if (!response.ok) {
           throw new Error(`Failed to load audit trail (${response.status})`)
         }
