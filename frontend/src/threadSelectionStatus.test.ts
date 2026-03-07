@@ -1,6 +1,27 @@
 import { describe, expect, it } from 'vitest'
 
-import { getSelectedVisibleThreadPositionLabel } from './threadSelectionStatus'
+import {
+  getSelectedVisibleThreadPositionLabel,
+  isSelectedVisibleThreadHiddenByFilter,
+} from './threadSelectionStatus'
+
+describe('isSelectedVisibleThreadHiddenByFilter', () => {
+  it('returns true when a selected child thread is filtered out', () => {
+    expect(isSelectedVisibleThreadHiddenByFilter(-1, 'thread-123', true)).toBe(true)
+  })
+
+  it('returns true when root is selected but hidden from list', () => {
+    expect(isSelectedVisibleThreadHiddenByFilter(-1, null, false)).toBe(true)
+  })
+
+  it('returns true when selected thread is hidden and no threads are visible', () => {
+    expect(isSelectedVisibleThreadHiddenByFilter(-1, 'thread-123', false)).toBe(true)
+  })
+
+  it('returns false when selected thread is currently visible', () => {
+    expect(isSelectedVisibleThreadHiddenByFilter(0, 'thread-123', true)).toBe(false)
+  })
+})
 
 describe('getSelectedVisibleThreadPositionLabel', () => {
   it('returns hidden/total when selected thread is hidden by filters', () => {

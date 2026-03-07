@@ -32,7 +32,10 @@ import {
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
 } from './apiContracts'
-import { getSelectedVisibleThreadPositionLabel } from './threadSelectionStatus'
+import {
+  getSelectedVisibleThreadPositionLabel,
+  isSelectedVisibleThreadHiddenByFilter,
+} from './threadSelectionStatus'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -1588,10 +1591,11 @@ function App() {
   }, [filteredChildThreads, showRootThreadInList])
 
   const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
-  const selectedVisibleThreadHiddenByFilter =
-    selectedVisibleThreadIndex < 0 &&
-    visibleThreadIds.length > 0 &&
-    (selectedThreadId !== null || !showRootThreadInList)
+  const selectedVisibleThreadHiddenByFilter = isSelectedVisibleThreadHiddenByFilter(
+    selectedVisibleThreadIndex,
+    selectedThreadId,
+    showRootThreadInList,
+  )
   const selectedVisibleThreadLabel =
     selectedVisibleThreadIndex >= 0
       ? visibleThreadIds[selectedVisibleThreadIndex] === null

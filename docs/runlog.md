@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-07 09:13 KST — hidden-selection detection parity when visible list is empty (offset lane)
+- Scope: frontend integration + API contract sync follow-up so hidden-selection status remains accurate when filters hide all visible threads.
+- Change:
+  - `frontend/src/threadSelectionStatus.ts`
+    - Added `isSelectedVisibleThreadHiddenByFilter(...)` helper to centralize hidden-selection detection.
+    - Removed visible-list-length coupling so hidden selections are still detected when visible thread count is zero.
+  - `frontend/src/main.tsx`
+    - Replaced inline hidden-selection condition with shared helper usage.
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused helper regression coverage for:
+      - hidden child selection,
+      - hidden root selection,
+      - hidden selection with zero visible threads,
+      - visible selection passthrough.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts src/threadHintParsers.test.ts src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (76/76)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 08:51 KST — unread wrap live-region interaction regression for backward wrap (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete live-region wrap narration coverage for both unread wrap directions.
 - Change:
