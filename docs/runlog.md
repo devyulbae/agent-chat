@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 10:42 KST — unread-next hint-parser chip alias lock (boost lane)
+- Scope: chat thread UX wiring regression hardening so unread-next aliases (`U`/`N`) stay chip-mapped through the hint-parser path, not only direct source mapping.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused `getShortcutChipPropsFromHint(...)` regression covering both unread-next status hints:
+      - `Jumped to next unread thread (U) ...` → `Shortcut badge U: U (boundary jump).`
+      - `Jumped to next unread thread (N) ...` → `Shortcut badge N: N (boundary jump).`
+    - Locks alias parity for boundary-jump chip derivation when shortcut extraction depends on hint text parsing.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (19/19)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a UI-level status-row interaction regression that composes boundary hint aria + chip rendering from unread-next hint text (`U`/`N`) to pin full render-lane parity.
+
 ## 2026-03-07 10:31 KST — unread-next alias chip semantics regression lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin `U`/`N` unread-next shortcut chip semantics/copy parity on the shared source-based chip props path.
 - Change:

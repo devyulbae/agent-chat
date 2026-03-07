@@ -273,6 +273,25 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('maps unread next alias hints (U/N) to boundary-jump chip props', () => {
+    expect(
+      getShortcutChipPropsFromHint('Jumped to next unread thread (U) · t-9 · 1/3.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'U',
+      title: 'U boundary jump',
+      ariaLabel: 'Shortcut badge U: U (boundary jump).',
+      context: 'thread-jump',
+    })
+    expect(
+      getShortcutChipPropsFromHint('Jumped to next unread thread (N) · t-9 · 1/3.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'N',
+      title: 'N boundary jump',
+      ariaLabel: 'Shortcut badge N: N (boundary jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('maps filter jump hints to chip props with filter-jump context', () => {
     expect(
       getShortcutChipPropsFromHint(
