@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-08 05:11 KST — Agent Chat parallel offset cycle
+- Delta: Added wrapped `Control+ArrowRight` alias regression coverage in frontend thread hint parser tests to keep horizontal `Ctrl`/`Control` extraction parity when hint copy uses `key: [...]` forms.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control+ArrowRight]).` → `Control+ArrowRight` extraction assertion.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (53 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add complementary wrapped `Control+ArrowLeft` alias coverage (`key: [Control+ArrowLeft]`) so `Control` horizontal extraction remains symmetric across both directions.
+
 ## 2026-03-08 01:12 KST — Agent Chat parallel offset cycle
 - Delta: Added return-symbol wording normalization coverage in frontend thread hint parser so verbose copy variants still map to canonical Enter shortcuts.
   - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to normalize `Return symbol / Enter symbol` forms and singular `Return symbol`/`Enter symbol` tokens to `Enter`.
@@ -2272,3 +2282,15 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: pending
 - Next action: normalize parser extraction for `Return symbol` wording variants (for example `Return symbol`, `Enter symbol`) so verbose hint text still resolves to canonical `Enter` chips.
+
+## 2026-03-08 05:03 KST — Cadence sync (project-controls)
+- Source probe:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200 (BasicAuth from `/Users/sybae/code/agent-chat/.env`), payload `[]`.
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500.
+- Mapping evaluation: no control rows found, so level→cadence remap not applied (L1 `*/10`, L2 `*/30`, L3 `every 3h`, L4 `daily 09:00` all N/A).
+- Trigger burst override (2h): no `incident` / `approval_overdue` / `test_fail` signals found; no temporary 10~20m override applied.
+- Cron state kept unchanged (no destructive changes):
+  - `agentchat-build-cycle-40m` = `*/20`
+  - `agentchat-build-cycle-20m-offset` = `10-59/20`
+  - `startup-loop-day-30m` core loop untouched (bridge lane notes-only policy).
+- Result: no-op sync completed; blocker only on fallback backend (`:8000` 500).
