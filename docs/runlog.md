@@ -2101,3 +2101,21 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `1f3ee54` — `[refactor] centralize credential audit query param contract builder`
   - Push: `main -> origin/main` ✅
 - Next action: add an integration regression that verifies `loadCredentialAuditEvents` request URLs stay stable across `all`/trimmed filter transitions (especially whitespace-only `event_type`) so UI filters and backend contract params remain in lockstep.
+
+## 2026-03-07 21:31 KST — credential audit request URL filter-transition stability lock (offset lane)
+- Scope: frontend integration + API contract sync lane (main-level request URL contract parity with centralized audit query builder).
+- Change:
+  - `frontend/src/main.credentialAuditRequestUrl.test.ts`
+    - Added focused integration regression for `buildCredentialAuditEventsRequestUrl(...)` that locks URL output across:
+      - all-optional filters omitted (`action=all`, `provider=all`, `label=all`, whitespace-only `event_type`)
+      - trimmed `event_type` inclusion (`"   credential.updated   "` → `event_type=credential.updated`)
+      - scoped filter inclusion (`entity_id`, `action`, `provider`, `label`) with stable ordering.
+    - Ensures `main.tsx` request URLs remain contract-aligned with `buildCredentialAuditEventsQueryParams(...)` when UI filter state transitions between blank/all and scoped values.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.credentialAuditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (6 passed)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `d649e04` — `[test] lock credential audit request URL filter transition contract`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact interaction-level regression that verifies audit refresh + older-page controls preserve the same query-param contract when `auditOffset` moves from `0` to `credentialAuditEvents.length` under trimmed `event_type` input.
