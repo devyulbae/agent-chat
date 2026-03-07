@@ -15,7 +15,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenBeforeToggle.statusHint).toBe('Thread shortcut legend hidden (Esc).')
 
     const shownAfterQuestionToggle = getThreadShortcutLegendPresentation(true)
-    expect(shownAfterQuestionToggle.buttonAriaKeyshortcuts).toBe('Escape')
+    expect(shownAfterQuestionToggle.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape')
     expect(shownAfterQuestionToggle.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
 
     const hiddenAfterEscDismiss = getThreadShortcutLegendPresentation(false)
@@ -114,7 +114,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
     expect(shownStatusAria).toContain('Thread shortcut legend shown (? / Shift+/).')
     expect(shownStatusAria).toContain('Shortcut badge /: Slash (filter jump).')
-    expect(shownPresentation.buttonAriaKeyshortcuts).toBe('Escape')
+    expect(shownPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape')
 
     const hiddenTransition = getThreadShortcutLegendKeyboardTransition(
       shownTransition.nextVisibility,
@@ -328,6 +328,42 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       isEditableTarget: false,
     })
     expect(ignoredHiddenAltEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+  })
+
+  it('keeps hidden Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
+    const ignoredHiddenDefaultPreventedEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: true,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenDefaultPreventedEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+
+    const ignoredHiddenRepeatEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: true,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenRepeatEscAliasDispatch).toEqual({
       handled: false,
       nextVisibility: false,
       statusHint: null,
