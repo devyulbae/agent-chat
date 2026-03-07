@@ -2204,3 +2204,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Next action: add a compact dispatch no-op regression for hidden `Esc` alias with `Meta`/`Ctrl`/`Alt` modifiers to complete alias parity with hidden `Escape` modifier guard rails.
+
+## 2026-03-07 23:31 KST — hidden Esc alias modifier dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync lane (thread shortcut legend keyboard dispatch guard-rail parity).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch-level regression asserting hidden legend + `Esc` alias with `Meta`/`Ctrl`/`Alt` modifiers remains a no-op.
+    - Locked dispatch contract expectations for each modifier path: `handled=false`, `nextVisibility=false`, and `statusHint=null`.
+    - Completes alias parity coverage with existing hidden `Escape` modifier dispatch guard rails.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (14 passed)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact render-state parity regression for hidden `Esc` alias with `Meta`/`Ctrl`/`Alt` to mirror dispatch-level guard rails and prevent stale aria emission under alias-modifier paths.
