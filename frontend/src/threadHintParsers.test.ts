@@ -117,6 +117,33 @@ describe('threadHintParsers', () => {
     })
   })
 
+  describe('thread shortcut legend toggle lifecycle semantics', () => {
+    it('keeps status hint text + aria-keyshortcuts metadata in sync for ? show then Esc hide', () => {
+      const hiddenState = {
+        ariaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(false),
+        statusHint: getThreadShortcutLegendToggleStatusHint(false),
+      }
+      const shownState = {
+        ariaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(true),
+        statusHint: getThreadShortcutLegendToggleStatusHint(true),
+      }
+      const hiddenAfterDismissState = {
+        ariaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(false),
+        statusHint: getThreadShortcutLegendToggleStatusHint(false),
+      }
+
+      expect(hiddenState).toEqual({
+        ariaKeyshortcuts: 'Shift+Slash',
+        statusHint: 'Thread shortcut legend hidden (Esc).',
+      })
+      expect(shownState).toEqual({
+        ariaKeyshortcuts: 'Escape',
+        statusHint: 'Thread shortcut legend shown (? / Shift+/).',
+      })
+      expect(hiddenAfterDismissState).toEqual(hiddenState)
+    })
+  })
+
   describe('thread shortcut legend status hint shortcut extraction', () => {
     it('normalizes click-toggle shown/hide status shortcut sources for chip rendering', () => {
       expect(getHintShortcutSource('Thread shortcut legend shown (? / Shift+/).')).toBe('Slash')
