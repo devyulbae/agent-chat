@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 15:52 KST — symbol-only legend-show `?` status-row composition + parser extraction lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin symbol-only shortcut-legend show alias parity on parser extraction and status-row aria/chip composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for symbol-only legend-show alias:
+      - `Thread shortcut legend shown (?).` → canonical slash chip semantics in composed aria output and rendered badge.
+  - `frontend/src/threadHintParsers.ts`
+    - Preserved symbol-only `?` parenthesized shortcut tokens during hint-segment cleanup by excluding `?` from trailing punctuation stripping.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added extraction regression asserting `Thread shortcut legend shown (?).` normalizes to canonical `Slash` source.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (94/94)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 15:42 KST — uppercase legend-hide `ESC` status-row composition lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for uppercase legend-hide alias parity on status-row aria + rendered chip composition.
 - Change:

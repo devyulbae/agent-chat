@@ -120,6 +120,7 @@ describe('threadHintParsers', () => {
   describe('thread shortcut legend status hint shortcut extraction', () => {
     it('normalizes click-toggle shown/hide status shortcut sources for chip rendering', () => {
       expect(getHintShortcutSource('Thread shortcut legend shown (? / Shift+/).')).toBe('Slash')
+      expect(getHintShortcutSource('Thread shortcut legend shown (?).')).toBe('Slash')
       expect(getHintShortcutSource('Thread shortcut legend hidden (Esc).')).toBe('Escape')
       expect(getHintShortcutSource('Thread shortcut legend hidden (esc).')).toBe('Escape')
     })
