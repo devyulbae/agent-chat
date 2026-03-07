@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 15:04 KST — lowercase unread-clear undo status-row chip composition lock (`z`) (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase unread-clear undo alias hints on status-row aria + chip render composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase unread-clear undo alias:
+      - `Restored unread markers (z) · 3 thread(s).` → canonical `Z` boundary-jump chip semantics in both aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (38/38)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `5a4a8f0` — `[test] lock lowercase unread-clear undo status-row chip composition`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow status-row composition regression for uppercase unread-clear undo alias (`Z`) to explicitly pin alias parity (`z`/`Z`) in the same render lane.
+
 ## 2026-03-07 14:53 KST — unread clear-undo status helper + interaction contract lock (`Z`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin unread clear→undo (`Z`) status copy on a shared helper path and lock hint/aria interaction semantics.
 - Change:
