@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 04:11 KST — shown Escape editable-target event-gate dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to mirror shown-state render guard parity at the keyboard dispatch contract layer.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting shown canonical `Escape` remains a no-op when `isEditableTarget=true` and `defaultPrevented=true`.
+    - Added companion shown-state dispatch no-op assertion for canonical `Escape` when `isEditableTarget=true` and `repeat=true`.
+    - Locked dispatch no-op contract for both paths: `handled=false`, `nextVisibility=true`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (32/32)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state dispatch no-op parity regression for `Esc` alias with `isEditableTarget=true` + `defaultPrevented=true`/`repeat=true` to keep canonical + alias event-gate dispatch coverage symmetric.
+
 ## 2026-03-08 04:04 KST — shown Escape modifier-key render-state no-op parity lock (boost lane)
 - Scope: chat thread UX wiring (render-state parity mirror for shown canonical `Escape` under modified-key guard paths).
 - Change:
