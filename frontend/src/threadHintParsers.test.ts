@@ -308,6 +308,7 @@ describe('threadHintParsers', () => {
       )
       expect(getHintShortcutSource('Jumped to first visible thread (Home).')).toBe('Home')
       expect(getHintShortcutSource('Jumped to first visible thread (G).')).toBe('G')
+      expect(getHintShortcutSource('Jumped to first visible thread (g).')).toBe('G')
       expect(getHintShortcutSource('Recovered to first visible thread (Enter) · Root · 1/9.')).toBe(
         'Enter',
       )

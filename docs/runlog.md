@@ -1,5 +1,36 @@
 # Runlog
 
+## 2026-03-07 12:12 KST — lowercase first-visible alias canonicalization lock (`g`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to extend lowercase single-key shortcut canonicalization parity beyond unread navigation aliases.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended `getHintShortcutSource(...)` extraction coverage with lowercase first-visible alias hint token:
+      - `Jumped to first visible thread (g).` → canonical `G` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression for lowercase first-visible alias on hint→chip path:
+      - `Jumped to first visible thread (g) ...` → `G` boundary-jump chip props (`Shortcut badge G: G (boundary jump).`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (75/75)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+## 2026-03-07 12:04 KST — lowercase previous-unread alias status-row composition lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase previous-unread hint alias rendering (`p` → canonical `P`) across chip + aria status composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression that normalizes lowercase previous-unread hint alias to canonical chip mapping:
+      - `Jumped to previous unread thread (p) ...` → `P` chip props (`Shortcut badge P: P (boundary jump).`).
+    - Added focused status-row composition regression asserting both aria and rendered chip output remain canonical for lowercase previous-unread hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (25/25)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `7cd4279` — `[test] lock lowercase previous-unread status-row chip composition`
+  - Push: `main -> origin/main` ✅
+- Next action: add a tiny parser/chip regression for lowercase root-jump alias (`g`) status hints to keep lowercase single-key canonicalization parity beyond unread navigation.
+
 ## 2026-03-07 11:51 KST — lowercase previous-unread alias canonicalization lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock lowercase previous-unread shortcut alias parsing parity with existing lowercase unread-next coverage.
 - Change:
