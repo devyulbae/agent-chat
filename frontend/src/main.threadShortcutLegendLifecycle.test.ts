@@ -828,6 +828,30 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps shown Escape with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
+    const ignoredShownEscapeShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownEscapeShiftDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      ignoredShownEscapeShiftDispatch.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownEscapeShiftDispatch.nextVisibility)
+  })
+
   it('keeps shown Esc alias with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
     const ignoredShownEscAliasShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
@@ -1557,6 +1581,29 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownRepeatEscAlias.nextVisibility).toBe(true)
     expect(ignoredShownRepeatEscAlias.statusHint).toBeNull()
     expect(ignoredShownRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
+
+  it('keeps shown Escape with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
+    const shownEscapeShiftNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownEscapeShiftNoOpRenderState.handled).toBe(false)
+    expect(shownEscapeShiftNoOpRenderState.nextVisibility).toBe(true)
+    expect(shownEscapeShiftNoOpRenderState.statusHint).toBeNull()
+    expect(shownEscapeShiftNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      shownEscapeShiftNoOpRenderState.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(shownEscapeShiftNoOpRenderState.nextVisibility)
   })
 
   it('keeps shown Esc alias with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
