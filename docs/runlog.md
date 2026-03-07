@@ -2190,3 +2190,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a compact dispatch-outcome regression for hidden legend `Escape` with modifier keys to mirror the new render-state parity lock at the lower keyboard-dispatch contract layer.
+
+## 2026-03-07 23:22 KST — hidden Escape modifier dispatch no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (keyboard dispatch guard-rail parity regression).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch-level regression asserting hidden legend + `Escape` with `Meta`/`Ctrl`/`Alt` modifiers remains a no-op.
+    - Locked dispatch contract expectations for each modifier path: `handled=false`, `nextVisibility=false`, and `statusHint=null`.
+    - Mirrors the prior render-state parity lock at the lower keyboard-dispatch contract layer to prevent hidden dismiss-key modifier combos from mutating legend state.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (13 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add a compact dispatch no-op regression for hidden `Esc` alias with `Meta`/`Ctrl`/`Alt` modifiers to complete alias parity with hidden `Escape` modifier guard rails.
