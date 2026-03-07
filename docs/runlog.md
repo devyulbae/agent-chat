@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 14:31 KST — lowercase thread-copy `source:`/`confirmed` parser-path lock (`y`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin parser canonicalization when thread-copy hints include decorated `source:` and `confirmed` wrappers.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended nested/multi-parenthesis shortcut extraction coverage for lowercase thread-copy alias in verbose templates:
+      - `Copied thread (source: y confirmed) · root.` → canonical `Y` source.
+      - `Copied thread (source (y confirmed)) · root.` → canonical `Y` source.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (86/86)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 14:12 KST — lowercase legend-hide alias status-row composition lock (`esc`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition parity for lowercase legend-hide alias hints.
 - Change:
@@ -1461,3 +1473,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a narrow regression to keep lowercase previous-unread alias hint extraction (`p`) canonicalization explicit so parser/source/chip parity stays locked across all unread navigation shortcuts.
+
+## 2026-03-07 14:22 KST — previous-unread alias (`P/p`) status-row chip parity lock (boost lane)
+- Scope: chat thread UX wiring (stabilize previous-unread alias parity at status-row aria + chip render path).
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added regression ensuring uppercase/lowercase previous-unread aliases (`P`/`p`) resolve to identical chip props.
+    - Added composed status-row aria assertions for both `P` and `p` hints to keep copy semantics stable.
+    - Added render assertions that both variants render canonical `P` chip badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (37 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `2fe05dc` — `[test] lock previous-unread alias status-row chip parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add a tiny parser-path regression for lowercase thread-copy root alias (`y`) with `source:`/`confirmed` decorated parentheses so canonical `Y` chip mapping remains stable under verbose hint templates.
