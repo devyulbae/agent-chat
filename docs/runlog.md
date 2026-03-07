@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 18:32 KST — uppercase mixed legend-hide `escape key / ESC` parser+chip lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin case-insensitive mixed legend-hide alias normalization when verbose escape wording uses uppercase `ESC`.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended legend-hide shortcut extraction regression with uppercase mixed alias:
+      - `Thread shortcut legend hidden (escape key / ESC).` → canonical `Escape` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Extended hint→chip mapping regression to assert uppercase mixed legend-hide alias resolves to canonical `Esc` chip props (`badge`, `title`, `ariaLabel`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (101/101)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `839ab27` — `[test] lock uppercase ESC mixed legend-hide alias parsing`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow mixed legend-show alias regression for uppercase delimiter variant (`slash key / SHIFT+/`) so dual-source slash normalization parity is pinned with the same case-insensitive delimiter contract family.
+
 ## 2026-03-07 18:12 KST — uppercase nested source-decorated unread-undo hint-chip semantics lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin hint-chip rendering parity for uppercase nested source wrappers on unread-clear undo status hints.
 - Change:
