@@ -2729,3 +2729,15 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: add focused shown-state canonical `Escape` + `shiftKey=true` editable-target no-op parity for guard conditions when `defaultPrevented=true` and `repeat=true` so shift-dismiss symmetry also holds under event-suppression paths.
+
+## 2026-03-08 07:51 KST — shown Esc alias+Shift editable event-gate no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync lane (thread shortcut legend shown-state alias symmetry under editable event-gate suppression).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting shown `Esc` alias with `shiftKey=true` stays no-op for `isEditableTarget=true` when `defaultPrevented=true` and `repeat=true`.
+    - Locked dispatch + render-state parity expectations (`handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`) and stable `ariaExpanded` synchronization.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (48/48)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state `Esc` alias + `shiftKey=true` editable-target no-op parity coverage for modifier-key guard paths (`Meta`/`Ctrl`/`Alt`) to complete alias symmetry with canonical `Escape` guard rails.
