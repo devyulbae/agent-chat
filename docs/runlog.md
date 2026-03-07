@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 02:31 KST — hidden Escape editable-target event-gate dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to close editable-target dispatch parity for canonical hidden `Escape` when event-gate flags are active.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch-level regression asserting hidden canonical `Escape` remains a no-op when `isEditableTarget=true` and the event is `defaultPrevented=true`.
+    - Added companion dispatch no-op assertion for hidden canonical `Escape` with `isEditableTarget=true` and `repeat=true`.
+    - Locked dispatch contract expectations for both paths: `handled=false`, `nextVisibility=false`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (24/24)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact render-state parity regression for hidden canonical `Escape` with `isEditableTarget=true` + `defaultPrevented=true`/`repeat=true` to fully mirror dispatch+render event-gate coverage.
+
 ## 2026-03-08 02:22 KST — hidden Escape editable-target dispatch no-op parity lock (boost lane)
 - Scope: chat thread UX wiring (dispatch-level parity mirror for editable-target dismiss guard).
 - Change:

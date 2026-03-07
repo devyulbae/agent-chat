@@ -425,6 +425,43 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps hidden Escape as no-op dispatch when target is editable and event is defaultPrevented or repeat', () => {
+    const ignoredHiddenEditableDefaultPreventedEscapeDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: false,
+        key: 'Escape',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: true,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredHiddenEditableDefaultPreventedEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+
+    const ignoredHiddenEditableRepeatEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: true,
+      isEditableTarget: true,
+    })
+    expect(ignoredHiddenEditableRepeatEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+  })
+
   it('keeps hidden Esc alias as no-op dispatch when target is editable', () => {
     const ignoredHiddenEditableEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
