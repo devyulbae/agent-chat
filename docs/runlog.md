@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 13:52 KST — lowercase alternate thread-copy alias status-row composition lock (`c`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition parity for lowercase alternate thread-copy alias hints.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase alternate thread-copy alias:
+      - `Copied thread (c) · root.` → canonical `C` thread-copy chip semantics in both aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (84/84)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `c078ce8` — `[test] add status-row lock for lowercase thread-copy c alias`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 13:45 KST — lowercase root-jump alias status-row composition lock (`r`) (boost lane)
 - Scope: chat thread UX wiring regression hardening for lowercase root-jump hint aliases on status-row aria + chip render composition.
 - Change:
