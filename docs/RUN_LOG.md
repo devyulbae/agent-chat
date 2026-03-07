@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-07 23:11 KST — Agent Chat parallel offset cycle
+- Delta: Added bracketed horizontal Option-arrow parity coverage in frontend thread hint parser tests so wrapped `key:` aliases remain canonical for both directions.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Option+ArrowLeft]).` → `Option+ArrowLeft` extraction assertion.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (52 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `7ba14f3` (pushed to `main`)
+- Next action: add complementary bracketed horizontal parity coverage for `key: [Control+ArrowRight]` alias extraction to keep `Ctrl`/`Control` wrapped variants symmetric.
+
 ## 2026-03-07 22:11 KST — Agent Chat parallel offset cycle
 - Delta: Added bracketed horizontal Ctrl-arrow alias regression coverage in frontend thread hint parsing so wrapped `key:` forms stay canonical for leftward navigation hints.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Ctrl+ArrowLeft]).` → `Ctrl+ArrowLeft` extraction assertion.
