@@ -49,8 +49,20 @@ describe('hidden-selection recovery hints', () => {
     expect(getSelectedVisibleThreadInlineRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
   })
 
+  it('renders exact hidden-selection inline recovery copy for empty visible-list state', () => {
+    expect(getSelectedVisibleThreadInlineRecoveryHint(true, 'hidden/0')).toBe(
+      'Hidden selection recovery (hidden/0): J/K or ↑/↓ → ↖ first / ↘ last visible.',
+    )
+  })
+
   it('includes hidden position token in shortcut recovery hint when list is empty', () => {
     expect(getSelectedVisibleThreadShortcutRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
+  })
+
+  it('renders exact hidden-selection shortcut recovery copy for empty visible-list state', () => {
+    expect(getSelectedVisibleThreadShortcutRecoveryHint(true, 'hidden/0')).toBe(
+      'Tip (hidden/0): J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread.',
+    )
   })
 
   it('includes hidden position token in button recovery hint when list is empty', () => {
