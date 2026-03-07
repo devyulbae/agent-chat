@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 06:43 KST — no-op render-state nullish aria + aria-expanded parity lock (boost lane)
+- Scope: chat thread UX wiring follow-up (render-state parity for hidden/show no-op key paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting hidden `Esc` no-op render-state keeps `statusAriaLabel` nullish while `ariaExpanded` remains aligned with `nextVisibility=false`.
+    - Added companion assertion for shown `Shift+Escape` no-op render-state with nullish `statusAriaLabel` and `ariaExpanded` aligned with `nextVisibility=true`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: add a compact no-op render-state parity regression for shown `Esc` alias with `shiftKey=true` to explicitly mirror the `Shift+Escape` path.
+
 ## 2026-03-08 06:31 KST — aria-expanded no-op dispatch parity lock for hidden/show states (offset lane)
 - Scope: frontend integration + API contract sync follow-up to keep legend toggle `aria-expanded` presentation stable under keyboard dispatch no-op paths, not only handled show/hide transitions.
 - Change:

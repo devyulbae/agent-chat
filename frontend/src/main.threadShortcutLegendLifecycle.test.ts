@@ -346,6 +346,50 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(shownNoOpPresentation.ariaExpanded).toBe(true)
   })
 
+  it('keeps no-op render-state nullish aria synchronized with aria-expanded for hidden Esc and shown Shift+Escape', () => {
+    const hiddenEscNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenEscNoOpRenderState.handled).toBe(false)
+    expect(hiddenEscNoOpRenderState.nextVisibility).toBe(false)
+    expect(hiddenEscNoOpRenderState.statusHint).toBeNull()
+    expect(hiddenEscNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(
+      hiddenEscNoOpRenderState.nextVisibility,
+    )
+    expect(hiddenNoOpPresentation.ariaExpanded).toBe(hiddenEscNoOpRenderState.nextVisibility)
+
+    const shownShiftEscapeNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownShiftEscapeNoOpRenderState.handled).toBe(false)
+    expect(shownShiftEscapeNoOpRenderState.nextVisibility).toBe(true)
+    expect(shownShiftEscapeNoOpRenderState.statusHint).toBeNull()
+    expect(shownShiftEscapeNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      shownShiftEscapeNoOpRenderState.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(shownShiftEscapeNoOpRenderState.nextVisibility)
+  })
+
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
     const ignoredHiddenMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
