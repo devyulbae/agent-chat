@@ -645,6 +645,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Moved to next visible thread (key: [Cmd+ArrowRight]).')).toBe(
         'Cmd+ArrowRight',
       )
+      expect(getHintShortcutSource('Moved to previous visible thread (key: [Option+ArrowLeft]).')).toBe(
+        'Option+ArrowLeft',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (key: [Option+ArrowRight]).')).toBe(
         'Option+ArrowRight',
       )
