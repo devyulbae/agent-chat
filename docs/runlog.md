@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 14:12 KST — lowercase legend-hide alias status-row composition lock (`esc`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition parity for lowercase legend-hide alias hints.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase legend-hide alias:
+      - `Thread shortcut legend hidden (esc).` → canonical `Esc` filter-jump chip semantics in both aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (85/85)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 13:52 KST — lowercase alternate thread-copy alias status-row composition lock (`c`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition parity for lowercase alternate thread-copy alias hints.
 - Change:
