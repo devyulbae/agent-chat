@@ -30,3 +30,47 @@ export function normalizeAuditOffset(value: number): number {
 
   return Math.max(0, Math.trunc(value))
 }
+
+export type CredentialAuditEventsQueryParamsInput = {
+  credentialId: string | null
+  action: string
+  eventType: string
+  provider: string
+  label: string
+  limit: number
+  offset: number
+}
+
+export function buildCredentialAuditEventsQueryParams(
+  input: CredentialAuditEventsQueryParamsInput,
+): URLSearchParams {
+  const boundedLimit = clampAuditEventLimit(input.limit)
+  const boundedOffset = normalizeAuditOffset(input.offset)
+
+  const params = new URLSearchParams({
+    entity_type: 'credential',
+    limit: String(boundedLimit),
+    offset: String(boundedOffset),
+  })
+
+  if (input.credentialId) {
+    params.set('entity_id', input.credentialId)
+  }
+  if (input.action !== 'all') {
+    params.set('action', input.action)
+  }
+
+  const trimmedEventType = input.eventType.trim()
+  if (trimmedEventType) {
+    params.set('event_type', trimmedEventType)
+  }
+
+  if (input.provider !== 'all') {
+    params.set('provider', input.provider)
+  }
+  if (input.label !== 'all') {
+    params.set('label', input.label)
+  }
+
+  return params
+}

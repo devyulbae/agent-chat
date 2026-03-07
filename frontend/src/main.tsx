@@ -29,6 +29,7 @@ import {
 } from './threadHintChips'
 import {
   AUDIT_EVENTS_LIMIT_MAX,
+  buildCredentialAuditEventsQueryParams,
   clampAuditEventLimit,
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
@@ -893,27 +894,15 @@ function App() {
 
       const boundedLimit = clampAuditEventLimit(limit)
       const boundedOffset = normalizeAuditOffset(offset)
-      const params = new URLSearchParams({
-        entity_type: 'credential',
-        limit: String(boundedLimit),
-        offset: String(boundedOffset),
+      const params = buildCredentialAuditEventsQueryParams({
+        credentialId,
+        action,
+        eventType,
+        provider,
+        label,
+        limit,
+        offset,
       })
-      if (credentialId) {
-        params.set('entity_id', credentialId)
-      }
-      if (action !== 'all') {
-        params.set('action', action)
-      }
-      const trimmedEventType = eventType.trim()
-      if (trimmedEventType) {
-        params.set('event_type', trimmedEventType)
-      }
-      if (provider !== 'all') {
-        params.set('provider', provider)
-      }
-      if (label !== 'all') {
-        params.set('label', label)
-      }
 
       try {
         const response = await fetch(`${API_BASE}/audit-events?${params.toString()}`, { signal })
