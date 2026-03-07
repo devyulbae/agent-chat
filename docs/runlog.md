@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 17:51 KST — nested source-decorated lowercase `z` parser canonicalization lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin parser extraction parity for nested source-decorated unread-undo alias templates.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused extraction regression asserting nested template canonicalizes to `Z`:
+      - `Restored unread markers (source (z confirmed)) · 3 thread(s).` → `Z`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add parser coverage for uppercase nested source wrapper variant (`source (Z confirmed)`) to pin case-insensitive canonicalization parity in the same nested template family.
+
 ## 2026-03-07 17:42 KST — nested source-decorated lowercase `z` hint-chip semantics lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for unread-undo hint-chip extraction parity across nested parenthesis source wrappers.
 - Change:
