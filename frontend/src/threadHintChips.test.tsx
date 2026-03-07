@@ -284,6 +284,17 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('composes first-visible status-row aria + chip rendering from lowercase hint alias (g)', () => {
+    const jumpFirstHintG = 'Jumped to first visible thread (g) · Root · 1/8.'
+    const chipG = getShortcutChipPropsFromHint(jumpFirstHintG, 'boundary jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(jumpFirstHintG, chipG)).toBe(
+      'Jumped to first visible thread (g) · Root · 1/8. Shortcut badge G: G (boundary jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipG)}</>)).toContain('>G<')
+  })
+
   it('normalizes lowercase recovery aliases (j/k) to canonical chip mappings', () => {
     expect(
       getShortcutChipPropsFromHint('Recovered to first visible thread (j) · Root · 1/9.', 'boundary jump', 'thread-jump'),
