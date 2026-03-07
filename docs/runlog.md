@@ -2686,3 +2686,32 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Next action: add a narrow lifecycle regression that verifies legend-toggle button `aria-expanded` + `aria-keyshortcuts` stay synchronized across `?` show and `Esc` hide transitions.
+
+## 2026-03-08 07:23 KST — shown canonical Escape+Shift no-op dispatch/render parity lock (boost lane)
+- Scope: chat thread UX wiring follow-up to mirror existing shown `Esc` alias shift no-op coverage with explicit canonical `Escape` parity.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting shown canonical `Escape` with `shiftKey=true` remains a no-op (`handled=false`, `nextVisibility=true`, `statusHint=null`) with stable `ariaExpanded` parity.
+    - Added companion render-state regression asserting the same canonical shown `Escape` + `shiftKey=true` path keeps nullish `statusAriaLabel` while `ariaExpanded` stays synchronized with `nextVisibility=true`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (45/45)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `2777a8b` — `[test] lock shown Escape shift no-op parity with Esc alias`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact shown-state dispatch+render no-op parity regression for canonical `Escape` + `shiftKey=true` when `isEditableTarget=true` to keep shift-dismiss guard symmetry consistent across editable-target lanes.
+
+## 2026-03-08 07:31 KST — shown canonical Escape+Shift editable-target no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync lane (thread shortcut legend shown-state guard symmetry for editable targets).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added compact integration regression asserting shown canonical `Escape` with `shiftKey=true` remains a no-op when `isEditableTarget=true` on both dispatch and render-state paths.
+    - Locked parity expectations to guard against editable-target regressions: `handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`, and stable `ariaExpanded` synchronization.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (46/46)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add focused shown-state canonical `Escape` + `shiftKey=true` editable-target no-op parity for guard conditions when `defaultPrevented=true` and `repeat=true` so shift-dismiss symmetry also holds under event-suppression paths.
