@@ -18,4 +18,15 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
     expect(hiddenAfterEscDismiss).toEqual(hiddenBeforeToggle)
   })
+
+  it('keeps toggle/dismiss control copy stable regardless of visibility state', () => {
+    const hidden = getThreadShortcutLegendPresentation(false)
+    const shown = getThreadShortcutLegendPresentation(true)
+
+    expect(hidden.toggleControlCopy).toBe('? / Shift+/')
+    expect(hidden.dismissControlCopy).toBe('Esc')
+
+    expect(shown.toggleControlCopy).toBe(hidden.toggleControlCopy)
+    expect(shown.dismissControlCopy).toBe(hidden.dismissControlCopy)
+  })
 })

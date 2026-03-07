@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 19:22 KST — legend lifecycle control-copy stability lock in main integration harness (boost lane)
+- Scope: chat thread UX wiring regression hardening for legend presentation metadata/copy coupling in `main.tsx` lifecycle helper.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting `getThreadShortcutLegendPresentation(...)` keeps control copy stable across visibility states:
+      - `toggleControlCopy` remains `? / Shift+/`
+      - `dismissControlCopy` remains `Esc`
+    - Complements existing hidden→shown→hidden lifecycle parity assertions for status hint + `aria-keyshortcuts`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (2/2)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow `threadHintChips` regression that composes legend lifecycle status hint copy with parsed shortcut chips (`Slash` shown / `Esc` hidden) to pin parser→status-row presentation parity.
+
 ## 2026-03-07 18:52 KST — uppercase mixed legend-show `slash key / SHIFT+/` parser+chip lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin case-insensitive mixed legend-show alias normalization when verbose toggle wording uses uppercase `SHIFT+/`.
 - Change:
