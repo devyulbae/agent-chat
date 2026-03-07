@@ -131,7 +131,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash')
   })
 
-  it('models window keydown dispatch lifecycle for ? then Esc with editable/modified-key no-op guards', () => {
+  it('models window keydown dispatch lifecycle for ?/Shift+/ show then Esc/Esc alias hide with no-op guards', () => {
     const shownDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
       key: '?',
@@ -149,6 +149,19 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       statusHint: 'Thread shortcut legend shown (? / Shift+/).',
     })
 
+    const shownByShiftSlashDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: '/',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownByShiftSlashDispatch).toEqual(shownDispatch)
+
     const hiddenDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: shownDispatch.nextVisibility,
       key: 'Escape',
@@ -165,6 +178,19 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       nextVisibility: false,
       statusHint: 'Thread shortcut legend hidden (Esc).',
     })
+
+    const hiddenEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: shownDispatch.nextVisibility,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenEscAliasDispatch).toEqual(hiddenDispatch)
 
     const ignoredEditableDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,

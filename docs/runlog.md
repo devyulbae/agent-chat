@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 21:06 KST — legend keyboard dispatch alias parity lock for Shift+/ + Esc alias (boost lane)
+- Scope: chat thread UX wiring, strict small regression increment on `main.tsx` legend keyboard dispatch lifecycle.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Extended window keydown dispatch regression to assert show parity for `?` and `Shift+/` (`key='/'`, `shiftKey=true`).
+    - Extended dismiss parity assertions so `Escape` and `Esc` alias produce identical handled hide outcomes.
+    - Kept editable-target and meta-modifier no-op guard assertions in the same dispatch lane.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (8/8)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow jsdom render-lane regression for actual `window` keydown events (`Shift+/` show → `Esc` hide) that asserts legend region visibility plus live status chip text together.
+
 ## 2026-03-07 20:46 KST — legend keyboard dispatch outcome helper lock for window keydown lifecycle (boost lane)
 - Scope: chat thread UX wiring, strict small increment to centralize `main.tsx` legend keyboard dispatch gating + lifecycle transition handling on one helper contract.
 - Change:
@@ -2026,3 +2041,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: add a narrow `main.tsx` DOM interaction test that dispatches actual keyboard events (`?`, then `Esc`) and asserts legend region visibility + live status chip rendering end-to-end when a jsdom-compatible harness is available.
+
+## 2026-03-07 20:51 KST — credential audit query-param contract helper sync (offset lane)
+- Scope: frontend integration + API contract sync lane (reduce query construction drift between UI callsites and contract bounds).
+- Change:
+  - `frontend/src/apiContracts.ts`
+    - Added `buildCredentialAuditEventsQueryParams(...)` and `CredentialAuditEventsQueryParamsInput` to centralize audit query composition.
+    - Preserves existing contract normalization behavior (bounded `limit`, normalized `offset`, trimmed `event_type`, omitted `all`/blank optional filters).
+  - `frontend/src/apiContracts.test.ts`
+    - Added regressions covering bounded/trimmed filter inclusion and optional-filter omission behavior.
+  - `frontend/src/main.tsx`
+    - Switched credential audit loader to consume `buildCredentialAuditEventsQueryParams(...)` instead of hand-building `URLSearchParams` inline.
+- Verification:
+  - `cd frontend && npm test -- --run src/apiContracts.test.ts src/main.threadShortcutLegendLifecycle.test.ts` ✅ (13 passed)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `1f3ee54` — `[refactor] centralize credential audit query param contract builder`
+  - Push: `main -> origin/main` ✅
+- Next action: add an integration regression that verifies `loadCredentialAuditEvents` request URLs stay stable across `all`/trimmed filter transitions (especially whitespace-only `event_type`) so UI filters and backend contract params remain in lockstep.
