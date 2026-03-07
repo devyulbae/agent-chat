@@ -311,6 +311,17 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('normalizes lowercase previous-unread alias hint (p) to canonical chip mapping', () => {
+    expect(
+      getShortcutChipPropsFromHint('Jumped to previous unread thread (p) · t-2 · 3/3.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'P',
+      title: 'P boundary jump',
+      ariaLabel: 'Shortcut badge P: P (boundary jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('keeps unread-next alias semantics aligned while allowing badge/token differences', () => {
     const chipU = getShortcutChipPropsFromHint(
       'Jumped to next unread thread (U) · t-9 · 1/3.',
@@ -366,6 +377,17 @@ describe('getShortcutChipPropsFromHint', () => {
 
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipU)}</>)).toContain('>U<')
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipN)}</>)).toContain('>N<')
+  })
+
+  it('composes previous-unread status-row aria + chip rendering from lowercase hint alias (p)', () => {
+    const unreadPrevHintP = 'Jumped to previous unread thread (p) · t-2 · 3/3.'
+    const chipP = getShortcutChipPropsFromHint(unreadPrevHintP, 'boundary jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(unreadPrevHintP, chipP)).toBe(
+      'Jumped to previous unread thread (p) · t-2 · 3/3. Shortcut badge P: P (boundary jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipP)}</>)).toContain('>P<')
   })
 
   it('maps filter jump hints to chip props with filter-jump context', () => {
