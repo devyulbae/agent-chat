@@ -245,6 +245,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/shift\s*\+\s*\//gu, 'shift+slash')
     .replace(/forward[\s-]?slash/gu, 'slash')
     .replace(/\bfwd[\s-]?slash\b/gu, 'slash')
+    .replace(/\bslash[\s-]+key\b/gu, 'slash')
     .replace(/\?/gu, 'slash')
     .replace(/\++/g, '+')
     .replace(/^\+|\+$/g, '')

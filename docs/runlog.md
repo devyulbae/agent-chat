@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 16:13 KST — verbose legend-show `forward-slash key` status-row composition + parser extraction lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin verbose legend-show alias wording parity (`slash key` / `forward-slash key`) on parser extraction and status-row aria/chip composition.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Extended shortcut alias normalization to fold `slash key` token forms into canonical `Slash` (covers `forward-slash key` after existing alias normalization).
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added extraction regressions asserting:
+      - `Thread shortcut legend shown (slash key).` → canonical `Slash` source.
+      - `Thread shortcut legend shown (forward-slash key).` → canonical `Slash` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added status-row composition regression asserting `Thread shortcut legend shown (forward-slash key).` resolves to canonical slash chip semantics in aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (95/95)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a narrow status-row composition regression for the mixed verbose toggle form (`slash key / Shift+/`) so dual-source legend-show wording stays pinned to canonical slash-toggle chip behavior.
+
 ## 2026-03-07 16:06 KST — legend-hide `escape key` alias parser/chip parity lock (boost lane)
 - Scope: chat thread UX wiring hardening for legend-dismiss shortcut alias normalization when status hints use verbose `escape key` wording.
 - Change:
