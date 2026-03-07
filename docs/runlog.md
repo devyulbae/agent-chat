@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-08 00:30 KST — trimmed event_type + scoped provider with label=all paging-offset parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin mixed optional include/omit ordering when only `provider` is scoped while `label` remains `all`.
+- Change:
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused regression asserting scoped `credentialId`, trimmed non-blank `event_type`, and scoped `provider` remain present while `action/label` set to `all` are omitted.
+    - Locked request URL contract parity across refresh (`offset=0`) and older-page fetch (`offset=20`) with stable param ordering.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (13/13)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `92e2425` — `[test] lock provider/event_type audit URL parity across offsets`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact regression for trimmed `event_type` + scoped `action` with `provider=all`/`label=all` across `offset` transitions to complete one-active-optional filter parity.
+
 ## 2026-03-08 00:10 KST — scoped credential + trimmed event_type omit/include paging-offset parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin mixed include/omit optional filter behavior when audit pagination offset advances.
 - Change:
