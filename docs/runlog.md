@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-08 05:53 KST — legend region aria-keyshortcuts main presentation parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin legend-region shortcut metadata on the same main presentation path consumed by rendered legend UI state.
+- Change:
+  - `frontend/src/main.tsx`
+    - Extended `ThreadShortcutLegendPresentation` with `regionAriaKeyshortcuts` sourced from `getThreadShortcutLegendRegionAriaKeyshortcuts()`.
+    - Wired rendered `#thread-shortcut-legend` region `aria-keyshortcuts` to `threadShortcutLegendPresentation.regionAriaKeyshortcuts` so region metadata stays coupled to main presentation state instead of ad-hoc callsites.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused main-integration assertions that `getThreadShortcutLegendPresentation(...)` exposes the canonical legend-region `aria-keyshortcuts` token list.
+    - Locked parity that region metadata remains stable across hidden → shown lifecycle transitions while button metadata/status hints continue to switch correctly.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts src/threadHintParsers.test.ts` ✅ (91/91)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `75b9593` — `[test] lock legend region aria-keyshortcuts in main presentation`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow DOM-capable interaction harness (when available) that asserts rendered `#thread-shortcut-legend` mount/unmount plus region `aria-keyshortcuts` presence under keyboard toggle (`?` / `Esc`) events end-to-end.
+
 ## 2026-03-08 05:03 KST — shown Escape/Esc editable-target modifier dispatch no-op parity lock (boost lane)
 - Scope: chat thread UX wiring (dispatch-level parity mirror for shown editable-target modifier guard rails).
 - Change:
