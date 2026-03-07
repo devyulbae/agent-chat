@@ -923,6 +923,56 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownEditableRepeatEscape.statusAriaLabel ?? null).toBeNull()
   })
 
+  it('keeps shown Escape with modifier keys as no-op render-state outcomes with nullish aria', () => {
+    const ignoredShownMetaEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownMetaEscape.handled).toBe(false)
+    expect(ignoredShownMetaEscape.nextVisibility).toBe(true)
+    expect(ignoredShownMetaEscape.statusHint).toBeNull()
+    expect(ignoredShownMetaEscape.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownCtrlEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownCtrlEscape.handled).toBe(false)
+    expect(ignoredShownCtrlEscape.nextVisibility).toBe(true)
+    expect(ignoredShownCtrlEscape.statusHint).toBeNull()
+    expect(ignoredShownCtrlEscape.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownAltEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownAltEscape.handled).toBe(false)
+    expect(ignoredShownAltEscape.nextVisibility).toBe(true)
+    expect(ignoredShownAltEscape.statusHint).toBeNull()
+    expect(ignoredShownAltEscape.statusAriaLabel ?? null).toBeNull()
+  })
+
   it('keeps shown Esc alias with modifier keys as no-op render-state outcomes with nullish aria', () => {
     const ignoredShownMetaEscAlias = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,

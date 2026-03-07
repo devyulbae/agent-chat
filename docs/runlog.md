@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 04:04 KST — shown Escape modifier-key render-state no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (render-state parity mirror for shown canonical `Escape` under modified-key guard paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown canonical `Escape` remains a no-op for each modified-key guard path (`metaKey`, `ctrlKey`, `altKey`).
+    - Locked no-op contract for all modifier paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: add compact shown-state render-state no-op parity regression for canonical `Escape` when `isEditableTarget=true` with `defaultPrevented=true`/`repeat=true` so canonical + alias shown-state event-gate coverage stays symmetric.
+
 ## 2026-03-08 03:50 KST — shown Esc alias modifier-key render-state no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock shown-state `Esc` alias no-op behavior under modified-key guard paths.
 - Change:
