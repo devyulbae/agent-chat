@@ -350,6 +350,24 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipN)}</>)).toContain('>N<')
   })
 
+  it('composes unread-next status-row aria + chip rendering from lowercase hint aliases (u/n)', () => {
+    const unreadNextHintU = 'Jumped to next unread thread (u) · t-9 · 1/3.'
+    const unreadNextHintN = 'Jumped to next unread thread (n) · t-9 · 1/3.'
+
+    const chipU = getShortcutChipPropsFromHint(unreadNextHintU, 'boundary jump', 'thread-jump')
+    const chipN = getShortcutChipPropsFromHint(unreadNextHintN, 'boundary jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(unreadNextHintU, chipU)).toBe(
+      'Jumped to next unread thread (u) · t-9 · 1/3. Shortcut badge U: U (boundary jump).',
+    )
+    expect(getStatusAriaLabelWithShortcutChip(unreadNextHintN, chipN)).toBe(
+      'Jumped to next unread thread (n) · t-9 · 1/3. Shortcut badge N: N (boundary jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipU)}</>)).toContain('>U<')
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipN)}</>)).toContain('>N<')
+  })
+
   it('maps filter jump hints to chip props with filter-jump context', () => {
     expect(
       getShortcutChipPropsFromHint(

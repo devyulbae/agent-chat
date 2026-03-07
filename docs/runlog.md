@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 11:32 KST — lowercase unread-next alias status-row composition lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock full status-row composition parity for lowercase unread-next hint aliases.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression composing status-row aria-label + chip rendering from lowercase unread-next hint aliases:
+      - `Jumped to next unread thread (u) ...` → canonical `U` chip + aria narration.
+      - `Jumped to next unread thread (n) ...` → canonical `N` chip + aria narration.
+    - Confirms render-lane parity with existing uppercase alias coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (23/23)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `75afa49` — `[test] lock lowercase unread-next status-row chip composition`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 11:23 KST — lowercase unread-next alias hint-parser regression lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for hint-parser alias normalization (`u`/`n` → canonical unread-next shortcuts).
 - Change:
