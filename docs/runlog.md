@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-08 04:43 KST — shown Escape/Esc render-state prevented/repeat no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (tight render-state parity follow-up for shown legend dismiss keys under event-gate paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression for shown non-editable legend state asserting both canonical `Escape` and alias `Esc` stay no-op when `defaultPrevented=true` and when `repeat=true`.
+    - Locked no-op contract for all four paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (35/35)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `e185bda` — `[test] lock shown Escape/Esc render no-op on prevented/repeat`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact shown-state render-state no-op parity regression for canonical `Escape` + alias `Esc` under `isEditableTarget=true` with modifier-key guards (`meta`/`ctrl`/`alt`) to keep shown-state event-gate + modifier coverage symmetric.
+
 ## 2026-03-08 04:31 KST — shown Escape/Esc defaultPrevented-repeat dispatch no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to close shown-state event-gate dispatch parity for canonical `Escape` and `Esc` alias when events are gated by `defaultPrevented`/`repeat`.
 - Change:
