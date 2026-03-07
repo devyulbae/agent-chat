@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 10:31 KST — unread-next alias chip semantics regression lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin `U`/`N` unread-next shortcut chip semantics/copy parity on the shared source-based chip props path.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Extended `getShortcutChipPropsFromSource(...)` regression coverage with explicit unread-next alias assertions:
+      - `U` → `Shortcut badge U: U (boundary jump).`
+      - `N` → `Shortcut badge N: N (boundary jump).`
+    - Locks both aliases to the same intent/context contract (`boundary jump`, `thread-jump`) while preserving distinct badges.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (21/21)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `bfe770b` — `[test] lock unread-next chip props for U and N aliases`
+  - Push: `main -> origin/main` ✅
+
+
 ## 2026-03-07 10:12 KST — hidden-selection empty-list recovery-row interaction lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock combined hidden-selection recovery status-row behavior in empty visible-list states.
 - Change:
