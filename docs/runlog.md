@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 10:12 KST — hidden-selection empty-list recovery-row interaction lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock combined hidden-selection recovery status-row behavior in empty visible-list states.
+- Change:
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused interaction-style regression that composes inline + shortcut + button hidden-selection recovery rows from shared helpers using `hidden/0` position label.
+    - Asserts all three recovery rows are present and each includes the `hidden/0` contract token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts src/threadHintParsers.test.ts src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (85/85)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `95f016a` — `[test] add hidden-selection empty-list recovery row interaction lock`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 10:05 KST — hidden-selection inline/shortcut empty-list copy lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for hidden-selection recovery text in zero-visible-thread states.
 - Change:
