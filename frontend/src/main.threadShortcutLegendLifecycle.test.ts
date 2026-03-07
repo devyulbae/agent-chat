@@ -520,4 +520,38 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenAltEscAlias.statusHint).toBeNull()
     expect(ignoredHiddenAltEscAlias.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps hidden Esc alias as no-op render-state when event is defaultPrevented or repeat', () => {
+    const ignoredHiddenDefaultPreventedEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: true,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenDefaultPreventedEscAlias.handled).toBe(false)
+    expect(ignoredHiddenDefaultPreventedEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenDefaultPreventedEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenDefaultPreventedEscAlias.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredHiddenRepeatEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: true,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenRepeatEscAlias.handled).toBe(false)
+    expect(ignoredHiddenRepeatEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenRepeatEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
 })
