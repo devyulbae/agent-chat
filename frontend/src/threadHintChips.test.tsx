@@ -702,6 +702,14 @@ describe('getShortcutChipPropsFromHint', () => {
       ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
       context: 'thread-jump',
     })
+    expect(
+      getShortcutChipPropsFromHint('Thread shortcut legend hidden (escape key / ESC).', 'filter jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'Esc',
+      title: 'Escape filter jump',
+      ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('composes shortcut-legend hide status-row aria + chip rendering from lowercase esc alias', () => {
