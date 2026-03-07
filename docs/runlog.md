@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-07 21:12 KST — credential audit loader request URL stability lock for all/trimmed filters (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin `loadCredentialAuditEvents` request URL composition against filter transitions (`all`/blank/trimmed).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `buildCredentialAuditEventsRequestUrl(...)` helper that composes `/audit-events` URLs from shared `buildCredentialAuditEventsQueryParams(...)` contract output.
+    - Switched `loadCredentialAuditEvents(...)` fetch callsite to consume the shared request URL helper instead of inline string composition.
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused integration regressions asserting request URL stability for:
+      - optional filters unset (`action/provider/label=all`, whitespace-only `event_type`) → omitted optional params.
+      - trimmed + bounded path (`event_type` whitespace trim, `limit` clamp, `offset` normalize) while keeping provider/label/action/entity filters intact.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `a56c205` — `[test] lock credential audit request URL normalization path`
+  - Push: `main -> origin/main` ✅
+
+
 ## 2026-03-07 21:06 KST — legend keyboard dispatch alias parity lock for Shift+/ + Esc alias (boost lane)
 - Scope: chat thread UX wiring, strict small regression increment on `main.tsx` legend keyboard dispatch lifecycle.
 - Change:
