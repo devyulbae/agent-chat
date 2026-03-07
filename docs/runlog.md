@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 21:44 KST — audit request URL paging-offset filter stability lock (boost lane)
+- Scope: chat thread UX wiring priority follow-up (frontend integration guard on credential audit pagination URL contract drift).
+- Change:
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused regression asserting trimmed/scoped filter params remain stable when paging offset advances from refresh (`offset=0`) to older-page fetch (`offset=20`).
+    - Locks invariant that only `offset` changes while `entity_id/action/event_type/provider/label` remain contract-identical.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (8/8)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `8d70714` — `[test] lock audit request URL filter stability across paging offsets`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow integration test that exercises the same paging-offset contract with optional filters set to `all`/blank (including whitespace-only `event_type`) to pin omission behavior under pagination transitions.
+
 ## 2026-03-07 21:26 KST — legend keyboard render-state helper lock for visibility + live-status aria sync (boost lane)
 - Scope: chat thread UX wiring, strict small increment to lock the main legend keyboard render-lane contract without introducing full DOM/jsdom harness.
 - Change:
