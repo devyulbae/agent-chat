@@ -197,4 +197,47 @@ describe('unread wrap live-region interaction', () => {
     clearTimeout(timeoutId)
     vi.useRealTimers()
   })
+
+  it('ignores Z undo after snapshot expiry without emitting restored live status', () => {
+    vi.useFakeTimers()
+
+    const unreadBeforeClear = ['t-1', 't-3']
+    let unreadAfterClear: string[] = []
+    let hasUndoSnapshot = true
+    let boundaryJumpStatusHint: string | null = null
+
+    const timeoutId = setTimeout(() => {
+      hasUndoSnapshot = false
+    }, 10_000)
+
+    vi.advanceTimersByTime(10_000)
+
+    const attemptUndoAfterExpiry = () => {
+      if (!hasUndoSnapshot) {
+        return
+      }
+
+      unreadAfterClear = [...unreadBeforeClear]
+      boundaryJumpStatusHint = getUnreadClearUndoStatusHint(unreadAfterClear.length)
+    }
+
+    attemptUndoAfterExpiry()
+
+    const boundaryJumpStatusAriaLabel = getUnreadBoundaryJumpStatusAriaLabel(
+      boundaryJumpStatusHint,
+      'Z',
+      null,
+    )
+    const unreadNavigationHintAriaLabel = getUnreadNavigationHintAriaLabel(
+      'Unread threads: 0 • U/N next • P previous • ⇧U clear',
+      null,
+    )
+
+    expect(unreadAfterClear).toEqual([])
+    expect(boundaryJumpStatusAriaLabel).toBeNull()
+    expect(unreadNavigationHintAriaLabel).not.toContain('Z undo clear')
+
+    clearTimeout(timeoutId)
+    vi.useRealTimers()
+  })
 })

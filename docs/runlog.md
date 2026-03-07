@@ -1,5 +1,31 @@
 # Runlog
 
+## 2026-03-07 17:12 KST — undo-after-expiry interaction no-op lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin `Z` undo behavior after unread clear snapshot expiry.
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added focused interaction regression asserting `Z` undo is ignored after the 10s snapshot timeout elapses.
+    - Test confirms no restored unread list-state mutation, no restored boundary live-status emission, and unread helper aria remains without `Z undo clear` affordance post-expiry.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (8/8)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+## 2026-03-07 17:05 KST — unread undo helper timeout-tick interaction lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for unread clear undo helper-copy lifecycle at the 10s snapshot expiry boundary.
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added timer-driven interaction regression using fake timers to simulate unread-clear undo snapshot timeout tick (`10_000ms`) and assert helper aria transitions from including `Z undo clear` to omitting it while retaining `⇧U clear`.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (7/7)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `c58c287` — `[test] add timer tick regression for unread undo helper expiry`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused interaction regression that asserts undo (`Z`) after snapshot expiry is ignored (no restored-live-status emission) while `Shift+U` clear state remains stable.
+
 ## 2026-03-07 16:50 KST — unread clear undo-expiry helper-copy boundary lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin unread clear undo helper-copy lifecycle at expiry boundary.
 - Change:
