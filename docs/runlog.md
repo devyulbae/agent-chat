@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 15:22 KST — lowercase legend-show `shift+/` status-row composition lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase shortcut-legend show alias path on status-row aria + chip render composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase legend-show alias:
+      - `Thread shortcut legend shown (shift+/).` → canonical `⇧/` slash-toggle chip semantics in composed aria output and rendered badge.
+- Blocker (resolved immediately):
+  - Initial expectation assumed canonical slash badge `/`, but parser correctly normalizes `shift+/` to `Shift+Slash` (`⇧/`).
+  - Next fix action applied in-run: update expected aria/chip assertions to `Shortcut badge ⇧/: Shift + Slash (filter jump).` and `>⇧/<` badge render token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (40/40)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow status-row composition regression for uppercase legend-show alias (`Shift+/`) so mixed-case legend-show hint parity is explicitly pinned in the same render lane.
+
 ## 2026-03-07 15:12 KST — uppercase unread-clear undo status-row composition lock (`Z`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin uppercase unread-clear undo alias parity on status-row aria + rendered chip composition.
 - Change:
