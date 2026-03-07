@@ -57,6 +57,12 @@ describe('hidden-selection recovery hints', () => {
     expect(getSelectedVisibleThreadButtonRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
   })
 
+  it('renders exact hidden-selection button recovery copy for empty visible-list state', () => {
+    expect(getSelectedVisibleThreadButtonRecoveryHint(true, 'hidden/0')).toBe(
+      'Selection hidden (hidden/0) → use “Jump to first visible”.',
+    )
+  })
+
   it('returns null recovery hints when selection is visible', () => {
     expect(getSelectedVisibleThreadInlineRecoveryHint(false, '1/3')).toBeNull()
     expect(getSelectedVisibleThreadShortcutRecoveryHint(false, '1/3')).toBeNull()

@@ -1,5 +1,36 @@
 # Runlog
 
+## 2026-03-07 09:51 KST — hidden-selection empty-list button recovery copy lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin render-lane status-row copy for hidden-selection empty-list recovery.
+- Change:
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused regression asserting exact button recovery status copy for hidden selection when no threads are visible:
+      - `Selection hidden (hidden/0) → use “Jump to first visible”.`
+    - Keeps `hidden/0` token surfaced in the status-row text contract, not just as partial match.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts src/threadHintParsers.test.ts src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (82/82)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+## 2026-03-07 09:43 KST — hidden-selection button recovery hint now carries position token (boost lane)
+- Scope: chat thread UX wiring, strict frontend-only increment to keep hidden-selection recovery copy consistent across inline, shortcut, and button guidance rows.
+- Change:
+  - `frontend/src/threadSelectionStatus.ts`
+    - Added `getSelectedVisibleThreadButtonRecoveryHint(...)` helper.
+    - Button recovery copy now includes selection position token (`hidden/<visible-count>`), e.g., `hidden/0`.
+  - `frontend/src/main.tsx`
+    - Replaced inline button recovery hint string with shared helper usage.
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added regression asserting button recovery hint includes `hidden/0` for empty visible-list case.
+    - Added visible-selection null-return assertion for new helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts` ✅ (12/12)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Commit: `5d02ee1` (pushed to `main`)
+- Next action: add a focused UI interaction regression (render lane) that verifies the hidden-selection status row text surfaces `hidden/0` when filters hide all threads.
+
 ## 2026-03-07 09:32 KST — hidden-selection recovery status hints include empty-list position token (offset lane)
 - Scope: frontend integration + API contract sync follow-up so hidden-selection helper/status hints keep explicit position context when filters hide all visible threads.
 - Change:
