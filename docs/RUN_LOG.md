@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-08 01:12 KST — Agent Chat parallel offset cycle
+- Delta: Added return-symbol wording normalization coverage in frontend thread hint parser so verbose copy variants still map to canonical Enter shortcuts.
+  - Frontend parser: updated `normalizeShortcutAlias(...)` in `frontend/src/threadHintParsers.ts` to normalize `Return symbol / Enter symbol` forms and singular `Return symbol`/`Enter symbol` tokens to `Enter`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with extraction assertions for `Return symbol`, `Enter symbol`, `Return symbol / Enter symbol`, and `Shift Return symbol` variants.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (52 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add alias normalization coverage for `Control+ArrowRight` in wrapped `key: [...]` copy to keep `Ctrl`/`Control` horizontal extraction parity.
+
 ## 2026-03-07 23:11 KST — Agent Chat parallel offset cycle
 - Delta: Added bracketed horizontal Option-arrow parity coverage in frontend thread hint parser tests so wrapped `key:` aliases remain canonical for both directions.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Option+ArrowLeft]).` → `Option+ArrowLeft` extraction assertion.

@@ -662,6 +662,11 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Return).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Return key).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Enter key).')).toBe('Enter')
+      expect(getHintShortcutSource('Recovered to first visible thread (Return symbol).')).toBe('Enter')
+      expect(getHintShortcutSource('Recovered to first visible thread (Enter symbol).')).toBe('Enter')
+      expect(getHintShortcutSource('Recovered to first visible thread (Return symbol / Enter symbol).')).toBe(
+        'Enter',
+      )
       expect(getHintShortcutSource('Recovered to first visible thread (Return-key).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Enter-key).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Return/Enter).')).toBe('Enter')
@@ -710,6 +715,9 @@ describe('threadHintParsers', () => {
         'Shift+Enter',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift Return Key confirmed).')).toBe(
+        'Shift+Enter',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (Shift Return symbol confirmed).')).toBe(
         'Shift+Enter',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (Shift Return/Enter confirmed).')).toBe(
