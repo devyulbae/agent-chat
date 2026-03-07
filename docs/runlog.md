@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 06:13 KST — legend toggle aria-expanded + keyshortcuts presentation sync lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to keep legend toggle accessibility state (`aria-expanded`) coupled with the same main presentation contract that already drives button `aria-keyshortcuts`.
+- Change:
+  - `frontend/src/main.tsx`
+    - Extended `ThreadShortcutLegendPresentation` with `ariaExpanded` and sourced it directly from visibility state in `getThreadShortcutLegendPresentation(...)`.
+    - Wired legend toggle button `aria-expanded` to `threadShortcutLegendPresentation.ariaExpanded` (instead of ad-hoc local state binding), so expanded-state metadata and shortcut metadata stay synchronized through one presentation path.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Extended hidden → shown → hidden lifecycle integration regression to assert `ariaExpanded` parity alongside existing `buttonAriaKeyshortcuts` and status-hint checks.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a narrow keyboard-dispatch lifecycle regression that explicitly asserts presentation-derived `ariaExpanded` remains in lockstep with dispatch `nextVisibility` for `?` show and `Esc` hide transitions.
+
 ## 2026-03-08 05:53 KST — legend region aria-keyshortcuts main presentation parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin legend-region shortcut metadata on the same main presentation path consumed by rendered legend UI state.
 - Change:

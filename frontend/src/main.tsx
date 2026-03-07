@@ -247,6 +247,7 @@ export function buildCredentialAuditEventsRequestUrl(
 }
 
 type ThreadShortcutLegendPresentation = {
+  ariaExpanded: boolean
   buttonAriaKeyshortcuts: string
   regionAriaKeyshortcuts: string
   statusHint: string
@@ -277,6 +278,7 @@ export function getThreadShortcutLegendPresentation(
   isVisible: boolean,
 ): ThreadShortcutLegendPresentation {
   return {
+    ariaExpanded: isVisible,
     buttonAriaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(isVisible),
     regionAriaKeyshortcuts: getThreadShortcutLegendRegionAriaKeyshortcuts(),
     statusHint: getThreadShortcutLegendToggleStatusHint(isVisible),
@@ -3041,7 +3043,7 @@ function App() {
                   : `Show thread shortcut legend (${threadShortcutLegendPresentation.toggleControlCopy})`
               }
               aria-keyshortcuts={threadShortcutLegendPresentation.buttonAriaKeyshortcuts}
-              aria-expanded={showThreadShortcutLegend}
+              aria-expanded={threadShortcutLegendPresentation.ariaExpanded}
               aria-controls="thread-shortcut-legend"
             >
               {showThreadShortcutLegend ? 'Hide shortcuts' : 'Show shortcuts'}
