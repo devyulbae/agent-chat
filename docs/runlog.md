@@ -2604,3 +2604,18 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Next action: add a focused main integration test asserting the rendered `#thread-shortcut-legend` region exposes the expected `aria-keyshortcuts` token list when legend visibility is toggled on.
+
+## 2026-03-08 06:03 KST — thread shortcut legend region visibility metadata contract lock
+- Scope: chat thread UX wiring (legend region accessibility wiring parity).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added `getThreadShortcutLegendRegionPresentation(isVisible)` to centralize render-time region metadata (`id`, `role`, `aria-label`, `aria-keyshortcuts`) and return `null` while hidden.
+    - Wired legend region JSX to consume the new presentation helper instead of duplicating inline props.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused integration regression asserting hidden state returns no legend region presentation and shown state exposes the expected `#thread-shortcut-legend` metadata contract including full `aria-keyshortcuts` token list.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (38 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add a narrow lifecycle regression that verifies legend-toggle button `aria-expanded` + `aria-keyshortcuts` stay synchronized across `?` show and `Esc` hide transitions.
