@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 15:42 KST — uppercase legend-hide `ESC` status-row composition lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for uppercase legend-hide alias parity on status-row aria + rendered chip composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for uppercase legend-hide alias:
+      - `Thread shortcut legend hidden (ESC).` → canonical `Esc` filter-jump chip semantics in composed aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (42/42)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `1820284` — `[test] lock uppercase legend-hide ESC status-row chip composition`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow status-row composition regression for lowercase symbol-only legend-show alias (`?`) so both `?` and `Shift+/` legend-show sources are explicitly pinned in the same integration lane.
+
 ## 2026-03-07 15:31 KST — uppercase legend-show `Shift+/` status-row composition lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin mixed-case shortcut-legend show alias parity on status-row aria + rendered chip composition.
 - Change:
