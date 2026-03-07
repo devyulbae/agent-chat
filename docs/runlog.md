@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-08 08:52 KST — shown Esc alias+Shift non-editable modifier+event-gate no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to close the shown-state `Esc` alias + `shiftKey=true` cross-guard no-op gap for non-editable targets.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch+render regression for shown `Esc` alias with `shiftKey=true` and `isEditableTarget=false` across mixed modifier/event-gate suppression paths.
+    - Locked dispatch no-op parity for representative guard combinations:
+      - `metaKey=true` + `defaultPrevented=true`
+      - `ctrlKey=true` + `repeat=true`
+    - Locked render-state nullish-aria parity for complementary combinations:
+      - `altKey=true` + `defaultPrevented=true`
+      - `metaKey=true` + `repeat=true`
+    - Preserved presentation parity by asserting `ariaExpanded` remains synchronized with `nextVisibility=true` on shown no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact shown-state canonical `Escape` + `shiftKey=true` non-editable modifier+event-gate parity regression to keep canonical/alias cross-guard coverage mirrored on the same dispatch/render lane.
+
 ## 2026-03-08 08:44 KST — shown Esc alias+Shift editable modifier+event-gate no-op parity lock (boost lane)
 - Scope: chat thread UX wiring follow-up to mirror canonical `Escape` cross-guard no-op coverage with `Esc` alias parity when legend is shown.
 - Change:
