@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 23:51 KST — scoped credential + blank event_type paging-offset omission parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin mixed required+omitted optional audit filter behavior across pagination offsets.
+- Change:
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused regression asserting a scoped `credentialId` remains present while whitespace-only `event_type` is omitted when paging advances (`offset=0` → `offset=20`).
+    - Locked contract that only `offset` changes between refresh and older-page URLs while `entity_id` stays stable and optional `action/provider/label/event_type` params stay omitted.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (11/11)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact regression that pairs scoped `credentialId` + trimmed non-blank `event_type` with `all` optional filters to keep mixed include/omit URL ordering stable across `offset` transitions.
+
 ## 2026-03-07 23:42 KST — hidden Esc alias modifier render-state no-op parity lock (boost lane)
 - Scope: chat thread UX wiring (compact render-state parity increment to mirror existing hidden Esc alias dispatch guard rails).
 - Change:

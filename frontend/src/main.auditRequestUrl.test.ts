@@ -82,4 +82,31 @@ describe('credential audit request URL integration', () => {
     expect(refreshUrl).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=0')
     expect(olderPageUrl).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=20')
   })
+
+  it('keeps scoped credential id while omitting whitespace event_type across paging offsets', () => {
+    const baseRequest = {
+      credentialId: 'cred-123',
+      action: 'all',
+      eventType: '   ',
+      provider: 'all',
+      label: 'all',
+      limit: 20,
+    }
+
+    const refreshUrl = buildCredentialAuditEventsRequestUrl({
+      ...baseRequest,
+      offset: 0,
+    })
+    const olderPageUrl = buildCredentialAuditEventsRequestUrl({
+      ...baseRequest,
+      offset: 20,
+    })
+
+    expect(refreshUrl).toBe(
+      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123',
+    )
+    expect(olderPageUrl).toBe(
+      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123',
+    )
+  })
 })
