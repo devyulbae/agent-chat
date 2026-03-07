@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 17:42 KST — nested source-decorated lowercase `z` hint-chip semantics lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for unread-undo hint-chip extraction parity across nested parenthesis source wrappers.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for nested source-decorated lowercase undo template:
+      - `Restored unread markers (source (z confirmed)) · 3 thread(s).`
+    - Asserts canonical `Z` chip props (`badge`, `title`, `ariaLabel`) and status-row aria composition parity.
+    - Asserts rendered chip badge output remains canonical (`>Z<`) for nested wrapper template.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (48/48)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow parser-level regression for `Restored unread markers (source (z confirmed)) ...` in `threadHintParsers.test.ts` to pin extraction parity alongside chip-level coverage.
+
 ## 2026-03-07 17:31 KST — source-decorated lowercase `z` hint-chip semantics lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin parser→chip rendering parity for verbose unread-undo status templates.
 - Change:
