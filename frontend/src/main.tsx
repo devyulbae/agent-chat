@@ -32,6 +32,7 @@ import {
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
 } from './apiContracts'
+import { getSelectedVisibleThreadPositionLabel } from './threadSelectionStatus'
 
 type OrgType = 'freeform' | 'department' | 'squad'
 type TokenStatusFilter = 'all' | 'active' | 'expired' | 'expiring_soon'
@@ -1599,10 +1600,11 @@ function App() {
       : selectedVisibleThreadHiddenByFilter
         ? `${selectedThreadId === null ? 'Root' : selectedThreadId} (hidden by current filters)`
         : 'none'
-  const selectedVisibleThreadPositionLabel =
-    selectedVisibleThreadHiddenByFilter && selectedThreadId !== null
-      ? `hidden/${visibleThreadIds.length}`
-      : `${selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/${visibleThreadIds.length}`
+  const selectedVisibleThreadPositionLabel = getSelectedVisibleThreadPositionLabel(
+    selectedVisibleThreadHiddenByFilter,
+    selectedVisibleThreadIndex,
+    visibleThreadIds.length,
+  )
   const selectedVisibleThreadPositionTitle = selectedVisibleThreadHiddenByFilter
     ? 'Selection is hidden by current filters. Use "Jump to first visible" to recover to the visible list.'
     : undefined
