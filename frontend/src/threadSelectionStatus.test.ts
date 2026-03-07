@@ -28,6 +28,10 @@ describe('getSelectedVisibleThreadPositionLabel', () => {
     expect(getSelectedVisibleThreadPositionLabel(true, -1, 4)).toBe('hidden/4')
   })
 
+  it('keeps hidden label explicit when selected thread is hidden and list is empty', () => {
+    expect(getSelectedVisibleThreadPositionLabel(true, -1, 0)).toBe('hidden/0')
+  })
+
   it('returns 1-indexed position when selected thread is visible', () => {
     expect(getSelectedVisibleThreadPositionLabel(false, 2, 5)).toBe('3/5')
   })

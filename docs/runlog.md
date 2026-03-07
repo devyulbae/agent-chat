@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 09:23 KST — hidden-selection empty-list position-label regression lock (boost lane)
+- Scope: chat thread UX wiring regression coverage to keep hidden-selection position feedback explicit even when filter results are empty.
+- Change:
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused assertion that `getSelectedVisibleThreadPositionLabel(true, -1, 0)` returns `hidden/0`.
+    - Locks current hidden-selection copy contract for zero-visible-thread states.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts` ✅ (8/8)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a focused UI regression that asserts hidden-selection helper/status rows render the `hidden/0` position token when filters hide all visible threads.
+
 ## 2026-03-07 09:13 KST — hidden-selection detection parity when visible list is empty (offset lane)
 - Scope: frontend integration + API contract sync follow-up so hidden-selection status remains accurate when filters hide all visible threads.
 - Change:
