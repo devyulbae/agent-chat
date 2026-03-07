@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 23:42 KST — hidden Esc alias modifier render-state no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (compact render-state parity increment to mirror existing hidden Esc alias dispatch guard rails).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting hidden legend + `Esc` alias with `Meta`/`Ctrl`/`Alt` modifiers remains a render-state no-op.
+    - Locked no-op output contract across each modifier path: `handled=false`, `nextVisibility=false`, `statusHint=null`, and nullish `statusAriaLabel` (no stale aria emission).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (15/15)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a compact render-state no-op regression for hidden `Esc` alias when `defaultPrevented=true`/`repeat=true` to complete guard-rail parity with dispatch-level event gate handling.
+
 ## 2026-03-07 22:39 KST — audit request URL all/blank filter omission parity across paging offsets (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin omission behavior for optional credential-audit filters when paging advances.
 - Change:

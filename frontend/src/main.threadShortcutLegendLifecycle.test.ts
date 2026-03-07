@@ -470,4 +470,54 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenAltEscape.statusHint).toBeNull()
     expect(ignoredHiddenAltEscape.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps hidden Esc alias with modifier keys as no-op render-state outcomes with nullish aria', () => {
+    const ignoredHiddenMetaEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenMetaEscAlias.handled).toBe(false)
+    expect(ignoredHiddenMetaEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenMetaEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenMetaEscAlias.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredHiddenCtrlEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenCtrlEscAlias.handled).toBe(false)
+    expect(ignoredHiddenCtrlEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenCtrlEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenCtrlEscAlias.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredHiddenAltEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenAltEscAlias.handled).toBe(false)
+    expect(ignoredHiddenAltEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenAltEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenAltEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
 })
