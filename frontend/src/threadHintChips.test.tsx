@@ -353,6 +353,21 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('keeps previous-unread alias semantics aligned across uppercase/lowercase hints (P/p)', () => {
+    const chipUpper = getShortcutChipPropsFromHint(
+      'Jumped to previous unread thread (P) · t-2 · 3/3.',
+      'boundary jump',
+      'thread-jump',
+    )
+    const chipLower = getShortcutChipPropsFromHint(
+      'Jumped to previous unread thread (p) · t-2 · 3/3.',
+      'boundary jump',
+      'thread-jump',
+    )
+
+    expect(chipUpper).toEqual(chipLower)
+  })
+
   it('keeps unread-next alias semantics aligned while allowing badge/token differences', () => {
     const chipU = getShortcutChipPropsFromHint(
       'Jumped to next unread thread (U) · t-9 · 1/3.',
