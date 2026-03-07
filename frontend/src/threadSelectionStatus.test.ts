@@ -80,4 +80,17 @@ describe('hidden-selection recovery hints', () => {
     expect(getSelectedVisibleThreadShortcutRecoveryHint(false, '1/3')).toBeNull()
     expect(getSelectedVisibleThreadButtonRecoveryHint(false, '1/3')).toBeNull()
   })
+
+  it('surfaces hidden/0 across inline + shortcut + button recovery status rows in empty-list state', () => {
+    const selectedVisibleThreadPositionLabel = getSelectedVisibleThreadPositionLabel(true, -1, 0)
+
+    const recoveryStatusRows = [
+      getSelectedVisibleThreadInlineRecoveryHint(true, selectedVisibleThreadPositionLabel),
+      getSelectedVisibleThreadShortcutRecoveryHint(true, selectedVisibleThreadPositionLabel),
+      getSelectedVisibleThreadButtonRecoveryHint(true, selectedVisibleThreadPositionLabel),
+    ].filter((hint): hint is string => Boolean(hint))
+
+    expect(recoveryStatusRows).toHaveLength(3)
+    expect(recoveryStatusRows.every((hint) => hint.includes('hidden/0'))).toBe(true)
+  })
 })
