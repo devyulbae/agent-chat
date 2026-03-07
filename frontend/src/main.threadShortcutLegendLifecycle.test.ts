@@ -4,6 +4,7 @@ import {
   getThreadShortcutLegendKeyboardTransition,
   getThreadShortcutLegendPresentation,
 } from './main'
+import { getShortcutChipPropsFromHint, getStatusAriaLabelWithShortcutChip } from './threadHintChips'
 
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
@@ -79,5 +80,36 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     const ignoredUnrelatedKey = getThreadShortcutLegendKeyboardTransition(shownLegend, 'Enter', false)
     expect(ignoredUnrelatedKey.nextVisibility).toBe(true)
     expect(ignoredUnrelatedKey.statusHint).toBeNull()
+  })
+
+  it('keeps status chip aria semantics synchronized with keyboard lifecycle transitions (? show → Esc hide)', () => {
+    const hiddenBeforeTogglePresentation = getThreadShortcutLegendPresentation(false)
+    expect(hiddenBeforeTogglePresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash')
+
+    const shownTransition = getThreadShortcutLegendKeyboardTransition(false, '?', false)
+    expect(shownTransition.nextVisibility).toBe(true)
+
+    const shownChip = getShortcutChipPropsFromHint(shownTransition.statusHint, 'filter jump', 'thread-jump')
+    const shownStatusAria = getStatusAriaLabelWithShortcutChip(shownTransition.statusHint, shownChip)
+    const shownPresentation = getThreadShortcutLegendPresentation(shownTransition.nextVisibility)
+
+    expect(shownStatusAria).toContain('Thread shortcut legend shown (? / Shift+/).')
+    expect(shownStatusAria).toContain('Shortcut badge /: Slash (filter jump).')
+    expect(shownPresentation.buttonAriaKeyshortcuts).toBe('Escape')
+
+    const hiddenTransition = getThreadShortcutLegendKeyboardTransition(
+      shownTransition.nextVisibility,
+      'Escape',
+      false,
+    )
+    expect(hiddenTransition.nextVisibility).toBe(false)
+
+    const hiddenChip = getShortcutChipPropsFromHint(hiddenTransition.statusHint, 'filter jump', 'thread-jump')
+    const hiddenStatusAria = getStatusAriaLabelWithShortcutChip(hiddenTransition.statusHint, hiddenChip)
+    const hiddenPresentation = getThreadShortcutLegendPresentation(hiddenTransition.nextVisibility)
+
+    expect(hiddenStatusAria).toContain('Thread shortcut legend hidden (Esc).')
+    expect(hiddenStatusAria).toContain('Shortcut badge Esc: Escape (filter jump).')
+    expect(hiddenPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash')
   })
 })
