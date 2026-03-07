@@ -2569,3 +2569,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add compact dispatch-level parity regression for hidden `Esc` alias when `isEditableTarget=true` to mirror the new render-state guard and lock no-op behavior at the lower keyboard-dispatch contract layer.
+
+## 2026-03-08 05:43 KST — thread shortcut legend region aria-keyshortcuts metadata wiring
+- Scope: chat thread UX wiring (keyboard discoverability + accessibility metadata).
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getThreadShortcutLegendRegionAriaKeyshortcuts()` returning canonical full thread-list shortcut metadata string (navigation, unread controls, reset/undo, composer, copy, legend dismiss aliases).
+  - `frontend/src/main.tsx`
+    - Wired thread shortcut legend region (`#thread-shortcut-legend`) to expose `aria-keyshortcuts` via `getThreadShortcutLegendRegionAriaKeyshortcuts()`.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added regression asserting full legend-region aria-keyshortcuts metadata remains stable.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (54 passed)
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (37 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Next action: add a focused main integration test asserting the rendered `#thread-shortcut-legend` region exposes the expected `aria-keyshortcuts` token list when legend visibility is toggled on.

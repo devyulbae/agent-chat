@@ -9,6 +9,7 @@ import {
   getThreadFilterResetHint,
   getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
+  getThreadShortcutLegendRegionAriaKeyshortcuts,
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadBoundaryJumpStatusAriaLabel,
@@ -3173,6 +3174,7 @@ function App() {
                 id="thread-shortcut-legend"
                 role="region"
                 aria-label="Thread keyboard shortcuts"
+                aria-keyshortcuts={getThreadShortcutLegendRegionAriaKeyshortcuts()}
                 style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
               >
                 <strong>Thread shortcuts:</strong>

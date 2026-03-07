@@ -31,6 +31,10 @@ export function getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcut
   return showThreadShortcutLegend ? 'Shift+Slash Escape Esc' : 'Shift+Slash'
 }
 
+export function getThreadShortcutLegendRegionAriaKeyshortcuts(): string {
+  return 'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc'
+}
+
 export function getThreadShortcutLegendToggleStatusHint(showThreadShortcutLegend: boolean): string {
   return showThreadShortcutLegend
     ? `Thread shortcut legend shown (${getThreadShortcutLegendToggleControlCopy()}).`

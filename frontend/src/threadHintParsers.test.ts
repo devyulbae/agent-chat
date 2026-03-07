@@ -15,6 +15,7 @@ import {
   getThreadFilterResetHint,
   getThreadShortcutLegendButtonAriaKeyshortcuts,
   getThreadShortcutLegendDismissControlCopy,
+  getThreadShortcutLegendRegionAriaKeyshortcuts,
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadBoundaryJumpStatusAriaLabel,
@@ -108,6 +109,14 @@ describe('threadHintParsers', () => {
     it('advertises the toggle shortcut always and escape dismiss while visible', () => {
       expect(getThreadShortcutLegendButtonAriaKeyshortcuts(false)).toBe('Shift+Slash')
       expect(getThreadShortcutLegendButtonAriaKeyshortcuts(true)).toBe('Shift+Slash Escape Esc')
+    })
+  })
+
+  describe('getThreadShortcutLegendRegionAriaKeyshortcuts', () => {
+    it('returns full thread list keyboard shortcut metadata for legend discoverability', () => {
+      expect(getThreadShortcutLegendRegionAriaKeyshortcuts()).toBe(
+        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+      )
     })
   })
 
