@@ -48,5 +48,5 @@ export function getSelectedVisibleThreadButtonRecoveryHint(
     return null
   }
 
-  return `Selection hidden (${selectedVisibleThreadPositionLabel}) → use “Jump to first visible”.`
+  return `Selection hidden (${selectedVisibleThreadPositionLabel}) → use “Jump to first/last visible”.`
 }
