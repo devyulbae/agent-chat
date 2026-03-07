@@ -923,6 +923,56 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownEditableRepeatEscape.statusAriaLabel ?? null).toBeNull()
   })
 
+  it('keeps shown Esc alias with modifier keys as no-op render-state outcomes with nullish aria', () => {
+    const ignoredShownMetaEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownMetaEscAlias.handled).toBe(false)
+    expect(ignoredShownMetaEscAlias.nextVisibility).toBe(true)
+    expect(ignoredShownMetaEscAlias.statusHint).toBeNull()
+    expect(ignoredShownMetaEscAlias.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownCtrlEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownCtrlEscAlias.handled).toBe(false)
+    expect(ignoredShownCtrlEscAlias.nextVisibility).toBe(true)
+    expect(ignoredShownCtrlEscAlias.statusHint).toBeNull()
+    expect(ignoredShownCtrlEscAlias.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownAltEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownAltEscAlias.handled).toBe(false)
+    expect(ignoredShownAltEscAlias.nextVisibility).toBe(true)
+    expect(ignoredShownAltEscAlias.statusHint).toBeNull()
+    expect(ignoredShownAltEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
+
   it('keeps shown Esc alias as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
     const ignoredShownEditableDefaultPreventedEscAlias = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,

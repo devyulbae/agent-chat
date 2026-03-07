@@ -1,5 +1,33 @@
 # Runlog
 
+## 2026-03-08 03:50 KST — shown Esc alias modifier-key render-state no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock shown-state `Esc` alias no-op behavior under modified-key guard paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown `Esc` alias remains a no-op for each modified-key guard path (`metaKey`, `ctrlKey`, `altKey`).
+    - Locked no-op contract for all modifier paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (30/30)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state render-state no-op parity regression for canonical `Escape` with `meta`/`ctrl`/`alt` modifiers so alias + canonical modified-key guard coverage remains symmetric.
+
+## 2026-03-08 03:43 KST — shown Esc alias editable-target event-gate render-state no-op parity lock (implementation lane)
+- Scope: chat thread UX wiring (render-state parity mirror for shown `Esc` alias under editable-target event-gate paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown `Esc` alias remains a no-op when `isEditableTarget=true` and `defaultPrevented=true`.
+    - Added companion no-op assertion for shown `Esc` alias when `isEditableTarget=true` and `repeat=true`.
+    - Locked no-op contract for both paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (29/29)
+  - `cd frontend && npm run build` ✅
+- Commit: `5ee40e1` (pushed to `main`)
+- Next action: add shown-state `Esc` alias no-op render-state parity coverage for modified-key guard paths (`meta`/`ctrl`/`alt`) to keep Escape/Esc alias guard behavior symmetric.
+
 ## 2026-03-08 03:31 KST — shown Escape editable-target event-gate render-state no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin shown-state editable-target event-gate no-op behavior for canonical `Escape` on render-state paths.
 - Change:
