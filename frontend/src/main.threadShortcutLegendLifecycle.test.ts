@@ -669,6 +669,110 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch outcomes', () => {
+    const ignoredShownEditableMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableMetaEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableCtrlEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableCtrlEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableAltEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableAltEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableMetaEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableMetaEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableCtrlEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableCtrlEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableAltEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredShownEditableAltEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+  })
+
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
     const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,

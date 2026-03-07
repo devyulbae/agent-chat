@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-08 05:03 KST — shown Escape/Esc editable-target modifier dispatch no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (dispatch-level parity mirror for shown editable-target modifier guard rails).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting shown `Escape` remains a no-op for editable-target modifier-key paths (`metaKey`, `ctrlKey`, `altKey`).
+    - Added companion shown dispatch no-op assertions for `Esc` alias under the same editable-target modifier paths.
+    - Locked dispatch no-op contract for all six paths: `handled=false`, `nextVisibility=true`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (37/37)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: add a compact dispatch-level no-op parity regression for shown `Escape` + `Esc` alias when `isEditableTarget=true` and event-gate flags are active (`defaultPrevented=true` / `repeat=true`) to keep shown editable-target dispatch coverage symmetric across modifier + event-gate guard paths.
+
 ## 2026-03-08 04:51 KST — shown Escape/Esc editable-target modifier render-state no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete shown-state render no-op symmetry for editable-target modifier-key guard paths.
 - Change:
