@@ -123,6 +123,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Thread shortcut legend shown (?).')).toBe('Slash')
       expect(getHintShortcutSource('Thread shortcut legend shown (slash key).')).toBe('Slash')
       expect(getHintShortcutSource('Thread shortcut legend shown (forward-slash key).')).toBe('Slash')
+      expect(getHintShortcutSource('Thread shortcut legend shown (slash key / Shift+/).')).toBe('Slash')
       expect(getHintShortcutSource('Thread shortcut legend hidden (Esc).')).toBe('Escape')
       expect(getHintShortcutSource('Thread shortcut legend hidden (esc).')).toBe('Escape')
       expect(getHintShortcutSource('Thread shortcut legend hidden (escape key).')).toBe('Escape')

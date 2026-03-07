@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-07 16:24 KST — mixed legend-show `slash key / Shift+/` parser + status-row composition lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for mixed verbose legend-show toggle wording so parser extraction and status-row chip composition remain canonical.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added mixed-toggle alias normalization for `slash key / Shift+/` forms by collapsing `slash(/ key) / shift+slash` variants to canonical `Slash` source before source matching.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added extraction regression asserting `Thread shortcut legend shown (slash key / Shift+/).` resolves to canonical `Slash` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added status-row composition regression asserting mixed alias hint renders canonical slash chip semantics in aria output + rendered badge.
+- Blocker (resolved immediately):
+  - Initial mixed-alias regression failed because parser normalization produced non-canonical combined token (`slash / shift+slash`), so hint extraction returned `null` and chip aria composition did not append slash semantics.
+  - Next fix action applied in-run: add explicit mixed-toggle normalization path in `normalizeShortcutAlias(...)` to collapse `slash(/ key) / shift+slash` to `slash`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (96/96)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow status-row composition regression for mixed verbose legend-hide alias wording (`escape key / Esc`) to pin canonical `Esc` chip behavior across dual-source dismiss phrasing.
+
 ## 2026-03-07 16:13 KST — verbose legend-show `forward-slash key` status-row composition + parser extraction lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin verbose legend-show alias wording parity (`slash key` / `forward-slash key`) on parser extraction and status-row aria/chip composition.
 - Change:
