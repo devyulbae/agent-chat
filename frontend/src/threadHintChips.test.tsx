@@ -630,6 +630,14 @@ describe('getShortcutChipPropsFromHint', () => {
       ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
       context: 'thread-jump',
     })
+    expect(
+      getShortcutChipPropsFromHint('Thread shortcut legend hidden (escape key / Esc).', 'filter jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'Esc',
+      title: 'Escape filter jump',
+      ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('composes shortcut-legend hide status-row aria + chip rendering from lowercase esc alias', () => {
@@ -648,6 +656,16 @@ describe('getShortcutChipPropsFromHint', () => {
 
     expect(getStatusAriaLabelWithShortcutChip(legendHint, legendChip)).toBe(
       'Thread shortcut legend hidden (ESC). Shortcut badge Esc: Escape (filter jump).',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>Esc<')
+  })
+
+  it('composes shortcut-legend hide status-row aria + chip rendering from mixed escape key / Esc alias', () => {
+    const legendHint = 'Thread shortcut legend hidden (escape key / Esc).'
+    const legendChip = getShortcutChipPropsFromHint(legendHint, 'filter jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(legendHint, legendChip)).toBe(
+      'Thread shortcut legend hidden (escape key / Esc). Shortcut badge Esc: Escape (filter jump).',
     )
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>Esc<')
   })

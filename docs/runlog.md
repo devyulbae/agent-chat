@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 16:31 KST — mixed legend-hide `escape key / Esc` parser + status-row composition lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin mixed verbose legend-hide alias wording so parser extraction and status-row chip composition remain canonical.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added mixed escape alias normalization (`escape / escape` -> `escape`) so `escape key / Esc` collapses to canonical `Escape` source.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added extraction regression asserting `Thread shortcut legend hidden (escape key / Esc).` resolves to canonical `Escape` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added chip-mapping regression asserting mixed alias hint resolves to canonical `Esc` chip props.
+    - Added status-row composition regression asserting mixed alias hint appends canonical `Esc` aria semantics and rendered badge output.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (97/97)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a narrow parser/chip regression for mixed legend-show/hide copy with uppercase delimiter variants (`escape key / ESC`) to pin case-insensitive dual-source normalization parity.
+
 ## 2026-03-07 16:24 KST — mixed legend-show `slash key / Shift+/` parser + status-row composition lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for mixed verbose legend-show toggle wording so parser extraction and status-row chip composition remain canonical.
 - Change:
