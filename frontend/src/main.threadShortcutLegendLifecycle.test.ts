@@ -15,7 +15,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenBeforeToggle.statusHint).toBe('Thread shortcut legend hidden (Esc).')
 
     const shownAfterQuestionToggle = getThreadShortcutLegendPresentation(true)
-    expect(shownAfterQuestionToggle.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape')
+    expect(shownAfterQuestionToggle.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape Esc')
     expect(shownAfterQuestionToggle.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
 
     const hiddenAfterEscDismiss = getThreadShortcutLegendPresentation(false)
@@ -114,7 +114,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
     expect(shownStatusAria).toContain('Thread shortcut legend shown (? / Shift+/).')
     expect(shownStatusAria).toContain('Shortcut badge /: Slash (filter jump).')
-    expect(shownPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape')
+    expect(shownPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape Esc')
 
     const hiddenTransition = getThreadShortcutLegendKeyboardTransition(
       shownTransition.nextVisibility,
