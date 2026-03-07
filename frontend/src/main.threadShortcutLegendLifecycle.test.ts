@@ -560,6 +560,44 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps shown Esc alias as no-op dispatch when target is editable and event is defaultPrevented or repeat', () => {
+    const ignoredShownEditableDefaultPreventedEscAliasDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: true,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableDefaultPreventedEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableRepeatEscAliasDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: true,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableRepeatEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+  })
+
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
     const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
