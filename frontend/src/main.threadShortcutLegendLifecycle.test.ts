@@ -59,6 +59,9 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(shownAfterShiftSlash.nextVisibility).toBe(true)
     expect(shownAfterShiftSlash.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
 
+    const shownAfterSlashKeyAlias = getThreadShortcutLegendKeyboardTransition(false, 'Slash', true)
+    expect(shownAfterSlashKeyAlias).toEqual(shownAfterShiftSlash)
+
     const hiddenAfterEscFromShiftSlash = getThreadShortcutLegendKeyboardTransition(
       shownAfterShiftSlash.nextVisibility,
       'Escape',

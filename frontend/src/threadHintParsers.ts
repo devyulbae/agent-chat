@@ -8,7 +8,11 @@ export function isThreadShortcutLegendToggleKey(key: string, shiftKey: boolean):
     return true
   }
 
-  return key === '/' && shiftKey
+  if (!shiftKey) {
+    return false
+  }
+
+  return key === '/' || key === 'Slash'
 }
 
 export function getThreadShortcutLegendToggleControlCopy(): string {

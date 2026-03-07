@@ -69,8 +69,13 @@ describe('threadHintParsers', () => {
       expect(isThreadShortcutLegendToggleKey('/', true)).toBe(true)
     })
 
+    it('accepts KeyboardEvent.key="Slash" + shift fallback key events', () => {
+      expect(isThreadShortcutLegendToggleKey('Slash', true)).toBe(true)
+    })
+
     it('rejects non-matching key combinations', () => {
       expect(isThreadShortcutLegendToggleKey('/', false)).toBe(false)
+      expect(isThreadShortcutLegendToggleKey('Slash', false)).toBe(false)
       expect(isThreadShortcutLegendToggleKey('k', true)).toBe(false)
     })
   })
