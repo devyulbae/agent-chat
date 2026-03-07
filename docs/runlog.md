@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 18:52 KST — uppercase mixed legend-show `slash key / SHIFT+/` parser+chip lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin case-insensitive mixed legend-show alias normalization when verbose toggle wording uses uppercase `SHIFT+/`.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended legend-show shortcut extraction regression with uppercase mixed alias:
+      - `Thread shortcut legend shown (slash key / SHIFT+/).` → canonical `Slash` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added hint→chip/status-row regression asserting uppercase mixed legend-show alias resolves to canonical slash chip props (`badge`, `title`, `ariaLabel`) and rendered `/` badge token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (103/103)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a narrow mixed legend-show alias regression for uppercase verbose slash wording variant (`SLASH key / Shift+/`) to pin token-side case-insensitive normalization parity.
+
 ## 2026-03-07 18:32 KST — uppercase mixed legend-hide `escape key / ESC` parser+chip lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin case-insensitive mixed legend-hide alias normalization when verbose escape wording uses uppercase `ESC`.
 - Change:

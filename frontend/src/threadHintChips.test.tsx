@@ -815,6 +815,16 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>/<')
   })
 
+  it('composes shortcut-legend show status-row aria + chip rendering from mixed slash-key and uppercase shift+/ alias', () => {
+    const legendHint = 'Thread shortcut legend shown (slash key / SHIFT+/).'
+    const legendChip = getShortcutChipPropsFromHint(legendHint, 'filter jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(legendHint, legendChip)).toBe(
+      'Thread shortcut legend shown (slash key / SHIFT+/). Shortcut badge /: Slash (filter jump).',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>/<')
+  })
+
   it('returns null when hint has no known shortcut', () => {
     expect(getShortcutChipPropsFromHint('Jumped to root thread (Mouse click).', 'root jump', 'thread-jump')).toBeNull()
   })
