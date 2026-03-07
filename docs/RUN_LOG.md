@@ -7,7 +7,7 @@
 - Quality gates:
   - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (52 passed)
   - `cd frontend && npm run build` ✅
-- Commit: pending
+- Commit: `679b46d` (pushed to `main`)
 - Next action: add parity coverage for bracketed horizontal Option-arrow alias form (`key: [Option+ArrowRight]`) to keep wrapped modifier-arrow extraction symmetric across left/right variants.
 
 ## 2026-03-07 20:23 KST — Agent Chat implementation cycle
