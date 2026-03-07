@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 04:31 KST — shown Escape/Esc defaultPrevented-repeat dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to close shown-state event-gate dispatch parity for canonical `Escape` and `Esc` alias when events are gated by `defaultPrevented`/`repeat`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused shown-state dispatch regression asserting canonical `Escape` is a no-op when `defaultPrevented=true` and when `repeat=true` (non-editable target path).
+    - Added companion shown-state dispatch no-op assertions for `Esc` alias under the same `defaultPrevented`/`repeat` event-gate paths.
+    - Locked no-op contract for all four paths: `handled=false`, `nextVisibility=true`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (34/34)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state render-state no-op parity regression for canonical `Escape` and `Esc` alias with `defaultPrevented=true`/`repeat=true` (non-editable path) to keep dispatch + render event-gate coverage symmetric.
+
 ## 2026-03-08 04:11 KST — shown Escape editable-target event-gate dispatch no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to mirror shown-state render guard parity at the keyboard dispatch contract layer.
 - Change:
