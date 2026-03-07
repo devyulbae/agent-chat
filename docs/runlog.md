@@ -1733,3 +1733,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a focused interaction regression for the undo-expiry boundary (10s timeout) so the `Z undo clear` helper copy disappears exactly when undo snapshot expires.
+
+## 2026-03-07 17:23 KST — source-decorated lowercase `z` parser canonicalization lock (boost lane)
+- Scope: chat thread UX wiring (tiny parser-path regression for unread undo shortcut alias templates).
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused `getHintShortcutSource` regression for verbose source-decorated lowercase undo token: `Restored unread markers (source: z confirmed) ...` → canonical `Z`.
+    - Locks parser/source/chip stability when unread-undo hints are emitted via templated `source:` wrappers.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (51 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `29f5dc3` — `[test] lock source-decorated lowercase z shortcut parsing`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow chip-level regression that feeds `Restored unread markers (source: z confirmed)` through hint-chip rendering and asserts canonical `Z` badge + `Z` tooltip parity with plain `(Z)` hints.
