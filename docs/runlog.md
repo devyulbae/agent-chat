@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 20:03 KST — shifted-Esc legend lifecycle no-op regression lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for legend keyboard lifecycle no-op boundaries while visible.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting `Shift+Escape` does **not** dismiss the visible legend and emits no lifecycle status hint (`statusHint === null`).
+    - Added companion no-op assertion for unrelated visible-state key (`Enter`) to keep transition boundaries explicit.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (5/5)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a lightweight DOM interaction harness for `main.tsx` keyboard dispatch (`?` then `Esc`) to assert legend region visibility and live status chip rendering end-to-end.
+
 ## 2026-03-07 19:51 KST — Shift+/ legend lifecycle toggle alias parity lock in main helper (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin keyboard lifecycle parity between `?` and `Shift+/` toggle paths while preserving hidden-state dismiss no-op semantics.
 - Change:

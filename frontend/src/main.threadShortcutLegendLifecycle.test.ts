@@ -68,4 +68,16 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredEscWhenAlreadyHidden.nextVisibility).toBe(false)
     expect(ignoredEscWhenAlreadyHidden.statusHint).toBeNull()
   })
+
+  it('keeps shifted escape and unrelated keys as no-op while visible', () => {
+    const shownLegend = true
+
+    const ignoredShiftEscape = getThreadShortcutLegendKeyboardTransition(shownLegend, 'Escape', true)
+    expect(ignoredShiftEscape.nextVisibility).toBe(true)
+    expect(ignoredShiftEscape.statusHint).toBeNull()
+
+    const ignoredUnrelatedKey = getThreadShortcutLegendKeyboardTransition(shownLegend, 'Enter', false)
+    expect(ignoredUnrelatedKey.nextVisibility).toBe(true)
+    expect(ignoredUnrelatedKey.statusHint).toBeNull()
+  })
 })
