@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-08 03:11 KST — hidden Esc alias editable-target event-gate render-state no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete hidden `Esc` alias editable-target event-gate parity on render-state paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting hidden `Esc` alias remains a no-op when `isEditableTarget=true` and `defaultPrevented=true`.
+    - Added companion render-state no-op assertion for hidden `Esc` alias when `isEditableTarget=true` and `repeat=true`.
+    - Locked nullish stale aria contract for both paths: `handled=false`, `nextVisibility=false`, `statusHint=null`, and `statusAriaLabel` nullish.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (26/26)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `bdb8580` — `[test] lock hidden Esc editable-target event-gate render no-op`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact dispatch no-op parity regression for hidden `Esc` alias with `isEditableTarget=true` + `defaultPrevented=true`/`repeat=true` to mirror the completed render-state event-gate coverage.
+
 ## 2026-03-08 02:51 KST — hidden Escape editable-target event-gate render-state no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete render-state parity for hidden canonical `Escape` editable-target event-gate paths.
 - Change:
