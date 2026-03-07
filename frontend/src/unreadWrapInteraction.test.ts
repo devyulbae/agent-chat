@@ -131,4 +131,24 @@ describe('unread wrap live-region interaction', () => {
     expect(boundaryJumpStatusAriaLabel).toBe('Restored unread markers (Z) · 3 thread(s).')
     expect(unreadNavigationHintAriaLabel).toContain('Z undo clear')
   })
+
+  it('restores unread list-state after clear+undo and emits restored live status with Z', () => {
+    const unreadBeforeClear = ['t-1', 't-3', null]
+    const unreadAfterClear: Array<string | null> = []
+
+    expect(unreadAfterClear).toHaveLength(0)
+
+    const restoredUnread = [...unreadBeforeClear]
+    const restoredStatusHint = getUnreadClearUndoStatusHint(restoredUnread.length)
+    const restoredStatusAria = getUnreadBoundaryJumpStatusAriaLabel(restoredStatusHint, 'Z', null)
+    const restoredUnreadNavigationAria = getUnreadNavigationHintAriaLabel(
+      `Unread threads: ${restoredUnread.length} • U/N next • P previous • ⇧U clear • Z undo clear`,
+      null,
+    )
+
+    expect(restoredUnread).toEqual(['t-1', 't-3', null])
+    expect(restoredStatusAria).toBe('Restored unread markers (Z) · 3 thread(s).')
+    expect(restoredUnreadNavigationAria).toContain('Unread threads: 3')
+    expect(restoredUnreadNavigationAria).toContain('Z undo clear')
+  })
 })

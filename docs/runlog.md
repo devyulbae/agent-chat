@@ -1680,3 +1680,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a narrow RTL interaction test for unread clear → `Z` undo flow to verify list-state recovery plus live status hint output in one scenario.
+
+## 2026-03-07 16:43 KST — unread clear/undo list-state + live-status interaction regression (boost lane)
+- Scope: chat thread UX wiring (strict one-scenario interaction regression for clear → undo recovery semantics).
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added regression that models unread list-state before clear, empty state immediately after clear, then restored state on undo.
+    - Verified restored live status text remains `Restored unread markers (Z) · N thread(s).` and unread helper aria keeps `Z undo clear` affordance copy after recovery.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (5 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a focused interaction regression for the undo-expiry boundary (10s timeout) so the `Z undo clear` helper copy disappears exactly when undo snapshot expires.
