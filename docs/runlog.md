@@ -1,5 +1,27 @@
 # Runlog
 
+## 2026-03-07 19:44 KST — legend keyboard lifecycle transition helper lock (`?` → `Esc`) (boost lane)
+- Scope: chat thread UX wiring regression hardening with a strict, testable main-integration increment for keyboard legend lifecycle flow.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `getThreadShortcutLegendKeyboardTransition(isVisible, key, shiftKey)` helper.
+    - Helper models canonical legend visibility/status transitions for toggle (`?` / `Shift+/`) and dismiss (`Esc`) paths while returning no-op state/hint for non-transition keys.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused lifecycle regression asserting keyboard sequence behavior:
+      - hidden + `?` → shown + `Thread shortcut legend shown (? / Shift+/).`
+      - shown + `Escape` → hidden + `Thread shortcut legend hidden (Esc).`
+      - hidden + `Escape` remains no-op with `null` status hint.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (3/3)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `4ad7fee` — `[test] model legend keyboard lifecycle transitions in main helper`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow `main.tsx` interaction-level regression for `Shift+/` toggle alias parity in the same keyboard lifecycle lane, keeping dismiss no-op semantics explicit when legend is already hidden.
+
 ## 2026-03-07 19:31 KST — legend lifecycle status-hint chip composition lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin parser→chip status-row composition against `main.tsx` legend lifecycle presentation output.
 - Change:
