@@ -1842,3 +1842,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `29f5dc3` — `[test] lock source-decorated lowercase z shortcut parsing`
   - Push: `main -> origin/main` ✅
 - Next action: add a narrow chip-level regression that feeds `Restored unread markers (source: z confirmed)` through hint-chip rendering and asserts canonical `Z` badge + `Z` tooltip parity with plain `(Z)` hints.
+
+## 2026-03-07 18:43 KST — source-decorated lowercase `z` hint-chip parity lock (boost lane)
+- Scope: chat thread UX wiring (small chip-level regression for unread undo hint templates).
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression that compares plain `(Z)` and source-decorated lowercase `(source: z confirmed)` unread-undo hints through `getShortcutChipPropsFromHint`.
+    - Asserted parity at chip mapping + status-row aria composition + rendered chip badge/title (`Z` / `Z boundary jump`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (51 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow interaction regression for thread-shortcut legend toggle lifecycle (`?` show → `Esc` hide) that verifies live status hint text and aria-keyshortcuts metadata switch together.

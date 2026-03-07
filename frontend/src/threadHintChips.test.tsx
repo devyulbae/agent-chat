@@ -456,6 +456,29 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipP)}</>)).toContain('>P<')
   })
 
+  it('keeps source-decorated lowercase undo hint chip mapping aligned with plain (Z) hint', () => {
+    const undoHintPlainZ = 'Restored unread markers (Z) · 3 thread(s).'
+    const undoHintSourceDecoratedLowerZ = 'Restored unread markers (source: z confirmed) · 3 thread(s).'
+
+    const chipPlainZ = getShortcutChipPropsFromHint(undoHintPlainZ, 'boundary jump', 'thread-jump')
+    const chipSourceDecoratedLowerZ = getShortcutChipPropsFromHint(
+      undoHintSourceDecoratedLowerZ,
+      'boundary jump',
+      'thread-jump',
+    )
+
+    expect(chipSourceDecoratedLowerZ).toEqual(chipPlainZ)
+    expect(getStatusAriaLabelWithShortcutChip(undoHintSourceDecoratedLowerZ, chipSourceDecoratedLowerZ)).toBe(
+      'Restored unread markers (source: z confirmed) · 3 thread(s). Shortcut badge Z: Z (boundary jump).',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipSourceDecoratedLowerZ)}</>)).toContain(
+      '>Z<',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipSourceDecoratedLowerZ)}</>)).toContain(
+      'title="Z boundary jump"',
+    )
+  })
+
   it('keeps previous-unread status-row aria + chip semantics aligned across hint aliases (P/p)', () => {
     const unreadPrevHintUpper = 'Jumped to previous unread thread (P) · t-2 · 3/3.'
     const unreadPrevHintLower = 'Jumped to previous unread thread (p) · t-2 · 3/3.'
