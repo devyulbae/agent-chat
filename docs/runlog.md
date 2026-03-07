@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 16:50 KST — unread clear undo-expiry helper-copy boundary lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin unread clear undo helper-copy lifecycle at expiry boundary.
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added focused interaction regression asserting unread helper aria includes `Z undo clear` before undo snapshot expiry and omits it after expiry while retaining `⇧U clear` affordance text.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (6/6)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `c41c2a5` — `[test] lock undo-expiry boundary for unread clear helper copy`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused UI-level timer-driven interaction regression that simulates the 10s undo-snapshot timeout and asserts helper-copy transition occurs on timeout tick.
+
 ## 2026-03-07 16:31 KST — mixed legend-hide `escape key / Esc` parser + status-row composition lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin mixed verbose legend-hide alias wording so parser extraction and status-row chip composition remain canonical.
 - Change:
