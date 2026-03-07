@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 01:43 KST — hidden Escape render-state no-op lock for defaultPrevented/repeat (boost lane)
+- Scope: chat thread UX wiring (render-state guard-rail parity for canonical hidden `Escape` event-gated paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting hidden canonical `Escape` stays a render-state no-op when `defaultPrevented=true`.
+    - Added focused regression asserting hidden canonical `Escape` stays a render-state no-op when `repeat=true`.
+    - Locked nullish stale aria contract for both paths (`statusAriaLabel` remains nullish).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (19/19)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add compact render-state no-op parity regression for hidden canonical `Escape` with `isEditableTarget=true` to complete event-gate mirror coverage with dispatch paths.
+
 ## 2026-03-08 01:31 KST — trimmed event_type + scoped label with action/provider=all paging-offset parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete one-active-optional filter parity by pinning scoped `label` behavior while `action`/`provider` remain `all`.
 - Change:
