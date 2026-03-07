@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 12:31 KST — lowercase recovery alias status-row composition lock (`j`/`k`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock status-row aria/chip composition parity for lowercase hidden-selection recovery aliases.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression coverage for lowercase recovery hint aliases:
+      - `Recovered to first visible thread (j) ...` → aria appends canonical `J` shortcut chip semantics.
+      - `Recovered to last visible thread (k) ...` → aria appends canonical `K` shortcut chip semantics.
+    - Added rendered chip assertions to keep lowercase alias path pinned to canonical `J`/`K` badges in the UI lane.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (28/28)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `1bbe25a` — `[test] lock lowercase recovery alias status-row chip composition`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 12:24 KST — lowercase recovery alias canonicalization lock (`j`/`k`) (boost lane)
 - Scope: chat thread UX wiring regression hardening for lowercase recovery shortcut aliases in hint parser → chip mapping path.
 - Change:
