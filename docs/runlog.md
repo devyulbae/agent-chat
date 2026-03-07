@@ -1,5 +1,25 @@
 # Runlog
 
+## 2026-03-08 08:44 KST — shown Esc alias+Shift editable modifier+event-gate no-op parity lock (boost lane)
+- Scope: chat thread UX wiring follow-up to mirror canonical `Escape` cross-guard no-op coverage with `Esc` alias parity when legend is shown.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch+render regression for shown `Esc` alias with `shiftKey=true` and `isEditableTarget=true` across mixed modifier/event-gate suppression paths.
+    - Locked dispatch no-op parity for representative combinations:
+      - `metaKey=true` + `defaultPrevented=true`
+      - `ctrlKey=true` + `repeat=true`
+    - Locked render-state no-op parity + nullish aria for complementary combinations:
+      - `altKey=true` + `defaultPrevented=true`
+      - `metaKey=true` + `repeat=true`
+    - Preserved presentation parity by asserting `ariaExpanded` remains synchronized with `nextVisibility=true` on shown no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: add a compact shown-state `Esc` alias + `shiftKey=true` non-editable modifier+event-gate parity regression to mirror existing canonical `Escape` no-op cross-guard coverage on the same dispatch/render lane.
+
 ## 2026-03-08 08:33 KST — shown canonical Escape+Shift editable modifier+event-gate no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to close the remaining shown-state canonical `Escape` + `shiftKey=true` editable-target guard cross-product by combining modifier-key and event-gate suppression paths.
 - Change:
