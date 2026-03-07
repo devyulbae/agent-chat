@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 15:31 KST — uppercase legend-show `Shift+/` status-row composition lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin mixed-case shortcut-legend show alias parity on status-row aria + rendered chip composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for uppercase legend-show alias:
+      - `Thread shortcut legend shown (Shift+/).` → canonical `⇧/` slash-toggle chip semantics in composed aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (41/41)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 15:22 KST — lowercase legend-show `shift+/` status-row composition lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for lowercase shortcut-legend show alias path on status-row aria + chip render composition.
 - Change:
