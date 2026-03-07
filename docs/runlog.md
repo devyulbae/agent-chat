@@ -1885,3 +1885,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `57b48c6` — `[test] lock legend toggle lifecycle aria/status parity`
   - Push: `main -> origin/main` ✅
 - Next action: add a focused UI interaction regression in `main.tsx` that fires keyboard `?` then `Esc` and asserts legend region visibility toggles alongside live status hint/chip rendering end-to-end.
+
+## 2026-03-07 19:13 KST — thread shortcut legend lifecycle presentation helper sync (offset lane)
+- Scope: frontend integration + API contract sync lane (main-level legend lifecycle metadata/status coupling).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `getThreadShortcutLegendPresentation(isVisible)` helper that composes legend button `aria-keyshortcuts`, lifecycle status hint copy, and control-copy labels from shared parser contracts.
+    - Routed both keyboard + button legend toggles through the helper so status hint emission stays contract-coupled with visible state.
+    - Reused a memoized presentation object for button title/aria-label/aria-keyshortcuts to keep render-time metadata and status wiring in lockstep.
+    - Guarded root mounting with a `document`/root-element check so contract helpers can be imported in unit tests without DOM bootstrap side effects.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added hidden → shown → hidden lifecycle regression that asserts `main.tsx` presentation output keeps `aria-keyshortcuts` + status hint copy synchronized across `?` show and `Esc` hide semantics.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts src/threadHintParsers.test.ts` ✅ (53 passed)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a narrow `main.tsx` DOM interaction test that dispatches actual keyboard events (`?`, then `Esc`) and asserts legend region visibility + live status chip rendering end-to-end when a jsdom-compatible harness is available.

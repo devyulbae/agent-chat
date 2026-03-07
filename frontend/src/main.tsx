@@ -237,6 +237,24 @@ function toIsoFromDatetimeLocal(value: string): string | null {
 }
 
 
+type ThreadShortcutLegendPresentation = {
+  buttonAriaKeyshortcuts: string
+  statusHint: string
+  toggleControlCopy: string
+  dismissControlCopy: string
+}
+
+export function getThreadShortcutLegendPresentation(
+  isVisible: boolean,
+): ThreadShortcutLegendPresentation {
+  return {
+    buttonAriaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(isVisible),
+    statusHint: getThreadShortcutLegendToggleStatusHint(isVisible),
+    toggleControlCopy: getThreadShortcutLegendToggleControlCopy(),
+    dismissControlCopy: getThreadShortcutLegendDismissControlCopy(),
+  }
+}
+
 function isEditableElement(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
     return false
@@ -2098,7 +2116,7 @@ function App() {
       event.preventDefault()
       setShowThreadShortcutLegend((current) => {
         const nextVisibility = !current
-        setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(nextVisibility))
+        setThreadShortcutLegendToggleHint(getThreadShortcutLegendPresentation(nextVisibility).statusHint)
         return nextVisibility
       })
     }
@@ -2123,7 +2141,7 @@ function App() {
       }
       event.preventDefault()
       setShowThreadShortcutLegend(false)
-      setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(false))
+      setThreadShortcutLegendToggleHint(getThreadShortcutLegendPresentation(false).statusHint)
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -2684,6 +2702,11 @@ function App() {
     return () => window.clearTimeout(timeoutId)
   }, [unreadClearUndoSnapshot])
 
+  const threadShortcutLegendPresentation = useMemo(
+    () => getThreadShortcutLegendPresentation(showThreadShortcutLegend),
+    [showThreadShortcutLegend],
+  )
+
   const typeCounts = useMemo(() => {
     if (!graph) {
       return { freeform: 0, department: 0, squad: 0 }
@@ -2888,21 +2911,21 @@ function App() {
               onClick={() =>
                 setShowThreadShortcutLegend((current) => {
                   const nextVisibility = !current
-                  setThreadShortcutLegendToggleHint(getThreadShortcutLegendToggleStatusHint(nextVisibility))
+                  setThreadShortcutLegendToggleHint(getThreadShortcutLegendPresentation(nextVisibility).statusHint)
                   return nextVisibility
                 })
               }
               title={
                 showThreadShortcutLegend
-                  ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
-                  : `Show thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`
+                  ? `Hide thread shortcut legend (${threadShortcutLegendPresentation.dismissControlCopy})`
+                  : `Show thread shortcut legend (${threadShortcutLegendPresentation.toggleControlCopy})`
               }
               aria-label={
                 showThreadShortcutLegend
-                  ? `Hide thread shortcut legend (${getThreadShortcutLegendDismissControlCopy()})`
-                  : `Show thread shortcut legend (${getThreadShortcutLegendToggleControlCopy()})`
+                  ? `Hide thread shortcut legend (${threadShortcutLegendPresentation.dismissControlCopy})`
+                  : `Show thread shortcut legend (${threadShortcutLegendPresentation.toggleControlCopy})`
               }
-              aria-keyshortcuts={getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcutLegend)}
+              aria-keyshortcuts={threadShortcutLegendPresentation.buttonAriaKeyshortcuts}
               aria-expanded={showThreadShortcutLegend}
               aria-controls="thread-shortcut-legend"
             >
@@ -3783,4 +3806,8 @@ function App() {
   )
 }
 
-createRoot(document.getElementById('root')!).render(<App />)
+const rootElement = typeof document !== 'undefined' ? document.getElementById('root') : null
+
+if (rootElement) {
+  createRoot(rootElement).render(<App />)
+}
