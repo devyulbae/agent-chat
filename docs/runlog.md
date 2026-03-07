@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 17:31 KST — source-decorated lowercase `z` hint-chip semantics lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin parser→chip rendering parity for verbose unread-undo status templates.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused hint-chip regression for `Restored unread markers (source: z confirmed) · 3 thread(s).`.
+    - Asserts canonical `Z` chip props (`badge`, `title`, `ariaLabel`) and status-row aria composition parity.
+    - Asserts rendered chip badge output remains canonical (`>Z<`) for source-decorated lowercase alias template.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (47/47)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `a54e87a` — `[test] lock source-decorated lowercase z hint chip semantics`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow chip-level regression for `Restored unread markers (source (z confirmed)) ...` nested-parenthesis template so unread-undo chip extraction parity remains pinned across both verbose wrapper styles.
+
 ## 2026-03-07 17:12 KST — undo-after-expiry interaction no-op lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin `Z` undo behavior after unread clear snapshot expiry.
 - Change:
