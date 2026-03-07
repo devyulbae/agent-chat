@@ -2369,6 +2369,8 @@ function App() {
     `Jump to next unread thread · ${unreadNavigationNextControlCopy}`
   const unreadNavigationClearControlAriaLabel =
     `Clear all unread thread markers · ${unreadNavigationClearControlCopy}`
+  const unreadNavigationUndoControlAriaLabel =
+    `Undo clear unread markers · ${unreadNavigationUndoClearControlCopy}`
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
@@ -2962,7 +2964,13 @@ function App() {
           <small style={{ color: '#555', display: 'inline-flex', gap: 6, alignItems: 'center' }}>
             Cleared {unreadClearUndoSnapshot.clearedCount} unread marker
             {unreadClearUndoSnapshot.clearedCount === 1 ? '' : 's'}.
-            <button type="button" onClick={undoClearAllUnreadMarkers}>
+            <button
+              type="button"
+              onClick={undoClearAllUnreadMarkers}
+              title={unreadNavigationUndoClearControlCopy}
+              aria-label={unreadNavigationUndoControlAriaLabel}
+              aria-keyshortcuts="Z"
+            >
               Undo
             </button>
           </small>
