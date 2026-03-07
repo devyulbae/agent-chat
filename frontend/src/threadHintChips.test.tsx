@@ -292,6 +292,25 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('normalizes lowercase unread-next alias hints (u/n) to canonical chip mappings', () => {
+    expect(
+      getShortcutChipPropsFromHint('Jumped to next unread thread (u) · t-9 · 1/3.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'U',
+      title: 'U boundary jump',
+      ariaLabel: 'Shortcut badge U: U (boundary jump).',
+      context: 'thread-jump',
+    })
+    expect(
+      getShortcutChipPropsFromHint('Jumped to next unread thread (n) · t-9 · 1/3.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'N',
+      title: 'N boundary jump',
+      ariaLabel: 'Shortcut badge N: N (boundary jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('keeps unread-next alias semantics aligned while allowing badge/token differences', () => {
     const chipU = getShortcutChipPropsFromHint(
       'Jumped to next unread thread (U) · t-9 · 1/3.',
