@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 19:51 KST — Shift+/ legend lifecycle toggle alias parity lock in main helper (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin keyboard lifecycle parity between `?` and `Shift+/` toggle paths while preserving hidden-state dismiss no-op semantics.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting `getThreadShortcutLegendKeyboardTransition(false, '/', true)` produces the same show status hint as `?` (`Thread shortcut legend shown (? / Shift+/).`).
+    - Added lifecycle continuation assertion that `Escape` after `Shift+/`-show returns canonical hide hint (`Thread shortcut legend hidden (Esc).`).
+    - Kept explicit hidden-state `Escape` no-op assertion (`statusHint === null`) in the same alias lifecycle lane.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (4/4)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a jsdom-capable DOM interaction regression for actual keyboard dispatch (`?` / `Shift+/` then `Esc`) to assert legend region visibility + live status chip rendering end-to-end once a lightweight render harness is introduced.
+
 ## 2026-03-07 19:44 KST — legend keyboard lifecycle transition helper lock (`?` → `Esc`) (boost lane)
 - Scope: chat thread UX wiring regression hardening with a strict, testable main-integration increment for keyboard legend lifecycle flow.
 - Change:

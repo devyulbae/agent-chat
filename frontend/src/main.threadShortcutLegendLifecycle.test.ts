@@ -50,4 +50,22 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredEscWhenHidden.nextVisibility).toBe(false)
     expect(ignoredEscWhenHidden.statusHint).toBeNull()
   })
+
+  it('treats Shift+/ as the same show toggle lifecycle as ? and keeps hidden Esc as no-op', () => {
+    const shownAfterShiftSlash = getThreadShortcutLegendKeyboardTransition(false, '/', true)
+    expect(shownAfterShiftSlash.nextVisibility).toBe(true)
+    expect(shownAfterShiftSlash.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
+
+    const hiddenAfterEscFromShiftSlash = getThreadShortcutLegendKeyboardTransition(
+      shownAfterShiftSlash.nextVisibility,
+      'Escape',
+      false,
+    )
+    expect(hiddenAfterEscFromShiftSlash.nextVisibility).toBe(false)
+    expect(hiddenAfterEscFromShiftSlash.statusHint).toBe('Thread shortcut legend hidden (Esc).')
+
+    const ignoredEscWhenAlreadyHidden = getThreadShortcutLegendKeyboardTransition(false, 'Escape', false)
+    expect(ignoredEscWhenAlreadyHidden.nextVisibility).toBe(false)
+    expect(ignoredEscWhenAlreadyHidden.statusHint).toBeNull()
+  })
 })
