@@ -386,6 +386,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Restored unread markers (source (z confirmed)) · 3 thread(s).')).toBe(
         'Z',
       )
+      expect(getHintShortcutSource('Restored unread markers (source (Z confirmed)) · 3 thread(s).')).toBe(
+        'Z',
+      )
       expect(
         getHintShortcutSource('Jumped to root thread (source (Shift+Home confirmed)) · Root.'),
       ).toBe('Shift+Home')
