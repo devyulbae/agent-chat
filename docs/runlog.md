@@ -1,5 +1,35 @@
 # Runlog
 
+## 2026-03-08 03:31 KST — shown Escape editable-target event-gate render-state no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin shown-state editable-target event-gate no-op behavior for canonical `Escape` on render-state paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown canonical `Escape` remains a no-op when `isEditableTarget=true` and `defaultPrevented=true`.
+    - Added companion shown-state no-op assertion for canonical `Escape` when `isEditableTarget=true` and `repeat=true`.
+    - Locked no-op contract for both paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (28/28)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state render-state parity regression for `Esc` alias with `isEditableTarget=true` + `defaultPrevented=true`/`repeat=true` to mirror canonical shown-state event-gate coverage.
+
+## 2026-03-08 03:22 KST — hidden Esc alias editable-target event-gate dispatch no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (dispatch-level parity mirror for hidden `Esc` alias under editable-target event-gate paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting hidden `Esc` alias remains a no-op when `isEditableTarget=true` and `defaultPrevented=true`.
+    - Added companion dispatch no-op assertion for hidden `Esc` alias when `isEditableTarget=true` and `repeat=true`.
+    - Locked dispatch contract expectations for both paths: `handled=false`, `nextVisibility=false`, `statusHint=null`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `bb6c4bd` — `[test] lock hidden Esc editable dispatch event-gate no-op parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact render-state parity regression for hidden canonical `Escape` with `isEditableTarget=true` + `defaultPrevented=true`/`repeat=true` nullish-aria no-op contract to keep alias/canonical event-gate coverage fully mirrored.
+
 ## 2026-03-08 03:11 KST — hidden Esc alias editable-target event-gate render-state no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete hidden `Esc` alias editable-target event-gate parity on render-state paths.
 - Change:

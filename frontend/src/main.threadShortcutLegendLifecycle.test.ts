@@ -886,4 +886,40 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenEditableRepeatEscAlias.statusHint).toBeNull()
     expect(ignoredHiddenEditableRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps shown Escape as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
+    const ignoredShownEditableDefaultPreventedEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: true,
+      repeat: false,
+      isEditableTarget: true,
+    })
+
+    expect(ignoredShownEditableDefaultPreventedEscape.handled).toBe(false)
+    expect(ignoredShownEditableDefaultPreventedEscape.nextVisibility).toBe(true)
+    expect(ignoredShownEditableDefaultPreventedEscape.statusHint).toBeNull()
+    expect(ignoredShownEditableDefaultPreventedEscape.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownEditableRepeatEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: true,
+      isEditableTarget: true,
+    })
+
+    expect(ignoredShownEditableRepeatEscape.handled).toBe(false)
+    expect(ignoredShownEditableRepeatEscape.nextVisibility).toBe(true)
+    expect(ignoredShownEditableRepeatEscape.statusHint).toBeNull()
+    expect(ignoredShownEditableRepeatEscape.statusAriaLabel ?? null).toBeNull()
+  })
 })
