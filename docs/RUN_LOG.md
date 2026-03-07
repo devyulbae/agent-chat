@@ -2247,3 +2247,17 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
 - Commit: `fbbdfdc` (pushed to `main`)
 - Next action: normalize macOS `Return` glyph variants in hint copy (for example `⌤`) to the same canonical `Enter` shortcut chip.
+
+## 2026-03-08 01:03 KST — Agent Chat implementation cycle
+- Delta: Expanded thread hint shortcut normalization to include the macOS `⌅` return glyph so Enter chip rendering stays canonical when hint copy uses alternate return symbols.
+  - Frontend parser: `normalizeShortcutAlias(...)` now rewrites `⌅` to `enter` alongside existing return glyph aliases.
+  - Frontend parser: combo key matching + alias maps now accept `⌅` for both standalone and modifier combos (for example `Shift+⌅`, `Cmd+⌅`).
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` coverage for `⌅`, `Shift+⌅`, and `Cmd+⌅` extraction normalization.
+  - Scope: chat thread UX wiring parser+tests only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run` ✅ (161 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (18 passed)
+- Commit: pending
+- Next action: normalize parser extraction for `Return symbol` wording variants (for example `Return symbol`, `Enter symbol`) so verbose hint text still resolves to canonical `Enter` chips.
