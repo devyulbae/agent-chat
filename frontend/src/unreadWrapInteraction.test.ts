@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   getUnreadBoundaryJumpStatusAriaLabel,
@@ -167,5 +167,34 @@ describe('unread wrap live-region interaction', () => {
     expect(beforeExpiryAria).toContain('Z undo clear')
     expect(afterExpiryAria).not.toContain('Z undo clear')
     expect(afterExpiryAria).toContain('⇧U clear')
+  })
+
+  it('transitions helper copy on 10s undo-snapshot timeout tick', () => {
+    vi.useFakeTimers()
+
+    const unreadCount = 2
+    let hasUndoSnapshot = true
+
+    const getUnreadNavigationHelperAria = () =>
+      getUnreadNavigationHintAriaLabel(
+        hasUndoSnapshot
+          ? `Unread threads: ${unreadCount} • U/N next • P previous • ⇧U clear • Z undo clear`
+          : `Unread threads: ${unreadCount} • U/N next • P previous • ⇧U clear`,
+        null,
+      )
+
+    const timeoutId = setTimeout(() => {
+      hasUndoSnapshot = false
+    }, 10_000)
+
+    expect(getUnreadNavigationHelperAria()).toContain('Z undo clear')
+
+    vi.advanceTimersByTime(10_000)
+
+    expect(getUnreadNavigationHelperAria()).not.toContain('Z undo clear')
+    expect(getUnreadNavigationHelperAria()).toContain('⇧U clear')
+
+    clearTimeout(timeoutId)
+    vi.useRealTimers()
   })
 })
