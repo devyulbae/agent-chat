@@ -85,6 +85,10 @@ export function getUnreadJumpWrapStatusCueAriaLabel(wrapCue: string | null): str
   return null
 }
 
+export function getUnreadClearUndoStatusHint(clearedCount: number): string {
+  return `Restored unread markers (Z) · ${Math.max(0, Math.trunc(clearedCount))} thread(s).`
+}
+
 export function getUnreadNavigationHintAriaLabel(
   baseAriaLabel: string | undefined,
   wrapCue: string | null,

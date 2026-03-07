@@ -18,6 +18,7 @@ import {
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadBoundaryJumpStatusAriaLabel,
+  getUnreadClearUndoStatusHint,
   getUnreadJumpWrapStatusCue,
   getUnreadJumpWrapStatusCueAriaLabel,
   getUnreadNavigationHintAriaLabel,
@@ -153,6 +154,17 @@ describe('threadHintParsers', () => {
     it('returns null for empty or unrecognized cues', () => {
       expect(getUnreadJumpWrapStatusCueAriaLabel(null)).toBeNull()
       expect(getUnreadJumpWrapStatusCueAriaLabel('wrapped')).toBeNull()
+    })
+  })
+
+  describe('getUnreadClearUndoStatusHint', () => {
+    it('returns canonical undo feedback copy with Z shortcut token', () => {
+      expect(getUnreadClearUndoStatusHint(3)).toBe('Restored unread markers (Z) · 3 thread(s).')
+    })
+
+    it('clamps invalid counts to a non-negative integer for stable status copy', () => {
+      expect(getUnreadClearUndoStatusHint(-2)).toBe('Restored unread markers (Z) · 0 thread(s).')
+      expect(getUnreadClearUndoStatusHint(2.9)).toBe('Restored unread markers (Z) · 2 thread(s).')
     })
   })
 

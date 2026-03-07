@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 14:53 KST — unread clear-undo status helper + interaction contract lock (`Z`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin unread clear→undo (`Z`) status copy on a shared helper path and lock hint/aria interaction semantics.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Added `getUnreadClearUndoStatusHint(clearedCount)` helper for canonical restore feedback copy:
+      - `Restored unread markers (Z) · N thread(s).`
+    - Helper normalizes count input to a non-negative integer to keep status text stable.
+  - `frontend/src/main.tsx`
+    - Switched unread clear-undo status message wiring to use `getUnreadClearUndoStatusHint(...)`.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused helper regression coverage for canonical copy + non-negative integer normalization.
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added focused interaction regression asserting restore status aria copy remains canonical for `Z` undo while unread helper aria retains `Z undo clear` affordance text.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/unreadWrapInteraction.test.ts src/threadHintChips.test.tsx` ✅ (92/92)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 14:31 KST — lowercase thread-copy `source:`/`confirmed` parser-path lock (`y`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin parser canonicalization when thread-copy hints include decorated `source:` and `confirmed` wrappers.
 - Change:

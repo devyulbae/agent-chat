@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   getUnreadBoundaryJumpStatusAriaLabel,
+  getUnreadClearUndoStatusHint,
   getUnreadNavigationHintAriaLabel,
   getUnreadNavigationWrapCueForAria,
 } from './threadHintParsers'
@@ -113,5 +114,21 @@ describe('unread wrap live-region interaction', () => {
     )
 
     expect(labelsWithWrapNarration).toHaveLength(1)
+  })
+
+  it('announces unread-marker restore via Z shortcut while unread helper keeps undo affordance text', () => {
+    const boundaryJumpStatusHint = getUnreadClearUndoStatusHint(3)
+    const boundaryJumpStatusAriaLabel = getUnreadBoundaryJumpStatusAriaLabel(
+      boundaryJumpStatusHint,
+      'Z',
+      null,
+    )
+    const unreadNavigationHintAriaLabel = getUnreadNavigationHintAriaLabel(
+      'Unread threads: 3 • U/N next • P previous • ⇧U clear • Z undo clear',
+      null,
+    )
+
+    expect(boundaryJumpStatusAriaLabel).toBe('Restored unread markers (Z) · 3 thread(s).')
+    expect(unreadNavigationHintAriaLabel).toContain('Z undo clear')
   })
 })

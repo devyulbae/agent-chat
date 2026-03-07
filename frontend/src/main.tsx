@@ -12,6 +12,7 @@ import {
   getThreadShortcutLegendToggleControlCopy,
   getThreadShortcutLegendToggleStatusHint,
   getUnreadBoundaryJumpStatusAriaLabel,
+  getUnreadClearUndoStatusHint,
   getUnreadJumpWrapStatusCue,
   getUnreadNavigationHintAriaLabel,
   getUnreadNavigationWrapCueForAria,
@@ -2643,7 +2644,7 @@ function App() {
     setLastSeenByThread(unreadClearUndoSnapshot.lastSeenByThread)
     setLastSeenCountByThread(unreadClearUndoSnapshot.lastSeenCountByThread)
     setUnseenThreadKeys(unreadClearUndoSnapshot.unseenThreadKeys)
-    setThreadBoundaryJumpHint(`Restored unread markers (Z) · ${unreadClearUndoSnapshot.clearedCount} thread(s).`)
+    setThreadBoundaryJumpHint(getUnreadClearUndoStatusHint(unreadClearUndoSnapshot.clearedCount))
     setUnreadClearUndoSnapshot(null)
   }, [unreadClearUndoSnapshot])
 
