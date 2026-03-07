@@ -1934,6 +1934,7 @@ function App() {
       getShortcutChipPropsFromSource('Shift+G', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Shift+PageUp', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Shift+PageDown', 'boundary jump', 'thread-jump'),
+      getShortcutChipPropsFromSource('Shift+End', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('Y', 'thread copy', 'thread-jump'),
     ].filter((chip): chip is ShortcutChipProps => chip !== null),
     [],
@@ -3018,7 +3019,7 @@ function App() {
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
-              focus/jump/reset shortcuts · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
+              focus/jump/reset shortcuts · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries (Shift+End/Shift+PgDn hard-jump last) · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
@@ -3175,8 +3176,9 @@ function App() {
                 style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
               >
                 <strong>Thread shortcuts:</strong>
-                J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · U/N next unread · P previous unread ·
-                Shift+U clear unread · Z undo clear · R/Shift+Home jump root · / focus filter ·
+                J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · Shift+End/Shift+PgDn hard-jump last ·
+                U/N next unread · P previous unread · Shift+U clear unread · Z undo clear ·
+                R/Shift+Home jump root · / focus filter ·
                 C focus composer · Y copy selected · Esc close legend
               </small>
             )}
