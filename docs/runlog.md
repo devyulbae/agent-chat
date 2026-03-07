@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 07:43 KST — shown canonical Escape+Shift editable event-gate no-op parity lock (boost lane)
+- Scope: chat thread UX wiring follow-up to complete shown-state canonical `Escape` + `shiftKey=true` editable-target no-op symmetry under event-suppression guard paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added compact dispatch + render-state regression for shown canonical `Escape` with `shiftKey=true` and `isEditableTarget=true` when `defaultPrevented=true` and when `repeat=true`.
+    - Locked no-op contract across both guard paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`, and stable `ariaExpanded` parity via presentation state.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (47/47)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: add focused shown-state `Esc` alias + `shiftKey=true` editable-target defaultPrevented/repeat dispatch+render no-op parity coverage so canonical/alias event-gate symmetry stays locked.
+
 ## 2026-03-08 07:11 KST — shown Esc alias shift-key dispatch no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to mirror existing shown render-state no-op coverage for `Esc` alias when `shiftKey=true` at the dispatch contract layer.
 - Change:
