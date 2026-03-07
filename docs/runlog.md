@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 08:12 KST — shown Esc alias+Shift editable-target modifier no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete shown-state `Esc` alias + `shiftKey=true` editable-target guard symmetry under modifier-key paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch+render regression for shown `Esc` alias with `shiftKey=true` and `isEditableTarget=true` when modifier guards are active (`metaKey`, `ctrlKey`, `altKey`).
+    - Locked no-op contract across all modifier paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`, and stable `ariaExpanded` parity via legend presentation state.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (49/49)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add focused shown-state canonical `Escape` + `shiftKey=true` editable-target modifier-key parity coverage to keep alias/canonical symmetry locked across dispatch + render guard lanes.
+
 ## 2026-03-08 07:43 KST — shown canonical Escape+Shift editable event-gate no-op parity lock (boost lane)
 - Scope: chat thread UX wiring follow-up to complete shown-state canonical `Escape` + `shiftKey=true` editable-target no-op symmetry under event-suppression guard paths.
 - Change:

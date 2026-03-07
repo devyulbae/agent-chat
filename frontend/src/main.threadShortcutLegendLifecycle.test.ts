@@ -1925,4 +1925,118 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownEditableAltEscAlias.statusHint).toBeNull()
     expect(ignoredShownEditableAltEscAlias.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps shown Esc alias with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
+    const ignoredShownEditableMetaEscAliasShiftDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: true,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableMetaEscAliasShiftDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableCtrlEscAliasShiftDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: true,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableCtrlEscAliasShiftDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableAltEscAliasShiftDispatch =
+      getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: true,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableAltEscAliasShiftDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const ignoredShownEditableMetaEscAliasShiftRenderState =
+      getThreadShortcutLegendKeyboardRenderState({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: true,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableMetaEscAliasShiftRenderState.handled).toBe(false)
+    expect(ignoredShownEditableMetaEscAliasShiftRenderState.nextVisibility).toBe(true)
+    expect(ignoredShownEditableMetaEscAliasShiftRenderState.statusHint).toBeNull()
+    expect(ignoredShownEditableMetaEscAliasShiftRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownEditableCtrlEscAliasShiftRenderState =
+      getThreadShortcutLegendKeyboardRenderState({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: true,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableCtrlEscAliasShiftRenderState.handled).toBe(false)
+    expect(ignoredShownEditableCtrlEscAliasShiftRenderState.nextVisibility).toBe(true)
+    expect(ignoredShownEditableCtrlEscAliasShiftRenderState.statusHint).toBeNull()
+    expect(ignoredShownEditableCtrlEscAliasShiftRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredShownEditableAltEscAliasShiftRenderState =
+      getThreadShortcutLegendKeyboardRenderState({
+        isVisible: true,
+        key: 'Esc',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: true,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: true,
+      })
+    expect(ignoredShownEditableAltEscAliasShiftRenderState.handled).toBe(false)
+    expect(ignoredShownEditableAltEscAliasShiftRenderState.nextVisibility).toBe(true)
+    expect(ignoredShownEditableAltEscAliasShiftRenderState.statusHint).toBeNull()
+    expect(ignoredShownEditableAltEscAliasShiftRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      ignoredShownEditableAltEscAliasShiftRenderState.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(
+      ignoredShownEditableAltEscAliasShiftRenderState.nextVisibility,
+    )
+  })
 })
