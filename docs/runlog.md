@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 12:24 KST — lowercase recovery alias canonicalization lock (`j`/`k`) (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase recovery shortcut aliases in hint parser → chip mapping path.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended `getHintShortcutSource(...)` extraction coverage for lowercase recovery aliases:
+      - `Recovered to first visible thread (j) ...` → canonical `J` source.
+      - `Recovered to last visible thread (k) ...` → canonical `K` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regressions that map lowercase recovery aliases to canonical boundary-jump chips:
+      - `(j)` → `J` chip props.
+      - `(k)` → `K` chip props.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (76/76)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a tiny status-row composition regression for lowercase recovery aliases (`j`/`k`) to lock aria + rendered chip parity at the integration layer.
+
 ## 2026-03-07 12:12 KST — lowercase first-visible alias canonicalization lock (`g`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to extend lowercase single-key shortcut canonicalization parity beyond unread navigation aliases.
 - Change:

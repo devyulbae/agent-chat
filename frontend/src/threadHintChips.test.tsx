@@ -284,6 +284,26 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('normalizes lowercase recovery aliases (j/k) to canonical chip mappings', () => {
+    expect(
+      getShortcutChipPropsFromHint('Recovered to first visible thread (j) · Root · 1/9.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'J',
+      title: 'J boundary jump',
+      ariaLabel: 'Shortcut badge J: J (boundary jump).',
+      context: 'thread-jump',
+    })
+
+    expect(
+      getShortcutChipPropsFromHint('Recovered to last visible thread (k) · Root · 9/9.', 'boundary jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'K',
+      title: 'K boundary jump',
+      ariaLabel: 'Shortcut badge K: K (boundary jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('maps unread next alias hints (U/N) to boundary-jump chip props', () => {
     expect(
       getShortcutChipPropsFromHint('Jumped to next unread thread (U) · t-9 · 1/3.', 'boundary jump', 'thread-jump'),
