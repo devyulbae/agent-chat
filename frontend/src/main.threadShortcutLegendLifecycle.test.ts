@@ -295,4 +295,23 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenRenderState.statusHint).toBe('Thread shortcut legend hidden (Esc).')
     expect(hiddenRenderState.statusAriaLabel).toContain('Shortcut badge Esc: Escape (filter jump).')
   })
+
+  it('keeps hidden Esc alias dismiss as a no-op render-state with no stale status aria emission', () => {
+    const ignoredHiddenEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+
+    expect(ignoredHiddenEscAlias.handled).toBe(false)
+    expect(ignoredHiddenEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
 })

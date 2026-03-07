@@ -2161,3 +2161,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a compact render-state no-op regression proving hidden legend + `Esc` alias keeps `handled=false` and null status aria, so dismiss-key spam cannot emit stale live-region hints.
+
+## 2026-03-07 22:50 KST — hidden Esc alias no-op render-state stale-aria guard (offset lane)
+- Scope: frontend integration + API contract sync lane (thread shortcut legend keyboard render-state no-op hardening).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression ensuring hidden legend + `Esc` alias remains a no-op on render-state path.
+    - Locked expectations for no-op semantics: `handled=false`, `nextVisibility=false`, `statusHint=null`, and absent status aria emission (`statusAriaLabel` null/undefined).
+    - This closes the lane follow-up to prevent dismiss-key spam from surfacing stale live-region shortcut hints when legend is already hidden.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (11 passed)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: extend keyboard render-state no-op coverage for hidden `Escape` with modifier keys (`Meta/Ctrl/Alt`) to lock parity with dispatch guard rails.
