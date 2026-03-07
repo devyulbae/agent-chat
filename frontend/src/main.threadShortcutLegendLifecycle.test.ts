@@ -12,10 +12,16 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
     const hiddenBeforeToggle = getThreadShortcutLegendPresentation(false)
     expect(hiddenBeforeToggle.buttonAriaKeyshortcuts).toBe('Shift+Slash')
+    expect(hiddenBeforeToggle.regionAriaKeyshortcuts).toBe(
+      'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+    )
     expect(hiddenBeforeToggle.statusHint).toBe('Thread shortcut legend hidden (Esc).')
 
     const shownAfterQuestionToggle = getThreadShortcutLegendPresentation(true)
     expect(shownAfterQuestionToggle.buttonAriaKeyshortcuts).toBe('Shift+Slash Escape Esc')
+    expect(shownAfterQuestionToggle.regionAriaKeyshortcuts).toBe(
+      hiddenBeforeToggle.regionAriaKeyshortcuts,
+    )
     expect(shownAfterQuestionToggle.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
 
     const hiddenAfterEscDismiss = getThreadShortcutLegendPresentation(false)

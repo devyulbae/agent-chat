@@ -248,6 +248,7 @@ export function buildCredentialAuditEventsRequestUrl(
 
 type ThreadShortcutLegendPresentation = {
   buttonAriaKeyshortcuts: string
+  regionAriaKeyshortcuts: string
   statusHint: string
   toggleControlCopy: string
   dismissControlCopy: string
@@ -270,6 +271,7 @@ export function getThreadShortcutLegendPresentation(
 ): ThreadShortcutLegendPresentation {
   return {
     buttonAriaKeyshortcuts: getThreadShortcutLegendButtonAriaKeyshortcuts(isVisible),
+    regionAriaKeyshortcuts: getThreadShortcutLegendRegionAriaKeyshortcuts(),
     statusHint: getThreadShortcutLegendToggleStatusHint(isVisible),
     toggleControlCopy: getThreadShortcutLegendToggleControlCopy(),
     dismissControlCopy: getThreadShortcutLegendDismissControlCopy(),
@@ -3174,7 +3176,7 @@ function App() {
                 id="thread-shortcut-legend"
                 role="region"
                 aria-label="Thread keyboard shortcuts"
-                aria-keyshortcuts={getThreadShortcutLegendRegionAriaKeyshortcuts()}
+                aria-keyshortcuts={threadShortcutLegendPresentation.regionAriaKeyshortcuts}
                 style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
               >
                 <strong>Thread shortcuts:</strong>
