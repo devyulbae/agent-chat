@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-08 02:22 KST — hidden Escape editable-target dispatch no-op parity lock (boost lane)
+- Scope: chat thread UX wiring (dispatch-level parity mirror for editable-target dismiss guard).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting hidden canonical `Escape` remains a no-op when `isEditableTarget=true`.
+    - Locked dispatch contract expectations for editable-target canonical path: `handled=false`, `nextVisibility=false`, `statusHint=null`.
+    - Keeps canonical `Escape` coverage aligned with existing hidden `Esc` alias editable-target dispatch guard.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (23/23)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `64eec48` — `[test] lock hidden Escape editable-target dispatch no-op parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact dispatch no-op parity regression for hidden canonical `Escape` when `isEditableTarget=true` with `defaultPrevented=true`/`repeat=true` to complete canonical editable-target event-gate mirror coverage.
+
 ## 2026-03-08 02:11 KST — hidden Esc alias editable-target dispatch no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete editable-target parity at keyboard dispatch layer for hidden `Esc` alias paths.
 - Change:
