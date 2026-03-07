@@ -1,5 +1,38 @@
 # Runlog
 
+## 2026-03-08 00:51 KST — trimmed event_type + scoped action with provider/label=all paging-offset parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin mixed include/omit optional filter ordering when `action` is scoped while `provider`/`label` remain `all`.
+- Change:
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused regression asserting scoped `credentialId`, scoped `action`, and trimmed non-blank `event_type` remain present while `provider/label=all` are omitted.
+    - Locked request URL contract parity across refresh (`offset=0`) and older-page fetch (`offset=20`) with stable param ordering.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (14/14)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact regression for trimmed `event_type` + scoped `label` with `action/provider=all` across `offset` transitions to complete one-active-optional filter parity.
+
+## 2026-03-08 00:43 KST — hidden Esc alias dispatch no-op lock for defaultPrevented/repeat (boost lane)
+- Scope: chat thread UX wiring (dispatch-level guard-rail parity for hidden `Esc` alias event-gated paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch regression asserting hidden `Esc` alias stays no-op when event is `defaultPrevented=true`.
+    - Added focused dispatch regression asserting hidden `Esc` alias stays no-op when `repeat=true`.
+    - Synced shown-state `buttonAriaKeyshortcuts` expectation to current contract (`Shift+Slash Escape`) in existing lifecycle assertions.
+- Blocker (resolved immediately):
+  - Initial targeted frontend run failed due to stale shown-state expectation (`Escape` only) after active metadata contract expanded to `Shift+Slash Escape`.
+  - Next fix action applied in-run: updated stale lifecycle assertions to match the shared parser contract, then reran the suite.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (17/17)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `4f2845b` — `[test] lock hidden Esc alias dispatch no-op for prevented/repeat`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact dispatch no-op parity regression for hidden `Escape` (non-alias) when `defaultPrevented=true`/`repeat=true` to fully mirror alias + canonical key event-gate coverage.
+
 ## 2026-03-08 00:30 KST — trimmed event_type + scoped provider with label=all paging-offset parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin mixed optional include/omit ordering when only `provider` is scoped while `label` remains `all`.
 - Change:

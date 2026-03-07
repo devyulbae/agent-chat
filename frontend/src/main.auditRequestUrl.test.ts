@@ -163,4 +163,31 @@ describe('credential audit request URL integration', () => {
       '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated&provider=openai_api',
     )
   })
+
+  it('keeps trimmed event_type with scoped action while omitting all provider/label across paging offsets', () => {
+    const baseRequest = {
+      credentialId: 'cred-123',
+      action: ' updated ',
+      eventType: '  credential.updated  ',
+      provider: ' all ',
+      label: ' all ',
+      limit: 20,
+    }
+
+    const refreshUrl = buildCredentialAuditEventsRequestUrl({
+      ...baseRequest,
+      offset: 0,
+    })
+    const olderPageUrl = buildCredentialAuditEventsRequestUrl({
+      ...baseRequest,
+      offset: 20,
+    })
+
+    expect(refreshUrl).toBe(
+      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated',
+    )
+    expect(olderPageUrl).toBe(
+      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&action=updated&event_type=credential.updated',
+    )
+  })
 })
