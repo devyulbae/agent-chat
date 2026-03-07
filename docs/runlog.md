@@ -1869,3 +1869,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a narrow interaction regression for thread-shortcut legend toggle lifecycle (`?` show → `Esc` hide) that verifies live status hint text and aria-keyshortcuts metadata switch together.
+
+## 2026-03-07 19:03 KST — thread shortcut legend toggle lifecycle parity lock (boost lane)
+- Scope: chat thread UX wiring (single parser-level lifecycle regression for `?` show → `Esc` hide semantics).
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added a narrow lifecycle regression that snapshots hidden → shown → hidden legend states and asserts status hint copy + button `aria-keyshortcuts` stay synchronized at each transition.
+    - Locked expected mapping: hidden=`Shift+Slash` + `Thread shortcut legend hidden (Esc).`; shown=`Escape` + `Thread shortcut legend shown (? / Shift+/).`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (52 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `57b48c6` — `[test] lock legend toggle lifecycle aria/status parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused UI interaction regression in `main.tsx` that fires keyboard `?` then `Esc` and asserts legend region visibility toggles alongside live status hint/chip rendering end-to-end.
