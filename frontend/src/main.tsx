@@ -257,6 +257,13 @@ export type ThreadShortcutLegendKeyboardTransition = {
   statusHint: string | null
 }
 
+export type ThreadShortcutLegendKeyboardRenderState = {
+  handled: boolean
+  nextVisibility: boolean
+  statusHint: string | null
+  statusAriaLabel: string | null
+}
+
 export function getThreadShortcutLegendPresentation(
   isVisible: boolean,
 ): ThreadShortcutLegendPresentation {
@@ -348,6 +355,22 @@ export function getThreadShortcutLegendKeyboardDispatchOutcome(
     handled: true,
     nextVisibility: transition.nextVisibility,
     statusHint: transition.statusHint,
+  }
+}
+
+export function getThreadShortcutLegendKeyboardRenderState(
+  input: ThreadShortcutLegendKeyboardDispatchInput,
+): ThreadShortcutLegendKeyboardRenderState {
+  const dispatchOutcome = getThreadShortcutLegendKeyboardDispatchOutcome(input)
+  const statusShortcutChip = getShortcutChipPropsFromHint(
+    dispatchOutcome.statusHint,
+    'filter jump',
+    'thread-jump',
+  )
+
+  return {
+    ...dispatchOutcome,
+    statusAriaLabel: getStatusAriaLabelWithShortcutChip(dispatchOutcome.statusHint, statusShortcutChip),
   }
 }
 

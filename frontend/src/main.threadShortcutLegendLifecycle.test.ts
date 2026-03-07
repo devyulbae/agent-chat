@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   getThreadShortcutLegendKeyboardDispatchOutcome,
+  getThreadShortcutLegendKeyboardRenderState,
   getThreadShortcutLegendKeyboardTransition,
   getThreadShortcutLegendPresentation,
 } from './main'
@@ -225,5 +226,39 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       nextVisibility: true,
       statusHint: null,
     })
+  })
+
+  it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
+    const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: '?',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownRenderState.handled).toBe(true)
+    expect(shownRenderState.nextVisibility).toBe(true)
+    expect(shownRenderState.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
+    expect(shownRenderState.statusAriaLabel).toContain('Shortcut badge /: Slash (filter jump).')
+
+    const hiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: shownRenderState.nextVisibility,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenRenderState.handled).toBe(true)
+    expect(hiddenRenderState.nextVisibility).toBe(false)
+    expect(hiddenRenderState.statusHint).toBe('Thread shortcut legend hidden (Esc).')
+    expect(hiddenRenderState.statusAriaLabel).toContain('Shortcut badge Esc: Escape (filter jump).')
   })
 })
