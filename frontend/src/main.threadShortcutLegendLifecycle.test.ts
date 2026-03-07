@@ -302,6 +302,50 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenAfterDismissPresentation.ariaExpanded).toBe(hiddenEscAliasDispatch.nextVisibility)
   })
 
+  it('keeps aria-expanded presentation stable across no-op dispatch paths for hidden Esc and shown Shift+Escape', () => {
+    const hiddenEscNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenEscNoOpDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+
+    const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(hiddenEscNoOpDispatch.nextVisibility)
+    expect(hiddenNoOpPresentation.ariaExpanded).toBe(false)
+
+    const shownShiftEscapeNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownShiftEscapeNoOpDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      shownShiftEscapeNoOpDispatch.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+  })
+
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
     const ignoredHiddenMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,

@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 06:31 KST — aria-expanded no-op dispatch parity lock for hidden/show states (offset lane)
+- Scope: frontend integration + API contract sync follow-up to keep legend toggle `aria-expanded` presentation stable under keyboard dispatch no-op paths, not only handled show/hide transitions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch→presentation regression asserting hidden-state `Esc` no-op preserves `ariaExpanded=false` via `nextVisibility=false`.
+    - Added companion shown-state `Shift+Escape` no-op regression asserting `ariaExpanded=true` remains stable via `nextVisibility=true`.
+    - Locked no-op dispatch contract expectations for both paths (`handled=false`, `statusHint=null`) while verifying presentation-derived `ariaExpanded` remains synchronized with `nextVisibility` in both hidden and shown no-op lifecycles.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (40/40)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a narrow render-state parity regression that mirrors these no-op dispatch paths and asserts nullish `statusAriaLabel` remains aligned with stable `ariaExpanded` on hidden `Esc` and shown `Shift+Escape` events.
+
 ## 2026-03-08 06:13 KST — legend toggle aria-expanded + keyshortcuts presentation sync lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to keep legend toggle accessibility state (`aria-expanded`) coupled with the same main presentation contract that already drives button `aria-keyshortcuts`.
 - Change:
