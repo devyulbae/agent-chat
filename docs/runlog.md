@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 18:12 KST — uppercase nested source-decorated unread-undo hint-chip semantics lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin hint-chip rendering parity for uppercase nested source wrappers on unread-clear undo status hints.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for uppercase nested source wrapper template:
+      - `Restored unread markers (source (Z confirmed)) · 3 thread(s).`
+    - Asserts canonical `Z` chip props (`badge`, `title`, `ariaLabel`) and composed status-row aria parity.
+    - Asserts rendered chip badge output remains canonical (`>Z<`) for the uppercase nested wrapper variant.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (49/49)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `925c6a5` — `[test] lock uppercase nested unread-undo source chip semantics`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow chip-level regression for `Restored unread markers (source: Z confirmed) ...` so both nested and colon-delimited uppercase source wrappers stay pinned to canonical `Z` chip semantics.
+
 ## 2026-03-07 18:04 KST — uppercase nested unread-undo source alias parser lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for nested source-decorated unread-undo shortcut templates.
 - Change:
