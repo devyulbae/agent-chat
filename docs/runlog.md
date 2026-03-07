@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-08 08:33 KST — shown canonical Escape+Shift editable modifier+event-gate no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to close the remaining shown-state canonical `Escape` + `shiftKey=true` editable-target guard cross-product by combining modifier-key and event-gate suppression paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused integration regression for shown canonical `Escape` with `shiftKey=true` + `isEditableTarget=true` across mixed modifier/event-gate paths.
+    - Locked dispatch no-op parity for representative guard combinations:
+      - `metaKey=true` + `defaultPrevented=true`
+      - `ctrlKey=true` + `repeat=true`
+    - Locked render-state no-op parity + nullish aria on complementary combinations:
+      - `altKey=true` + `defaultPrevented=true`
+      - `metaKey=true` + `repeat=true`
+    - Preserved presentation parity contract by asserting `ariaExpanded` remains synchronized with stable `nextVisibility=true` on these shown no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact shown-state `Esc` alias + `shiftKey=true` editable-target modifier+event-gate parity coverage to mirror canonical `Escape` on the same cross-guard lane.
+
 ## 2026-03-08 08:24 KST — shown canonical Escape+Shift editable-target modifier no-op parity lock (boost lane)
 - Scope: chat thread UX wiring follow-up to mirror the existing shown `Esc` alias `shiftKey=true` editable-target modifier guard coverage with canonical `Escape` parity.
 - Change:
