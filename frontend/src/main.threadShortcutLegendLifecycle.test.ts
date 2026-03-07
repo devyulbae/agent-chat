@@ -406,6 +406,25 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps hidden Esc alias as no-op dispatch when target is editable', () => {
+    const ignoredHiddenEditableEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredHiddenEditableEscAliasDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+  })
+
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
     const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
