@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  getThreadShortcutLegendKeyboardDispatchOutcome,
   getThreadShortcutLegendKeyboardTransition,
   getThreadShortcutLegendPresentation,
 } from './main'
@@ -128,5 +129,75 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenStatusAria).toContain('Thread shortcut legend hidden (Esc).')
     expect(hiddenStatusAria).toContain('Shortcut badge Esc: Escape (filter jump).')
     expect(hiddenPresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash')
+  })
+
+  it('models window keydown dispatch lifecycle for ? then Esc with editable/modified-key no-op guards', () => {
+    const shownDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: '?',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownDispatch).toEqual({
+      handled: true,
+      nextVisibility: true,
+      statusHint: 'Thread shortcut legend shown (? / Shift+/).',
+    })
+
+    const hiddenDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: shownDispatch.nextVisibility,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenDispatch).toEqual({
+      handled: true,
+      nextVisibility: false,
+      statusHint: 'Thread shortcut legend hidden (Esc).',
+    })
+
+    const ignoredEditableDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: '?',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+    expect(ignoredEditableDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+
+    const ignoredModifiedDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredModifiedDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
   })
 })

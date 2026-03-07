@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-07 20:46 KST — legend keyboard dispatch outcome helper lock for window keydown lifecycle (boost lane)
+- Scope: chat thread UX wiring, strict small increment to centralize `main.tsx` legend keyboard dispatch gating + lifecycle transition handling on one helper contract.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `getThreadShortcutLegendKeyboardDispatchOutcome(...)` with explicit dispatch guards (`defaultPrevented`, `repeat`, modifier keys, editable target) and transition delegation to existing lifecycle helper.
+    - Consolidated legend toggle/dismiss window `keydown` listeners into one effect that consumes the new dispatch helper and applies returned visibility + status hint.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression for dispatch lifecycle sequence (`?` show → `Esc` hide).
+    - Added guard regressions for editable-target no-op and modifier-key no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (8/8)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow jsdom render-lane regression that dispatches actual `window` keyboard events and asserts legend region visibility + live status chip output together.
+
 ## 2026-03-07 20:31 KST — Esc alias legend dismiss lifecycle parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin `Esc` alias parity with `Escape` on main legend keyboard lifecycle transitions.
 - Change:

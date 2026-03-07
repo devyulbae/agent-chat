@@ -286,6 +286,63 @@ export function getThreadShortcutLegendKeyboardTransition(
   }
 }
 
+export type ThreadShortcutLegendKeyboardDispatchInput = {
+  isVisible: boolean
+  key: string
+  shiftKey: boolean
+  metaKey: boolean
+  ctrlKey: boolean
+  altKey: boolean
+  defaultPrevented: boolean
+  repeat: boolean
+  isEditableTarget: boolean
+}
+
+export type ThreadShortcutLegendKeyboardDispatchOutcome = {
+  handled: boolean
+  nextVisibility: boolean
+  statusHint: string | null
+}
+
+export function getThreadShortcutLegendKeyboardDispatchOutcome(
+  input: ThreadShortcutLegendKeyboardDispatchInput,
+): ThreadShortcutLegendKeyboardDispatchOutcome {
+  if (
+    input.defaultPrevented ||
+    input.repeat ||
+    input.metaKey ||
+    input.ctrlKey ||
+    input.altKey ||
+    input.isEditableTarget
+  ) {
+    return {
+      handled: false,
+      nextVisibility: input.isVisible,
+      statusHint: null,
+    }
+  }
+
+  const transition = getThreadShortcutLegendKeyboardTransition(
+    input.isVisible,
+    input.key,
+    input.shiftKey,
+  )
+
+  if (transition.nextVisibility === input.isVisible && transition.statusHint === null) {
+    return {
+      handled: false,
+      nextVisibility: input.isVisible,
+      statusHint: null,
+    }
+  }
+
+  return {
+    handled: true,
+    nextVisibility: transition.nextVisibility,
+    statusHint: transition.statusHint,
+  }
+}
+
 function isEditableElement(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
     return false
@@ -2132,47 +2189,25 @@ function App() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || event.repeat) {
-        return
-      }
-      if (event.metaKey || event.ctrlKey || event.altKey) {
-        return
-      }
-      if (!isThreadShortcutLegendToggleKey(event.key, event.shiftKey)) {
-        return
-      }
-      if (isEditableElement(event.target)) {
-        return
-      }
-      event.preventDefault()
-      setShowThreadShortcutLegend((current) => {
-        const nextVisibility = !current
-        setThreadShortcutLegendToggleHint(getThreadShortcutLegendPresentation(nextVisibility).statusHint)
-        return nextVisibility
+      const dispatchOutcome = getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: showThreadShortcutLegend,
+        key: event.key,
+        shiftKey: event.shiftKey,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+        altKey: event.altKey,
+        defaultPrevented: event.defaultPrevented,
+        repeat: event.repeat,
+        isEditableTarget: isEditableElement(event.target),
       })
-    }
 
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+      if (!dispatchOutcome.handled) {
+        return
+      }
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || event.repeat) {
-        return
-      }
-      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
-        return
-      }
-      if (!isThreadShortcutLegendDismissKey(event.key)) {
-        return
-      }
-      if (!showThreadShortcutLegend || isEditableElement(event.target)) {
-        return
-      }
       event.preventDefault()
-      setShowThreadShortcutLegend(false)
-      setThreadShortcutLegendToggleHint(getThreadShortcutLegendPresentation(false).statusHint)
+      setShowThreadShortcutLegend(dispatchOutcome.nextVisibility)
+      setThreadShortcutLegendToggleHint(dispatchOutcome.statusHint)
     }
 
     window.addEventListener('keydown', onKeyDown)
