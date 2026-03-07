@@ -255,6 +255,53 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps aria-expanded presentation synchronized with dispatch nextVisibility for ? show and Esc hide', () => {
+    const hiddenPresentation = getThreadShortcutLegendPresentation(false)
+    expect(hiddenPresentation.ariaExpanded).toBe(false)
+
+    const shownDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: '?',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownDispatch).toEqual({
+      handled: true,
+      nextVisibility: true,
+      statusHint: 'Thread shortcut legend shown (? / Shift+/).',
+    })
+
+    const shownPresentation = getThreadShortcutLegendPresentation(shownDispatch.nextVisibility)
+    expect(shownPresentation.ariaExpanded).toBe(shownDispatch.nextVisibility)
+
+    const hiddenEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: shownDispatch.nextVisibility,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenEscAliasDispatch).toEqual({
+      handled: true,
+      nextVisibility: false,
+      statusHint: 'Thread shortcut legend hidden (Esc).',
+    })
+
+    const hiddenAfterDismissPresentation = getThreadShortcutLegendPresentation(
+      hiddenEscAliasDispatch.nextVisibility,
+    )
+    expect(hiddenAfterDismissPresentation.ariaExpanded).toBe(hiddenEscAliasDispatch.nextVisibility)
+  })
+
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
     const ignoredHiddenMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
