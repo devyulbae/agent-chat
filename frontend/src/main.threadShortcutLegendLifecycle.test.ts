@@ -660,4 +660,23 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenRepeatEscAlias.statusHint).toBeNull()
     expect(ignoredHiddenRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps hidden Escape as no-op render-state when target is editable', () => {
+    const ignoredHiddenEditableEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+
+    expect(ignoredHiddenEditableEscape.handled).toBe(false)
+    expect(ignoredHiddenEditableEscape.nextVisibility).toBe(false)
+    expect(ignoredHiddenEditableEscape.statusHint).toBeNull()
+    expect(ignoredHiddenEditableEscape.statusAriaLabel ?? null).toBeNull()
+  })
 })
