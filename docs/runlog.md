@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 13:45 KST — lowercase root-jump alias status-row composition lock (`r`) (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase root-jump hint aliases on status-row aria + chip render composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase root-jump alias:
+      - `Jumped to root thread (r) · Root · 1/9.` → canonical `R` root-jump chip semantics in both aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (34/34)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `7250e1b` — `[test] lock lowercase root-jump status-row chip composition`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow status-row composition regression for lowercase alternate thread-copy alias (`c`) so lowercase copy alias parity is pinned at the same aria + rendered-chip integration lane.
+
 ## 2026-03-07 13:31 KST — lowercase root alias canonicalization lock (`r`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin lowercase root-jump alias handling on parser and hint→chip paths.
 - Change:
