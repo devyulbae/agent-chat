@@ -1159,3 +1159,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add the complementary `P` (first→last) interaction regression so both unread wrap directions are pinned at the live-region boundary.
+
+## 2026-03-07 10:24 KST — unread wrap live-region regression for `U` alias (boost lane)
+- Scope: chat thread UX wiring (pin unread wrap aria de-duplication for both forward-next shortcuts, `N` and `U`).
+- Change:
+  - `frontend/src/unreadWrapInteraction.test.ts`
+    - Added focused interaction regression for `U` forward wrap (`last→first`) asserting wrap narration appears only once across boundary-jump and unread-navigation live regions.
+    - Keeps parity with existing `N` and `P` wrap direction coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/unreadWrapInteraction.test.ts` ✅ (3 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a small UI-level thread hint chip regression to ensure `U` and `N` continue sharing the same unread-next chip semantics/copy when shortcut source parsing changes.
