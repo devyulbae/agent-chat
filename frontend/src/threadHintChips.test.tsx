@@ -571,6 +571,22 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(copyChip)}</>)).toContain('>C<')
   })
 
+  it('composes unread-clear undo status-row aria + chip rendering from lowercase alias (z)', () => {
+    const undoHint = 'Restored unread markers (z) · 3 thread(s).'
+    const undoChip = getShortcutChipPropsFromHint(undoHint, 'boundary jump', 'thread-jump')
+
+    expect(undoChip).toEqual({
+      badge: 'Z',
+      title: 'Z boundary jump',
+      ariaLabel: 'Shortcut badge Z: Z (boundary jump).',
+      context: 'thread-jump',
+    })
+    expect(getStatusAriaLabelWithShortcutChip(undoHint, undoChip)).toBe(
+      'Restored unread markers (z) · 3 thread(s). Shortcut badge Z: Z (boundary jump).',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(undoChip)}</>)).toContain('>Z<')
+  })
+
   it('maps shortcut legend click-toggle status hints to chip props', () => {
     expect(
       getShortcutChipPropsFromHint('Thread shortcut legend shown (? / Shift+/).', 'filter jump', 'thread-jump'),
