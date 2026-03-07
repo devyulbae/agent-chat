@@ -82,6 +82,23 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredUnrelatedKey.statusHint).toBeNull()
   })
 
+  it('treats Esc alias as the same dismiss lifecycle as Escape', () => {
+    const shownAfterQuestionKey = getThreadShortcutLegendKeyboardTransition(false, '?', false)
+    expect(shownAfterQuestionKey.nextVisibility).toBe(true)
+
+    const hiddenAfterEscAlias = getThreadShortcutLegendKeyboardTransition(
+      shownAfterQuestionKey.nextVisibility,
+      'Esc',
+      false,
+    )
+    expect(hiddenAfterEscAlias.nextVisibility).toBe(false)
+    expect(hiddenAfterEscAlias.statusHint).toBe('Thread shortcut legend hidden (Esc).')
+
+    const ignoredEscAliasWhenHidden = getThreadShortcutLegendKeyboardTransition(false, 'Esc', false)
+    expect(ignoredEscAliasWhenHidden.nextVisibility).toBe(false)
+    expect(ignoredEscAliasWhenHidden.statusHint).toBeNull()
+  })
+
   it('keeps status chip aria semantics synchronized with keyboard lifecycle transitions (? show → Esc hide)', () => {
     const hiddenBeforeTogglePresentation = getThreadShortcutLegendPresentation(false)
     expect(hiddenBeforeTogglePresentation.buttonAriaKeyshortcuts).toBe('Shift+Slash')

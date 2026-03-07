@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 20:31 KST — Esc alias legend dismiss lifecycle parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin `Esc` alias parity with `Escape` on main legend keyboard lifecycle transitions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting `Esc` alias dismisses the visible legend with canonical hide hint (`Thread shortcut legend hidden (Esc).`).
+    - Added hidden-state no-op assertion for `Esc` alias (`statusHint === null`) to keep dismiss boundary semantics explicit.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Next action: add a lightweight DOM interaction harness for `main.tsx` keyboard dispatch (`?` then `Esc`) to assert legend region visibility and live status chip rendering end-to-end.
+
 ## 2026-03-07 20:15 KST — legend keyboard lifecycle status-chip aria transition lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock legend keyboard lifecycle status-hint + chip-aria semantics through the same transition path.
 - Change:
