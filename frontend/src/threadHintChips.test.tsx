@@ -474,6 +474,17 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipK)}</>)).toContain('>K<')
   })
 
+  it('composes root-jump status-row aria + chip rendering from lowercase hint alias (r)', () => {
+    const rootJumpHintR = 'Jumped to root thread (r) · Root · 1/9.'
+    const chipR = getShortcutChipPropsFromHint(rootJumpHintR, 'root jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(rootJumpHintR, chipR)).toBe(
+      'Jumped to root thread (r) · Root · 1/9. Shortcut badge R: R (root jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipR)}</>)).toContain('>R<')
+  })
+
   it('maps filter jump hints to chip props with filter-jump context', () => {
     expect(
       getShortcutChipPropsFromHint(
