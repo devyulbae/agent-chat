@@ -2148,3 +2148,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `d649e04` — `[test] lock credential audit request URL filter transition contract`
   - Push: `main -> origin/main` ✅
 - Next action: add a compact interaction-level regression that verifies audit refresh + older-page controls preserve the same query-param contract when `auditOffset` moves from `0` to `credentialAuditEvents.length` under trimmed `event_type` input.
+
+## 2026-03-07 22:44 KST — thread shortcut legend Shift+/ + Esc alias render-state parity lock (boost lane)
+- Scope: chat thread UX wiring (single interaction-level render-state regression for alternate show/hide key path).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused lifecycle regression asserting `getThreadShortcutLegendKeyboardRenderState(...)` stays synchronized when showing legend via `Shift+/` and hiding via `Esc` alias.
+    - Locked parity checks for handled state, visibility transition, status hint copy, and status aria shortcut-chip text (`/` on show, `Esc` on hide).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (10 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a compact render-state no-op regression proving hidden legend + `Esc` alias keeps `handled=false` and null status aria, so dismiss-key spam cannot emit stale live-region hints.

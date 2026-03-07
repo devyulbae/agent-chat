@@ -261,4 +261,38 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenRenderState.statusHint).toBe('Thread shortcut legend hidden (Esc).')
     expect(hiddenRenderState.statusAriaLabel).toContain('Shortcut badge Esc: Escape (filter jump).')
   })
+
+  it('keeps render-state aria/status parity on Shift+/ show then Esc alias hide lifecycle', () => {
+    const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: '/',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownRenderState.handled).toBe(true)
+    expect(shownRenderState.nextVisibility).toBe(true)
+    expect(shownRenderState.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
+    expect(shownRenderState.statusAriaLabel).toContain('Shortcut badge /: Slash (filter jump).')
+
+    const hiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: shownRenderState.nextVisibility,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(hiddenRenderState.handled).toBe(true)
+    expect(hiddenRenderState.nextVisibility).toBe(false)
+    expect(hiddenRenderState.statusHint).toBe('Thread shortcut legend hidden (Esc).')
+    expect(hiddenRenderState.statusAriaLabel).toContain('Shortcut badge Esc: Escape (filter jump).')
+  })
 })
