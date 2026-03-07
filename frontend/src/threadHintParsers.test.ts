@@ -647,6 +647,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Moved to previous visible thread (key: [Ctrl+ArrowLeft]).')).toBe(
         'Ctrl+ArrowLeft',
       )
+      expect(getHintShortcutSource('Moved to previous visible thread (key: [Control+ArrowLeft]).')).toBe(
+        'Control+ArrowLeft',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (key: [Control+ArrowRight]).')).toBe(
         'Control+ArrowRight',
       )
@@ -852,6 +855,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('Ctrl+Shift+End')).toBe('Ctrl+⇧End')
       expect(getThreadShortcutBadge('Control+PageDown')).toBe('Control+PgDn')
       expect(getThreadShortcutBadge('Control+ArrowDown')).toBe('Control+↓')
+      expect(getThreadShortcutBadge('Control+ArrowLeft')).toBe('Control+←')
       expect(getThreadShortcutBadge('Control+ArrowRight')).toBe('Control+→')
       expect(getThreadShortcutBadge('Option+PageUp')).toBe('Option+PgUp')
       expect(getThreadShortcutBadge('Option+ArrowDown')).toBe('Option+↓')
@@ -920,6 +924,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('Ctrl+Shift+End')).toBe('Ctrl + Shift + End')
       expect(getThreadShortcutTooltip('Control+PageDown')).toBe('Control + PageDown')
       expect(getThreadShortcutTooltip('Control+ArrowDown')).toBe('Control + Arrow Down')
+      expect(getThreadShortcutTooltip('Control+ArrowLeft')).toBe('Control + Arrow Left')
       expect(getThreadShortcutTooltip('Control+ArrowRight')).toBe('Control + Arrow Right')
       expect(getThreadShortcutTooltip('Option+PageUp')).toBe('Option + PageUp')
       expect(getThreadShortcutTooltip('Option+ArrowDown')).toBe('Option + Arrow Down')

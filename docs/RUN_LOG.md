@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-08 05:32 KST — Agent Chat parallel offset cycle
+- Delta: Added leftward Control-arrow parity coverage for wrapped `key: [...]` thread hint copy so frontend parser + chip contract remains symmetric with existing `Control+ArrowRight` handling.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Control+ArrowLeft]).` → `Control+ArrowLeft` extraction assertion.
+  - Frontend tests: added badge/tooltip mapping assertions for `Control+ArrowLeft` (`Control+←`, `Control + Arrow Left`) to keep horizontal Control-arrow presentation parity.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (53 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add wrapped `Control+ArrowUp` alias regression coverage (`key: [Control+ArrowUp]`) so Control-arrow normalization stays symmetric across horizontal and vertical variants.
+
 ## 2026-03-08 05:11 KST — Agent Chat parallel offset cycle
 - Delta: Added wrapped `Control+ArrowRight` alias regression coverage in frontend thread hint parser tests to keep horizontal `Ctrl`/`Control` extraction parity when hint copy uses `key: [...]` forms.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control+ArrowRight]).` → `Control+ArrowRight` extraction assertion.
