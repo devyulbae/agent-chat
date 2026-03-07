@@ -317,6 +317,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to next unread thread (U) · t-9 · 1/3.')).toBe('U')
       expect(getHintShortcutSource('Jumped to next unread thread (u) · t-9 · 1/3.')).toBe('U')
       expect(getHintShortcutSource('Jumped to previous unread thread (P) · t-4 · 3/3.')).toBe('P')
+      expect(getHintShortcutSource('Jumped to previous unread thread (p) · t-4 · 3/3.')).toBe('P')
       expect(getHintShortcutSource('Copied thread (Y) · root.')).toBe('Y')
     })
 
