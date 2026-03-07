@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 11:23 KST — lowercase unread-next alias hint-parser regression lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for hint-parser alias normalization (`u`/`n` → canonical unread-next shortcuts).
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression asserting lowercase unread-next hint tokens map to canonical chip props:
+      - `Jumped to next unread thread (u) ...` → `U` chip semantics/copy.
+      - `Jumped to next unread thread (n) ...` → `N` chip semantics/copy.
+    - Locks parser-path resilience when hint text casing drifts.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (22/22)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `35284a8` — `[test] normalize lowercase unread-next aliases in chip hint parsing`
+  - Push: `main -> origin/main` ✅
+- Next action: add a tiny interaction regression that composes status-row aria + rendered chips for lowercase unread-next hints (`u`/`n`) to lock end-to-end render-lane parity.
+
 ## 2026-03-07 10:51 KST — unread-next status-row composition lock from hint aliases (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock full status-row composition parity (hint text → chip render + aria copy) for unread-next aliases.
 - Change:
