@@ -1218,3 +1218,20 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
   - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
 - Next action: add a small UI-level thread hint chip regression to ensure `U` and `N` continue sharing the same unread-next chip semantics/copy when shortcut source parsing changes.
+
+## 2026-03-07 11:04 KST — unread-next alias semantic parity regression lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for unread-next alias consistency (`U` vs `N`) on the hint→chip path.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused test asserting unread-next alias semantics remain aligned across `U` and `N` hints while still allowing badge/token differences.
+    - Locks parity for context + semantic copy shape so parser/mapping tweaks cannot drift alias meaning.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (21/21)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `3c56b95` — `[test] lock unread-next alias semantic parity in chip hints`
+  - Push: `main -> origin/main` ✅
+- Next action: add a tiny parser-path regression that feeds lowercase unread-next alias tokens (`u`/`n`) through hint extraction and confirms canonical chip mapping remains stable.
