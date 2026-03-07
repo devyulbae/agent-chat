@@ -327,6 +327,8 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Jumped to previous unread thread (p) · t-4 · 3/3.')).toBe('P')
       expect(getHintShortcutSource('Copied thread (Y) · root.')).toBe('Y')
       expect(getHintShortcutSource('Copied thread (y) · root.')).toBe('Y')
+      expect(getHintShortcutSource('Restored unread markers (Z) · 3 thread(s).')).toBe('Z')
+      expect(getHintShortcutSource('Restored unread markers (z) · 3 thread(s).')).toBe('Z')
       expect(getHintShortcutSource('Copied thread (C) · root.')).toBe('C')
       expect(getHintShortcutSource('Copied thread (c) · root.')).toBe('C')
     })
@@ -789,6 +791,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutBadge('G')).toBe('G')
       expect(getThreadShortcutBadge('N')).toBe('N')
       expect(getThreadShortcutBadge('P')).toBe('P')
+      expect(getThreadShortcutBadge('Z')).toBe('Z')
       expect(getThreadShortcutBadge('R')).toBe('R')
     })
 
@@ -852,6 +855,7 @@ describe('threadHintParsers', () => {
       expect(getThreadShortcutTooltip('G')).toBe('G')
       expect(getThreadShortcutTooltip('N')).toBe('N')
       expect(getThreadShortcutTooltip('P')).toBe('P')
+      expect(getThreadShortcutTooltip('Z')).toBe('Z')
       expect(getThreadShortcutTooltip('R')).toBe('R')
     })
 

@@ -1490,3 +1490,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `2fe05dc` — `[test] lock previous-unread alias status-row chip parity`
   - Push: `main -> origin/main` ✅
 - Next action: add a tiny parser-path regression for lowercase thread-copy root alias (`y`) with `source:`/`confirmed` decorated parentheses so canonical `Y` chip mapping remains stable under verbose hint templates.
+
+## 2026-03-07 14:41 KST — unread clear undo keyboard wiring (`Z`) + hint-chip parity (boost lane)
+- Scope: chat thread UX wiring (small, testable unread marker undo increment).
+- Change:
+  - `frontend/src/main.tsx`
+    - Added global `Z` shortcut (non-editable contexts) to undo unread-marker clear while undo snapshot is active.
+    - Added explicit boundary status hint on undo: `Restored unread markers (Z) · N thread(s).`
+    - Wired undo control copy/chip into unread navigation hint text and aria chip composition while undo is available.
+    - Updated thread shortcut legend copy to include `Z undo clear`.
+  - `frontend/src/threadHintParsers.ts`
+    - Extended shortcut normalization + badge/tooltip mappings to include `Z`.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added parser extraction assertions for `(Z)`/`(z)` undo hints.
+    - Added badge/tooltip assertions for `Z` mapping.
+- Verification:
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow RTL interaction test for unread clear → `Z` undo flow to verify list-state recovery plus live status hint output in one scenario.

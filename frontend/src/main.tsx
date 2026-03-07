@@ -2217,6 +2217,13 @@ function App() {
   const unreadNavigationClearControlCopy = unreadNavigationClearShortcutChipPresentation
     ? `${unreadNavigationClearShortcutChipPresentation.badge} clear`
     : 'Shift+U clear'
+  const unreadNavigationUndoClearShortcutChipPresentation = useMemo(
+    () => getShortcutChipPropsFromSource('Z', 'boundary jump', 'thread-jump'),
+    [],
+  )
+  const unreadNavigationUndoClearControlCopy = unreadNavigationUndoClearShortcutChipPresentation
+    ? `${unreadNavigationUndoClearShortcutChipPresentation.badge} undo clear`
+    : 'Z undo clear'
   const unreadNavigationNextControlCopy =
     unreadNavigationNextShortcutChipPresentation && unreadNavigationNextAltShortcutChipPresentation
       ? `${unreadNavigationNextShortcutChipPresentation.badge}/${unreadNavigationNextAltShortcutChipPresentation.badge} next`
@@ -2233,7 +2240,7 @@ function App() {
 
   const unreadNavigationHint =
     unreadThreadIds.length > 0
-      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}${unreadNavigationWrapCue ? ` • ${unreadNavigationWrapCue}` : ''}`
+      ? `Unread threads: ${unreadThreadIds.length} • ${unreadNavigationNextControlCopy} • ${unreadNavigationPreviousControlCopy} • ${unreadNavigationDirectionCueCopy} • ${unreadNavigationClearControlCopy}${unreadClearUndoSnapshot ? ` • ${unreadNavigationUndoClearControlCopy}` : ''}${unreadNavigationWrapCue ? ` • ${unreadNavigationWrapCue}` : ''}`
       : 'No unread threads right now. Jump/clear controls enable when new activity arrives.'
 
   const unreadNavigationHintAriaLabel = useMemo(() => {
@@ -2244,6 +2251,7 @@ function App() {
       unreadNavigationToFirstDirectionChipPresentation,
       unreadNavigationToLastDirectionChipPresentation,
       unreadNavigationClearShortcutChipPresentation,
+      unreadNavigationUndoClearShortcutChipPresentation,
     ])
 
     const navigationWrapCueAria = getUnreadNavigationWrapCueForAria(
@@ -2265,6 +2273,7 @@ function App() {
     unreadNavigationPreviousShortcutChipPresentation,
     unreadNavigationToFirstDirectionChipPresentation,
     unreadNavigationToLastDirectionChipPresentation,
+    unreadNavigationUndoClearShortcutChipPresentation,
     unreadNavigationWrapCue,
   ])
 
@@ -2634,8 +2643,34 @@ function App() {
     setLastSeenByThread(unreadClearUndoSnapshot.lastSeenByThread)
     setLastSeenCountByThread(unreadClearUndoSnapshot.lastSeenCountByThread)
     setUnseenThreadKeys(unreadClearUndoSnapshot.unseenThreadKeys)
+    setThreadBoundaryJumpHint(`Restored unread markers (Z) · ${unreadClearUndoSnapshot.clearedCount} thread(s).`)
     setUnreadClearUndoSnapshot(null)
   }, [unreadClearUndoSnapshot])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat) {
+        return
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+        return
+      }
+      if (event.key.toLowerCase() !== 'z') {
+        return
+      }
+      if (isEditableElement(event.target)) {
+        return
+      }
+      if (!unreadClearUndoSnapshot) {
+        return
+      }
+      event.preventDefault()
+      undoClearAllUnreadMarkers()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [undoClearAllUnreadMarkers, unreadClearUndoSnapshot])
 
   useEffect(() => {
     if (!unreadClearUndoSnapshot) {
@@ -2803,6 +2838,8 @@ function App() {
               {renderShortcutChipPresentation(unreadNavigationToFirstDirectionChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationToLastDirectionChipPresentation)}
               {renderShortcutChipPresentation(unreadNavigationClearShortcutChipPresentation)}
+              {unreadClearUndoSnapshot &&
+                renderShortcutChipPresentation(unreadNavigationUndoClearShortcutChipPresentation)}
             </>
           )}
           {unreadNavigationHint}
@@ -3030,8 +3067,8 @@ function App() {
               >
                 <strong>Thread shortcuts:</strong>
                 J/K or ↑/↓ move · Home/End/PgUp/PgDn jump · U/N next unread · P previous unread ·
-                Shift+U clear unread · R/Shift+Home jump root · / focus filter · C focus composer ·
-                Y copy selected · Esc close legend
+                Shift+U clear unread · Z undo clear · R/Shift+Home jump root · / focus filter ·
+                C focus composer · Y copy selected · Esc close legend
               </small>
             )}
           </div>
