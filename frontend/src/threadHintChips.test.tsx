@@ -242,6 +242,18 @@ describe('getShortcutChipPropsFromSource', () => {
       ariaLabel: 'Shortcut badge ⇧U: Shift + U (boundary jump).',
       context: 'thread-jump',
     })
+    expect(getShortcutChipPropsFromSource('U', 'boundary jump', 'thread-jump')).toEqual({
+      badge: 'U',
+      title: 'U boundary jump',
+      ariaLabel: 'Shortcut badge U: U (boundary jump).',
+      context: 'thread-jump',
+    })
+    expect(getShortcutChipPropsFromSource('N', 'boundary jump', 'thread-jump')).toEqual({
+      badge: 'N',
+      title: 'N boundary jump',
+      ariaLabel: 'Shortcut badge N: N (boundary jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('returns null for unknown shortcut source', () => {
