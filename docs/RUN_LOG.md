@@ -8,7 +8,7 @@
 - Quality gates:
   - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (53 passed)
   - `cd frontend && npm run build` ✅
-- Commit: pending
+- Commit: `67643f3` (pushed to `main`)
 - Next action: add wrapped `Control+ArrowUp` alias regression coverage (`key: [Control+ArrowUp]`) so Control-arrow normalization stays symmetric across horizontal and vertical variants.
 
 ## 2026-03-08 05:11 KST — Agent Chat parallel offset cycle
