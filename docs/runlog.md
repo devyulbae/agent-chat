@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-07 10:51 KST — unread-next status-row composition lock from hint aliases (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock full status-row composition parity (hint text → chip render + aria copy) for unread-next aliases.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused interaction-style regression that composes unread-next status-row behavior from hint text aliases:
+      - Parses chip props from `Jumped to next unread thread (U) ...` and `... (N) ...` via `getShortcutChipPropsFromHint(...)`.
+      - Asserts composed status aria-label includes the correct unread-next chip narration (`Shortcut badge U...` / `Shortcut badge N...`).
+      - Asserts rendered chip markup surfaces the corresponding `U` / `N` badge token.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (23/23)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 10:42 KST — unread-next hint-parser chip alias lock (boost lane)
 - Scope: chat thread UX wiring regression hardening so unread-next aliases (`U`/`N`) stay chip-mapped through the hint-parser path, not only direct source mapping.
 - Change:
