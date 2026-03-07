@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 20:15 KST — legend keyboard lifecycle status-chip aria transition lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock legend keyboard lifecycle status-hint + chip-aria semantics through the same transition path.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused integration regression for `?` show → `Esc` hide lifecycle sequence.
+    - Asserts transition-driven status hints compose canonical shortcut-chip aria semantics:
+      - shown path includes slash chip narration (`Shortcut badge /: Slash (filter jump).`)
+      - hidden path includes escape chip narration (`Shortcut badge Esc: Escape (filter jump).`)
+    - Asserts presentation metadata (`buttonAriaKeyshortcuts`) remains synchronized at each transition edge (`Shift+Slash` hidden, `Escape` shown).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (6/6)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `5fa831b` — `[test] lock legend lifecycle status-chip aria transition semantics`
+  - Push: `main -> origin/main` ✅
+
+
 ## 2026-03-07 20:03 KST — shifted-Esc legend lifecycle no-op regression lock (boost lane)
 - Scope: chat thread UX wiring regression hardening for legend keyboard lifecycle no-op boundaries while visible.
 - Change:
