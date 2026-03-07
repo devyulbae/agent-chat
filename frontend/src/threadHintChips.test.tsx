@@ -541,6 +541,17 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(copyChip)}</>)).toContain('>C<')
   })
 
+  it('composes thread-copy status-row aria + chip rendering from lowercase alternate alias (c)', () => {
+    const copyHint = 'Copied thread (c) · root.'
+    const copyChip = getShortcutChipPropsFromHint(copyHint, 'thread copy', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(copyHint, copyChip)).toBe(
+      'Copied thread (c) · root. Shortcut badge C: C (thread copy).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(copyChip)}</>)).toContain('>C<')
+  })
+
   it('maps shortcut legend click-toggle status hints to chip props', () => {
     expect(
       getShortcutChipPropsFromHint('Thread shortcut legend shown (? / Shift+/).', 'filter jump', 'thread-jump'),
