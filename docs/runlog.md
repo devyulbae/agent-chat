@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 11:51 KST — lowercase previous-unread alias canonicalization lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock lowercase previous-unread shortcut alias parsing parity with existing lowercase unread-next coverage.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused `getHintShortcutSource(...)` regression for lowercase previous-unread hint token:
+      - `Jumped to previous unread thread (p) ...` → canonical `P` source.
+    - Keeps parser→chip source contract stable for all unread navigation aliases (`u`/`n`/`p`).
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (75/75)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `70007ed` — `[test] lock lowercase previous-unread hint alias canonicalization`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 11:32 KST — lowercase unread-next alias status-row composition lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock full status-row composition parity for lowercase unread-next hint aliases.
 - Change:
