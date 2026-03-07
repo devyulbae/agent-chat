@@ -556,8 +556,14 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Moved to previous visible thread ([Left Arrow] confirmed).')).toBe(
         'ArrowLeft',
       )
+      expect(getHintShortcutSource('Moved to previous visible thread (Shift+[Left Arrow] confirmed).')).toBe(
+        'Shift+ArrowLeft',
+      )
       expect(getHintShortcutSource('Moved to next visible thread (key: [ArrowRight]).')).toBe(
         'ArrowRight',
+      )
+      expect(getHintShortcutSource('Moved to next visible thread (key: [Cmd+ArrowRight]).')).toBe(
+        'Cmd+ArrowRight',
       )
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (↩).')).toBe('Enter')
