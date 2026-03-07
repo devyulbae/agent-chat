@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 07:11 KST — shown Esc alias shift-key dispatch no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to mirror existing shown render-state no-op coverage for `Esc` alias when `shiftKey=true` at the dispatch contract layer.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch-level regression asserting shown `Esc` alias with `shiftKey=true` remains a no-op.
+    - Locked no-op dispatch contract expectations: `handled=false`, `nextVisibility=true`, `statusHint=null`.
+    - Added parity assertion that `getThreadShortcutLegendPresentation(nextVisibility).ariaExpanded` remains synchronized (`true`) for this shown no-op dispatch path.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (43/43)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact dispatch+render parity regression for shown canonical `Escape` with `shiftKey=true` to lock alias/canonical shift-dismiss no-op symmetry.
+
 ## 2026-03-08 06:51 KST — shown Esc+Shift no-op render-state parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to mirror shown no-op render-state parity for `Esc` alias when `shiftKey=true`.
 - Change:

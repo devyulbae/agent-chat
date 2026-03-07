@@ -828,6 +828,30 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps shown Esc alias with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
+    const ignoredShownEscAliasShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredShownEscAliasShiftDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      ignoredShownEscAliasShiftDispatch.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownEscAliasShiftDispatch.nextVisibility)
+  })
+
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch outcomes', () => {
     const ignoredShownEditableMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
