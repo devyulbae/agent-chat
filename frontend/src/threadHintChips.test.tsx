@@ -292,6 +292,27 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('keeps unread-next alias semantics aligned while allowing badge/token differences', () => {
+    const chipU = getShortcutChipPropsFromHint(
+      'Jumped to next unread thread (U) · t-9 · 1/3.',
+      'boundary jump',
+      'thread-jump',
+    )
+    const chipN = getShortcutChipPropsFromHint(
+      'Jumped to next unread thread (N) · t-9 · 1/3.',
+      'boundary jump',
+      'thread-jump',
+    )
+
+    expect(chipU?.context).toBe('thread-jump')
+    expect(chipN?.context).toBe('thread-jump')
+
+    expect(chipU?.title.replace('U', 'X')).toBe(chipN?.title.replace('N', 'X'))
+    expect(chipU?.ariaLabel.replace(/badge U: U/, 'badge X: X')).toBe(
+      chipN?.ariaLabel.replace(/badge N: N/, 'badge X: X'),
+    )
+  })
+
   it('composes unread-next status-row aria + chip rendering from hint text aliases (U/N)', () => {
     const unreadNextHintU = 'Jumped to next unread thread (U) · t-9 · 1/3.'
     const unreadNextHintN = 'Jumped to next unread thread (N) · t-9 · 1/3.'
