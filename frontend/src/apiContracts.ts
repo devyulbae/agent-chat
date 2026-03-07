@@ -53,24 +53,39 @@ export function buildCredentialAuditEventsQueryParams(
     offset: String(boundedOffset),
   })
 
-  if (input.credentialId) {
-    params.set('entity_id', input.credentialId)
-  }
-  if (input.action !== 'all') {
-    params.set('action', input.action)
+  const trimmedCredentialId = input.credentialId?.trim()
+  if (trimmedCredentialId) {
+    params.set('entity_id', trimmedCredentialId)
   }
 
-  const trimmedEventType = input.eventType.trim()
-  if (trimmedEventType) {
-    params.set('event_type', trimmedEventType)
+  const normalizedAction = normalizeOptionalAuditFilter(input.action)
+  if (normalizedAction) {
+    params.set('action', normalizedAction)
   }
 
-  if (input.provider !== 'all') {
-    params.set('provider', input.provider)
+  const normalizedEventType = normalizeOptionalAuditFilter(input.eventType)
+  if (normalizedEventType) {
+    params.set('event_type', normalizedEventType)
   }
-  if (input.label !== 'all') {
-    params.set('label', input.label)
+
+  const normalizedProvider = normalizeOptionalAuditFilter(input.provider)
+  if (normalizedProvider) {
+    params.set('provider', normalizedProvider)
+  }
+
+  const normalizedLabel = normalizeOptionalAuditFilter(input.label)
+  if (normalizedLabel) {
+    params.set('label', normalizedLabel)
   }
 
   return params
+}
+
+function normalizeOptionalAuditFilter(value: string, allKeyword = 'all'): string | null {
+  const trimmed = value.trim()
+  if (!trimmed || trimmed.toLowerCase() === allKeyword) {
+    return null
+  }
+
+  return trimmed
 }

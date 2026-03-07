@@ -50,6 +50,25 @@ describe('apiContracts helpers', () => {
     expect(params.get('offset')).toBe('0')
   })
 
+
+  it('normalizes optional audit filters by trimming and omitting all/blank values', () => {
+    const params = buildCredentialAuditEventsQueryParams({
+      credentialId: '  cred-123  ',
+      action: '  ALL  ',
+      eventType: '  credential.deleted  ',
+      provider: '  openai_api  ',
+      label: '  all  ',
+      limit: 20,
+      offset: 0,
+    })
+
+    expect(params.get('entity_id')).toBe('cred-123')
+    expect(params.has('action')).toBe(false)
+    expect(params.get('event_type')).toBe('credential.deleted')
+    expect(params.get('provider')).toBe('openai_api')
+    expect(params.has('label')).toBe(false)
+  })
+
   it('omits optional audit-events filters when all/blank values are passed', () => {
     const params = buildCredentialAuditEventsQueryParams({
       credentialId: null,

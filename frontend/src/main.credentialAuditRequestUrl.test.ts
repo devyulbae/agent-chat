@@ -31,11 +31,11 @@ describe('credential audit request URL contract (main integration)', () => {
     )
 
     const scopedFiltersUrl = buildCredentialAuditEventsRequestUrl({
-      credentialId: 'cred-123',
-      action: 'updated',
+      credentialId: '  cred-123  ',
+      action: ' updated ',
       eventType: '   ',
-      provider: 'openai_api',
-      label: 'primary',
+      provider: ' openai_api ',
+      label: ' primary ',
       limit: 20,
       offset: 0,
     })
