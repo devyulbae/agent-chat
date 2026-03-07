@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-07 11:11 KST — Agent Chat parallel offset cycle
+- Delta: Added bracketed modifier horizontal-arrow alias regression coverage to keep frontend hint parsing contract-safe when wrapped shortcut copy emits combined forms.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+[Left Arrow]` → `Shift+ArrowLeft` and `key: [Cmd+ArrowRight]` → `Cmd+ArrowRight` extraction assertions.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (49 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `b5d2b54` (pushed to `main`)
+- Next action: add bracketed modifier vertical-arrow coverage (`Shift+[Up Arrow]`, `key: [Ctrl+ArrowDown]`) to keep wrapped arrow-combo alias parity across both axes.
+
 ## 2026-03-07 07:50 KST — Agent Chat parallel offset cycle
 - Delta: Added left/right bracketed arrow-alias regression coverage in frontend thread hint parsing so horizontal shortcut chips remain canonical when hint copy emits wrapped variants.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `[Left Arrow] confirmed` → `ArrowLeft` and `key: [ArrowRight]` → `ArrowRight` extraction assertions.
