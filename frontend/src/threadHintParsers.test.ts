@@ -100,9 +100,9 @@ describe('threadHintParsers', () => {
   })
 
   describe('getThreadShortcutLegendButtonAriaKeyshortcuts', () => {
-    it('advertises only the active shortcut for assistive metadata', () => {
+    it('advertises the toggle shortcut always and escape dismiss while visible', () => {
       expect(getThreadShortcutLegendButtonAriaKeyshortcuts(false)).toBe('Shift+Slash')
-      expect(getThreadShortcutLegendButtonAriaKeyshortcuts(true)).toBe('Escape')
+      expect(getThreadShortcutLegendButtonAriaKeyshortcuts(true)).toBe('Shift+Slash Escape')
     })
   })
 
@@ -137,7 +137,7 @@ describe('threadHintParsers', () => {
         statusHint: 'Thread shortcut legend hidden (Esc).',
       })
       expect(shownState).toEqual({
-        ariaKeyshortcuts: 'Escape',
+        ariaKeyshortcuts: 'Shift+Slash Escape',
         statusHint: 'Thread shortcut legend shown (? / Shift+/).',
       })
       expect(hiddenAfterDismissState).toEqual(hiddenState)
