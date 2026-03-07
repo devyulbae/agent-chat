@@ -151,4 +151,21 @@ describe('unread wrap live-region interaction', () => {
     expect(restoredUnreadNavigationAria).toContain('Unread threads: 3')
     expect(restoredUnreadNavigationAria).toContain('Z undo clear')
   })
+
+  it('drops Z undo-clear helper copy after undo snapshot expiry boundary', () => {
+    const unreadCount = 2
+
+    const beforeExpiryAria = getUnreadNavigationHintAriaLabel(
+      `Unread threads: ${unreadCount} • U/N next • P previous • ⇧U clear • Z undo clear`,
+      null,
+    )
+    const afterExpiryAria = getUnreadNavigationHintAriaLabel(
+      `Unread threads: ${unreadCount} • U/N next • P previous • ⇧U clear`,
+      null,
+    )
+
+    expect(beforeExpiryAria).toContain('Z undo clear')
+    expect(afterExpiryAria).not.toContain('Z undo clear')
+    expect(afterExpiryAria).toContain('⇧U clear')
+  })
 })
