@@ -273,6 +273,15 @@ describe('getShortcutChipPropsFromHint', () => {
     })
   })
 
+  it('normalizes lowercase root alias hint (r) to canonical chip mapping', () => {
+    expect(getShortcutChipPropsFromHint('Jumped to root thread (r) · Root · 1/8.', 'root jump', 'thread-jump')).toEqual({
+      badge: 'R',
+      title: 'R root jump',
+      ariaLabel: 'Shortcut badge R: R (root jump).',
+      context: 'thread-jump',
+    })
+  })
+
   it('normalizes lowercase first-visible alias hint (g) to canonical chip mapping', () => {
     expect(
       getShortcutChipPropsFromHint('Jumped to first visible thread (g) · Root · 1/8.', 'boundary jump', 'thread-jump'),

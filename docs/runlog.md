@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 13:31 KST — lowercase root alias canonicalization lock (`r`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin lowercase root-jump alias handling on parser and hint→chip paths.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused extraction regression for lowercase root alias:
+      - `Jumped to root thread (r) ...` → canonical `R` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused chip-mapping regression asserting lowercase root alias hint normalizes to canonical root-jump chip props:
+      - `Jumped to root thread (r) ...` → `R` chip semantics.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (82/82)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 13:12 KST — lowercase first-visible alias status-row composition lock (`g`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition for lowercase first-visible alias hints.
 - Change:

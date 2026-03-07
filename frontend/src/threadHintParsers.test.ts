@@ -317,6 +317,7 @@ describe('threadHintParsers', () => {
         'Enter',
       )
       expect(getHintShortcutSource('Jumped to root thread (R) · Root · 1/9.')).toBe('R')
+      expect(getHintShortcutSource('Jumped to root thread (r) · Root · 1/9.')).toBe('R')
       expect(getHintShortcutSource('Jumped to next unread thread (N) · t-9 · 1/3.')).toBe('N')
       expect(getHintShortcutSource('Jumped to next unread thread (n) · t-9 · 1/3.')).toBe('N')
       expect(getHintShortcutSource('Jumped to next unread thread (U) · t-9 · 1/3.')).toBe('U')
