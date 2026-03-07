@@ -39,3 +39,14 @@ export function getSelectedVisibleThreadShortcutRecoveryHint(
 
   return `Tip (${selectedVisibleThreadPositionLabel}): J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread.`
 }
+
+export function getSelectedVisibleThreadButtonRecoveryHint(
+  selectedVisibleThreadHiddenByFilter: boolean,
+  selectedVisibleThreadPositionLabel: string,
+): string | null {
+  if (!selectedVisibleThreadHiddenByFilter) {
+    return null
+  }
+
+  return `Selection hidden (${selectedVisibleThreadPositionLabel}) → use “Jump to first visible”.`
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
   getSelectedVisibleThreadShortcutRecoveryHint,
@@ -52,8 +53,13 @@ describe('hidden-selection recovery hints', () => {
     expect(getSelectedVisibleThreadShortcutRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
   })
 
+  it('includes hidden position token in button recovery hint when list is empty', () => {
+    expect(getSelectedVisibleThreadButtonRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
+  })
+
   it('returns null recovery hints when selection is visible', () => {
     expect(getSelectedVisibleThreadInlineRecoveryHint(false, '1/3')).toBeNull()
     expect(getSelectedVisibleThreadShortcutRecoveryHint(false, '1/3')).toBeNull()
+    expect(getSelectedVisibleThreadButtonRecoveryHint(false, '1/3')).toBeNull()
   })
 })

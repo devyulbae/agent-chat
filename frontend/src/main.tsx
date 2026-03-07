@@ -33,6 +33,7 @@ import {
   normalizeAuditOffset,
 } from './apiContracts'
 import {
+  getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
   getSelectedVisibleThreadShortcutRecoveryHint,
@@ -1614,9 +1615,10 @@ function App() {
   const selectedVisibleThreadPositionTitle = selectedVisibleThreadHiddenByFilter
     ? 'Selection is hidden by current filters. Use "Jump to first visible" to recover to the visible list.'
     : undefined
-  const selectedVisibleThreadRecoveryHint = selectedVisibleThreadHiddenByFilter
-    ? 'Selection hidden by current filters → use “Jump to first visible”.'
-    : null
+  const selectedVisibleThreadRecoveryHint = getSelectedVisibleThreadButtonRecoveryHint(
+    selectedVisibleThreadHiddenByFilter,
+    selectedVisibleThreadPositionLabel,
+  )
   const selectedVisibleThreadShortcutRecoveryHint = getSelectedVisibleThreadShortcutRecoveryHint(
     selectedVisibleThreadHiddenByFilter,
     selectedVisibleThreadPositionLabel,
