@@ -1,5 +1,34 @@
 # Runlog
 
+## 2026-03-07 12:50 KST — lowercase thread-copy alias extraction lock (`y`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to lock parser-path canonicalization for lowercase thread-copy shortcut aliases.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended `getHintShortcutSource(...)` extraction coverage for lowercase thread-copy hint alias:
+      - `Copied thread (y) · root.` → canonical `Y` source.
+    - Keeps parser→chip contract stable for thread-copy hints across uppercase/lowercase alias variants.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (78/78)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
+## 2026-03-07 12:43 KST — lowercase thread-copy alias chip canonicalization lock (`y`) (boost lane)
+- Scope: chat thread UX wiring regression hardening for lowercase thread-copy hint aliases on the hint→chip→status-row path.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused regression for lowercase thread-copy alias hint canonicalization:
+      - `Copied thread (y) · root.` → canonical `Y` chip props.
+    - Added status-row composition assertions to pin aria-label + rendered badge parity for lowercase `y` copy hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (29/29)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `1011f22` — `[test] lock lowercase thread-copy hint chip canonicalization`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow parser-path regression in `threadHintParsers.test.ts` to explicitly lock lowercase thread-copy alias extraction (`Copied thread (y) ...` → `Y`) alongside existing uppercase coverage.
+
 ## 2026-03-07 12:31 KST — lowercase recovery alias status-row composition lock (`j`/`k`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock status-row aria/chip composition parity for lowercase hidden-selection recovery aliases.
 - Change:
