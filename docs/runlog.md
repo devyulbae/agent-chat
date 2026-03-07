@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-07 10:05 KST — hidden-selection inline/shortcut empty-list copy lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for hidden-selection recovery text in zero-visible-thread states.
+- Change:
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added exact-copy regression for inline hidden-selection recovery hint in empty visible-list state:
+      - `Hidden selection recovery (hidden/0): J/K or ↑/↓ → ↖ first / ↘ last visible.`
+    - Added exact-copy regression for shortcut hidden-selection recovery hint in empty visible-list state:
+      - `Tip (hidden/0): J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread.`
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts` ✅ (15/15)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `86f3f51` — `[test] lock hidden-selection empty-list inline/shortcut copy`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused render-lane interaction test that asserts hidden-selection status rows surface `hidden/0` across inline + shortcut + button recovery hints when filters hide all threads.
+
 ## 2026-03-07 09:51 KST — hidden-selection empty-list button recovery copy lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin render-lane status-row copy for hidden-selection empty-list recovery.
 - Change:
