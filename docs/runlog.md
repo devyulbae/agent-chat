@@ -1,5 +1,16 @@
 # Runlog
 
+## 2026-03-07 15:12 KST — uppercase unread-clear undo status-row composition lock (`Z`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin uppercase unread-clear undo alias parity on status-row aria + rendered chip composition.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for uppercase unread-clear undo alias:
+      - `Restored unread markers (Z) · 3 thread(s).` → canonical `Z` boundary-jump chip semantics in composed aria output and rendered badge.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 15:04 KST — lowercase unread-clear undo status-row chip composition lock (`z`) (boost lane)
 - Scope: chat thread UX wiring regression hardening for lowercase unread-clear undo alias hints on status-row aria + chip render composition.
 - Change:
