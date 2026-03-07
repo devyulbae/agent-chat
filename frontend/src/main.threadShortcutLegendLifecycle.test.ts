@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { getThreadShortcutLegendPresentation } from './main'
+import {
+  getThreadShortcutLegendKeyboardTransition,
+  getThreadShortcutLegendPresentation,
+} from './main'
 
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
@@ -28,5 +31,23 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
     expect(shown.toggleControlCopy).toBe(hidden.toggleControlCopy)
     expect(shown.dismissControlCopy).toBe(hidden.dismissControlCopy)
+  })
+
+  it('models keyboard lifecycle transitions for ? toggle then Esc dismiss', () => {
+    const shownAfterQuestionKey = getThreadShortcutLegendKeyboardTransition(false, '?', false)
+    expect(shownAfterQuestionKey.nextVisibility).toBe(true)
+    expect(shownAfterQuestionKey.statusHint).toBe('Thread shortcut legend shown (? / Shift+/).')
+
+    const hiddenAfterEscKey = getThreadShortcutLegendKeyboardTransition(
+      shownAfterQuestionKey.nextVisibility,
+      'Escape',
+      false,
+    )
+    expect(hiddenAfterEscKey.nextVisibility).toBe(false)
+    expect(hiddenAfterEscKey.statusHint).toBe('Thread shortcut legend hidden (Esc).')
+
+    const ignoredEscWhenHidden = getThreadShortcutLegendKeyboardTransition(false, 'Escape', false)
+    expect(ignoredEscWhenHidden.nextVisibility).toBe(false)
+    expect(ignoredEscWhenHidden.statusHint).toBeNull()
   })
 })

@@ -244,6 +244,11 @@ type ThreadShortcutLegendPresentation = {
   dismissControlCopy: string
 }
 
+export type ThreadShortcutLegendKeyboardTransition = {
+  nextVisibility: boolean
+  statusHint: string | null
+}
+
 export function getThreadShortcutLegendPresentation(
   isVisible: boolean,
 ): ThreadShortcutLegendPresentation {
@@ -252,6 +257,32 @@ export function getThreadShortcutLegendPresentation(
     statusHint: getThreadShortcutLegendToggleStatusHint(isVisible),
     toggleControlCopy: getThreadShortcutLegendToggleControlCopy(),
     dismissControlCopy: getThreadShortcutLegendDismissControlCopy(),
+  }
+}
+
+export function getThreadShortcutLegendKeyboardTransition(
+  isVisible: boolean,
+  key: string,
+  shiftKey: boolean,
+): ThreadShortcutLegendKeyboardTransition {
+  if (isThreadShortcutLegendToggleKey(key, shiftKey)) {
+    const nextVisibility = !isVisible
+    return {
+      nextVisibility,
+      statusHint: getThreadShortcutLegendPresentation(nextVisibility).statusHint,
+    }
+  }
+
+  if (!shiftKey && isVisible && isThreadShortcutLegendDismissKey(key)) {
+    return {
+      nextVisibility: false,
+      statusHint: getThreadShortcutLegendPresentation(false).statusHint,
+    }
+  }
+
+  return {
+    nextVisibility: isVisible,
+    statusHint: null,
   }
 }
 
