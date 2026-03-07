@@ -456,6 +456,25 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipP)}</>)).toContain('>P<')
   })
 
+  it('keeps previous-unread status-row aria + chip semantics aligned across hint aliases (P/p)', () => {
+    const unreadPrevHintUpper = 'Jumped to previous unread thread (P) · t-2 · 3/3.'
+    const unreadPrevHintLower = 'Jumped to previous unread thread (p) · t-2 · 3/3.'
+
+    const chipUpper = getShortcutChipPropsFromHint(unreadPrevHintUpper, 'boundary jump', 'thread-jump')
+    const chipLower = getShortcutChipPropsFromHint(unreadPrevHintLower, 'boundary jump', 'thread-jump')
+
+    expect(chipUpper).toEqual(chipLower)
+    expect(getStatusAriaLabelWithShortcutChip(unreadPrevHintUpper, chipUpper)).toBe(
+      'Jumped to previous unread thread (P) · t-2 · 3/3. Shortcut badge P: P (boundary jump).',
+    )
+    expect(getStatusAriaLabelWithShortcutChip(unreadPrevHintLower, chipLower)).toBe(
+      'Jumped to previous unread thread (p) · t-2 · 3/3. Shortcut badge P: P (boundary jump).',
+    )
+
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipUpper)}</>)).toContain('>P<')
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(chipLower)}</>)).toContain('>P<')
+  })
+
   it('composes hidden-selection recovery status-row aria + chip rendering from lowercase hint aliases (j/k)', () => {
     const recoverFirstHintJ = 'Recovered to first visible thread (j) · Root · 1/9.'
     const recoverLastHintK = 'Recovered to last visible thread (k) · Root · 9/9.'
