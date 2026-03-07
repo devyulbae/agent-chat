@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 18:04 KST — uppercase nested unread-undo source alias parser lock (boost lane)
+- Scope: chat thread UX wiring regression hardening for nested source-decorated unread-undo shortcut templates.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added focused parser regression asserting uppercase nested source wrapper canonicalizes to `Z`:
+      - `Restored unread markers (source (Z confirmed)) · 3 thread(s).` → `Z`.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (51/51)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `d2272df` — `[test] lock uppercase nested unread-undo source alias parsing`
+  - Push: `main -> origin/main` ✅
+- Next action: add a chip-level regression in `threadHintChips.test.tsx` for `Restored unread markers (source (Z confirmed)) ...` so parser and status-chip render lanes stay pinned together.
+
 ## 2026-03-07 17:51 KST — nested source-decorated lowercase `z` parser canonicalization lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin parser extraction parity for nested source-decorated unread-undo alias templates.
 - Change:
