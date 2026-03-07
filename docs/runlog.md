@@ -2339,3 +2339,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: add compact render-state parity regression for hidden `Esc` alias with `Meta`/`Ctrl`/`Alt` to mirror dispatch-level guard rails and prevent stale aria emission under alias-modifier paths.
+
+## 2026-03-08 02:02 KST — hidden Esc alias editable-target no-op render-state parity lock (boost lane)
+- Scope: chat thread UX wiring (keyboard render-state guard rail parity for editable targets).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting hidden legend + `Esc` alias remains a no-op when key events originate from editable targets.
+    - Locked nullish status semantics to prevent stale live-region emission under editable-target dismiss-key paths (`handled=false`, `nextVisibility=false`, `statusHint=null`, `statusAriaLabel` nullish).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (21 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add compact dispatch-level parity regression for hidden `Esc` alias when `isEditableTarget=true` to mirror the new render-state guard and lock no-op behavior at the lower keyboard-dispatch contract layer.

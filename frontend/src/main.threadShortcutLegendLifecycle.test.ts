@@ -679,4 +679,23 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenEditableEscape.statusHint).toBeNull()
     expect(ignoredHiddenEditableEscape.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps hidden Esc alias as no-op render-state when target is editable', () => {
+    const ignoredHiddenEditableEscAlias = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Esc',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    })
+
+    expect(ignoredHiddenEditableEscAlias.handled).toBe(false)
+    expect(ignoredHiddenEditableEscAlias.nextVisibility).toBe(false)
+    expect(ignoredHiddenEditableEscAlias.statusHint).toBeNull()
+    expect(ignoredHiddenEditableEscAlias.statusAriaLabel ?? null).toBeNull()
+  })
 })
