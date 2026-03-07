@@ -1,5 +1,17 @@
 # Run Log
 
+## 2026-03-07 20:23 KST — Agent Chat implementation cycle
+- Delta: Added bracketed vertical modifier-arrow parser regression coverage in thread hint parsing so wrapped combo hints normalize consistently with the existing horizontal alias path.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+[Up Arrow]` → `Shift+ArrowUp` and `key: [Ctrl+ArrowDown]` → `Ctrl+ArrowDown` extraction assertions.
+  - Scope kept frontend-only (chat thread UX wiring; no backend/API contract changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (52 passed)
+- Commit: `085465d` (pushed to `main`)
+- Next action: add focused parser regression coverage for bracketed horizontal `Ctrl` modifier variant parity (`key: [Ctrl+ArrowLeft]`) to keep wrapped-modifier alias handling symmetric across both directions.
+
 ## 2026-03-07 11:11 KST — Agent Chat parallel offset cycle
 - Delta: Added bracketed modifier horizontal-arrow alias regression coverage to keep frontend hint parsing contract-safe when wrapped shortcut copy emits combined forms.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+[Left Arrow]` → `Shift+ArrowLeft` and `key: [Cmd+ArrowRight]` → `Cmd+ArrowRight` extraction assertions.
