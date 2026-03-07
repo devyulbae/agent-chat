@@ -370,6 +370,42 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
+  it('keeps hidden Escape as no-op dispatch when event is defaultPrevented or repeat', () => {
+    const ignoredHiddenDefaultPreventedEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: true,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenDefaultPreventedEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+
+    const ignoredHiddenRepeatEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: true,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenRepeatEscapeDispatch).toEqual({
+      handled: false,
+      nextVisibility: false,
+      statusHint: null,
+    })
+  })
+
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
     const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
