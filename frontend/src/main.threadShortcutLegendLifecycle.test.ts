@@ -1535,6 +1535,29 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
   })
 
+  it('keeps shown Esc alias with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
+    const shownEscAliasShiftNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key: 'Esc',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(shownEscAliasShiftNoOpRenderState.handled).toBe(false)
+    expect(shownEscAliasShiftNoOpRenderState.nextVisibility).toBe(true)
+    expect(shownEscAliasShiftNoOpRenderState.statusHint).toBeNull()
+    expect(shownEscAliasShiftNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+
+    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+      shownEscAliasShiftNoOpRenderState.nextVisibility,
+    )
+    expect(shownNoOpPresentation.ariaExpanded).toBe(shownEscAliasShiftNoOpRenderState.nextVisibility)
+  })
+
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op render-state outcomes', () => {
     const ignoredShownEditableMetaEscape = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,

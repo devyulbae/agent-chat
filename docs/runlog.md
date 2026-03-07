@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 06:51 KST — shown Esc+Shift no-op render-state parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to mirror shown no-op render-state parity for `Esc` alias when `shiftKey=true`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown `Esc` alias with `shiftKey=true` remains a no-op.
+    - Locked no-op contract: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+    - Added parity assertion that `getThreadShortcutLegendPresentation(nextVisibility).ariaExpanded` remains synchronized (`true`) on this shown no-op path.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (42/42)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact dispatch-level parity regression for shown `Esc` alias with `shiftKey=true` so no-op symmetry stays locked across dispatch + render layers.
+
 ## 2026-03-08 06:43 KST — no-op render-state nullish aria + aria-expanded parity lock (boost lane)
 - Scope: chat thread UX wiring follow-up (render-state parity for hidden/show no-op key paths).
 - Change:
