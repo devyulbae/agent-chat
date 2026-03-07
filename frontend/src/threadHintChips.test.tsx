@@ -569,6 +569,14 @@ describe('getShortcutChipPropsFromHint', () => {
       ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
       context: 'thread-jump',
     })
+    expect(
+      getShortcutChipPropsFromHint('Thread shortcut legend hidden (esc).', 'filter jump', 'thread-jump'),
+    ).toEqual({
+      badge: 'Esc',
+      title: 'Escape filter jump',
+      ariaLabel: 'Shortcut badge Esc: Escape (filter jump).',
+      context: 'thread-jump',
+    })
   })
 
   it('returns null when hint has no known shortcut', () => {
