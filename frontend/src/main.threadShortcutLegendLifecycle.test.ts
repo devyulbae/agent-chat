@@ -314,4 +314,54 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredHiddenEscAlias.statusHint).toBeNull()
     expect(ignoredHiddenEscAlias.statusAriaLabel ?? null).toBeNull()
   })
+
+  it('keeps hidden Escape with modifier keys as no-op render-state parity with dispatch guard rails', () => {
+    const ignoredHiddenMetaEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: true,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenMetaEscape.handled).toBe(false)
+    expect(ignoredHiddenMetaEscape.nextVisibility).toBe(false)
+    expect(ignoredHiddenMetaEscape.statusHint).toBeNull()
+    expect(ignoredHiddenMetaEscape.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredHiddenCtrlEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: true,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenCtrlEscape.handled).toBe(false)
+    expect(ignoredHiddenCtrlEscape.nextVisibility).toBe(false)
+    expect(ignoredHiddenCtrlEscape.statusHint).toBeNull()
+    expect(ignoredHiddenCtrlEscape.statusAriaLabel ?? null).toBeNull()
+
+    const ignoredHiddenAltEscape = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key: 'Escape',
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: true,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenAltEscape.handled).toBe(false)
+    expect(ignoredHiddenAltEscape.nextVisibility).toBe(false)
+    expect(ignoredHiddenAltEscape.statusHint).toBeNull()
+    expect(ignoredHiddenAltEscape.statusAriaLabel ?? null).toBeNull()
+  })
 })

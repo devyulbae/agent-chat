@@ -2174,3 +2174,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: extend keyboard render-state no-op coverage for hidden `Escape` with modifier keys (`Meta/Ctrl/Alt`) to lock parity with dispatch guard rails.
+
+## 2026-03-07 23:03 KST — hidden Escape modifier no-op render-state parity lock (boost lane)
+- Scope: chat thread UX wiring (keyboard render-state guard-rail parity regression).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting hidden legend + `Escape` with `Meta`/`Ctrl`/`Alt` modifiers remains a no-op on render-state path.
+    - Locked parity expectations with dispatch guard rails: `handled=false`, `nextVisibility=false`, `statusHint=null`, and no stale status aria emission.
+- Blocker encountered:
+  - Initial assertion expected `statusAriaLabel: null`, but render-state no-op currently emits `undefined` (nullish).
+  - Next fix action (applied immediately): switched to nullish assertion (`statusAriaLabel ?? null`) to lock behavior without over-constraining null vs undefined representation.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (12 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a compact dispatch-outcome regression for hidden legend `Escape` with modifier keys to mirror the new render-state parity lock at the lower keyboard-dispatch contract layer.
