@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
+  getSelectedVisibleThreadShortcutRecoveryHint,
   isSelectedVisibleThreadHiddenByFilter,
 } from './threadSelectionStatus'
 
@@ -38,5 +40,20 @@ describe('getSelectedVisibleThreadPositionLabel', () => {
 
   it('returns 0/total when no selection exists and nothing is hidden', () => {
     expect(getSelectedVisibleThreadPositionLabel(false, -1, 2)).toBe('0/2')
+  })
+})
+
+describe('hidden-selection recovery hints', () => {
+  it('includes hidden position token in inline recovery hint when list is empty', () => {
+    expect(getSelectedVisibleThreadInlineRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
+  })
+
+  it('includes hidden position token in shortcut recovery hint when list is empty', () => {
+    expect(getSelectedVisibleThreadShortcutRecoveryHint(true, 'hidden/0')).toContain('hidden/0')
+  })
+
+  it('returns null recovery hints when selection is visible', () => {
+    expect(getSelectedVisibleThreadInlineRecoveryHint(false, '1/3')).toBeNull()
+    expect(getSelectedVisibleThreadShortcutRecoveryHint(false, '1/3')).toBeNull()
   })
 })

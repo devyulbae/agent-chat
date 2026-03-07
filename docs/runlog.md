@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-07 09:32 KST — hidden-selection recovery status hints include empty-list position token (offset lane)
+- Scope: frontend integration + API contract sync follow-up so hidden-selection helper/status hints keep explicit position context when filters hide all visible threads.
+- Change:
+  - `frontend/src/threadSelectionStatus.ts`
+    - Added `getSelectedVisibleThreadInlineRecoveryHint(...)` and `getSelectedVisibleThreadShortcutRecoveryHint(...)` helpers.
+    - Both helpers now embed the current selection position token (e.g., `hidden/0`) in hidden-selection recovery hint copy.
+  - `frontend/src/main.tsx`
+    - Switched hidden-selection recovery hint construction to shared helper functions using `selectedVisibleThreadPositionLabel`.
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused regressions asserting inline + shortcut recovery hint helpers include `hidden/0` for empty visible-list scenarios.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts src/threadHintParsers.test.ts src/threadHintChips.test.tsx src/unreadWrapInteraction.test.ts` ✅ (80/80)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+
 ## 2026-03-07 09:23 KST — hidden-selection empty-list position-label regression lock (boost lane)
 - Scope: chat thread UX wiring regression coverage to keep hidden-selection position feedback explicit even when filter results are empty.
 - Change:

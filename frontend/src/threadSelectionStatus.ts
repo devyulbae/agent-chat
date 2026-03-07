@@ -17,3 +17,25 @@ export function getSelectedVisibleThreadPositionLabel(
 
   return `${selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/${visibleThreadCount}`
 }
+
+export function getSelectedVisibleThreadInlineRecoveryHint(
+  selectedVisibleThreadHiddenByFilter: boolean,
+  selectedVisibleThreadPositionLabel: string,
+): string | null {
+  if (!selectedVisibleThreadHiddenByFilter) {
+    return null
+  }
+
+  return `Hidden selection recovery (${selectedVisibleThreadPositionLabel}): J/K or ↑/↓ → ↖ first / ↘ last visible.`
+}
+
+export function getSelectedVisibleThreadShortcutRecoveryHint(
+  selectedVisibleThreadHiddenByFilter: boolean,
+  selectedVisibleThreadPositionLabel: string,
+): string | null {
+  if (!selectedVisibleThreadHiddenByFilter) {
+    return null
+  }
+
+  return `Tip (${selectedVisibleThreadPositionLabel}): J/K/↑/↓ will also recover to ↖ first / ↘ last visible thread.`
+}
