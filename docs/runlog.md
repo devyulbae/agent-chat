@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-07 13:12 KST — lowercase first-visible alias status-row composition lock (`g`) (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin status-row aria/chip composition for lowercase first-visible alias hints.
+- Change:
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added focused status-row composition regression for lowercase first-visible alias:
+      - `Jumped to first visible thread (g) ...` → canonical `G` chip semantics in both aria and rendered badge output.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintChips.test.tsx src/threadHintParsers.test.ts` ✅ (80/80)
+  - `cd frontend && npm run build` ✅
+- API contract checks: not required this cycle (backend contracts/files unchanged).
+- Git:
+  - Commit: `ca2934c` — `[test] lock lowercase first-visible status-row chip composition`
+  - Push: `main -> origin/main` ✅
+
 ## 2026-03-07 12:50 KST — lowercase thread-copy alias extraction lock (`y`) (offset lane)
 - Scope: frontend integration + API contract sync follow-up to lock parser-path canonicalization for lowercase thread-copy shortcut aliases.
 - Change:
