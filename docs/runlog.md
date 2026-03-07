@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 04:51 KST — shown Escape/Esc editable-target modifier render-state no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete shown-state render no-op symmetry for editable-target modifier-key guard paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state regression asserting shown canonical `Escape` remains a no-op for editable-target modifier paths (`metaKey`, `ctrlKey`, `altKey`).
+    - Added companion shown-state render no-op assertions for `Esc` alias under the same editable-target modifier paths.
+    - Locked no-op contract for all six paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, and nullish `statusAriaLabel`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (36/36)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add compact dispatch-level no-op parity regression for shown `Escape` + `Esc` alias with `isEditableTarget=true` and modifier-key guards (`meta`/`ctrl`/`alt`) to keep shown editable-target modifier coverage symmetric across dispatch + render layers.
+
 ## 2026-03-08 04:43 KST — shown Escape/Esc render-state prevented/repeat no-op parity lock (boost lane)
 - Scope: chat thread UX wiring (tight render-state parity follow-up for shown legend dismiss keys under event-gate paths).
 - Change:
