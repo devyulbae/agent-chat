@@ -239,6 +239,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/\breturn\s*\/\s*enter\b/gu, 'enter')
     .replace(/\b(return|enter)[\s-]+key\b/gu, '$1')
     .replace(/\breturn\b/gu, 'enter')
+    .replace(/\besc(?:ape)?[\s-]+key\b/gu, 'escape')
     .replace(/\besc(?:ape)?\b/gu, 'escape')
     .replace(/\?\s*\/\s*shift\s*\+\s*\//gu, 'slash')
     .replace(/shift\s*\+\s*\//gu, 'shift+slash')

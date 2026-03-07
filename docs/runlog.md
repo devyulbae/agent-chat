@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-07 16:06 KST — legend-hide `escape key` alias parser/chip parity lock (boost lane)
+- Scope: chat thread UX wiring hardening for legend-dismiss shortcut alias normalization when status hints use verbose `escape key` wording.
+- Change:
+  - `frontend/src/threadHintParsers.ts`
+    - Extended shortcut alias normalization to fold `esc key`/`escape key` tokens into canonical `escape` before chip extraction.
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added extraction regression asserting `Thread shortcut legend hidden (escape key).` resolves to canonical `Escape` source.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added chip-props regression asserting legend-hide hint with `escape key` still renders canonical `Esc` badge/aria tuple.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (94/94)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow status-row composition regression for verbose legend-show alias wording (`slash key` / `forward-slash`) to pin canonical `/` chip parity on the same parser→render lane.
+
 ## 2026-03-07 15:52 KST — symbol-only legend-show `?` status-row composition + parser extraction lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin symbol-only shortcut-legend show alias parity on parser extraction and status-row aria/chip composition.
 - Change:
