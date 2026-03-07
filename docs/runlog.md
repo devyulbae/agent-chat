@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-08 08:24 KST — shown canonical Escape+Shift editable-target modifier no-op parity lock (boost lane)
+- Scope: chat thread UX wiring follow-up to mirror the existing shown `Esc` alias `shiftKey=true` editable-target modifier guard coverage with canonical `Escape` parity.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch+render regression asserting shown canonical `Escape` with `shiftKey=true` and `isEditableTarget=true` remains a no-op under modifier guards (`metaKey`, `ctrlKey`, `altKey`).
+    - Locked no-op contract for all modifier paths: `handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`, and stable `ariaExpanded` parity via presentation state.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (50/50)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `58f4f5a` — `[test] lock shown Escape shift editable modifier no-op parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add compact shown-state canonical `Escape` + `shiftKey=true` editable-target modifier parity coverage for event-gate paths (`defaultPrevented=true` / `repeat=true`) to keep canonical+alias guard symmetry complete.
+
 ## 2026-03-08 08:12 KST — shown Esc alias+Shift editable-target modifier no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete shown-state `Esc` alias + `shiftKey=true` editable-target guard symmetry under modifier-key paths.
 - Change:
