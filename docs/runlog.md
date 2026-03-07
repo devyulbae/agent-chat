@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-07 22:39 KST — audit request URL all/blank filter omission parity across paging offsets (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin omission behavior for optional credential-audit filters when paging advances.
+- Change:
+  - `frontend/src/main.auditRequestUrl.test.ts`
+    - Added focused regression asserting all/blank optional filters (`action/provider/label=all`, whitespace-only `event_type`) remain omitted on both refresh and older-page request URLs.
+    - Locks contract that only `offset` changes between `offset=0` and `offset=20` while the omitted-optional-param shape remains stable.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.auditRequestUrl.test.ts src/apiContracts.test.ts` ✅ (10/10)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a narrow main-level request URL regression that pairs whitespace-only `event_type` with a scoped `credentialId` across paging offsets to pin mixed required+omitted optional param stability.
+
 ## 2026-03-07 21:44 KST — audit request URL paging-offset filter stability lock (boost lane)
 - Scope: chat thread UX wiring priority follow-up (frontend integration guard on credential audit pagination URL contract drift).
 - Change:
