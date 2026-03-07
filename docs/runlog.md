@@ -1,5 +1,27 @@
 # Runlog
 
+## 2026-03-07 21:26 KST — legend keyboard render-state helper lock for visibility + live-status aria sync (boost lane)
+- Scope: chat thread UX wiring, strict small increment to lock the main legend keyboard render-lane contract without introducing full DOM/jsdom harness.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `getThreadShortcutLegendKeyboardRenderState(...)` helper that composes dispatch outcome (`handled`, `nextVisibility`, `statusHint`) with canonical live-status aria via `getStatusAriaLabelWithShortcutChip(...)`.
+    - Added exported `ThreadShortcutLegendKeyboardRenderState` type for the composed render contract.
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused regression asserting `?` keyboard show and `Escape` hide transitions keep:
+      - legend visibility state transitions (`false -> true -> false`), and
+      - live status chip aria narration (`Slash` when shown, `Esc` when hidden)
+      synchronized through the shared render-state helper path.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (9/9)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Git:
+  - Commit: `29d0d2b` — `[test] lock legend keyboard render-state aria/visibility sync`
+  - Push: `main -> origin/main` ✅
+- Next action: add a narrow DOM-capable interaction harness that dispatches actual `window` keyboard events (`?`/`Shift+/` then `Esc`) and asserts legend region mount/unmount plus rendered live status row text end-to-end once jsdom/browser-test support is available.
+
 ## 2026-03-07 21:12 KST — credential audit loader request URL stability lock for all/trimmed filters (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin `loadCredentialAuditEvents` request URL composition against filter transitions (`all`/blank/trimmed).
 - Change:
