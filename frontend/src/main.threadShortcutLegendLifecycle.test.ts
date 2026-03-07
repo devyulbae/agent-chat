@@ -5,6 +5,7 @@ import {
   getThreadShortcutLegendKeyboardRenderState,
   getThreadShortcutLegendKeyboardTransition,
   getThreadShortcutLegendPresentation,
+  getThreadShortcutLegendRegionPresentation,
 } from './main'
 import { getShortcutChipPropsFromHint, getStatusAriaLabelWithShortcutChip } from './threadHintChips'
 
@@ -29,6 +30,20 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenAfterEscDismiss.statusHint).toBe('Thread shortcut legend hidden (Esc).')
 
     expect(hiddenAfterEscDismiss).toEqual(hiddenBeforeToggle)
+  })
+
+  it('renders thread shortcut legend region metadata only when legend is visible', () => {
+    const hiddenRegion = getThreadShortcutLegendRegionPresentation(false)
+    expect(hiddenRegion).toBeNull()
+
+    const shownRegion = getThreadShortcutLegendRegionPresentation(true)
+    expect(shownRegion).toEqual({
+      id: 'thread-shortcut-legend',
+      role: 'region',
+      ariaLabel: 'Thread keyboard shortcuts',
+      ariaKeyshortcuts:
+        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+    })
   })
 
   it('keeps toggle/dismiss control copy stable regardless of visibility state', () => {

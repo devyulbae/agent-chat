@@ -254,6 +254,13 @@ type ThreadShortcutLegendPresentation = {
   dismissControlCopy: string
 }
 
+export type ThreadShortcutLegendRegionPresentation = {
+  id: 'thread-shortcut-legend'
+  role: 'region'
+  ariaLabel: 'Thread keyboard shortcuts'
+  ariaKeyshortcuts: string
+}
+
 export type ThreadShortcutLegendKeyboardTransition = {
   nextVisibility: boolean
   statusHint: string | null
@@ -275,6 +282,21 @@ export function getThreadShortcutLegendPresentation(
     statusHint: getThreadShortcutLegendToggleStatusHint(isVisible),
     toggleControlCopy: getThreadShortcutLegendToggleControlCopy(),
     dismissControlCopy: getThreadShortcutLegendDismissControlCopy(),
+  }
+}
+
+export function getThreadShortcutLegendRegionPresentation(
+  isVisible: boolean,
+): ThreadShortcutLegendRegionPresentation | null {
+  if (!isVisible) {
+    return null
+  }
+
+  return {
+    id: 'thread-shortcut-legend',
+    role: 'region',
+    ariaLabel: 'Thread keyboard shortcuts',
+    ariaKeyshortcuts: getThreadShortcutLegendRegionAriaKeyshortcuts(),
   }
 }
 
@@ -2795,6 +2817,10 @@ function App() {
     () => getThreadShortcutLegendPresentation(showThreadShortcutLegend),
     [showThreadShortcutLegend],
   )
+  const threadShortcutLegendRegionPresentation = useMemo(
+    () => getThreadShortcutLegendRegionPresentation(showThreadShortcutLegend),
+    [showThreadShortcutLegend],
+  )
 
   const typeCounts = useMemo(() => {
     if (!graph) {
@@ -3171,12 +3197,12 @@ function App() {
                 {threadFilterJumpHint}
               </small>
             )}
-            {showThreadShortcutLegend && (
+            {threadShortcutLegendRegionPresentation && (
               <small
-                id="thread-shortcut-legend"
-                role="region"
-                aria-label="Thread keyboard shortcuts"
-                aria-keyshortcuts={threadShortcutLegendPresentation.regionAriaKeyshortcuts}
+                id={threadShortcutLegendRegionPresentation.id}
+                role={threadShortcutLegendRegionPresentation.role}
+                aria-label={threadShortcutLegendRegionPresentation.ariaLabel}
+                aria-keyshortcuts={threadShortcutLegendRegionPresentation.ariaKeyshortcuts}
                 style={{ color: '#444', display: 'inline-flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}
               >
                 <strong>Thread shortcuts:</strong>
