@@ -1269,3 +1269,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `3c56b95` — `[test] lock unread-next alias semantic parity in chip hints`
   - Push: `main -> origin/main` ✅
 - Next action: add a tiny parser-path regression that feeds lowercase unread-next alias tokens (`u`/`n`) through hint extraction and confirms canonical chip mapping remains stable.
+
+## 2026-03-07 11:42 KST — lowercase unread alias canonicalization in parser hint extraction (boost lane)
+- Scope: chat thread UX wiring (strict parser-path regression + normalization fix for unread-next lowercase alias tokens).
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Extended `getHintShortcutSource` extraction coverage to include lowercase unread-next alias hints (`(n)` and `(u)`) and assert canonical uppercase sources (`N`/`U`).
+  - `frontend/src/threadHintParsers.ts`
+    - Added single-key alias normalization for thread navigation/copy keys (`g/j/k/u/n/p/y/c/r`) so hint extraction returns canonical uppercase shortcut tokens for chip mapping.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (72 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest` ✅ (18 passed)
+- Next action: add a narrow regression to keep lowercase previous-unread alias hint extraction (`p`) canonicalization explicit so parser/source/chip parity stays locked across all unread navigation shortcuts.
