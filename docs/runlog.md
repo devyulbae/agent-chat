@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 12:31 KST — hidden non-editable modifier render-state helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated hidden non-editable modifier render-state no-op fixtures shared by canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendModifierNoOpRenderState(key)` helper to table-drive hidden non-editable modifier render-state no-op checks (`meta`/`ctrl`/`alt`).
+    - Replaced duplicated inline hidden modifier render-state no-op assertion blocks for canonical `Escape` and alias `Esc` with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (50/50)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining hidden-state editable-target render-state no-op duplication where canonical `Escape` and alias `Esc` assertions are structurally identical.
+
 
 ## 2026-03-08 12:12 KST — hidden non-editable event-gate render helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated hidden non-editable `defaultPrevented`/`repeat` render-state no-op fixtures shared by canonical `Escape` and alias `Esc`.
