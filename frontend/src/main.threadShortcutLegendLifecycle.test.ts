@@ -745,19 +745,13 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertLegendEventGateNoOpByVisibilityAndMode('Escape', false, 'dispatch')
   })
 
-  it('keeps hidden Escape as no-op dispatch when target is editable', () => {
+  it('keeps hidden Escape/Esc as no-op dispatch when target is editable', () => {
     assertHiddenEditableLegendNoOpByMode('Escape', false, false, 'dispatch')
-  })
-
-  it('keeps hidden Escape as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
-    assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Escape', false, false, 'dispatch+render')
-  })
-
-  it('keeps hidden Esc alias as no-op dispatch when target is editable', () => {
     assertHiddenEditableLegendNoOpByMode('Esc', false, false, 'dispatch')
   })
 
-  it('keeps hidden Esc alias as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
+  it('keeps hidden Escape/Esc as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
+    assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Escape', false, false, 'dispatch+render')
     assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Esc', false, false, 'dispatch+render')
   })
 
@@ -849,19 +843,13 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertLegendEventGateNoOpByVisibilityAndMode('Esc', false, 'dispatch+render')
   })
 
-  it('keeps hidden Escape as no-op render-state when target is editable', () => {
+  it('keeps hidden Escape/Esc as no-op render-state when target is editable', () => {
     assertHiddenEditableLegendNoOpByMode('Escape', false, false, 'render')
-  })
-
-  it('keeps hidden Escape as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
-    assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Escape', false, false, 'dispatch+render')
-  })
-
-  it('keeps hidden Esc alias as no-op render-state when target is editable', () => {
     assertHiddenEditableLegendNoOpByMode('Esc', false, false, 'render')
   })
 
-  it('keeps hidden Esc alias as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
+  it('keeps hidden Escape/Esc as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
+    assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Escape', false, false, 'dispatch+render')
     assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Esc', false, false, 'dispatch+render')
   })
 

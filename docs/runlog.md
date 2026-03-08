@@ -4064,3 +4064,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (19/19)
 - Commit: `d6064b8` (pushed to `main`)
 - Next action: consolidate remaining hidden editable non-event-gate wrapper duplication by introducing a shared mode-parameterized helper for base no-op dispatch vs render-state assertions.
+
+## 2026-03-09 02:51 KST — hidden editable base no-op Escape/Esc spec consolidation (offset lane)
+- Scope: frontend integration + API contract sync lane (test-only incremental dedupe in thread shortcut legend lifecycle coverage).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Consolidated duplicated hidden editable base no-op specs by grouping canonical `Escape` and alias `Esc` assertions into shared dispatch/render cases.
+    - Consolidated duplicated hidden editable event-gate specs similarly so both keys are asserted in the same dispatch+render test lane.
+    - Preserved all helper-level parity checks (`handled=false`, `nextVisibility=false`, nullish status aria label paths) with no behavior changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming duplicated key-specific legend lifecycle specs by introducing a tiny shared `forEach` key runner where helper call signatures are identical.
