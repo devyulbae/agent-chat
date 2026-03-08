@@ -211,87 +211,47 @@ const assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode 
   })
 }
 
-const assertHiddenLegendModifierNoOpByMode = (
-  key: 'Escape' | 'Esc',
-  mode: LegendNoOpAssertionMode,
-) => {
-  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
-    const input = {
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    assertLegendNoOpByModeForInput(input, false, mode)
-  })
-}
-
 const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAssertionMode) => {
   forEachLegendEscapeKey((key) => {
-    assertHiddenLegendModifierNoOpByMode(key, mode)
+    legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+      const input = {
+        isVisible: false,
+        key,
+        shiftKey: false,
+        metaKey,
+        ctrlKey,
+        altKey,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+      assertLegendNoOpByModeForInput(input, false, mode)
+    })
   })
 }
 
 type LegendEventGateAssertionMode = 'dispatch' | 'dispatch+render'
-
-const assertLegendEventGateNoOpByVisibilityAndMode = (
-  key: 'Escape' | 'Esc',
-  isVisible: boolean,
-  mode: LegendEventGateAssertionMode,
-) => {
-  assertLegendEventGateNoOpForInputBase(
-    {
-      isVisible,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      isEditableTarget: false,
-    },
-    isVisible,
-    mode,
-  )
-}
 
 const assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode = (
   isVisible: boolean,
   mode: LegendEventGateAssertionMode,
 ) => {
   forEachLegendEscapeKey((key) => {
-    assertLegendEventGateNoOpByVisibilityAndMode(key, isVisible, mode)
+    assertLegendEventGateNoOpForInputBase(
+      {
+        isVisible,
+        key,
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        isEditableTarget: false,
+      },
+      isVisible,
+      mode,
+    )
   })
-}
-
-const assertShownLegendModifierNoOpByShiftAndEditable = (
-  key: 'Escape' | 'Esc',
-  shiftKey: boolean,
-  isEditableTarget: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
-    const input = {
-      isVisible: true,
-      key,
-      shiftKey,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget,
-    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    assertLegendNoOpByModeForInput(input, true, mode)
-  })
-
-  assertShownLegendNoOpAriaExpanded()
 }
 
 const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
@@ -300,7 +260,23 @@ const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   mode: LegendNoOpAssertionMode,
 ) => {
   forEachLegendEscapeKey((key) => {
-    assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, mode)
+    legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+      const input = {
+        isVisible: true,
+        key,
+        shiftKey,
+        metaKey,
+        ctrlKey,
+        altKey,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget,
+      } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+      assertLegendNoOpByModeForInput(input, true, mode)
+    })
+
+    assertShownLegendNoOpAriaExpanded()
   })
 }
 
