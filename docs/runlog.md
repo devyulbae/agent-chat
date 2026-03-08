@@ -3625,3 +3625,18 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (18/18)
 - Next action: collapse hidden-state non-editable no-op dispatch/render helper duplication (`assertHiddenLegendEventGateNoOpDispatch` + `assertHiddenLegendEventGateNoOpRenderState`) into a shared parameterized helper to keep parity assertions in one lane.
+
+## 2026-03-08 20:23 KST — hidden event-gate helper lane consolidation (boost cycle)
+- Scope: chat thread UX wiring test-only increment with strict no-behavior-change helper dedupe for hidden non-editable event-gate assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced split visibility/mode wrappers with shared `assertLegendEventGateNoOpByVisibilityAndMode(...)`.
+    - Added hidden-only bridge `assertHiddenLegendEventGateNoOp(key, includeRenderState)` to collapse duplicated hidden dispatch/render event-gate helper wrappers into one parameterized lane.
+    - Rewired hidden event-gate dispatch/render specs to use the shared hidden helper while preserving no-op parity assertions.
+    - Kept shown-path wrappers wired through the same shared visibility/mode helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
+- Next action: collapse hidden editable event-gate wrapper split (`assertHiddenEditableLegendEventGateNoOp` + `assertHiddenEditableLegendEventGateNoOpRenderState`) into one shared parameterized helper to keep editable hidden guard assertions in a single lane.
