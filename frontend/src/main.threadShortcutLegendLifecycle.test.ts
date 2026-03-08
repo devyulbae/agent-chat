@@ -80,6 +80,29 @@ const assertShownEditableLegendNoOpRenderState = (
   expect(shownNoOpPresentation.ariaExpanded).toBe(shownEditableNoOpRenderState.nextVisibility)
 }
 
+const assertHiddenLegendNoOpDispatch = (
+  key: 'Escape' | 'Esc',
+  modifier: Pick<
+    Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
+    'metaKey' | 'ctrlKey' | 'altKey'
+  >,
+) => {
+  const hiddenNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+    isVisible: false,
+    key,
+    shiftKey: false,
+    defaultPrevented: false,
+    repeat: false,
+    isEditableTarget: false,
+    ...modifier,
+  })
+  expect(hiddenNoOpDispatch).toEqual({
+    handled: false,
+    nextVisibility: false,
+    statusHint: null,
+  })
+}
+
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
     const hiddenBeforeToggle = getThreadShortcutLegendPresentation(false)
@@ -462,109 +485,15 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
-    const ignoredHiddenMetaEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: true,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenMetaEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
-
-    const ignoredHiddenCtrlEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: true,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenCtrlEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
-
-    const ignoredHiddenAltEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: true,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenAltEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertHiddenLegendNoOpDispatch('Escape', { metaKey: true, ctrlKey: false, altKey: false })
+    assertHiddenLegendNoOpDispatch('Escape', { metaKey: false, ctrlKey: true, altKey: false })
+    assertHiddenLegendNoOpDispatch('Escape', { metaKey: false, ctrlKey: false, altKey: true })
   })
 
   it('keeps hidden Esc alias with modifier keys as no-op dispatch outcomes', () => {
-    const ignoredHiddenMetaEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: true,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenMetaEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
-
-    const ignoredHiddenCtrlEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: true,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenCtrlEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
-
-    const ignoredHiddenAltEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: true,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenAltEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertHiddenLegendNoOpDispatch('Esc', { metaKey: true, ctrlKey: false, altKey: false })
+    assertHiddenLegendNoOpDispatch('Esc', { metaKey: false, ctrlKey: true, altKey: false })
+    assertHiddenLegendNoOpDispatch('Esc', { metaKey: false, ctrlKey: false, altKey: true })
   })
 
   it('keeps hidden Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {

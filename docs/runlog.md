@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-08 10:04 KST — hidden legend modifier dispatch assertion helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to reduce repeated hidden-state modifier guard assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendNoOpDispatch(key, modifier)` helper for hidden `Escape`/`Esc` modifier no-op dispatch checks.
+    - Replaced duplicated inline assertion blocks in hidden `Escape` and `Esc` modifier guard tests with helper calls (`meta`/`ctrl`/`alt`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `8229963` — `[test] dedupe hidden legend modifier no-op dispatch assertions`
+  - Push: `main -> origin/main` ✅
+- Next action: continue helper/table extraction for remaining hidden-state `defaultPrevented`/`repeat` no-op dispatch fixtures to shrink repetitive lifecycle test surface while preserving guard parity.
+
 ## 2026-03-08 09:52 KST — shown Shift+Escape editable no-op dispatch helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to remove duplicate shown editable-target `Shift+Escape`/`Shift+Esc` event-gate dispatch no-op fixtures.
 - Change:
