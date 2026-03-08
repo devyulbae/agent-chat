@@ -1,3 +1,17 @@
+## 2026-03-09 02:22 KST — shown shift modifier+event-gate case-loop input-base dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated input-base construction between shown shift modifier+event-gate dispatch/render no-op case loops.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownShiftLegendModifierEventGateNoOpCasesByMode(...)` helper to centralize shared case-loop input-base construction with explicit mode routing (`dispatch`/`render`).
+    - Refactored `assertShownShiftLegendModifierEventGateNoOp(...)` to reuse the helper for dispatch and render case tables.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing one-hop helper/input-base duplication in `main.threadShortcutLegendLifecycle.test.ts`, especially where dispatch/render case tables still differ only by mode routing.
+
 ## 2026-03-09 02:14 KST — editable event-gate helper unification across hidden/shown lanes (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to merge hidden/shown editable event-gate wrapper helpers into one visibility+shift-aware helper path.
 - Change:

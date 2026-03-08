@@ -316,43 +316,51 @@ const assertLegendEventGateNoOpForInputBase = (
 }
 
 
+const assertShownShiftLegendModifierEventGateNoOpCasesByMode = (
+  key: 'Escape' | 'Esc',
+  isEditableTarget: boolean,
+  cases: readonly ShownShiftModifierEventGateNoOpCase[],
+  mode: LegendNoOpAssertionMode,
+) => {
+  cases.forEach((caseInput) => {
+    const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
+    const input = {
+      isVisible: true,
+      key,
+      shiftKey: true,
+      metaKey,
+      ctrlKey,
+      altKey,
+      defaultPrevented,
+      repeat,
+      isEditableTarget,
+    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+    if (mode === 'render') {
+      assertLegendNoOpRenderStateForInput(input, true)
+      return
+    }
+
+    assertLegendNoOpDispatchForInput(input, true)
+  })
+}
+
 const assertShownShiftLegendModifierEventGateNoOp = (
   key: 'Escape' | 'Esc',
   isEditableTarget: boolean,
 ) => {
-  shownShiftModifierEventGateDispatchNoOpCases.forEach((caseInput) => {
-    const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
-    const input = {
-      isVisible: true,
-      key,
-      shiftKey: true,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented,
-      repeat,
-      isEditableTarget,
-    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    assertLegendNoOpDispatchForInput(input, true)
-  })
-
-  shownShiftModifierEventGateRenderStateNoOpCases.forEach((caseInput) => {
-    const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
-    const input = {
-      isVisible: true,
-      key,
-      shiftKey: true,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented,
-      repeat,
-      isEditableTarget,
-    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    assertLegendNoOpRenderStateForInput(input, true)
-  })
+  assertShownShiftLegendModifierEventGateNoOpCasesByMode(
+    key,
+    isEditableTarget,
+    shownShiftModifierEventGateDispatchNoOpCases,
+    'dispatch',
+  )
+  assertShownShiftLegendModifierEventGateNoOpCasesByMode(
+    key,
+    isEditableTarget,
+    shownShiftModifierEventGateRenderStateNoOpCases,
+    'render',
+  )
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
