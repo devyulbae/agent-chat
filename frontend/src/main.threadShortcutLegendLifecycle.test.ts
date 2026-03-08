@@ -259,6 +259,32 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   })
 }
 
+const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
+  const eventGateCases = [
+    { defaultPrevented: true, repeat: false },
+    { defaultPrevented: false, repeat: true },
+  ]
+
+  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+    const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key,
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: false,
+    })
+    expect(ignoredDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
+  })
+}
+
 const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
   const eventGateCases = [
     { defaultPrevented: true, repeat: false },
@@ -969,75 +995,12 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertShownEditableNonShiftLegendEventGateNoOp('Esc')
   })
 
-  it('keeps shown Escape/Esc as no-op dispatch when event is defaultPrevented or repeat', () => {
-    const ignoredShownDefaultPreventedEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: true,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredShownDefaultPreventedEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+  it('keeps shown Escape as no-op dispatch when event is defaultPrevented or repeat', () => {
+    assertShownLegendEventGateNoOpDispatch('Escape')
+  })
 
-    const ignoredShownRepeatEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: true,
-      isEditableTarget: false,
-    })
-    expect(ignoredShownRepeatEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownDefaultPreventedEscAliasDispatch =
-      getThreadShortcutLegendKeyboardDispatchOutcome({
-        isVisible: true,
-        key: 'Esc',
-        shiftKey: false,
-        metaKey: false,
-        ctrlKey: false,
-        altKey: false,
-        defaultPrevented: true,
-        repeat: false,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownDefaultPreventedEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownRepeatEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: true,
-      isEditableTarget: false,
-    })
-    expect(ignoredShownRepeatEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+  it('keeps shown Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
+    assertShownLegendEventGateNoOpDispatch('Esc')
   })
 
   it('keeps shown Escape with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
