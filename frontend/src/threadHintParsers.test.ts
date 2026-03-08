@@ -115,7 +115,7 @@ describe('threadHintParsers', () => {
   describe('getThreadShortcutLegendRegionAriaKeyshortcuts', () => {
     it('returns full thread list keyboard shortcut metadata for legend discoverability', () => {
       expect(getThreadShortcutLegendRegionAriaKeyshortcuts()).toBe(
-        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+G Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
       )
     })
   })
