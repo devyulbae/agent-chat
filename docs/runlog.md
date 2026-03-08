@@ -1,3 +1,18 @@
+## 2026-03-09 01:31 KST — shown shift modifier/event-gate case helper inlined (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove a one-hop shown shift modifier/event-gate case wrapper helper.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use wrapper helper `assertShownShiftLegendModifierEventGateNoOpCase(...)`.
+    - Inlined dispatch/render no-op input construction directly inside `assertShownShiftLegendModifierEventGateNoOp(...)` loops while preserving explicit mode intent per case table.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `ffc6863` — `[test] inline shown shift modifier+event-gate case helper`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing one-hop wrapper/helper aliases in lifecycle tests where dispatch/render case loops can call shared no-op assertion helpers directly.
+
 ## 2026-03-09 01:03 KST — inline single-use hidden Esc render no-op helper alias (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove a one-hop hidden Esc render-state helper alias.
 - Change:
