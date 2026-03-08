@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-09 01:28 KST — Agent Chat implementation cycle
+- Delta: Collapsed remaining shown-editable event-gate no-op entrypoints in thread shortcut legend lifecycle tests behind a shared mode helper.
+  - Frontend tests: added `assertShownEditableLegendEventGateNoOpByShiftAndMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
+  - Frontend tests: rewired shown editable `Escape`/`Esc` event-gate cases (both `shiftKey=false` and `shiftKey=true`) to consume the shared helper instead of inline input-base payload duplication.
+  - Scope kept frontend-only (test helper consolidation; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55 passed)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Commit: `913bd1a` (pushed to `main`)
+- Next action: collapse remaining shown-editable modifier event-gate no-op dispatch/render entrypoints behind the same mode-based helper path to finish lifecycle no-op DRY parity.
+
 ## 2026-03-09 01:12 KST — Agent Chat parallel offset cycle
 - Delta: Consolidated hidden-editable legend event-gate no-op assertion entrypoints into a shared mode-based helper path in frontend lifecycle tests.
   - Frontend tests: added `assertHiddenEditableLegendEventGateNoOpByMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
