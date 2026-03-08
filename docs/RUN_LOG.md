@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-08 13:51 KST — Agent Chat parallel offset cycle
+- Delta: Added explicit `Control+ArrowUp` chip-mapping regression coverage in frontend thread hint parser tests so wrapped vertical `Control` alias extraction remains contract-synced with badge/tooltip presentation.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `getThreadShortcutBadge('Control+ArrowUp')` → `Control+↑` assertion.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `getThreadShortcutTooltip('Control+ArrowUp')` → `Control + Arrow Up` assertion.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add wrapped vertical parity coverage for `key: [Control+ArrowDown]` chip mapping assertions so `Control+Arrow` badge/tooltip coverage is fully symmetric across up/down aliases.
+
 ## 2026-03-08 05:32 KST — Agent Chat parallel offset cycle
 - Delta: Added leftward Control-arrow parity coverage for wrapped `key: [...]` thread hint copy so frontend parser + chip contract remains symmetric with existing `Control+ArrowRight` handling.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Control+ArrowLeft]).` → `Control+ArrowLeft` extraction assertion.
@@ -2295,6 +2306,18 @@
 - Next action: normalize parser extraction for `Return symbol` wording variants (for example `Return symbol`, `Enter symbol`) so verbose hint text still resolves to canonical `Enter` chips.
 
 ## 2026-03-08 05:03 KST — Cadence sync (project-controls)
+- Source probe:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200 (BasicAuth from `/Users/sybae/code/agent-chat/.env`), payload `[]`.
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500.
+- Mapping evaluation: no control rows found, so level→cadence remap not applied (L1 `*/10`, L2 `*/30`, L3 `every 3h`, L4 `daily 09:00` all N/A).
+- Trigger burst override (2h): no `incident` / `approval_overdue` / `test_fail` signals found; no temporary 10~20m override applied.
+- Cron state kept unchanged (no destructive changes):
+  - `agentchat-build-cycle-40m` = `*/20`
+  - `agentchat-build-cycle-20m-offset` = `10-59/20`
+  - `startup-loop-day-30m` core loop untouched (bridge lane notes-only policy).
+- Result: no-op sync completed; blocker only on fallback backend (`:8000` 500).
+
+## 2026-03-08 13:43 KST — Cadence sync (project-controls)
 - Source probe:
   - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200 (BasicAuth from `/Users/sybae/code/agent-chat/.env`), payload `[]`.
   - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500.
