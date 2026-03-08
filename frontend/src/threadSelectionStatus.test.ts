@@ -71,6 +71,17 @@ describe('getSelectedVisibleThreadBoundaryRecoveryButtonTitle', () => {
     )
   })
 
+  it('keeps first/last button tooltip copy synchronized with hidden-selection position title text', () => {
+    const positionTitle = getSelectedVisibleThreadPositionTitle(true)
+    expect(positionTitle).toBeTruthy()
+
+    const firstBoundaryTitle = getSelectedVisibleThreadBoundaryRecoveryButtonTitle(true, 'first')
+    const lastBoundaryTitle = getSelectedVisibleThreadBoundaryRecoveryButtonTitle(true, 'last')
+
+    expect(firstBoundaryTitle).toContain(positionTitle as string)
+    expect(lastBoundaryTitle).toContain(positionTitle as string)
+  })
+
   it('falls back to explicit hidden-filter copy when selection is visible', () => {
     expect(getSelectedVisibleThreadBoundaryRecoveryButtonTitle(false, 'first')).toBe(
       'Selected thread is hidden by filters. Jump to first visible result.',
