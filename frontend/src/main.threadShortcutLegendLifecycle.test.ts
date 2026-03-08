@@ -232,11 +232,6 @@ const assertHiddenLegendModifierNoOpByMode = (
   })
 }
 
-const assertHiddenLegendModifierNoOpAcrossModes = (key: 'Escape' | 'Esc') => {
-  assertHiddenLegendModifierNoOpByMode(key, 'dispatch')
-  assertHiddenLegendModifierNoOpByMode(key, 'render')
-}
-
 type LegendEventGateAssertionMode = 'dispatch' | 'dispatch+render'
 
 const assertLegendEventGateNoOpByVisibilityAndMode = (
@@ -738,11 +733,13 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape with modifier keys as no-op dispatch/render-state outcomes matching keyboard guard rails', () => {
-    assertHiddenLegendModifierNoOpAcrossModes('Escape')
+    assertHiddenLegendModifierNoOpByMode('Escape', 'dispatch')
+    assertHiddenLegendModifierNoOpByMode('Escape', 'render')
   })
 
   it('keeps hidden Esc alias with modifier keys as no-op dispatch/render-state outcomes', () => {
-    assertHiddenLegendModifierNoOpAcrossModes('Esc')
+    assertHiddenLegendModifierNoOpByMode('Esc', 'dispatch')
+    assertHiddenLegendModifierNoOpByMode('Esc', 'render')
   })
 
   it('keeps hidden Escape/Esc as no-op dispatch when event is defaultPrevented or repeat', () => {

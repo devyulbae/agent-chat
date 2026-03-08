@@ -1,3 +1,17 @@
+## 2026-03-09 06:03 KST — inline hidden modifier across-modes wrapper callsites (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop hidden modifier across-modes wrapper indirection.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed helper `assertHiddenLegendModifierNoOpAcrossModes(...)`.
+    - Inlined its two callsites to invoke `assertHiddenLegendModifierNoOpByMode(..., 'dispatch'|'render')` directly for `Escape` and `Esc` tests.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (39/39)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming one-hop across-modes wrappers where tests can call mode-aware helpers directly at key-specific callsites.
+
 ## 2026-03-09 05:52 KST — inline shown modifier across-modes key wrapper callsites (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown modifier across-modes key wrapper indirection.
 - Change:
