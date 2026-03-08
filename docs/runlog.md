@@ -1,5 +1,26 @@
 # Runlog
 
+## 2026-03-08 17:24 KST — legend no-op helper reuse for shown guard lanes (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe on shown no-op guard helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Reused shared `assertLegendNoOpDispatchOutcome(...)` inside:
+      - `assertHiddenLegendNoOpDispatch(...)`
+      - `assertShownLegendEventGateNoOpDispatch(...)`
+      - `assertShownEditableLegendModifierNoOpByShift(...)`
+    - Reused shared `assertLegendNoOpRenderStateOutcome(...)` inside:
+      - `assertShownLegendModifierNoOpRenderState(...)`
+      - `assertShownLegendEventGateNoOpRenderState(...)`
+      - `assertShownEditableLegendModifierNoOpByShift(...)`
+    - Removed repeated inline `handled/nextVisibility/statusHint/statusAriaLabel` expectations while preserving existing aria-expanded parity assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing repeated no-op helper scaffolding in shown shift modifier+event-gate case helpers where dispatch/render assertions still restate the same outcome contract.
+
 ## 2026-03-08 17:12 KST — legend no-op expectation helper reuse for shown/hidden editable lanes (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to reduce repeated no-op expectation scaffolding in editable legend helper paths.
 - Change:

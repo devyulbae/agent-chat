@@ -226,11 +226,7 @@ const assertHiddenLegendNoOpDispatch = (
     isEditableTarget: false,
     ...modifier,
   })
-  expect(hiddenNoOpDispatch).toEqual({
-    handled: false,
-    nextVisibility: false,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(hiddenNoOpDispatch, false)
 }
 
 const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
@@ -297,10 +293,7 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
       repeat: false,
       isEditableTarget: false,
     })
-    expect(ignoredRenderState.handled).toBe(false)
-    expect(ignoredRenderState.nextVisibility).toBe(true)
-    expect(ignoredRenderState.statusHint).toBeNull()
-    expect(ignoredRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredRenderState, true)
   })
 }
 
@@ -317,11 +310,7 @@ const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
       repeat,
       isEditableTarget: false,
     })
-    expect(ignoredDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(ignoredDispatch, true)
   })
 }
 
@@ -338,10 +327,7 @@ const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
       repeat,
       isEditableTarget: false,
     })
-    expect(ignoredRenderState.handled).toBe(false)
-    expect(ignoredRenderState.nextVisibility).toBe(true)
-    expect(ignoredRenderState.statusHint).toBeNull()
-    expect(ignoredRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredRenderState, true)
   })
 }
 
@@ -361,11 +347,7 @@ const assertShownEditableLegendModifierNoOpByShift = (
       repeat: false,
       isEditableTarget: true,
     })
-    expect(ignoredDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(ignoredDispatch, true)
 
     const ignoredRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,
@@ -378,10 +360,7 @@ const assertShownEditableLegendModifierNoOpByShift = (
       repeat: false,
       isEditableTarget: true,
     })
-    expect(ignoredRenderState.handled).toBe(false)
-    expect(ignoredRenderState.nextVisibility).toBe(true)
-    expect(ignoredRenderState.statusHint).toBeNull()
-    expect(ignoredRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredRenderState, true)
   })
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
