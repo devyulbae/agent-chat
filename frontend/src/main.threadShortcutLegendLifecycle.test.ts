@@ -297,24 +297,6 @@ const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   })
 }
 
-const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAcrossModes = (
-  shiftKey: boolean,
-  isEditableTarget: boolean,
-) => {
-  forEachLegendNoOpAssertionMode((mode) => {
-    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(
-      shiftKey,
-      isEditableTarget,
-      mode,
-    )
-  })
-}
-
-const assertShownEditableLegendModifierNoOpAcrossShiftStates = () => {
-  ;([false, true] as const).forEach((shiftKey) => {
-    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAcrossModes(shiftKey, true)
-  })
-}
 
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
@@ -809,7 +791,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch/render-state outcomes across shift states', () => {
-    assertShownEditableLegendModifierNoOpAcrossShiftStates()
+    ;([false, true] as const).forEach((shiftKey) => {
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(shiftKey, true, mode)
+      })
+    })
   })
 
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
@@ -846,7 +832,9 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc with modifier keys as no-op dispatch/render-state outcomes with nullish aria', () => {
-    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAcrossModes(false, false)
+    forEachLegendNoOpAssertionMode((mode) => {
+      assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(false, false, mode)
+    })
   })
 
   it('keeps shown Escape/Esc as no-op render-state when event is defaultPrevented or repeat', () => {
