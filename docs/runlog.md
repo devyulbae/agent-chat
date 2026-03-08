@@ -1,3 +1,20 @@
+## 2026-03-09 02:03 KST — shown editable render-state event-gate helper callsite dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated inline shown editable event-gate input-base payloads in render-state assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced two inline `assertLegendEventGateNoOpForInputBase(...)` callsites (shown editable render-state `Escape`/`Esc`, `shiftKey=false`) with shared helper `assertShownEditableLegendEventGateNoOpByShiftAndMode(..., false, 'dispatch+render')`.
+    - Preserved dispatch/render no-op parity and explicit canonical/alias key coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `1365755` — `[test] reuse shown editable event-gate helper in render-state tests`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing one-hop helper/input-base callsites in `main.threadShortcutLegendLifecycle.test.ts` where shown/hidden event-gate cases can route through existing visibility/shift-mode helpers directly.
+
 ## 2026-03-09 01:51 KST — inline hidden editable no-op input helper (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove a single-use hidden editable no-op input helper alias.
 - Change:
