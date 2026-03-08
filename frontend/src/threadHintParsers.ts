@@ -28,7 +28,7 @@ export function getThreadShortcutLegendDismissControlCopy(): string {
 }
 
 export function getThreadShortcutLegendButtonAriaKeyshortcuts(showThreadShortcutLegend: boolean): string {
-  return showThreadShortcutLegend ? 'Shift+Slash Escape Esc' : 'Shift+Slash'
+  return showThreadShortcutLegend ? 'Question Shift+Slash Escape Esc' : 'Question Shift+Slash'
 }
 
 export function getThreadShortcutLegendRegionAriaKeyshortcuts(): string {
