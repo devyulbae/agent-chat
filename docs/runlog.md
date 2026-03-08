@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 14:31 KST — plain Slash no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated plain Slash (`key='/'`, `shiftKey=false`) no-op dispatch/render-state fixtures shared by hidden and shown visibility states.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertPlainSlashNoOp(isVisible)` helper to centralize plain Slash no-op assertions for both dispatch and render-state lanes.
+    - Replaced duplicated hidden/shown inline plain Slash fixture blocks with helper-driven assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue extracting shared helpers for remaining repeated shown/hidden no-op fixture patterns where dispatch + render assertions are structurally identical.
+
 ## 2026-03-08 14:23 KST — shown editable event-gate helper shift-key parameterization lock (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only increment to restore explicit non-shift vs shift editable-target event-gate coverage in shared no-op helpers.
 - Change:

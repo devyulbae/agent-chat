@@ -603,6 +603,41 @@ const assertShownShiftLegendNonEditableModifierEventGateNoOp = (key: 'Escape' | 
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
+const assertPlainSlashNoOp = (isVisible: boolean) => {
+  const slashDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+    isVisible,
+    key: '/',
+    shiftKey: false,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: false,
+    isEditableTarget: false,
+  })
+  expect(slashDispatch).toEqual({
+    handled: false,
+    nextVisibility: isVisible,
+    statusHint: null,
+  })
+
+  const slashRenderState = getThreadShortcutLegendKeyboardRenderState({
+    isVisible,
+    key: '/',
+    shiftKey: false,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: false,
+    isEditableTarget: false,
+  })
+  expect(slashRenderState.handled).toBe(false)
+  expect(slashRenderState.nextVisibility).toBe(isVisible)
+  expect(slashRenderState.statusHint).toBeNull()
+  expect(slashRenderState.statusAriaLabel ?? null).toBeNull()
+}
+
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
     const hiddenBeforeToggle = getThreadShortcutLegendPresentation(false)
@@ -1230,70 +1265,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps plain Slash (without Shift) as a no-op for hidden and shown legend states', () => {
-    const hiddenSlashDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: '/',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(hiddenSlashDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
-
-    const hiddenSlashRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: '/',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(hiddenSlashRenderState.handled).toBe(false)
-    expect(hiddenSlashRenderState.nextVisibility).toBe(false)
-    expect(hiddenSlashRenderState.statusHint).toBeNull()
-    expect(hiddenSlashRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const shownSlashDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key: '/',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(shownSlashDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const shownSlashRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key: '/',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(shownSlashRenderState.handled).toBe(false)
-    expect(shownSlashRenderState.nextVisibility).toBe(true)
-    expect(shownSlashRenderState.statusHint).toBeNull()
-    expect(shownSlashRenderState.statusAriaLabel ?? null).toBeNull()
+    assertPlainSlashNoOp(false)
+    assertPlainSlashNoOp(true)
   })
 })
