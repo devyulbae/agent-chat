@@ -135,13 +135,13 @@ const assertShownLegendNoOpByShiftAndEditable = (
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
-const assertShownEditableLegendNoOpDispatch = (
+const getShownEditableLegendNoOpInput = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
   defaultPrevented: boolean,
   repeat: boolean,
-) => {
-  const shownEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+) =>
+  ({
     isVisible: true,
     key,
     shiftKey,
@@ -151,8 +151,34 @@ const assertShownEditableLegendNoOpDispatch = (
     defaultPrevented,
     repeat,
     isEditableTarget: true,
-  })
-  assertLegendNoOpDispatchOutcome(shownEditableNoOpDispatch, true)
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
+
+const assertShownEditableLegendNoOpByMode = (
+  key: 'Escape' | 'Esc',
+  shiftKey: boolean,
+  defaultPrevented: boolean,
+  repeat: boolean,
+  includeRenderState: boolean,
+) => {
+  const input = getShownEditableLegendNoOpInput(key, shiftKey, defaultPrevented, repeat)
+
+  if (!includeRenderState) {
+    assertLegendNoOpDispatchForInput(input, true)
+    return
+  }
+
+  assertLegendNoOpRenderStateForInput(input, true)
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
+  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+}
+
+const assertShownEditableLegendNoOpDispatch = (
+  key: 'Escape' | 'Esc',
+  shiftKey: boolean,
+  defaultPrevented: boolean,
+  repeat: boolean,
+) => {
+  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, false)
 }
 
 const assertShownEditableLegendNoOpRenderState = (
@@ -161,23 +187,7 @@ const assertShownEditableLegendNoOpRenderState = (
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
-  const shownEditableNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented,
-    repeat,
-    isEditableTarget: true,
-  })
-  assertLegendNoOpRenderStateOutcome(shownEditableNoOpRenderState, true)
-
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-    shownEditableNoOpRenderState.nextVisibility,
-  )
-  expect(shownNoOpPresentation.ariaExpanded).toBe(shownEditableNoOpRenderState.nextVisibility)
+  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, true)
 }
 
 

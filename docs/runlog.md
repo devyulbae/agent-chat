@@ -1,3 +1,16 @@
+## 2026-03-08 21:51 KST — shown editable no-op mode helper unification (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown editable no-op input construction across dispatch/render helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `getShownEditableLegendNoOpInput(...)` to build one canonical typed input payload for shown editable no-op cases.
+    - Added `assertShownEditableLegendNoOpByMode(...)` to route the shared payload through dispatch/render-state assertions by mode.
+    - Refactored `assertShownEditableLegendNoOpDispatch(...)` and `assertShownEditableLegendNoOpRenderState(...)` to reuse the unified mode helper while preserving shown-state `ariaExpanded` parity checks.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining shown no-op wrappers where mode-specific helper branches still construct parallel payload scaffolding before reaching identical no-op contract assertions.
+
 ## 2026-03-08 21:30 KST — shown no-op shift/editable helper input unification (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown no-op dispatch/render input scaffolding in the shift/editable helper lane.
 - Change:
