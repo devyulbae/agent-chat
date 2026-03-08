@@ -674,6 +674,9 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Moved to next visible thread (key: [Ctrl+ArrowDown]).')).toBe(
         'Ctrl+ArrowDown',
       )
+      expect(getHintShortcutSource('Moved to previous visible thread (key: [Control+ArrowUp]).')).toBe(
+        'Control+ArrowUp',
+      )
       expect(getHintShortcutSource('Recovered to first visible thread (↵).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (↩).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (⌤).')).toBe('Enter')
