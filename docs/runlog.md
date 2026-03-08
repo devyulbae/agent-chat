@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 11:53 KST — shown editable non-shift event-gate no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated shown editable-target (`shiftKey=false`) event-gate no-op fixtures shared by canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableNonShiftLegendEventGateNoOp(key)` helper that reuses existing dispatch/render no-op helpers for `defaultPrevented` and `repeat` paths.
+    - Replaced duplicated canonical `Escape` + alias `Esc` shown editable non-shift event-gate dispatch/render no-op test bodies with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue extracting shared helpers for remaining hidden-state editable-target defaultPrevented/repeat dispatch/render no-op fixtures where `Escape` and `Esc` assertions are structurally identical.
+
 ## 2026-03-08 11:31 KST — shown non-editable event-gate render no-op helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated shown non-editable `defaultPrevented`/`repeat` render-state no-op fixtures.
 - Change:
