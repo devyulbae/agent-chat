@@ -1,3 +1,20 @@
+## 2026-03-09 00:12 KST — shown/hidden modifier+event-gate wrapper entrypoint trim (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining wrapper-only shown/hidden helper entrypoints around modifier and event-gate no-op lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced split hidden modifier wrappers (`assertHiddenLegendModifierNoOpDispatch` / `assertHiddenLegendModifierNoOpRenderState`) with one mode-aware helper: `assertHiddenLegendModifierNoOpByMode(key, mode)`.
+    - Removed wrapper-only shown helper aliases:
+      - `assertShownLegendModifierNoOpDispatch(...)`
+      - `assertShownLegendModifierNoOpRenderState(...)`
+      - `assertShownLegendEventGateNoOpDispatch(...)`
+      - `assertShownLegendEventGateNoOpRenderState(...)`
+    - Updated callsites to invoke shared parameterized helpers directly (`assertShownLegendModifierNoOpByShiftAndEditable(...)` / `assertLegendEventGateNoOpByVisibilityAndMode(...)`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing wrapper-only helper aliases that still forward fixed arguments into shared mode-aware no-op helpers in lifecycle test coverage.
+
 ## 2026-03-09 00:03 KST — hidden editable wrapper entrypoint alias removal (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove wrapper-only hidden editable no-op entrypoints.
 - Change:
