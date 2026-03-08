@@ -1,3 +1,19 @@
+## 2026-03-09 04:43 KST — hidden editable no-op helper inline in across-keys path (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop hidden editable no-op wrapper while preserving Escape/Esc parity.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use helper `assertHiddenEditableLegendNoOpByMode(...)`.
+    - Inlined canonical hidden editable no-op input payload into `assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (42/42)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `2fe386a` — `[test] inline hidden editable no-op input in across-keys helper`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing single-use visibility-specific wrapper helpers in `main.threadShortcutLegendLifecycle.test.ts` where one shared escape-keys helper can keep dispatch/render intent explicit.
+
 ## 2026-03-09 04:31 KST — shown shift modifier+event-gate across-keys helper reuse (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining per-key (`Escape`/`Esc`) wrappers for shown `shiftKey=true` modifier+event-gate no-op lanes.
 - Change:
