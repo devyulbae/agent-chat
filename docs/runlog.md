@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 18:31 KST — lifecycle no-op assertion helper reuse for dispatch/render parity follow-up (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline no-op assertion scaffolding in lifecycle integration tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Reused `assertLegendNoOpDispatchOutcome(...)` for remaining inline no-op dispatch assertions in keyboard dispatch lifecycle tests (editable guard + modifier guard + hidden/shown no-op parity paths).
+    - Reused `assertLegendNoOpRenderStateOutcome(...)` for remaining inline no-op render-state assertions in hidden/shown no-op lifecycle paths (including hidden `Esc` alias no-op render-state).
+    - Removed duplicated `handled/nextVisibility/statusHint/statusAriaLabel` assertion blocks while preserving existing `ariaExpanded` parity assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing any remaining lifecycle show/hide inline outcome assertions into focused shared helpers where transition contracts are structurally identical.
+
 ## 2026-03-08 18:12 KST — legend no-op input helper extraction for event-gate + editable hidden paths (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to reduce repeated no-op dispatch/render-state input scaffolding across hidden/shown event-gate and hidden editable helpers.
 - Change:

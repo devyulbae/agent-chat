@@ -742,11 +742,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: true,
     })
-    expect(ignoredEditableDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(ignoredEditableDispatch, false)
 
     const ignoredModifiedDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
@@ -759,11 +755,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: false,
     })
-    expect(ignoredModifiedDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(ignoredModifiedDispatch, true)
   })
 
   it('keeps aria-expanded presentation synchronized with dispatch nextVisibility for ? show and Esc hide', () => {
@@ -825,11 +817,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: false,
     })
-    expect(hiddenEscNoOpDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(hiddenEscNoOpDispatch, false)
 
     const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(hiddenEscNoOpDispatch.nextVisibility)
     expect(hiddenNoOpPresentation.ariaExpanded).toBe(false)
@@ -845,11 +833,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: false,
     })
-    expect(shownShiftEscapeNoOpDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(shownShiftEscapeNoOpDispatch, true)
 
     const shownNoOpPresentation = getThreadShortcutLegendPresentation(
       shownShiftEscapeNoOpDispatch.nextVisibility,
@@ -869,10 +853,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: false,
     })
-    expect(hiddenEscNoOpRenderState.handled).toBe(false)
-    expect(hiddenEscNoOpRenderState.nextVisibility).toBe(false)
-    expect(hiddenEscNoOpRenderState.statusHint).toBeNull()
-    expect(hiddenEscNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(hiddenEscNoOpRenderState, false)
 
     const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(
       hiddenEscNoOpRenderState.nextVisibility,
@@ -890,10 +871,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       repeat: false,
       isEditableTarget: false,
     })
-    expect(shownShiftEscapeNoOpRenderState.handled).toBe(false)
-    expect(shownShiftEscapeNoOpRenderState.nextVisibility).toBe(true)
-    expect(shownShiftEscapeNoOpRenderState.statusHint).toBeNull()
-    expect(shownShiftEscapeNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(shownShiftEscapeNoOpRenderState, true)
 
     const shownNoOpPresentation = getThreadShortcutLegendPresentation(
       shownShiftEscapeNoOpRenderState.nextVisibility,
@@ -1063,10 +1041,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       isEditableTarget: false,
     })
 
-    expect(ignoredHiddenEscAlias.handled).toBe(false)
-    expect(ignoredHiddenEscAlias.nextVisibility).toBe(false)
-    expect(ignoredHiddenEscAlias.statusHint).toBeNull()
-    expect(ignoredHiddenEscAlias.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredHiddenEscAlias, false)
   })
 
   it('keeps hidden Escape with modifier keys as no-op render-state parity with dispatch guard rails', () => {
