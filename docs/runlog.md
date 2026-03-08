@@ -1,5 +1,33 @@
 # Runlog
 
+## 2026-03-08 11:31 KST — shown non-editable event-gate render no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated shown non-editable `defaultPrevented`/`repeat` render-state no-op fixtures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendEventGateNoOpRenderState(key)` helper that table-drives shown non-editable event-gate render-state no-op checks for both `defaultPrevented` and `repeat` paths.
+    - Replaced the duplicated inline canonical `Escape` + alias `Esc` no-op render-state assertion block with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue helper/table extraction for remaining hidden shown-state render/dispatch no-op fixtures where canonical `Escape` and alias `Esc` assertions are structurally identical.
+
+## 2026-03-08 11:23 KST — shown non-editable modifier render no-op helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to reduce duplicated shown non-editable (`isEditableTarget=false`) non-shift modifier render-state no-op assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendModifierNoOpRenderState(key)` helper for shown non-editable modifier render-state no-op checks (`meta`/`ctrl`/`alt`).
+    - Replaced duplicated canonical `Escape` + alias `Esc` modifier render-state assertion blocks with shared helper invocation.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `06bed80` — `[test] dedupe shown non-editable modifier render no-op assertions`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing duplicated shown non-editable event-gate (`defaultPrevented`/`repeat`) render-state no-op fixtures into shared helper/table assertions to reduce lifecycle test repetition.
+
 ## 2026-03-08 11:06 KST — shown editable non-shift modifier no-op helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to reduce duplicated shown editable-target non-shift (`shiftKey=false`) modifier no-op assertions.
 - Change:
