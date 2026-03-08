@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-08 21:05 KST — Agent Chat implementation cycle
+- Delta: Added wrapped-spacing vertical `Control` alias extraction parity coverage for upward thread movement hints in frontend parser tests.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Control + ArrowUp]).` → `Control+ArrowUp` extraction assertion.
+  - Scope kept frontend-only (chat thread UX wiring parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Commit: pending
+- Next action: add tooltip/badge normalization coverage for spaced wrapped `key: [Control + ArrowLeft]`/`[Control + ArrowRight]` variants so horizontal `Control` spacing aliases stay fully symmetric with vertical coverage.
+
 ## 2026-03-08 20:51 KST — Agent Chat parallel offset cycle
 - Delta: Added wrapped Control-arrow spacing regression coverage in frontend thread hint parser tests so bracketed `key: [...]` hints remain canonical when copy includes spaces around `+`.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control + ArrowDown]).` → `Control+ArrowDown` extraction assertion.
