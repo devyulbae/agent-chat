@@ -2118,11 +2118,11 @@ function App() {
   const hasThreadViewFiltersActive =
     threadFilterText.trim().length > 0 || showUnreadOnlyThreads || !includeRootInUnreadOnly
 
-  const resetThreadViewFilters = useCallback(() => {
+  const resetThreadViewFilters = useCallback((source: 'button' | 'shortcut' = 'button') => {
     setThreadFilterText('')
     setShowUnreadOnlyThreads(false)
     setIncludeRootInUnreadOnly(true)
-    setThreadFilterJumpHint(null)
+    setThreadFilterJumpHint(getThreadFilterResetHint(source))
   }, [])
 
   useEffect(() => {
@@ -2233,7 +2233,7 @@ function App() {
         return
       }
       event.preventDefault()
-      resetThreadViewFilters()
+      resetThreadViewFilters('shortcut')
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -3031,7 +3031,7 @@ function App() {
             </button>
             <button
               type="button"
-              onClick={resetThreadViewFilters}
+              onClick={() => resetThreadViewFilters('button')}
               disabled={!hasThreadViewFiltersActive}
               title="Reset thread filter + unread toggles (Shift+Esc)"
             >

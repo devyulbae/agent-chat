@@ -1,6 +1,6 @@
 export type BoundaryDirection = 'first' | 'last'
 export type ShortcutChipIntent = 'root jump' | 'boundary jump' | 'filter jump' | 'thread copy'
-export type ThreadFilterResetSource = 'input'
+export type ThreadFilterResetSource = 'input' | 'button' | 'shortcut'
 export type UnreadJumpStep = 1 | -1
 
 export function isThreadShortcutLegendToggleKey(key: string, shiftKey: boolean): boolean {
@@ -46,7 +46,11 @@ export function getThreadFilterResetHint(source: ThreadFilterResetSource): strin
     return 'Reset thread view filters from filter input focus (Shift+Esc).'
   }
 
-  return 'Reset thread view filters (Shift+Esc).'
+  if (source === 'button') {
+    return 'Reset thread view filters from toolbar button (Shift+Esc).'
+  }
+
+  return 'Reset thread view filters from global shortcut (Shift+Esc).'
 }
 
 export function getBoundaryDirectionLabel(direction: BoundaryDirection): string {

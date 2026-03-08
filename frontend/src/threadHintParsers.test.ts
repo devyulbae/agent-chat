@@ -59,6 +59,18 @@ describe('threadHintParsers', () => {
         'Reset thread view filters from filter input focus (Shift+Esc).',
       )
     })
+
+    it('returns toolbar-specific reset copy for button-driven resets', () => {
+      expect(getThreadFilterResetHint('button')).toBe(
+        'Reset thread view filters from toolbar button (Shift+Esc).',
+      )
+    })
+
+    it('returns shortcut-specific reset copy for global Shift+Esc resets', () => {
+      expect(getThreadFilterResetHint('shortcut')).toBe(
+        'Reset thread view filters from global shortcut (Shift+Esc).',
+      )
+    })
   })
 
   describe('isThreadShortcutLegendToggleKey', () => {
