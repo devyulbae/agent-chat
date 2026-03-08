@@ -1,3 +1,16 @@
+## 2026-03-09 04:31 KST — shown shift modifier+event-gate across-keys helper reuse (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining per-key (`Escape`/`Esc`) wrappers for shown `shiftKey=true` modifier+event-gate no-op lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(...)`.
+    - Collapsed separate shown editable `Escape` and `Esc` modifier+event-gate tests into one across-keys test.
+    - Routed shown non-editable `Escape`/`Esc` modifier+event-gate assertions through the same across-keys helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (42/42)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop shown modifier no-op wrappers where per-key callsites still only forward fixed visibility/shift/editable inputs.
+
 ## 2026-03-09 04:23 KST — shown shift editable modifier no-op across-keys helper reuse (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse per-key (`Escape`/`Esc`) shown `shiftKey=true` editable-target modifier no-op mode assertions into one across-keys helper path.
 - Change:
