@@ -3526,3 +3526,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18/18)
 - Next action: collapse duplicate shown non-editable no-op helper wrappers (`assertShownLegendNoOpDispatch` / `assertShownLegendNoOpRenderState`) into the same parameterized helper lane used by modifier/event-gate assertions to further reduce fixture scaffolding.
+
+## 2026-03-08 18:44 KST — unify shown shift no-op wrapper lane (boost cycle)
+- Scope: chat thread UX wiring (test-only helper refactor) with strict no-behavior-change dedupe.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced duplicate shown non-editable shift no-op wrappers (`assertShownLegendNoOpDispatch` / `assertShownLegendNoOpRenderState`) with shared `assertShownLegendNoOpByShiftAndEditable(key, shiftKey, isEditableTarget)`.
+    - Routed shown editable shift no-op helper (`assertShownEditableShiftLegendNoOp`) through the same shared helper.
+    - Updated affected shift no-op specs to call the shared helper path directly.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (18/18)
+- Next action: collapse hidden-state non-editable no-op dispatch/render helper duplication (`assertHiddenLegendEventGateNoOpDispatch` + `assertHiddenLegendEventGateNoOpRenderState`) into a shared parameterized helper to keep parity assertions in one lane.
