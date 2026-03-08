@@ -1,3 +1,19 @@
+## 2026-03-09 02:32 KST — no-op mode router helper reuse across lifecycle case helpers (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated dispatch/render mode branching across no-op helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendNoOpByModeForInput(...)` helper to centralize `dispatch` vs `render` routing for no-op assertions.
+    - Refactored helpers to reuse the mode router instead of duplicating mode `if` branches:
+      - `assertHiddenEditableLegendNoOpByMode(...)`
+      - `assertHiddenLegendModifierNoOpByMode(...)`
+      - `assertShownLegendModifierNoOpByShiftAndEditable(...)`
+      - `assertShownShiftLegendModifierEventGateNoOpCasesByMode(...)`
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing one-hop helper wrappers in `main.threadShortcutLegendLifecycle.test.ts` where key/visibility/shift aliases only forward fixed arguments to shared mode-aware helpers.
+
 ## 2026-03-09 02:22 KST — shown shift modifier+event-gate case-loop input-base dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated input-base construction between shown shift modifier+event-gate dispatch/render no-op case loops.
 - Change:

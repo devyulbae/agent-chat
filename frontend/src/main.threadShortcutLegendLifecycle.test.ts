@@ -137,6 +137,18 @@ const assertShownLegendNoOpByShiftAndEditable = (
 
 type LegendNoOpAssertionMode = 'dispatch' | 'render'
 
+const assertLegendNoOpByModeForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
+  nextVisibility: boolean,
+  mode: LegendNoOpAssertionMode,
+) => {
+  if (mode === 'render') {
+    assertLegendNoOpRenderStateForInput(input, nextVisibility)
+    return
+  }
+
+  assertLegendNoOpDispatchForInput(input, nextVisibility)
+}
 
 const legendModifierCases = [
   { metaKey: true, ctrlKey: false, altKey: false },
@@ -185,12 +197,7 @@ const assertHiddenEditableLegendNoOpByMode = (
     isEditableTarget: true,
   } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-  if (mode === 'render') {
-    assertLegendNoOpRenderStateForInput(input, false)
-    return
-  }
-
-  assertLegendNoOpDispatchForInput(input, false)
+  assertLegendNoOpByModeForInput(input, false, mode)
 }
 
 
@@ -232,12 +239,7 @@ const assertHiddenLegendModifierNoOpByMode = (
       isEditableTarget: false,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-    if (mode === 'render') {
-      assertLegendNoOpRenderStateForInput(input, false)
-      return
-    }
-
-    assertLegendNoOpDispatchForInput(input, false)
+    assertLegendNoOpByModeForInput(input, false, mode)
   })
 }
 
@@ -282,12 +284,7 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
       isEditableTarget,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-    if (mode === 'render') {
-      assertLegendNoOpRenderStateForInput(input, true)
-      return
-    }
-
-    assertLegendNoOpDispatchForInput(input, true)
+    assertLegendNoOpByModeForInput(input, true, mode)
   })
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
@@ -336,12 +333,7 @@ const assertShownShiftLegendModifierEventGateNoOpCasesByMode = (
       isEditableTarget,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-    if (mode === 'render') {
-      assertLegendNoOpRenderStateForInput(input, true)
-      return
-    }
-
-    assertLegendNoOpDispatchForInput(input, true)
+    assertLegendNoOpByModeForInput(input, true, mode)
   })
 }
 
