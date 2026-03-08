@@ -113,43 +113,8 @@ const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') =
 }
 
 const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
-  const ignoredShownEditableShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: false,
-    isEditableTarget: true,
-  })
-  expect(ignoredShownEditableShiftDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
-  })
-
-  const ignoredShownEditableShiftRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: false,
-    isEditableTarget: true,
-  })
-  expect(ignoredShownEditableShiftRenderState.handled).toBe(false)
-  expect(ignoredShownEditableShiftRenderState.nextVisibility).toBe(true)
-  expect(ignoredShownEditableShiftRenderState.statusHint).toBeNull()
-  expect(ignoredShownEditableShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-    ignoredShownEditableShiftRenderState.nextVisibility,
-  )
-  expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownEditableShiftRenderState.nextVisibility)
+  assertShownEditableLegendNoOpDispatch(key, true, false, false)
+  assertShownEditableLegendNoOpRenderState(key, true, false, false)
 }
 
 const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {

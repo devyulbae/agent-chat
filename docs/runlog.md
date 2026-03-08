@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-08 14:42 KST — shown editable shift no-op helper reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe on shown editable `shiftKey=true` no-op fixture path.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownEditableShiftLegendNoOp(key)` to reuse existing shared helpers:
+      - `assertShownEditableLegendNoOpDispatch(key, true, false, false)`
+      - `assertShownEditableLegendNoOpRenderState(key, true, false, false)`
+    - Removed duplicated inline dispatch/render assertion scaffolding while preserving the same no-op contract coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing remaining shown editable `shiftKey=true` modifier/event-gate helper duplication by reusing the shared dispatch/render no-op helper pair where fixture parameters are identical.
+
 ## 2026-03-08 14:31 KST — plain Slash no-op helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated plain Slash (`key='/'`, `shiftKey=false`) no-op dispatch/render-state fixtures shared by hidden and shown visibility states.
 - Change:
