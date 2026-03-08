@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 14:12 KST — shown shift editable no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated shown editable-target `shiftKey=true` no-op fixtures across canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableShiftLegendNoOp(key)` helper for shown editable `shiftKey=true` dispatch/render-state no-op assertions.
+    - Added `assertShownEditableShiftLegendEventGateNoOp(key)` helper for shown editable `defaultPrevented`/`repeat` no-op parity assertions.
+    - Replaced duplicated inline `Escape`/`Esc` shown editable `shiftKey=true` fixture bodies with helper-driven tests.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining shown-state editable-target no-op fixture duplication where canonical `Escape` and alias `Esc` assertions are structurally identical.
+
 ## 2026-03-08 14:04 KST — hidden event-gate dispatch helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated hidden non-editable event-gate (`defaultPrevented`/`repeat`) dispatch no-op fixtures for canonical `Escape` and alias `Esc`.
 - Change:
