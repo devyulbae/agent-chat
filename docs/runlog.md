@@ -1,3 +1,15 @@
+## 2026-03-08 23:51 KST — shown editable modifier wrapper alias removal (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove the remaining wrapper-only shown editable modifier helper entrypoints.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed wrapper-only helper aliases `assertShownEditableLegendModifierNoOp(...)` and `assertShownEditableShiftLegendModifierNoOp(...)`.
+    - Updated shown editable modifier no-op callsites to invoke `assertShownEditableLegendModifierNoOpByShift(key, shiftKey)` directly for both non-shift and `shiftKey=true` lanes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing wrapper-only shown editable helper aliases by routing remaining mode/shift entrypoints directly to shared parameterized helpers.
+
 ## 2026-03-08 23:31 KST — shown editable shift no-op wrapper alias removal (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one remaining wrapper-only shown editable shift no-op entrypoint.
 - Change:
