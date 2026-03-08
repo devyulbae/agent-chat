@@ -451,7 +451,7 @@ export function getThreadFilterInputKeyboardDispatchOutcome(
     }
   }
 
-  if (input.key === 'Enter') {
+  if (input.key === 'Enter' || input.key === 'NumpadEnter') {
     return {
       handled: true,
       action: input.shiftKey ? 'jumpLastVisible' : 'jumpFirstVisible',

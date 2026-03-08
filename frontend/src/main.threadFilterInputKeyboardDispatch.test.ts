@@ -113,6 +113,36 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
 
     expect(
       getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'NumpadEnter',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: false,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'jumpFirstVisible',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'NumpadEnter',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: false,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'jumpLastVisible',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
         key: 'Escape',
         shiftKey: true,
         metaKey: false,
