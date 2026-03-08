@@ -171,30 +171,21 @@ const forEachLegendEscapeKey = (assertion: (key: (typeof legendEscapeKeys)[numbe
   legendEscapeKeys.forEach(assertion)
 }
 
-const assertHiddenEditableLegendNoOpByMode = (
-  key: 'Escape' | 'Esc',
-  defaultPrevented: boolean,
-  repeat: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  const input = {
-    isVisible: false,
-    key,
-    shiftKey: false,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented,
-    repeat,
-    isEditableTarget: true,
-  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-  assertLegendNoOpByModeForInput(input, false, mode)
-}
-
 const assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAssertionMode) => {
   forEachLegendEscapeKey((key) => {
-    assertHiddenEditableLegendNoOpByMode(key, false, false, mode)
+    const input = {
+      isVisible: false,
+      key,
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      repeat: false,
+      isEditableTarget: true,
+    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+    assertLegendNoOpByModeForInput(input, false, mode)
   })
 }
 
