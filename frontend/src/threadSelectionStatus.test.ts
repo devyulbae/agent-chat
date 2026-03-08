@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  getSelectedVisibleThreadBoundaryRecoveryButtonTitle,
   getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
@@ -54,6 +55,26 @@ describe('getSelectedVisibleThreadPositionTitle', () => {
 
   it('returns undefined when selection is visible', () => {
     expect(getSelectedVisibleThreadPositionTitle(false)).toBeUndefined()
+  })
+})
+
+describe('getSelectedVisibleThreadBoundaryRecoveryButtonTitle', () => {
+  it('reuses hidden-selection position title for first-boundary recovery button', () => {
+    expect(getSelectedVisibleThreadBoundaryRecoveryButtonTitle(true, 'first')).toBe(
+      'Selection is hidden by current filters. Use "Jump to first/last visible" to recover to the visible list. Jump to first visible result.',
+    )
+  })
+
+  it('reuses hidden-selection position title for last-boundary recovery button', () => {
+    expect(getSelectedVisibleThreadBoundaryRecoveryButtonTitle(true, 'last')).toBe(
+      'Selection is hidden by current filters. Use "Jump to first/last visible" to recover to the visible list. Jump to last visible result.',
+    )
+  })
+
+  it('falls back to explicit hidden-filter copy when selection is visible', () => {
+    expect(getSelectedVisibleThreadBoundaryRecoveryButtonTitle(false, 'first')).toBe(
+      'Selected thread is hidden by filters. Jump to first visible result.',
+    )
   })
 })
 

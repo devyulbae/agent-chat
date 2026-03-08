@@ -37,6 +37,7 @@ import {
   type CredentialAuditEventsQueryParamsInput,
 } from './apiContracts'
 import {
+  getSelectedVisibleThreadBoundaryRecoveryButtonTitle,
   getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
@@ -1769,6 +1770,10 @@ function App() {
   const selectedVisibleThreadPositionTitle = getSelectedVisibleThreadPositionTitle(
     selectedVisibleThreadHiddenByFilter,
   )
+  const selectedVisibleThreadFirstRecoveryButtonTitle =
+    getSelectedVisibleThreadBoundaryRecoveryButtonTitle(selectedVisibleThreadHiddenByFilter, 'first')
+  const selectedVisibleThreadLastRecoveryButtonTitle =
+    getSelectedVisibleThreadBoundaryRecoveryButtonTitle(selectedVisibleThreadHiddenByFilter, 'last')
   const selectedVisibleThreadRecoveryHint = getSelectedVisibleThreadButtonRecoveryHint(
     selectedVisibleThreadHiddenByFilter,
     selectedVisibleThreadPositionLabel,
@@ -3099,14 +3104,14 @@ function App() {
                 <button
                   type="button"
                   onClick={() => recoverToFirstVisibleThread('button')}
-                  title="Selected thread is hidden by filters. Jump to first visible result."
+                  title={selectedVisibleThreadFirstRecoveryButtonTitle}
                 >
                   Jump to first visible
                 </button>
                 <button
                   type="button"
                   onClick={() => recoverToLastVisibleThread('button')}
-                  title="Selected thread is hidden by filters. Jump to last visible result."
+                  title={selectedVisibleThreadLastRecoveryButtonTitle}
                 >
                   Jump to last visible
                 </button>

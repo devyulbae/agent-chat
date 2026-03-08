@@ -28,6 +28,21 @@ export function getSelectedVisibleThreadPositionTitle(
   return 'Selection is hidden by current filters. Use "Jump to first/last visible" to recover to the visible list.'
 }
 
+export function getSelectedVisibleThreadBoundaryRecoveryButtonTitle(
+  selectedVisibleThreadHiddenByFilter: boolean,
+  boundary: 'first' | 'last',
+): string {
+  const boundaryLabel = boundary === 'first' ? 'first' : 'last'
+  const positionTitle = getSelectedVisibleThreadPositionTitle(selectedVisibleThreadHiddenByFilter)
+  const fallbackTitle = `Selected thread is hidden by filters. Jump to ${boundaryLabel} visible result.`
+
+  if (!positionTitle) {
+    return fallbackTitle
+  }
+
+  return `${positionTitle} Jump to ${boundaryLabel} visible result.`
+}
+
 export function getSelectedVisibleThreadInlineRecoveryHint(
   selectedVisibleThreadHiddenByFilter: boolean,
   selectedVisibleThreadPositionLabel: string,
