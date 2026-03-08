@@ -126,11 +126,18 @@ const shownShiftModifierEventGateRenderStateNoOpCases = [
   { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
 ] as const
 
-const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
+const assertShownEditableLegendEventGateNoOpByShift = (
+  key: 'Escape' | 'Esc',
+  shiftKey: boolean,
+) => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    assertShownEditableLegendNoOpDispatch(key, false, defaultPrevented, repeat)
-    assertShownEditableLegendNoOpRenderState(key, false, defaultPrevented, repeat)
+    assertShownEditableLegendNoOpDispatch(key, shiftKey, defaultPrevented, repeat)
+    assertShownEditableLegendNoOpRenderState(key, shiftKey, defaultPrevented, repeat)
   })
+}
+
+const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
+  assertShownEditableLegendEventGateNoOpByShift(key, false)
 }
 
 const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
@@ -139,10 +146,7 @@ const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    assertShownEditableLegendNoOpDispatch(key, true, defaultPrevented, repeat)
-    assertShownEditableLegendNoOpRenderState(key, true, defaultPrevented, repeat)
-  })
+  assertShownEditableLegendEventGateNoOpByShift(key, true)
 }
 
 const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {
