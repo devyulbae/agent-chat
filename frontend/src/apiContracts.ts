@@ -4,6 +4,9 @@ export const CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX = 24 * 30
 export const AUDIT_EVENTS_LIMIT_MIN = 1
 export const AUDIT_EVENTS_LIMIT_MAX = 100
 
+export const CHANNEL_MESSAGES_LIMIT_MIN = 1
+export const CHANNEL_MESSAGES_LIMIT_MAX = 500
+
 export function clampCredentialExpiringWindowHours(value: number): number {
   if (!Number.isFinite(value)) {
     return 24
@@ -29,6 +32,40 @@ export function normalizeAuditOffset(value: number): number {
   }
 
   return Math.max(0, Math.trunc(value))
+}
+
+export function clampChannelMessagesLimit(value: number, fallback = 200): number {
+  const fallbackLimit = Math.min(
+    CHANNEL_MESSAGES_LIMIT_MAX,
+    Math.max(CHANNEL_MESSAGES_LIMIT_MIN, Math.trunc(fallback)),
+  )
+
+  if (!Number.isFinite(value)) {
+    return fallbackLimit
+  }
+
+  return Math.min(
+    CHANNEL_MESSAGES_LIMIT_MAX,
+    Math.max(CHANNEL_MESSAGES_LIMIT_MIN, Math.trunc(value)),
+  )
+}
+
+export type ChannelMessagesQueryParamsInput = {
+  threadId: string | null
+  limit: number
+}
+
+export function buildChannelMessagesQueryParams(input: ChannelMessagesQueryParamsInput): URLSearchParams {
+  const params = new URLSearchParams({
+    limit: String(clampChannelMessagesLimit(input.limit)),
+  })
+
+  const trimmedThreadId = input.threadId?.trim()
+  if (trimmedThreadId) {
+    params.set('thread_id', trimmedThreadId)
+  }
+
+  return params
 }
 
 export type CredentialAuditEventsQueryParamsInput = {

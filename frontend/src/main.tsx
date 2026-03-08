@@ -30,6 +30,7 @@ import {
 } from './threadHintChips'
 import {
   AUDIT_EVENTS_LIMIT_MAX,
+  buildChannelMessagesQueryParams,
   buildCredentialAuditEventsQueryParams,
   clampAuditEventLimit,
   clampCredentialExpiringWindowHours,
@@ -661,11 +662,10 @@ function App() {
       setMessageLoading(true)
       setChatError(null)
 
-      const params = new URLSearchParams()
-      if (selectedThreadId) {
-        params.set('thread_id', selectedThreadId)
-      }
-      params.set('limit', String(MESSAGE_PAGE_LIMIT))
+      const params = buildChannelMessagesQueryParams({
+        threadId: selectedThreadId,
+        limit: MESSAGE_PAGE_LIMIT,
+      })
 
       const query = params.toString()
       const url = `${API_BASE}/channels/${encodeURIComponent(channelId)}/messages${query ? `?${query}` : ''}`

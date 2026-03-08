@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   AUDIT_EVENTS_LIMIT_MAX,
+  CHANNEL_MESSAGES_LIMIT_MAX,
   CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX,
+  buildChannelMessagesQueryParams,
   buildCredentialAuditEventsQueryParams,
   clampAuditEventLimit,
+  clampChannelMessagesLimit,
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
 } from './apiContracts'
@@ -27,6 +30,30 @@ describe('apiContracts helpers', () => {
     expect(normalizeAuditOffset(Number.NaN)).toBe(0)
     expect(normalizeAuditOffset(-50)).toBe(0)
     expect(normalizeAuditOffset(12.8)).toBe(12)
+  })
+
+  it('clamps channel messages limit to API bounds', () => {
+    expect(clampChannelMessagesLimit(Number.NaN)).toBe(200)
+    expect(clampChannelMessagesLimit(0)).toBe(1)
+    expect(clampChannelMessagesLimit(CHANNEL_MESSAGES_LIMIT_MAX + 5)).toBe(CHANNEL_MESSAGES_LIMIT_MAX)
+    expect(clampChannelMessagesLimit(Number.NaN, 999)).toBe(CHANNEL_MESSAGES_LIMIT_MAX)
+  })
+
+  it('builds channel messages params with bounded limit and optional trimmed thread id', () => {
+    const withThread = buildChannelMessagesQueryParams({
+      threadId: '  thread-1  ',
+      limit: 999,
+    })
+    const withoutThread = buildChannelMessagesQueryParams({
+      threadId: '   ',
+      limit: -5,
+    })
+
+    expect(withThread.get('thread_id')).toBe('thread-1')
+    expect(withThread.get('limit')).toBe(String(CHANNEL_MESSAGES_LIMIT_MAX))
+
+    expect(withoutThread.has('thread_id')).toBe(false)
+    expect(withoutThread.get('limit')).toBe('1')
   })
 
   it('builds audit-events query params with bounded limit/offset and trimmed optional filters', () => {
