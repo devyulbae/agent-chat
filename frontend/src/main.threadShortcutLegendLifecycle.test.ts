@@ -127,19 +127,6 @@ const forEachLegendNoOpAssertionMode = (
   legendNoOpAssertionModes.forEach(assertion)
 }
 
-const assertLegendNoOpByModeForInput = (
-  input: Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
-  nextVisibility: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  if (mode === 'render') {
-    assertLegendNoOpRenderStateForInput(input, nextVisibility)
-    return
-  }
-
-  assertLegendNoOpDispatchForInput(input, nextVisibility)
-}
-
 const legendModifierCases = [
   { metaKey: true, ctrlKey: false, altKey: false },
   { metaKey: false, ctrlKey: true, altKey: false },
@@ -171,7 +158,12 @@ const assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
       isEditableTarget: true,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-    assertLegendNoOpByModeForInput(input, false, mode)
+    if (mode === 'render') {
+      assertLegendNoOpRenderStateForInput(input, false)
+      return
+    }
+
+    assertLegendNoOpDispatchForInput(input, false)
   })
 }
 
@@ -212,7 +204,12 @@ const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
         isEditableTarget: false,
       } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-      assertLegendNoOpByModeForInput(input, false, mode)
+      if (mode === 'render') {
+        assertLegendNoOpRenderStateForInput(input, false)
+        return
+      }
+
+      assertLegendNoOpDispatchForInput(input, false)
     })
   })
 }
@@ -259,7 +256,12 @@ const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
         isEditableTarget,
       } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-      assertLegendNoOpByModeForInput(input, true, mode)
+      if (mode === 'render') {
+        assertLegendNoOpRenderStateForInput(input, true)
+        return
+      }
+
+      assertLegendNoOpDispatchForInput(input, true)
     })
 
     assertShownLegendNoOpAriaExpanded()
@@ -309,7 +311,12 @@ const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode = (
         isEditableTarget,
       } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-      assertLegendNoOpByModeForInput(input, isVisible, mode)
+      if (mode === 'render') {
+        assertLegendNoOpRenderStateForInput(input, isVisible)
+        return
+      }
+
+      assertLegendNoOpDispatchForInput(input, isVisible)
     })
   })
 
