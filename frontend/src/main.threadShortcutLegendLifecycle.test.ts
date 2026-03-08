@@ -89,6 +89,25 @@ const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') =
 }
 
 
+const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {
+  const hiddenEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+    isVisible: false,
+    key,
+    shiftKey: false,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: false,
+    isEditableTarget: true,
+  })
+  expect(hiddenEditableNoOpDispatch).toEqual({
+    handled: false,
+    nextVisibility: false,
+    statusHint: null,
+  })
+}
+
 const assertHiddenEditableLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
   const hiddenEditableDispatchCases = [
     { defaultPrevented: true, repeat: false },
@@ -978,22 +997,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape as no-op dispatch when target is editable', () => {
-    const ignoredHiddenEditableEscapeDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: true,
-    })
-    expect(ignoredHiddenEditableEscapeDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertHiddenEditableLegendNoOpDispatch('Escape')
   })
 
   it('keeps hidden Escape as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
@@ -1001,22 +1005,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Esc alias as no-op dispatch when target is editable', () => {
-    const ignoredHiddenEditableEscAliasDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: true,
-    })
-    expect(ignoredHiddenEditableEscAliasDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertHiddenEditableLegendNoOpDispatch('Esc')
   })
 
   it('keeps hidden Esc alias as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {

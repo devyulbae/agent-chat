@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 12:50 KST — hidden editable dispatch no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated hidden editable-target dispatch no-op fixtures shared by canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenEditableLegendNoOpDispatch(key)` helper for hidden editable dispatch no-op assertions.
+    - Replaced duplicated inline hidden editable dispatch no-op test bodies for canonical `Escape` and alias `Esc` with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (50/50)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining hidden-state editable-target no-op fixture duplication where canonical `Escape` and alias `Esc` assertions remain structurally identical.
+
 ## 2026-03-08 12:31 KST — hidden non-editable modifier render-state helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated hidden non-editable modifier render-state no-op fixtures shared by canonical `Escape` and alias `Esc`.
 - Change:
