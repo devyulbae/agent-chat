@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-08 20:51 KST — Agent Chat parallel offset cycle
+- Delta: Added wrapped Control-arrow spacing regression coverage in frontend thread hint parser tests so bracketed `key: [...]` hints remain canonical when copy includes spaces around `+`.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control + ArrowDown]).` → `Control+ArrowDown` extraction assertion.
+  - Scope kept frontend-only (thread hint parser contract coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add companion wrapped-spacing parity coverage for `key: [Control + ArrowUp]` so vertical Control-arrow extraction remains symmetric across up/down variants.
+
 ## 2026-03-08 18:06 KST — Agent Chat implementation cycle
 - Delta: Added wrapped vertical `Control` alias extraction parity coverage for downward navigation in frontend thread hint parser tests.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control+ArrowDown]).` → `Control+ArrowDown` extraction assertion.
