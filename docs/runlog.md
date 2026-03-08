@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 09:52 KST — shown Shift+Escape editable no-op dispatch helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to remove duplicate shown editable-target `Shift+Escape`/`Shift+Esc` event-gate dispatch no-op fixtures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableLegendNoOpDispatch(key, defaultPrevented, repeat)` helper for shown editable-target `shiftKey=true` dispatch no-op checks (`handled=false`, `nextVisibility=true`, `statusHint=null`).
+    - Replaced duplicated inline dispatch assertions in both canonical `Escape` and alias `Esc` editable-target defaultPrevented/repeat tests with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue table/helper extraction for remaining shown editable-target modifier-only dispatch fixtures where assertions are structurally identical.
+
 ## 2026-03-08 09:32 KST — shown Shift+Escape editable no-op render helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to trim duplicated shown-state `Shift+Escape`/`Shift+Esc` editable-target event-gate render assertions.
 - Change:
@@ -2886,3 +2898,22 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
 - Next action: wire `selectedVisibleThreadPositionTitle` onto hidden-selection recovery buttons (`Jump to first/last visible`) for consistent hover/help text across selection status + recovery controls.
+
+## 2026-03-08 09:43 KST — hidden-selection recovery button title wiring (chat thread UX)
+- Scope: chat thread UX wiring (hidden-selection recovery controls tooltip consistency).
+- Change:
+  - `frontend/src/threadSelectionStatus.ts`
+    - Added `getSelectedVisibleThreadBoundaryRecoveryButtonTitle(...)` to compose first/last recovery button titles from shared hidden-selection position title copy.
+  - `frontend/src/main.tsx`
+    - Wired hidden-selection recovery buttons (`Jump to first/last visible`) to use centralized boundary button title helper.
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added regression coverage for first/last boundary button title composition and visible-state fallback copy.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts` ✅ (21 passed)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (18 passed)
+- Git:
+  - Commit: `1a43cc2` — `[refactor] reuse hidden-selection title for recovery button tooltips`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused frontend regression to lock that hidden-selection recovery button tooltips stay in sync with `selectedVisibleThreadPositionTitle` copy whenever hidden-selection title text changes.
