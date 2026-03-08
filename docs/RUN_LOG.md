@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-09 04:11 KST — Agent Chat parallel offset cycle
+- Delta: Collapsed remaining shown/hidden editable event-gate no-op test entrypoints across `Escape`/`Esc` into one escape-key loop helper in lifecycle tests.
+  - Frontend tests: added `assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
+  - Frontend tests: rewired duplicated shown/hidden editable event-gate no-op specs (`shiftKey=false/true`) to consume the shared escape-key helper, removing residual single-key dispatch/render duplication.
+  - Scope kept frontend-only (test helper consolidation; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (44 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: collapse remaining visible-state no-op parity specs that still duplicate Escape/Esc single-key assertions into shared escape-key loop helpers where only key alias differs.
+
 ## 2026-03-09 03:03 KST — Agent Chat implementation cycle
 - Delta: Collapsed remaining shown-legend shift+modifier+event-gate no-op assertion entrypoints behind one mode-based helper in lifecycle tests.
   - Frontend tests: removed split case-list wrappers for shown shift modifier event-gate coverage in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
