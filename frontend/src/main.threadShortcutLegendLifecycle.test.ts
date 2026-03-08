@@ -154,7 +154,30 @@ const assertHiddenLegendNoOpDispatch = (
   })
 }
 
+const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
+  const eventGateCases = [
+    { defaultPrevented: true, repeat: false },
+    { defaultPrevented: false, repeat: true },
+  ]
 
+  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+    const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: false,
+      key,
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: false,
+    })
+    expect(ignoredHiddenRenderState.handled).toBe(false)
+    expect(ignoredHiddenRenderState.nextVisibility).toBe(false)
+    expect(ignoredHiddenRenderState.statusHint).toBeNull()
+    expect(ignoredHiddenRenderState.statusAriaLabel ?? null).toBeNull()
+  })
+}
 
 const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   const modifierCases = [
@@ -1352,71 +1375,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape as no-op render-state when event is defaultPrevented or repeat', () => {
-    const ignoredHiddenDefaultPreventedEscape = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: true,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenDefaultPreventedEscape.handled).toBe(false)
-    expect(ignoredHiddenDefaultPreventedEscape.nextVisibility).toBe(false)
-    expect(ignoredHiddenDefaultPreventedEscape.statusHint).toBeNull()
-    expect(ignoredHiddenDefaultPreventedEscape.statusAriaLabel ?? null).toBeNull()
-
-    const ignoredHiddenRepeatEscape = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: 'Escape',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: true,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenRepeatEscape.handled).toBe(false)
-    expect(ignoredHiddenRepeatEscape.nextVisibility).toBe(false)
-    expect(ignoredHiddenRepeatEscape.statusHint).toBeNull()
-    expect(ignoredHiddenRepeatEscape.statusAriaLabel ?? null).toBeNull()
+    assertHiddenLegendEventGateNoOpRenderState('Escape')
   })
 
   it('keeps hidden Esc alias as no-op render-state when event is defaultPrevented or repeat', () => {
-    const ignoredHiddenDefaultPreventedEscAlias = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: true,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenDefaultPreventedEscAlias.handled).toBe(false)
-    expect(ignoredHiddenDefaultPreventedEscAlias.nextVisibility).toBe(false)
-    expect(ignoredHiddenDefaultPreventedEscAlias.statusHint).toBeNull()
-    expect(ignoredHiddenDefaultPreventedEscAlias.statusAriaLabel ?? null).toBeNull()
-
-    const ignoredHiddenRepeatEscAlias = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: true,
-      isEditableTarget: false,
-    })
-    expect(ignoredHiddenRepeatEscAlias.handled).toBe(false)
-    expect(ignoredHiddenRepeatEscAlias.nextVisibility).toBe(false)
-    expect(ignoredHiddenRepeatEscAlias.statusHint).toBeNull()
-    expect(ignoredHiddenRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
+    assertHiddenLegendEventGateNoOpRenderState('Esc')
   })
 
   it('keeps hidden Escape as no-op render-state when target is editable', () => {

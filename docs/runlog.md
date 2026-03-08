@@ -1,6 +1,18 @@
 # Runlog
 
 
+## 2026-03-08 12:12 KST — hidden non-editable event-gate render helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated hidden non-editable `defaultPrevented`/`repeat` render-state no-op fixtures shared by canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendEventGateNoOpRenderState(key)` helper to centralize hidden non-editable event-gate render-state no-op assertions for `defaultPrevented` and `repeat` paths.
+    - Replaced duplicated inline `Escape` + `Esc` hidden non-editable render-state event-gate no-op test bodies with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (50/50)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue helper/table extraction for remaining hidden-state non-editable modifier render-state no-op fixtures where `Escape` and `Esc` assertions are structurally identical.
+
 ## 2026-03-08 12:04 KST — hidden editable event-gate no-op helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated hidden editable-target (`isEditableTarget=true`) `defaultPrevented`/`repeat` no-op dispatch+render fixtures for canonical `Escape` and alias `Esc`.
 - Change:
