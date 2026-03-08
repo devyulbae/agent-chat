@@ -116,6 +116,16 @@ const shownEventGateCases = [
   { defaultPrevented: false, repeat: true },
 ] as const
 
+const shownShiftModifierEventGateDispatchNoOpCases = [
+  { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: true, repeat: false },
+  { metaKey: false, ctrlKey: true, altKey: false, defaultPrevented: false, repeat: true },
+] as const
+
+const shownShiftModifierEventGateRenderStateNoOpCases = [
+  { metaKey: false, ctrlKey: false, altKey: true, defaultPrevented: true, repeat: false },
+  { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
+] as const
+
 const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
   shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     assertShownEditableLegendNoOpDispatch(key, false, defaultPrevented, repeat)
@@ -445,52 +455,46 @@ const assertShownShiftLegendModifierEventGateNoOp = (
   key: 'Escape' | 'Esc',
   isEditableTarget: boolean,
 ) => {
-  const dispatchNoOpCases = [
-    { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: true, repeat: false },
-    { metaKey: false, ctrlKey: true, altKey: false, defaultPrevented: false, repeat: true },
-  ]
+  shownShiftModifierEventGateDispatchNoOpCases.forEach(
+    ({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
+      const noOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+        isVisible: true,
+        key,
+        shiftKey: true,
+        metaKey,
+        ctrlKey,
+        altKey,
+        defaultPrevented,
+        repeat,
+        isEditableTarget,
+      })
+      expect(noOpDispatch).toEqual({
+        handled: false,
+        nextVisibility: true,
+        statusHint: null,
+      })
+    },
+  )
 
-  dispatchNoOpCases.forEach(({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
-    const noOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key,
-      shiftKey: true,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented,
-      repeat,
-      isEditableTarget,
-    })
-    expect(noOpDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-  })
-
-  const renderStateNoOpCases = [
-    { metaKey: false, ctrlKey: false, altKey: true, defaultPrevented: true, repeat: false },
-    { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
-  ]
-
-  renderStateNoOpCases.forEach(({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
-    const noOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key,
-      shiftKey: true,
-      metaKey,
-      ctrlKey,
-      altKey,
-      defaultPrevented,
-      repeat,
-      isEditableTarget,
-    })
-    expect(noOpRenderState.handled).toBe(false)
-    expect(noOpRenderState.nextVisibility).toBe(true)
-    expect(noOpRenderState.statusHint).toBeNull()
-    expect(noOpRenderState.statusAriaLabel ?? null).toBeNull()
-  })
+  shownShiftModifierEventGateRenderStateNoOpCases.forEach(
+    ({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
+      const noOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+        isVisible: true,
+        key,
+        shiftKey: true,
+        metaKey,
+        ctrlKey,
+        altKey,
+        defaultPrevented,
+        repeat,
+        isEditableTarget,
+      })
+      expect(noOpRenderState.handled).toBe(false)
+      expect(noOpRenderState.nextVisibility).toBe(true)
+      expect(noOpRenderState.statusHint).toBeNull()
+      expect(noOpRenderState.statusAriaLabel ?? null).toBeNull()
+    },
+  )
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)

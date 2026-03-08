@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 16:12 KST — shown shift modifier+event-gate case-table constants reuse (offset lane)
+- Scope: frontend integration + API contract sync follow-up to remove inline shown `shiftKey=true` modifier+event-gate fixture tables that were still nested inside helper flow.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `shownShiftModifierEventGateDispatchNoOpCases` constant.
+    - Added shared `shownShiftModifierEventGateRenderStateNoOpCases` constant.
+    - Refactored `assertShownShiftLegendModifierEventGateNoOp(...)` to iterate those shared case tables instead of defining local inline arrays.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining repetitive no-op fixture scaffolding where dispatch/render helper paths still encode structurally paired case permutations inline.
+
+
 ## 2026-03-08 16:04 KST — shared modifier-case table reuse across legend no-op helpers (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated `meta/ctrl/alt` modifier fixture arrays across shown/hidden no-op helper lanes.
 - Change:
