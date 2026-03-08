@@ -214,10 +214,6 @@ const assertShownEditableLegendEventGateNoOpByShift = (
   })
 }
 
-const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownLegendNoOpByShiftAndEditable(key, true, true)
-}
-
 const getHiddenEditableLegendNoOpInput = (
   key: 'Escape' | 'Esc',
   defaultPrevented: boolean,
@@ -911,11 +907,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape with shiftKey=true as no-op dispatch/render-state when target is editable', () => {
-    assertShownEditableShiftLegendNoOp('Escape')
+    assertShownLegendNoOpByShiftAndEditable('Escape', true, true)
   })
 
   it('keeps shown Esc alias with shiftKey=true as no-op dispatch/render-state when target is editable', () => {
-    assertShownEditableShiftLegendNoOp('Esc')
+    assertShownLegendNoOpByShiftAndEditable('Esc', true, true)
   })
 
   it('keeps shown Escape with shiftKey=true as no-op for editable target when event is defaultPrevented or repeat', () => {
