@@ -846,20 +846,14 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertShownLegendNoOpByShiftAndEditableAcrossEscapeKeys(true, false)
   })
 
-  it('keeps shown Escape/Esc with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(
-      true,
-      true,
-      true,
-    )
-  })
-
-  it('keeps shown Escape/Esc with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(
-      true,
-      true,
-      false,
-    )
+  it('keeps shown Escape/Esc with shiftKey=true modifier+event-gate paths as no-op dispatch/render-state outcomes across editable states', () => {
+    ;([true, false] as const).forEach((isEditableTarget) => {
+      assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(
+        true,
+        true,
+        isEditableTarget,
+      )
+    })
   })
 
   it('keeps plain Slash (without Shift) as a no-op for hidden and shown legend states', () => {
