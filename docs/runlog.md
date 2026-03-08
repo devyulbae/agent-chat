@@ -1,3 +1,32 @@
+## 2026-03-08 23:12 KST — shown editable event-gate wrapper entrypoint trim (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove wrapper-only shown editable event-gate helper entrypoints.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed wrapper-only helper aliases `assertShownEditableNonShiftLegendEventGateNoOp(...)` and `assertShownEditableShiftLegendEventGateNoOp(...)`.
+    - Updated shown editable event-gate no-op callsites to invoke `assertShownEditableLegendEventGateNoOpByShift(key, shiftKey)` directly for both non-shift and shift lanes.
+    - Preserved existing dispatch/render no-op coverage and shown-state `ariaExpanded` parity assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining wrapper-only shown editable helper aliases (e.g., shift modifier+event-gate entrypoint forwarding) into direct mode-aware helper callsites.
+
+## 2026-03-08 23:03 KST — hidden editable no-op input helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated hidden editable no-op dispatch/render input scaffolding.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `getHiddenEditableLegendNoOpInput(...)` helper for hidden editable no-op keyboard inputs.
+    - Refactored `assertHiddenEditableLegendNoOpDispatch(...)` and `assertHiddenEditableLegendNoOpRenderState(...)` to reuse the shared helper while preserving dispatch/render no-op contract assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `f8cc8fc` — `[test] dedupe hidden editable legend no-op input scaffolding`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing wrapper-only shown editable event-gate helper entrypoints so non-shift/shift lanes call one mode-aware helper path directly.
+
 ## 2026-03-08 22:43 KST — shown editable event-gate wrapper indirection trim (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove wrapper-only helper indirection in shown editable event-gate no-op paths.
 - Change:
