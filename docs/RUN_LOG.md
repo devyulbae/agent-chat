@@ -1,5 +1,19 @@
 # Run Log
 
+## 2026-03-09 03:03 KST — Agent Chat implementation cycle
+- Delta: Collapsed remaining shown-legend shift+modifier+event-gate no-op assertion entrypoints behind one mode-based helper in lifecycle tests.
+  - Frontend tests: removed split case-list wrappers for shown shift modifier event-gate coverage in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
+  - Frontend tests: added `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(...)` and rewired shown editable/non-editable `Escape`/`Esc` shift+modifier+event-gate no-op specs to reuse the shared helper for both `dispatch` and `render` paths.
+  - Scope kept frontend-only (test helper consolidation; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51 passed)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Commit: pending
+- Next action: collapse remaining shown shift+modifier no-op test invocations that still call dispatch/render separately into a single mode-loop assertion helper to finish lifecycle DRY parity.
+
 ## 2026-03-09 01:28 KST — Agent Chat implementation cycle
 - Delta: Collapsed remaining shown-editable event-gate no-op entrypoints in thread shortcut legend lifecycle tests behind a shared mode helper.
   - Frontend tests: added `assertShownEditableLegendEventGateNoOpByShiftAndMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
