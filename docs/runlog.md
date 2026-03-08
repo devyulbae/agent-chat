@@ -1,3 +1,17 @@
+## 2026-03-09 08:07 KST — inline shown shift no-op across-escape-keys wrapper callsites (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop shown shift no-op across-escape-keys wrapper indirection at lifecycle test callsites.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertShownLegendNoOpByShiftAndEditableAcrossEscapeKeys(...)` one-hop wrapper helper.
+    - Inlined `forEachLegendEscapeKey(...)` iteration directly at the three shown `shiftKey=true` no-op test callsites while keeping assertions routed through `assertShownLegendNoOpByShiftAndEditable(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming one-hop wrappers where shown no-op callsites can iterate `forEachLegendEscapeKey(...)` directly while preserving explicit mode/guard intent.
+
 ## 2026-03-09 07:51 KST — inline shown shift modifier+event-gate across-escape-keys mode wrapper callsite (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop across-escape-keys+mode wrapper indirection in shown shift modifier/event-gate lifecycle coverage.
 - Change:
