@@ -1,5 +1,22 @@
 # Runlog
 
+## 2026-03-08 10:23 KST — shown Shift+Escape non-editable modifier/event-gate helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to shrink duplicated shown non-editable `Shift+Escape`/`Shift+Esc` modifier+event-gate no-op fixtures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownShiftLegendNonEditableModifierEventGateNoOp(key)` helper encapsulating repeated dispatch/render assertions for:
+      - `metaKey=true + defaultPrevented=true`
+      - `ctrlKey=true + repeat=true`
+      - render parity checks for nullish aria + stable `ariaExpanded`.
+    - Replaced duplicated separate canonical/alias no-op tests with one compact shared test invoking the helper for both `Escape` and `Esc`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue helper/table extraction for remaining shown editable-target `shiftKey=true` modifier+event-gate no-op fixtures to reduce duplicated render/dispatch assertions while preserving parity coverage.
+
 ## 2026-03-08 10:04 KST — hidden legend modifier dispatch assertion helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to reduce repeated hidden-state modifier guard assertions.
 - Change:
@@ -2934,3 +2951,18 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `1a43cc2` — `[refactor] reuse hidden-selection title for recovery button tooltips`
   - Push: `main -> origin/main` ✅
 - Next action: add a focused frontend regression to lock that hidden-selection recovery button tooltips stay in sync with `selectedVisibleThreadPositionTitle` copy whenever hidden-selection title text changes.
+
+## 2026-03-08 10:12 KST — hidden-selection recovery tooltip/title sync regression lock (offset lane)
+- Scope: frontend integration + API contract sync lane (lock hidden-selection recovery button tooltip copy to shared position-title source).
+- Change:
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added focused regression asserting both hidden-state recovery button tooltips (`first` / `last`) include `getSelectedVisibleThreadPositionTitle(true)` output.
+    - This pins title synchronization so future position-title copy updates cannot silently drift button tooltip text.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadSelectionStatus.test.ts` ✅ (22/22)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `2d9cc20` — `[test] lock hidden-selection recovery tooltip/title sync`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact `main.tsx` integration regression that composes hidden-selection position label/title + boundary button titles together and asserts the same copy contract surfaces coherently in one lane.

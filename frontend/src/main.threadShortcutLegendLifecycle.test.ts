@@ -103,6 +103,79 @@ const assertHiddenLegendNoOpDispatch = (
   })
 }
 
+const assertShownShiftLegendNonEditableModifierEventGateNoOp = (key: 'Escape' | 'Esc') => {
+  const ignoredShownMetaDefaultPreventedShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+    isVisible: true,
+    key,
+    shiftKey: true,
+    metaKey: true,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: true,
+    repeat: false,
+    isEditableTarget: false,
+  })
+  expect(ignoredShownMetaDefaultPreventedShiftDispatch).toEqual({
+    handled: false,
+    nextVisibility: true,
+    statusHint: null,
+  })
+
+  const ignoredShownCtrlRepeatShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+    isVisible: true,
+    key,
+    shiftKey: true,
+    metaKey: false,
+    ctrlKey: true,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: true,
+    isEditableTarget: false,
+  })
+  expect(ignoredShownCtrlRepeatShiftDispatch).toEqual({
+    handled: false,
+    nextVisibility: true,
+    statusHint: null,
+  })
+
+  const ignoredShownAltDefaultPreventedShiftRenderState = getThreadShortcutLegendKeyboardRenderState({
+    isVisible: true,
+    key,
+    shiftKey: true,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: true,
+    defaultPrevented: true,
+    repeat: false,
+    isEditableTarget: false,
+  })
+  expect(ignoredShownAltDefaultPreventedShiftRenderState.handled).toBe(false)
+  expect(ignoredShownAltDefaultPreventedShiftRenderState.nextVisibility).toBe(true)
+  expect(ignoredShownAltDefaultPreventedShiftRenderState.statusHint).toBeNull()
+  expect(ignoredShownAltDefaultPreventedShiftRenderState.statusAriaLabel ?? null).toBeNull()
+
+  const ignoredShownMetaRepeatShiftRenderState = getThreadShortcutLegendKeyboardRenderState({
+    isVisible: true,
+    key,
+    shiftKey: true,
+    metaKey: true,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: true,
+    isEditableTarget: false,
+  })
+  expect(ignoredShownMetaRepeatShiftRenderState.handled).toBe(false)
+  expect(ignoredShownMetaRepeatShiftRenderState.nextVisibility).toBe(true)
+  expect(ignoredShownMetaRepeatShiftRenderState.statusHint).toBeNull()
+  expect(ignoredShownMetaRepeatShiftRenderState.statusAriaLabel ?? null).toBeNull()
+
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(
+    ignoredShownMetaRepeatShiftRenderState.nextVisibility,
+  )
+  expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownMetaRepeatShiftRenderState.nextVisibility)
+}
+
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
     const hiddenBeforeToggle = getThreadShortcutLegendPresentation(false)
@@ -2130,162 +2203,10 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps shown Esc alias with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    const ignoredShownMetaDefaultPreventedEscAliasShiftDispatch =
-      getThreadShortcutLegendKeyboardDispatchOutcome({
-        isVisible: true,
-        key: 'Esc',
-        shiftKey: true,
-        metaKey: true,
-        ctrlKey: false,
-        altKey: false,
-        defaultPrevented: true,
-        repeat: false,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownMetaDefaultPreventedEscAliasShiftDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownCtrlRepeatEscAliasShiftDispatch =
-      getThreadShortcutLegendKeyboardDispatchOutcome({
-        isVisible: true,
-        key: 'Esc',
-        shiftKey: true,
-        metaKey: false,
-        ctrlKey: true,
-        altKey: false,
-        defaultPrevented: false,
-        repeat: true,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownCtrlRepeatEscAliasShiftDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownAltDefaultPreventedEscAliasShiftRenderState =
-      getThreadShortcutLegendKeyboardRenderState({
-        isVisible: true,
-        key: 'Esc',
-        shiftKey: true,
-        metaKey: false,
-        ctrlKey: false,
-        altKey: true,
-        defaultPrevented: true,
-        repeat: false,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownAltDefaultPreventedEscAliasShiftRenderState.handled).toBe(false)
-    expect(ignoredShownAltDefaultPreventedEscAliasShiftRenderState.nextVisibility).toBe(true)
-    expect(ignoredShownAltDefaultPreventedEscAliasShiftRenderState.statusHint).toBeNull()
-    expect(ignoredShownAltDefaultPreventedEscAliasShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const ignoredShownMetaRepeatEscAliasShiftRenderState =
-      getThreadShortcutLegendKeyboardRenderState({
-        isVisible: true,
-        key: 'Esc',
-        shiftKey: true,
-        metaKey: true,
-        ctrlKey: false,
-        altKey: false,
-        defaultPrevented: false,
-        repeat: true,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownMetaRepeatEscAliasShiftRenderState.handled).toBe(false)
-    expect(ignoredShownMetaRepeatEscAliasShiftRenderState.nextVisibility).toBe(true)
-    expect(ignoredShownMetaRepeatEscAliasShiftRenderState.statusHint).toBeNull()
-    expect(ignoredShownMetaRepeatEscAliasShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      ignoredShownMetaRepeatEscAliasShiftRenderState.nextVisibility,
-    )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(
-      ignoredShownMetaRepeatEscAliasShiftRenderState.nextVisibility,
-    )
+  it('keeps shown Escape/Esc with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
+    assertShownShiftLegendNonEditableModifierEventGateNoOp('Escape')
+    assertShownShiftLegendNonEditableModifierEventGateNoOp('Esc')
   })
 
-  it('keeps shown Escape with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    const ignoredShownMetaDefaultPreventedEscapeShiftDispatch =
-      getThreadShortcutLegendKeyboardDispatchOutcome({
-        isVisible: true,
-        key: 'Escape',
-        shiftKey: true,
-        metaKey: true,
-        ctrlKey: false,
-        altKey: false,
-        defaultPrevented: true,
-        repeat: false,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownMetaDefaultPreventedEscapeShiftDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownCtrlRepeatEscapeShiftDispatch =
-      getThreadShortcutLegendKeyboardDispatchOutcome({
-        isVisible: true,
-        key: 'Escape',
-        shiftKey: true,
-        metaKey: false,
-        ctrlKey: true,
-        altKey: false,
-        defaultPrevented: false,
-        repeat: true,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownCtrlRepeatEscapeShiftDispatch).toEqual({
-      handled: false,
-      nextVisibility: true,
-      statusHint: null,
-    })
-
-    const ignoredShownAltDefaultPreventedEscapeShiftRenderState =
-      getThreadShortcutLegendKeyboardRenderState({
-        isVisible: true,
-        key: 'Escape',
-        shiftKey: true,
-        metaKey: false,
-        ctrlKey: false,
-        altKey: true,
-        defaultPrevented: true,
-        repeat: false,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownAltDefaultPreventedEscapeShiftRenderState.handled).toBe(false)
-    expect(ignoredShownAltDefaultPreventedEscapeShiftRenderState.nextVisibility).toBe(true)
-    expect(ignoredShownAltDefaultPreventedEscapeShiftRenderState.statusHint).toBeNull()
-    expect(ignoredShownAltDefaultPreventedEscapeShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const ignoredShownMetaRepeatEscapeShiftRenderState =
-      getThreadShortcutLegendKeyboardRenderState({
-        isVisible: true,
-        key: 'Escape',
-        shiftKey: true,
-        metaKey: true,
-        ctrlKey: false,
-        altKey: false,
-        defaultPrevented: false,
-        repeat: true,
-        isEditableTarget: false,
-      })
-    expect(ignoredShownMetaRepeatEscapeShiftRenderState.handled).toBe(false)
-    expect(ignoredShownMetaRepeatEscapeShiftRenderState.nextVisibility).toBe(true)
-    expect(ignoredShownMetaRepeatEscapeShiftRenderState.statusHint).toBeNull()
-    expect(ignoredShownMetaRepeatEscapeShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      ignoredShownMetaRepeatEscapeShiftRenderState.nextVisibility,
-    )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(
-      ignoredShownMetaRepeatEscapeShiftRenderState.nextVisibility,
-    )
-  })
 
 })
