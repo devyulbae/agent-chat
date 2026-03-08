@@ -1,3 +1,20 @@
+## 2026-03-09 01:44 KST — remove dead shown editable no-op input helper (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only cleanup to remove an unused helper alias in lifecycle tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed dead helper `getShownEditableLegendNoOpInput(...)` (no callsites).
+    - Kept existing mode-aware no-op helper paths unchanged.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `dc53715` — `[test] remove unused shown editable no-op input helper`
+  - Push: `main -> origin/main` ✅
+- Next action: continue trimming dead or single-hop helper aliases in `main.threadShortcutLegendLifecycle.test.ts` where direct shared no-op helper calls keep dispatch/render intent explicit.
+
 ## 2026-03-09 01:31 KST — shown shift modifier/event-gate case helper inlined (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove a one-hop shown shift modifier/event-gate case wrapper helper.
 - Change:
