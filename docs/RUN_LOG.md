@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-08 22:31 KST — Agent Chat parallel offset cycle
+- Delta: Collapsed duplicated shown-editable legend event-gate no-op assertion entrypoints in frontend lifecycle tests to keep dispatch/render parity checks centralized.
+  - Frontend tests: refactored `frontend/src/main.threadShortcutLegendLifecycle.test.ts` to route shown-editable event-gate cases through shared mode-based helper (`assertShownEditableLegendNoOpByModeCase`) instead of separate dispatch/render wrappers.
+  - Scope kept frontend-only (test helper consolidation; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: collapse hidden-editable event-gate no-op dispatch/render helper entrypoints behind the same mode-based helper path to keep lifecycle guard-rail coverage DRY.
+
 ## 2026-03-08 21:05 KST — Agent Chat implementation cycle
 - Delta: Added wrapped-spacing vertical `Control` alias extraction parity coverage for upward thread movement hints in frontend parser tests.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to previous visible thread (key: [Control + ArrowUp]).` → `Control+ArrowUp` extraction assertion.
@@ -2352,6 +2362,18 @@
 - Result: no-op sync completed; blocker only on fallback backend (`:8000` 500).
 
 ## 2026-03-08 13:43 KST — Cadence sync (project-controls)
+- Source probe:
+  - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200 (BasicAuth from `/Users/sybae/code/agent-chat/.env`), payload `[]`.
+  - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500.
+- Mapping evaluation: no control rows found, so level→cadence remap not applied (L1 `*/10`, L2 `*/30`, L3 `every 3h`, L4 `daily 09:00` all N/A).
+- Trigger burst override (2h): no `incident` / `approval_overdue` / `test_fail` signals found; no temporary 10~20m override applied.
+- Cron state kept unchanged (no destructive changes):
+  - `agentchat-build-cycle-40m` = `*/20`
+  - `agentchat-build-cycle-20m-offset` = `10-59/20`
+  - `startup-loop-day-30m` core loop untouched (bridge lane notes-only policy).
+- Result: no-op sync completed; blocker only on fallback backend (`:8000` 500).
+
+## 2026-03-08 22:24 KST — Cadence sync (project-controls)
 - Source probe:
   - Primary `http://127.0.0.1:50004/api/project-controls` ✅ HTTP 200 (BasicAuth from `/Users/sybae/code/agent-chat/.env`), payload `[]`.
   - Fallback `http://127.0.0.1:8000/api/project-controls` ❌ HTTP 500.
