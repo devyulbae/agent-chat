@@ -403,6 +403,86 @@ export function getThreadShortcutLegendKeyboardRenderState(
   }
 }
 
+export type ThreadFilterInputKeyboardDispatchInput = {
+  key: string
+  shiftKey: boolean
+  metaKey: boolean
+  ctrlKey: boolean
+  altKey: boolean
+  defaultPrevented: boolean
+  hasThreadFilter: boolean
+}
+
+export type ThreadFilterInputKeyboardDispatchOutcome = {
+  handled: boolean
+  action: 'none' | 'clearFilter' | 'resetView' | 'jumpFirstVisible' | 'jumpLastVisible'
+}
+
+export function getThreadFilterInputKeyboardDispatchOutcome(
+  input: ThreadFilterInputKeyboardDispatchInput,
+): ThreadFilterInputKeyboardDispatchOutcome {
+  if (input.defaultPrevented || input.metaKey || input.ctrlKey || input.altKey) {
+    return {
+      handled: false,
+      action: 'none',
+    }
+  }
+
+  if (input.key === 'Escape') {
+    if (input.shiftKey) {
+      return {
+        handled: true,
+        action: 'resetView',
+      }
+    }
+
+    if (!input.hasThreadFilter) {
+      return {
+        handled: false,
+        action: 'none',
+      }
+    }
+
+    return {
+      handled: true,
+      action: 'clearFilter',
+    }
+  }
+
+  if (input.key === 'Enter') {
+    return {
+      handled: true,
+      action: input.shiftKey ? 'jumpLastVisible' : 'jumpFirstVisible',
+    }
+  }
+
+  if (!input.shiftKey) {
+    return {
+      handled: false,
+      action: 'none',
+    }
+  }
+
+  if (input.key === 'Home' || input.key === 'PageUp') {
+    return {
+      handled: true,
+      action: 'jumpFirstVisible',
+    }
+  }
+
+  if (input.key === 'End' || input.key === 'PageDown') {
+    return {
+      handled: true,
+      action: 'jumpLastVisible',
+    }
+  }
+
+  return {
+    handled: false,
+    action: 'none',
+  }
+}
+
 function isEditableElement(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
     return false
@@ -825,35 +905,42 @@ function App() {
 
   const handleThreadFilterKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        if (event.shiftKey) {
-          setThreadFilterText('')
-          setShowUnreadOnlyThreads(false)
-          setIncludeRootInUnreadOnly(true)
-          setThreadFilterJumpHint(getThreadFilterResetHint('input'))
-          return
-        }
+      const dispatchOutcome = getThreadFilterInputKeyboardDispatchOutcome({
+        key: event.key,
+        shiftKey: event.shiftKey,
+        metaKey: event.metaKey,
+        ctrlKey: event.ctrlKey,
+        altKey: event.altKey,
+        defaultPrevented: event.defaultPrevented,
+        hasThreadFilter: Boolean(threadFilterText),
+      })
 
-        if (!threadFilterText) {
-          return
-        }
+      if (!dispatchOutcome.handled) {
+        return
+      }
+
+      event.preventDefault()
+
+      if (dispatchOutcome.action === 'clearFilter') {
         setThreadFilterText('')
         setThreadFilterJumpHint(null)
         return
       }
 
-      if (
-        event.key === 'Enter' &&
-        !event.metaKey &&
-        !event.ctrlKey &&
-        !event.altKey
-      ) {
-        event.preventDefault()
-        if (event.shiftKey) {
-          recoverToLastVisibleThread('Shift+Enter')
-          return
-        }
+      if (dispatchOutcome.action === 'resetView') {
+        setThreadFilterText('')
+        setShowUnreadOnlyThreads(false)
+        setIncludeRootInUnreadOnly(true)
+        setThreadFilterJumpHint(getThreadFilterResetHint('input'))
+        return
+      }
+
+      if (dispatchOutcome.action === 'jumpLastVisible') {
+        recoverToLastVisibleThread('Shift+Enter')
+        return
+      }
+
+      if (dispatchOutcome.action === 'jumpFirstVisible') {
         recoverToFirstVisibleThread('Enter')
       }
     },
