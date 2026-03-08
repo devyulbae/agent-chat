@@ -1,3 +1,16 @@
+## 2026-03-09 08:52 KST — inline editable event-gate input-base assembly at lifecycle callsites (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop editable event-gate across-keys wrapper indirection.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(...)` helper.
+    - Inlined `forEachLegendEscapeKey(...)` + `assertLegendEventGateNoOpForInputBase(...)` call paths directly at three editable event-gate lifecycle test callsites (hidden non-shift, shown non-shift, shown shift).
+    - Kept assertions routed through shared `assertLegendEventGateNoOpForInputBase(...)` helper to preserve event-gate case coverage parity.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop wrappers where remaining helper aliases only forward fixed modifier/event-gate inputs at lifecycle callsites.
+
 ## 2026-03-09 08:33 KST — inline event-gate input-base assembly at Escape/Esc lifecycle callsites (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop non-editable event-gate across-keys wrapper indirection.
 - Change:
