@@ -218,23 +218,6 @@ const assertHiddenEditableLegendNoOpByMode = (
   assertLegendNoOpDispatchForInput(input, false)
 }
 
-const assertHiddenLegendNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  assertLegendNoOpRenderStateForInput(
-    {
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    },
-    false,
-  )
-}
-
 const assertHiddenLegendModifierNoOpByMode = (
   key: 'Escape' | 'Esc',
   mode: LegendNoOpAssertionMode,
@@ -892,7 +875,20 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Esc alias dismiss as a no-op render-state with no stale status aria emission', () => {
-    assertHiddenLegendNoOpRenderState('Esc')
+    assertLegendNoOpRenderStateForInput(
+      {
+        isVisible: false,
+        key: 'Esc',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      },
+      false,
+    )
   })
 
   it('keeps hidden Escape with modifier keys as no-op render-state parity with dispatch guard rails', () => {

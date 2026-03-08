@@ -1,3 +1,17 @@
+## 2026-03-09 01:03 KST — inline single-use hidden Esc render no-op helper alias (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove a one-hop hidden Esc render-state helper alias.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use wrapper helper `assertHiddenLegendNoOpRenderState(...)`.
+    - Inlined its only `Esc` callsite to directly invoke `assertLegendNoOpRenderStateForInput(...)` with explicit hidden non-editable no-op input.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing single-use wrapper aliases by inlining one-hop no-op helper entrypoints where direct shared helper calls keep hidden/shown dispatch/render intent explicit.
+
 ## 2026-03-09 00:52 KST — remove dead no-op helper aliases in lifecycle tests (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove helper aliases that no longer have callsites.
 - Change:
