@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 13:12 KST — shown shift editable modifier no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated shown editable-target `shiftKey=true` modifier no-op fixtures shared by canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownEditableShiftLegendModifierNoOp(key)` to table-drive modifier cases (`meta`/`ctrl`/`alt`) through a single dispatch + render-state assertion loop.
+    - Removed duplicated per-modifier inline dispatch/render assertion blocks while preserving no-op contract expectations and shown-state `ariaExpanded` parity checks.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (50/50)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining shown `shiftKey=true` editable-target modifier+event-gate no-op duplication where canonical `Escape` and alias `Esc` assertions are structurally identical.
+
 ## 2026-03-08 13:05 KST — hidden editable render-state no-op helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated hidden editable-target render-state no-op assertions shared by canonical `Escape` and alias `Esc`.
 - Change:
