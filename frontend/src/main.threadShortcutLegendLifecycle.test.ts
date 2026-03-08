@@ -189,34 +189,25 @@ const assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
   })
 }
 
-const assertEditableLegendEventGateNoOpByVisibilityShiftAndMode = (
-  key: 'Escape' | 'Esc',
-  isVisible: boolean,
-  shiftKey: boolean,
-  mode: LegendEventGateAssertionMode,
-) => {
-  assertLegendEventGateNoOpForInputBase(
-    {
-      isVisible,
-      key,
-      shiftKey,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      isEditableTarget: true,
-    },
-    isVisible,
-    mode,
-  )
-}
-
 const assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode = (
   isVisible: boolean,
   shiftKey: boolean,
   mode: LegendEventGateAssertionMode,
 ) => {
   forEachLegendEscapeKey((key) => {
-    assertEditableLegendEventGateNoOpByVisibilityShiftAndMode(key, isVisible, shiftKey, mode)
+    assertLegendEventGateNoOpForInputBase(
+      {
+        isVisible,
+        key,
+        shiftKey,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        isEditableTarget: true,
+      },
+      isVisible,
+      mode,
+    )
   })
 }
 
@@ -363,39 +354,25 @@ const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode = (
   }
 }
 
-const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes = (
-  key: 'Escape' | 'Esc',
-  isVisible: boolean,
-  shiftKey: boolean,
-  isEditableTarget: boolean,
-) => {
-  assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
-    key,
-    isVisible,
-    shiftKey,
-    isEditableTarget,
-    'dispatch',
-  )
-  assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
-    key,
-    isVisible,
-    shiftKey,
-    isEditableTarget,
-    'render',
-  )
-}
-
 const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes = (
   isVisible: boolean,
   shiftKey: boolean,
   isEditableTarget: boolean,
 ) => {
-  ;(['Escape', 'Esc'] as const).forEach((key) => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes(
+  forEachLegendEscapeKey((key) => {
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
       key,
       isVisible,
       shiftKey,
       isEditableTarget,
+      'dispatch',
+    )
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
+      key,
+      isVisible,
+      shiftKey,
+      isEditableTarget,
+      'render',
     )
   })
 }

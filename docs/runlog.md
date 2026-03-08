@@ -1,3 +1,16 @@
+## 2026-03-09 04:52 KST — inline escape-keys event-gate/modifier mode wrappers in lifecycle tests (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop visibility/mode wrappers and keep escape-key iteration on shared helper path.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use `assertEditableLegendEventGateNoOpByVisibilityShiftAndMode(...)` wrapper and inlined its input-base call into `assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(...)`.
+    - Removed one-hop `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes(...)` wrapper.
+    - Updated `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(...)` to iterate via `forEachLegendEscapeKey(...)` and dispatch/render directly through `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (42/42)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop escape-key wrapper helpers where dispatch/render mode selection can be expressed directly at the across-keys callsite.
+
 ## 2026-03-09 04:43 KST — hidden editable no-op helper inline in across-keys path (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop hidden editable no-op wrapper while preserving Escape/Esc parity.
 - Change:
