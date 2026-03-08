@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 14:04 KST — hidden event-gate dispatch helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated hidden non-editable event-gate (`defaultPrevented`/`repeat`) dispatch no-op fixtures for canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendEventGateNoOpDispatch(key)` helper for hidden non-editable event-gate dispatch no-op checks.
+    - Replaced duplicated inline hidden dispatch event-gate test bodies for `Escape` and `Esc` with helper-driven assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing duplicated shown-state editable `shiftKey=true` no-op fixtures where `Escape` and `Esc` assertions are structurally identical.
+
 ## 2026-03-08 13:31 KST — shown Shift+Escape dispatch no-op helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated shown non-editable `shiftKey=true` dispatch no-op fixtures for canonical `Escape` and alias `Esc`.
 - Change:
