@@ -3456,3 +3456,18 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
 - Next action: collapse remaining duplicated shown editable/non-editable modifier no-op helper scaffolding by introducing a shared assertion helper that parameterizes `isEditableTarget` + `shiftKey`.
+
+## 2026-03-08 17:42 KST — shared shown modifier no-op helper extraction (boost lane)
+- Scope: chat thread UX wiring test-hygiene increment with strict no-behavior-change helper dedupe in legend lifecycle coverage.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget)` to centralize shown-state modifier-key no-op dispatch/render assertions.
+    - Rewired `assertShownEditableLegendModifierNoOpByShift(...)` to use the new shared helper.
+    - Rewired non-editable render-state helper to reuse the same shared path (`shiftKey=false`, `isEditableTarget=false`) while preserving aria-expanded parity assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18/18)
+- Next action: extract a single shared helper for shown non-editable modifier-only no-op dispatch assertions so explicit non-editable dispatch tests can reuse the same case-table lane without duplicating fixture setup.
