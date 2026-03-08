@@ -297,6 +297,14 @@ const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   })
 }
 
+const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditable = (
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  forEachLegendNoOpAssertionMode((mode) => {
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(shiftKey, isEditableTarget, mode)
+  })
+}
 
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
@@ -790,11 +798,13 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch/render-state outcomes across shift states', () => {
-    ;([false, true] as const).forEach((shiftKey) => {
-      forEachLegendNoOpAssertionMode((mode) => {
-        assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(shiftKey, true, mode)
-      })
+  it('keeps shown Escape/Esc modifier-key paths as no-op dispatch/render-state outcomes across editable + shift states', () => {
+    ;([
+      { shiftKey: false, isEditableTarget: false },
+      { shiftKey: false, isEditableTarget: true },
+      { shiftKey: true, isEditableTarget: true },
+    ] as const).forEach(({ shiftKey, isEditableTarget }) => {
+      assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditable(shiftKey, isEditableTarget)
     })
   })
 
@@ -829,12 +839,6 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
   it('keeps hidden Escape/Esc as no-op render-state when target is editable', () => {
     assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('render')
-  })
-
-  it('keeps shown Escape/Esc with modifier keys as no-op dispatch/render-state outcomes with nullish aria', () => {
-    forEachLegendNoOpAssertionMode((mode) => {
-      assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(false, false, mode)
-    })
   })
 
   it('keeps shown Escape/Esc as no-op render-state when event is defaultPrevented or repeat', () => {

@@ -4324,3 +4324,21 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
 - Next action: dedupe remaining shown editable modifier no-op spec pair by consolidating dispatch/render assertions into a single table-driven helper-backed test while preserving explicit aria parity coverage.
+
+## 2026-03-09 07:22 KST — shown editable modifier no-op spec pair consolidation (boost cycle)
+- Scope: chat thread UX wiring (test-only, strict no-behavior-change dedupe in legend lifecycle coverage).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditable(...)` helper to centralize dispatch/render mode iteration for shown modifier no-op checks.
+    - Consolidated duplicated shown modifier no-op spec pair into one table-driven test covering `{shift=false, editable=false}`, `{shift=false, editable=true}`, and `{shift=true, editable=true}`.
+    - Removed the standalone non-editable duplicate test now covered by the consolidated helper-backed matrix.
+- Blocker encountered:
+  - Initial test run failed with esbuild parse error (`Expected ";" but found ")"`) caused by malformed `as const` cast wrapping in the new table-driven array expression.
+- Immediate fix action:
+  - Corrected expression to `;([ ... ] as const).forEach(...)`, reran targeted test, and continued full gate verification.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (32/32)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (19/19)
+- Next action: apply the same helper-matrix consolidation pattern to shown modifier+event-gate specs (editable/non-editable shift=true) to reduce remaining duplicated no-op test scaffolding while preserving aria-expanded parity assertions.
