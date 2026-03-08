@@ -1,3 +1,16 @@
+## 2026-03-09 08:11 KST — inline shown shift no-op helper callsites in lifecycle tests (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown shift no-op helper indirection at callsites.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertShownLegendNoOpByShiftAndEditable(...)` helper.
+    - Inlined shown `shiftKey=true` no-op input payloads directly at the three Escape/Esc callsite loops (non-editable dispatch parity, editable parity, render-state parity).
+    - Kept assertions routed through shared `assertLegendNoOpDispatchAndRenderStateForInput(...)` and `assertShownLegendNoOpAriaExpanded()` helpers.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop lifecycle wrappers where shown/hidden callsites can invoke existing mode-aware helpers directly without intermediate aliases.
+
 ## 2026-03-09 08:07 KST — inline shown shift no-op across-escape-keys wrapper callsites (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop shown shift no-op across-escape-keys wrapper indirection at lifecycle test callsites.
 - Change:
