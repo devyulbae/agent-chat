@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 13:31 KST — shown Shift+Escape dispatch no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to collapse duplicated shown non-editable `shiftKey=true` dispatch no-op fixtures for canonical `Escape` and alias `Esc`.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendNoOpDispatch(key, shiftKey)` helper for shown dispatch no-op + `ariaExpanded` parity assertions.
+    - Replaced duplicated shown non-editable `shiftKey=true` dispatch no-op test bodies (`Escape`, `Esc`) with helper-driven assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining shown-state no-op fixture duplication where canonical `Escape` and alias `Esc` assertions are structurally identical.
+
 ## 2026-03-08 13:22 KST — shown non-editable event-gate dispatch helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated shown non-editable event-gate (`defaultPrevented`/`repeat`) no-op dispatch assertions for canonical `Escape` and alias `Esc`.
 - Change:
