@@ -2997,3 +2997,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: continue extracting helper coverage for remaining shown editable-target `shiftKey=true` modifier+event-gate mixed-path fixtures to further shrink repetitive lifecycle assertions.
+
+## 2026-03-08 10:51 KST — shown editable shift modifier+event-gate helper dedupe follow-up (offset lane)
+- Scope: frontend integration + API contract sync lane (reduce repetitive shown editable `shiftKey=true` modifier+event-gate no-op assertions).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownEditableShiftLegendModifierEventGateNoOp(key)` to drive dispatch/render no-op checks from compact case tables.
+    - Preserved parity contract assertions (`handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`) while removing duplicated fixture scaffolding.
+    - Kept `ariaExpanded` parity assertion explicit via `getThreadShortcutLegendPresentation(true)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: extract the same case-table helper style for shown non-editable `shiftKey=true` modifier+event-gate no-op parity to further trim duplicate fixture setup.
