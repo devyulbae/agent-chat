@@ -1,3 +1,16 @@
+## 2026-03-09 04:23 KST — shown shift editable modifier no-op across-keys helper reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse per-key (`Escape`/`Esc`) shown `shiftKey=true` editable-target modifier no-op mode assertions into one across-keys helper path.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared helper `assertShownLegendModifierNoOpByShiftAndEditableAcrossEscapeKeysAcrossModes(...)`.
+    - Replaced two key-specific tests (`Escape`, `Esc`) for shown `shiftKey=true` editable-target modifier no-op dispatch/render coverage with one combined across-keys test.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (43/43)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: apply the same across-escape-keys helper pattern to shown `shiftKey=true` editable-target modifier+event-gate no-op callsites that still keep separate per-key test wrappers.
+
 ## 2026-03-09 04:03 KST — hidden editable no-op escape-key helper reuse (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated hidden editable `Escape`/`Esc` no-op call pairs by routing through one across-keys helper.
 - Change:

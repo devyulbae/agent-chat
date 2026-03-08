@@ -311,6 +311,15 @@ const assertShownLegendModifierNoOpByShiftAndEditableAcrossModes = (
   assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'render')
 }
 
+const assertShownLegendModifierNoOpByShiftAndEditableAcrossEscapeKeysAcrossModes = (
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  forEachLegendEscapeKey((key) => {
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(key, shiftKey, isEditableTarget)
+  })
+}
+
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
   nextVisibility: boolean,
@@ -900,12 +909,8 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', false, true)
   })
 
-  it('keeps shown Escape with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', true, true)
-  })
-
-  it('keeps shown Esc alias with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', true, true)
+  it('keeps shown Escape/Esc with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossEscapeKeysAcrossModes(true, true)
   })
   it('keeps shown Escape with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
     assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes('Escape', true, true, true)
