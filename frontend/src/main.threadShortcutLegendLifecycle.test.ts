@@ -117,7 +117,7 @@ const assertShownLegendNoOpByShiftAndEditable = (
   shiftKey: boolean,
   isEditableTarget: boolean,
 ) => {
-  const shownNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+  const input = {
     isVisible: true,
     key,
     shiftKey,
@@ -127,24 +127,12 @@ const assertShownLegendNoOpByShiftAndEditable = (
     defaultPrevented: false,
     repeat: false,
     isEditableTarget,
-  })
-  assertLegendNoOpDispatchOutcome(shownNoOpDispatch, true)
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-  const shownNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: false,
-    isEditableTarget,
-  })
-  assertLegendNoOpRenderStateOutcome(shownNoOpRenderState, true)
+  assertLegendNoOpDispatchAndRenderStateForInput(input, true)
 
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(shownNoOpRenderState.nextVisibility)
-  expect(shownNoOpPresentation.ariaExpanded).toBe(shownNoOpRenderState.nextVisibility)
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
+  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
 const assertShownEditableLegendNoOpDispatch = (

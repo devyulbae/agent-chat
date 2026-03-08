@@ -1,3 +1,16 @@
+## 2026-03-08 21:30 KST — shown no-op shift/editable helper input unification (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown no-op dispatch/render input scaffolding in the shift/editable helper lane.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownLegendNoOpByShiftAndEditable(...)` to build one typed canonical input payload (`satisfies` dispatch input contract).
+    - Replaced separate inline dispatch + render-state calls with shared `assertLegendNoOpDispatchAndRenderStateForInput(...)` helper reuse.
+    - Preserved shown-state no-op presentation parity assertion (`ariaExpanded === true`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing wrapper-only no-op helpers that still branch into separate dispatch/render entrypoints despite sharing identical typed input payloads.
+
 ## 2026-03-08 21:12 KST — hidden modifier dispatch helper reuse for Escape/Esc no-op coverage (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated hidden modifier dispatch fixtures across canonical `Escape` and alias `Esc` no-op tests.
 - Change:
