@@ -112,6 +112,11 @@ const assertLegendRenderStateShowHideLifecycle = (
   expect(hiddenRenderState.statusAriaLabel).toContain('Shortcut badge Esc: Escape (filter jump).')
 }
 
+const assertShownLegendNoOpAriaExpanded = () => {
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
+  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+}
+
 const assertShownLegendNoOpByShiftAndEditable = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
@@ -131,8 +136,7 @@ const assertShownLegendNoOpByShiftAndEditable = (
 
   assertLegendNoOpDispatchAndRenderStateForInput(input, true)
 
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
-  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+  assertShownLegendNoOpAriaExpanded()
 }
 
 type LegendNoOpAssertionMode = 'dispatch' | 'render'
@@ -287,8 +291,7 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
     assertLegendNoOpByModeForInput(input, true, mode)
   })
 
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
-  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+  assertShownLegendNoOpAriaExpanded()
 }
 
 const assertLegendEventGateNoOpForInputBase = (
@@ -354,8 +357,7 @@ const assertShownShiftLegendModifierEventGateNoOp = (
     'render',
   )
 
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
-  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+  assertShownLegendNoOpAriaExpanded()
 }
 
 
