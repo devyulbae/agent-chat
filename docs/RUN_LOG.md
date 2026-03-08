@@ -8,7 +8,7 @@
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
-- Commit: pending
+- Commit: `bacbde7` (pushed to `main`)
 - Next action: add complementary wrapped extraction coverage for `key: [Control+ArrowRight]`/`key: [Control+ArrowLeft]` parity in one-step movement hint copy if product copy starts emitting mixed direction variants.
 
 ## 2026-03-08 13:51 KST — Agent Chat parallel offset cycle
