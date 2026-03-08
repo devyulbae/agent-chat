@@ -247,22 +247,6 @@ const assertHiddenEditableLegendNoOpByMode = (
   assertLegendNoOpDispatchForInput(input, false)
 }
 
-const assertHiddenEditableLegendNoOpDispatch = (
-  key: 'Escape' | 'Esc',
-  defaultPrevented = false,
-  repeat = false,
-) => {
-  assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'dispatch')
-}
-
-const assertHiddenEditableLegendNoOpRenderState = (
-  key: 'Escape' | 'Esc',
-  defaultPrevented: boolean,
-  repeat: boolean,
-) => {
-  assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'render')
-}
-
 const assertHiddenEditableLegendEventGateNoOp = (
   key: 'Escape' | 'Esc',
   mode: LegendEventGateAssertionMode,
@@ -870,7 +854,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape as no-op dispatch when target is editable', () => {
-    assertHiddenEditableLegendNoOpDispatch('Escape')
+    assertHiddenEditableLegendNoOpByMode('Escape', false, false, 'dispatch')
   })
 
   it('keeps hidden Escape as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
@@ -878,7 +862,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Esc alias as no-op dispatch when target is editable', () => {
-    assertHiddenEditableLegendNoOpDispatch('Esc')
+    assertHiddenEditableLegendNoOpByMode('Esc', false, false, 'dispatch')
   })
 
   it('keeps hidden Esc alias as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
@@ -959,7 +943,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape as no-op render-state when target is editable', () => {
-    assertHiddenEditableLegendNoOpRenderState('Escape', false, false)
+    assertHiddenEditableLegendNoOpByMode('Escape', false, false, 'render')
   })
 
   it('keeps hidden Escape as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
@@ -967,7 +951,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Esc alias as no-op render-state when target is editable', () => {
-    assertHiddenEditableLegendNoOpRenderState('Esc', false, false)
+    assertHiddenEditableLegendNoOpByMode('Esc', false, false, 'render')
   })
 
   it('keeps hidden Esc alias as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {

@@ -1,3 +1,16 @@
+## 2026-03-09 00:03 KST — hidden editable wrapper entrypoint alias removal (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove wrapper-only hidden editable no-op entrypoints.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed wrapper aliases `assertHiddenEditableLegendNoOpDispatch(...)` and `assertHiddenEditableLegendNoOpRenderState(...)`.
+    - Updated hidden editable no-op callsites to invoke `assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, mode)` directly for dispatch/render assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing wrapper-only helper aliases in shown/hidden legend no-op paths so all callsites route through mode-aware helpers directly.
+
 ## 2026-03-08 23:51 KST — shown editable modifier wrapper alias removal (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove the remaining wrapper-only shown editable modifier helper entrypoints.
 - Change:
