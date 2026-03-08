@@ -65,6 +65,38 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
     })
   })
 
+  it('maps Shift+U to unread-only toggle from filter input', () => {
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'u',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: true,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'toggleUnreadOnly',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'U',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: false,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'toggleUnreadOnly',
+    })
+  })
+
   it('preserves existing enter/escape behavior', () => {
     expect(
       getThreadFilterInputKeyboardDispatchOutcome({

@@ -418,7 +418,7 @@ export type ThreadFilterInputKeyboardDispatchInput = {
 
 export type ThreadFilterInputKeyboardDispatchOutcome = {
   handled: boolean
-  action: 'none' | 'clearFilter' | 'resetView' | 'jumpFirstVisible' | 'jumpLastVisible'
+  action: 'none' | 'clearFilter' | 'resetView' | 'jumpFirstVisible' | 'jumpLastVisible' | 'toggleUnreadOnly'
 }
 
 export function getThreadFilterInputKeyboardDispatchOutcome(
@@ -449,6 +449,13 @@ export function getThreadFilterInputKeyboardDispatchOutcome(
     return {
       handled: true,
       action: 'clearFilter',
+    }
+  }
+
+  if (input.shiftKey && (input.key === 'U' || input.key === 'u')) {
+    return {
+      handled: true,
+      action: 'toggleUnreadOnly',
     }
   }
 
@@ -935,6 +942,17 @@ function App() {
         setShowUnreadOnlyThreads(false)
         setIncludeRootInUnreadOnly(true)
         setThreadFilterJumpHint(getThreadFilterResetHint('input'))
+        return
+      }
+
+      if (dispatchOutcome.action === 'toggleUnreadOnly') {
+        setShowUnreadOnlyThreads((current) => {
+          const next = !current
+          setThreadFilterJumpHint(
+            `Unread-only filter ${next ? 'enabled' : 'disabled'} from filter input (Shift+U).`
+          )
+          return next
+        })
         return
       }
 
@@ -3151,7 +3169,7 @@ function App() {
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
-              focus/jump/reset shortcuts · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries (Shift+End/Shift+PgDn hard-jump last) · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
+              focus/jump/reset shortcuts · Shift+U toggles unread-only · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries (Shift+End/Shift+PgDn hard-jump last) · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input
