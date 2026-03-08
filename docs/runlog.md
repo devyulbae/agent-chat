@@ -1,3 +1,19 @@
+## 2026-03-09 06:32 KST — inline single-hop escape-key no-op wrappers in lifecycle tests (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop key-specific wrappers that only forwarded fixed visibility/modifier no-op inputs.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertHiddenLegendModifierNoOpByMode(...)` and inlined its modifier-case loop directly into `assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode(...)`.
+    - Removed `assertLegendEventGateNoOpByVisibilityAndMode(...)` and inlined its fixed input-base forwarding into `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(...)`.
+    - Removed `assertShownLegendModifierNoOpByShiftAndEditable(...)` and inlined its modifier-case loop into `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (37/37)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `0d4b19d` — `[test] inline single-hop escape-key no-op helper wrappers`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing one-hop escape-key wrapper callsites where across-keys helpers can directly express fixed input-base routing without intermediate per-key helpers.
+
 ## 2026-03-09 06:22 KST — event-gate across-escape-keys helper reuse in legend lifecycle tests (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated Escape/Esc event-gate no-op call loops in lifecycle coverage.
 - Change:
