@@ -277,6 +277,15 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
   assertShownLegendNoOpAriaExpanded()
 }
 
+const assertShownLegendModifierNoOpByShiftAndEditableAcrossModes = (
+  key: 'Escape' | 'Esc',
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'dispatch')
+  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'render')
+}
+
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
   nextVisibility: boolean,
@@ -765,10 +774,8 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', false, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', false, true, 'render')
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', false, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', false, true, 'render')
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', false, true)
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', false, true)
   })
 
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
@@ -851,19 +858,16 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', false, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', false, true, 'render')
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', false, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', false, true, 'render')
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', false, true)
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', false, true)
   })
 
   it('keeps shown Escape with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', true, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Escape', true, true, 'render')
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', true, true)
   })
+
   it('keeps shown Esc alias with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', true, true, 'dispatch')
-    assertShownLegendModifierNoOpByShiftAndEditable('Esc', true, true, 'render')
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', true, true)
   })
   it('keeps shown Escape with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
     assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Escape', true, true, true, 'dispatch')

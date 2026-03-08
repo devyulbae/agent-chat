@@ -1,3 +1,18 @@
+## 2026-03-09 03:22 KST — shown modifier across-modes helper reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse repeated shown modifier no-op dispatch/render call pairs in lifecycle tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared helper `assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(...)` to route fixed dispatch+render pair assertions through one call.
+    - Refactored repeated callsites to use the helper for:
+      - shown editable non-shift modifier no-op lanes (`Escape`/`Esc`)
+      - shown editable `shiftKey=true` modifier no-op lanes (`Escape`/`Esc`)
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming duplicate shown modifier/event-gate no-op test callsites where dispatch/render pairs still appear as repeated adjacent calls with fixed visibility/shift inputs.
+
 ## 2026-03-09 02:44 KST — shown no-op aria-expanded helper reuse (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated shown-state `ariaExpanded` no-op assertions across lifecycle helpers.
 - Change:
