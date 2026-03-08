@@ -2966,3 +2966,15 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - Commit: `2d9cc20` — `[test] lock hidden-selection recovery tooltip/title sync`
   - Push: `main -> origin/main` ✅
 - Next action: add a compact `main.tsx` integration regression that composes hidden-selection position label/title + boundary button titles together and asserts the same copy contract surfaces coherently in one lane.
+
+## 2026-03-08 10:33 KST — shown editable shift-modifier no-op helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to reduce duplicated shown editable-target `shiftKey=true` modifier-only no-op dispatch/render fixtures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableShiftLegendModifierNoOp(key)` helper for shown editable-target `shiftKey=true` + modifier-key (`meta`/`ctrl`/`alt`) dispatch/render no-op assertions, including stable `ariaExpanded` parity.
+    - Replaced duplicated canonical `Escape` and alias `Esc` modifier-only test bodies with concise helper invocations.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue extracting helper coverage for remaining shown editable-target `shiftKey=true` modifier+event-gate mixed-path fixtures to further shrink repetitive lifecycle assertions.
