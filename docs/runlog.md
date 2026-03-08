@@ -1,3 +1,16 @@
+## 2026-03-08 20:31 KST — shown modifier no-op helper mode-unification for dispatch/render lanes (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown modifier no-op helper loops split by dispatch vs render-state modes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced separate `assertShownLegendModifierNoOpDispatchByShiftAndEditable(...)` and `assertShownLegendModifierNoOpRenderStateByShiftAndEditable(...)` helpers with unified `assertShownLegendModifierNoOpByShiftAndEditable(...)` mode helper.
+    - Refactored shown non-editable and shown editable shift/non-shift modifier no-op wrappers to reuse the unified helper for both dispatch and render-state lanes.
+    - Preserved shown-state `ariaExpanded` presentation parity assertion in the unified helper path.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining shown shift modifier+event-gate case helpers where dispatch/render case functions still duplicate the same input wiring.
+
 ## 2026-03-08 20:13 KST — no-op presentation parity helper extraction for Esc/Shift+Escape lanes (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated no-op dispatch/render-state presentation parity scaffolding for hidden `Esc` and shown `Shift+Escape` paths.
 - Change:
