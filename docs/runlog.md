@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 09:24 KST — shown Shift+Escape alias no-op render parity helper extraction (boost lane)
+- Scope: chat thread UX wiring follow-up to reduce duplicated shown-state `Shift+Escape`/`Shift+Esc` non-editable no-op render assertions with strict test-only scope.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendNoOpRenderState(key, shiftKey)` helper for shown no-op render-state assertions (`handled=false`, `nextVisibility=true`, nullish status/aria, stable `ariaExpanded` parity).
+    - Collapsed duplicate canonical/alias tests into one compact table-style assertion lane for `Escape` and `Esc` with `shiftKey=true`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing duplicated shown-state `Shift+Escape` editable-target modifier/event-gate fixtures into the same helper pattern to trim repetitive lifecycle surface while preserving dispatch/render parity assertions.
+
 ## 2026-03-08 09:12 KST — shown canonical Escape+Shift non-editable modifier+event-gate no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to mirror the existing shown `Esc` alias `shiftKey=true` non-editable modifier+event-gate no-op lane with canonical `Escape` parity.
 - Change:

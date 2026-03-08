@@ -9,6 +9,27 @@ import {
 } from './main'
 import { getShortcutChipPropsFromHint, getStatusAriaLabelWithShortcutChip } from './threadHintChips'
 
+const assertShownLegendNoOpRenderState = (key: 'Escape' | 'Esc', shiftKey: boolean) => {
+  const shownNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+    isVisible: true,
+    key,
+    shiftKey,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented: false,
+    repeat: false,
+    isEditableTarget: false,
+  })
+  expect(shownNoOpRenderState.handled).toBe(false)
+  expect(shownNoOpRenderState.nextVisibility).toBe(true)
+  expect(shownNoOpRenderState.statusHint).toBeNull()
+  expect(shownNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(shownNoOpRenderState.nextVisibility)
+  expect(shownNoOpPresentation.ariaExpanded).toBe(shownNoOpRenderState.nextVisibility)
+}
+
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
   it('keeps status hint and aria-keyshortcuts synchronized across hidden → shown → hidden transitions', () => {
     const hiddenBeforeToggle = getThreadShortcutLegendPresentation(false)
@@ -1782,50 +1803,9 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(ignoredShownRepeatEscAlias.statusAriaLabel ?? null).toBeNull()
   })
 
-  it('keeps shown Escape with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
-    const shownEscapeShiftNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key: 'Escape',
-      shiftKey: true,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(shownEscapeShiftNoOpRenderState.handled).toBe(false)
-    expect(shownEscapeShiftNoOpRenderState.nextVisibility).toBe(true)
-    expect(shownEscapeShiftNoOpRenderState.statusHint).toBeNull()
-    expect(shownEscapeShiftNoOpRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      shownEscapeShiftNoOpRenderState.nextVisibility,
-    )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(shownEscapeShiftNoOpRenderState.nextVisibility)
-  })
-
-  it('keeps shown Esc alias with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
-    const shownEscAliasShiftNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key: 'Esc',
-      shiftKey: true,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    expect(shownEscAliasShiftNoOpRenderState.handled).toBe(false)
-    expect(shownEscAliasShiftNoOpRenderState.nextVisibility).toBe(true)
-    expect(shownEscAliasShiftNoOpRenderState.statusHint).toBeNull()
-    expect(shownEscAliasShiftNoOpRenderState.statusAriaLabel ?? null).toBeNull()
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      shownEscAliasShiftNoOpRenderState.nextVisibility,
-    )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(shownEscAliasShiftNoOpRenderState.nextVisibility)
+  it('keeps shown Escape/Esc with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
+    assertShownLegendNoOpRenderState('Escape', true)
+    assertShownLegendNoOpRenderState('Esc', true)
   })
 
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op render-state outcomes', () => {
