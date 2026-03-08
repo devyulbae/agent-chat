@@ -1,3 +1,37 @@
+## 2026-03-09 08:33 KST — inline event-gate input-base assembly at Escape/Esc lifecycle callsites (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop non-editable event-gate across-keys wrapper indirection.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(...)` helper.
+    - Inlined `forEachLegendEscapeKey(...)` + `assertLegendEventGateNoOpForInputBase(...)` call paths directly at four non-editable event-gate test callsites (hidden/shown × dispatch/dispatch+render).
+    - Kept assertions routed through shared `assertLegendEventGateNoOpForInputBase(...)` helper to preserve event-gate case coverage parity.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: trim remaining one-hop editable event-gate wrapper callsites by inlining fixed `inputBase` assembly where `isVisible`/`shiftKey` are constant per test.
+
+## 2026-03-09 08:24 KST — inline legend no-op mode helper at lifecycle callsites (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop mode router helper indirection.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertLegendNoOpByModeForInput(...)` helper.
+    - Inlined render-vs-dispatch branching directly at four lifecycle helper callsites:
+      - `assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode(...)`
+      - `assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode(...)`
+      - `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(...)`
+      - `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(...)`
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `4d12d3b` — `[test] inline no-op mode branching at legend lifecycle helper callsites`
+  - Push: `main -> origin/main` ✅
+- Next action: trim remaining one-hop event-gate wrappers by inlining fixed `inputBase` assembly at Escape/Esc lifecycle callsites while keeping dispatch/render parity explicit.
+
 ## 2026-03-09 08:11 KST — inline shown shift no-op helper callsites in lifecycle tests (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown shift no-op helper indirection at callsites.
 - Change:
