@@ -1,3 +1,18 @@
+## 2026-03-09 05:11 KST — inline single-use shown modifier across-escape-keys wrapper (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown modifier across-escape-keys wrapper indirection.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use helper `assertShownLegendModifierNoOpByShiftAndEditableAcrossEscapeKeysAcrossModes(...)`.
+    - Inlined its only callsite by iterating `forEachLegendEscapeKey(...)` directly in the shown editable `shiftKey=true` modifier no-op test and calling `assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (40/40)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Git:
+  - Commit: `b491520` — `[test] inline single-use shown modifier across-escape-keys wrapper`
+  - Push: `main -> origin/main` ✅
+- Next action: continue trimming single-use across-escape-keys wrapper helpers where tests can iterate `forEachLegendEscapeKey(...)` directly at callsites while keeping mode intent explicit.
+
 ## 2026-03-09 04:52 KST — inline escape-keys event-gate/modifier mode wrappers in lifecycle tests (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop visibility/mode wrappers and keep escape-key iteration on shared helper path.
 - Change:
