@@ -1,3 +1,16 @@
+## 2026-03-09 00:52 KST — remove dead no-op helper aliases in lifecycle tests (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove helper aliases that no longer have callsites.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed unused shown editable no-op mode wrapper `assertShownEditableLegendNoOpByMode(...)`.
+    - Removed unused hidden modifier dispatch wrapper `assertHiddenLegendNoOpDispatch(...)`.
+    - Kept all active no-op assertion paths routed through shared input/mode helpers already in use.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming remaining wrapper-style helper indirection by inlining one-hop case helpers where direct shared helper calls keep dispatch/render intent explicit.
+
 ## 2026-03-09 00:45 KST — hidden editable event-gate wrapper alias removal (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove a wrapper-only hidden editable event-gate helper entrypoint.
 - Change:

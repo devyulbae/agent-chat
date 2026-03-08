@@ -155,25 +155,6 @@ const getShownEditableLegendNoOpInput = (
 
 type LegendNoOpAssertionMode = 'dispatch' | 'render'
 
-const assertShownEditableLegendNoOpByMode = (
-  key: 'Escape' | 'Esc',
-  shiftKey: boolean,
-  defaultPrevented: boolean,
-  repeat: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  const input = getShownEditableLegendNoOpInput(key, shiftKey, defaultPrevented, repeat)
-
-  if (mode === 'dispatch') {
-    assertLegendNoOpDispatchForInput(input, true)
-  } else {
-    assertLegendNoOpRenderStateForInput(input, true)
-  }
-
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
-  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
-}
-
 
 const legendModifierCases = [
   { metaKey: true, ctrlKey: false, altKey: false },
@@ -235,25 +216,6 @@ const assertHiddenEditableLegendNoOpByMode = (
   }
 
   assertLegendNoOpDispatchForInput(input, false)
-}
-
-const assertHiddenLegendNoOpDispatch = (
-  key: 'Escape' | 'Esc',
-  modifier: Pick<
-    Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
-    'metaKey' | 'ctrlKey' | 'altKey'
-  >,
-) => {
-  const hiddenNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-    isVisible: false,
-    key,
-    shiftKey: false,
-    defaultPrevented: false,
-    repeat: false,
-    isEditableTarget: false,
-    ...modifier,
-  })
-  assertLegendNoOpDispatchOutcome(hiddenNoOpDispatch, false)
 }
 
 const assertHiddenLegendNoOpRenderState = (key: 'Escape' | 'Esc') => {
