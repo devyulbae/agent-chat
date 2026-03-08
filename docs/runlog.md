@@ -1,3 +1,16 @@
+## 2026-03-09 04:03 KST — hidden editable no-op escape-key helper reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated hidden editable `Escape`/`Esc` no-op call pairs by routing through one across-keys helper.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode(...)`.
+    - Replaced duplicated hidden editable no-op dispatch/render call pairs with the helper in both mode-specific tests.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (47/47)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing repeated `Escape`/`Esc` wrapper callsites in lifecycle no-op tests (event-gate and shown-state lanes) via shared across-keys helpers.
+
 ## 2026-03-09 03:50 KST — hidden modifier across-modes helper reuse (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to collapse repeated hidden modifier dispatch/render helper call pairs into one across-modes entrypoint.
 - Change:
