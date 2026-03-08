@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 17:30 KST — shown shift modifier+event-gate no-op helpers reuse shared outcome assertions (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline no-op expectation scaffolding in shown `shiftKey=true` modifier+event-gate case helpers.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownShiftLegendModifierEventGateNoOpDispatchCase(...)` to reuse `assertLegendNoOpDispatchOutcome(...)`.
+    - Refactored `assertShownShiftLegendModifierEventGateNoOpRenderStateCase(...)` to reuse `assertLegendNoOpRenderStateOutcome(...)`.
+    - Removed duplicated inline `handled/nextVisibility/statusHint/statusAriaLabel` expectations while preserving existing shown-state `ariaExpanded` parity assertions in wrapper helpers.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing repeated no-op helper scaffolding in plain slash and hidden/shown no-op branches where dispatch/render assertions still inline the same canonical outcome contract.
+
 ## 2026-03-08 17:24 KST — legend no-op helper reuse for shown guard lanes (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe on shown no-op guard helper paths.
 - Change:

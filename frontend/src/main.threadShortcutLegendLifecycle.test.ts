@@ -398,11 +398,7 @@ const assertShownShiftLegendModifierEventGateNoOpDispatchCase = (
     repeat,
     isEditableTarget,
   })
-  expect(noOpDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(noOpDispatch, true)
 }
 
 const assertShownShiftLegendModifierEventGateNoOpRenderStateCase = (
@@ -428,10 +424,7 @@ const assertShownShiftLegendModifierEventGateNoOpRenderStateCase = (
     repeat,
     isEditableTarget,
   })
-  expect(noOpRenderState.handled).toBe(false)
-  expect(noOpRenderState.nextVisibility).toBe(true)
-  expect(noOpRenderState.statusHint).toBeNull()
-  expect(noOpRenderState.statusAriaLabel ?? null).toBeNull()
+  assertLegendNoOpRenderStateOutcome(noOpRenderState, true)
 }
 
 const assertShownShiftLegendModifierEventGateNoOp = (
