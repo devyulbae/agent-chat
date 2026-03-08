@@ -231,15 +231,28 @@ const getHiddenEditableLegendNoOpInput = (
     isEditableTarget: true,
   } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
 
+const assertHiddenEditableLegendNoOpByMode = (
+  key: 'Escape' | 'Esc',
+  defaultPrevented: boolean,
+  repeat: boolean,
+  mode: LegendNoOpAssertionMode,
+) => {
+  const input = getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat)
+
+  if (mode === 'render') {
+    assertLegendNoOpRenderStateForInput(input, false)
+    return
+  }
+
+  assertLegendNoOpDispatchForInput(input, false)
+}
+
 const assertHiddenEditableLegendNoOpDispatch = (
   key: 'Escape' | 'Esc',
   defaultPrevented = false,
   repeat = false,
 ) => {
-  assertLegendNoOpDispatchForInput(
-    getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat),
-    false,
-  )
+  assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'dispatch')
 }
 
 const assertHiddenEditableLegendNoOpRenderState = (
@@ -247,10 +260,7 @@ const assertHiddenEditableLegendNoOpRenderState = (
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
-  assertLegendNoOpRenderStateForInput(
-    getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat),
-    false,
-  )
+  assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'render')
 }
 
 const assertHiddenEditableLegendEventGateNoOp = (
@@ -258,10 +268,10 @@ const assertHiddenEditableLegendEventGateNoOp = (
   mode: LegendEventGateAssertionMode,
 ) => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    assertHiddenEditableLegendNoOpDispatch(key, defaultPrevented, repeat)
+    assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'dispatch')
 
     if (mode === 'dispatch+render') {
-      assertHiddenEditableLegendNoOpRenderState(key, defaultPrevented, repeat)
+      assertHiddenEditableLegendNoOpByMode(key, defaultPrevented, repeat, 'render')
     }
   })
 }
