@@ -47,6 +47,14 @@ const assertLegendNoOpRenderStateForInput = (
   assertLegendNoOpRenderStateOutcome(outcome, nextVisibility)
 }
 
+const assertLegendNoOpDispatchAndRenderStateForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
+  nextVisibility: boolean,
+) => {
+  assertLegendNoOpDispatchForInput(input, nextVisibility)
+  assertLegendNoOpRenderStateForInput(input, nextVisibility)
+}
+
 const assertLegendRenderStateShowHideLifecycle = (
   showKey: '?' | '/',
   showShiftKey: boolean,
@@ -543,7 +551,7 @@ const assertShownShiftLegendNonEditableModifierEventGateNoOp = (key: 'Escape' | 
 }
 
 const assertPlainSlashNoOp = (isVisible: boolean) => {
-  const slashDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+  const plainSlashNoOpInput = {
     isVisible,
     key: '/',
     shiftKey: false,
@@ -553,24 +561,12 @@ const assertPlainSlashNoOp = (isVisible: boolean) => {
     defaultPrevented: false,
     repeat: false,
     isEditableTarget: false,
-  })
-  assertLegendNoOpDispatchOutcome(slashDispatch, isVisible)
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-  const slashRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible,
-    key: '/',
-    shiftKey: false,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: false,
-    isEditableTarget: false,
-  })
-  assertLegendNoOpRenderStateOutcome(slashRenderState, isVisible)
+  assertLegendNoOpDispatchAndRenderStateForInput(plainSlashNoOpInput, isVisible)
 
-  const noOpPresentation = getThreadShortcutLegendPresentation(slashRenderState.nextVisibility)
-  expect(noOpPresentation.ariaExpanded).toBe(slashRenderState.nextVisibility)
+  const noOpPresentation = getThreadShortcutLegendPresentation(isVisible)
+  expect(noOpPresentation.ariaExpanded).toBe(isVisible)
 }
 
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
