@@ -235,6 +235,11 @@ const assertHiddenLegendModifierNoOpByMode = (
   })
 }
 
+const assertHiddenLegendModifierNoOpAcrossModes = (key: 'Escape' | 'Esc') => {
+  assertHiddenLegendModifierNoOpByMode(key, 'dispatch')
+  assertHiddenLegendModifierNoOpByMode(key, 'render')
+}
+
 type LegendEventGateAssertionMode = 'dispatch' | 'dispatch+render'
 
 const assertLegendEventGateNoOpByVisibilityAndMode = (
@@ -733,12 +738,12 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
-    assertHiddenLegendModifierNoOpByMode('Escape', 'dispatch')
+  it('keeps hidden Escape with modifier keys as no-op dispatch/render-state outcomes matching keyboard guard rails', () => {
+    assertHiddenLegendModifierNoOpAcrossModes('Escape')
   })
 
-  it('keeps hidden Esc alias with modifier keys as no-op dispatch outcomes', () => {
-    assertHiddenLegendModifierNoOpByMode('Esc', 'dispatch')
+  it('keeps hidden Esc alias with modifier keys as no-op dispatch/render-state outcomes', () => {
+    assertHiddenLegendModifierNoOpAcrossModes('Esc')
   })
 
   it('keeps hidden Escape/Esc as no-op dispatch when event is defaultPrevented or repeat', () => {
@@ -823,14 +828,6 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       },
       false,
     )
-  })
-
-  it('keeps hidden Escape with modifier keys as no-op render-state parity with dispatch guard rails', () => {
-    assertHiddenLegendModifierNoOpByMode('Escape', 'render')
-  })
-
-  it('keeps hidden Esc alias with modifier keys as no-op render-state outcomes with nullish aria', () => {
-    assertHiddenLegendModifierNoOpByMode('Esc', 'render')
   })
 
   it('keeps hidden Escape as no-op render-state when event is defaultPrevented or repeat', () => {

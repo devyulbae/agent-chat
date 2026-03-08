@@ -1,3 +1,16 @@
+## 2026-03-09 03:50 KST — hidden modifier across-modes helper reuse (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to collapse repeated hidden modifier dispatch/render helper call pairs into one across-modes entrypoint.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared helper `assertHiddenLegendModifierNoOpAcrossModes(...)`.
+    - Refactored hidden modifier no-op tests for canonical `Escape` and alias `Esc` to route dispatch+render assertions through the helper.
+    - Removed now-redundant render-only hidden modifier test wrappers replaced by the across-modes coverage path.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (47/47)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing paired dispatch/render helper callsites where key/visibility/editable inputs are fixed and only assertion mode differs.
+
 ## 2026-03-09 03:32 KST — shown shift modifier+event-gate across-modes helper reuse (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to collapse repeated dispatch/render call pairs in shown `shiftKey=true` modifier+event-gate no-op lifecycle lanes.
 - Change:
@@ -4107,3 +4120,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: continue trimming duplicated key-specific legend lifecycle specs by introducing a tiny shared `forEach` key runner where helper call signatures are identical.
+
+## 2026-03-09 03:43 KST — Escape/Esc event-gate spec runner dedupe (boost cycle)
+- Scope: chat thread UX wiring (test-only, strict no-behavior-change dedupe).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `legendEscapeKeys` + `forEachLegendEscapeKey(...)` runner.
+    - Consolidated duplicated hidden shown event-gate no-op dispatch specs into two combined `Escape/Esc` table-driven tests.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (49/49)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
+- Commit: `5e92951` (pushed to `main`)
+- Next action: apply the same `forEachLegendEscapeKey(...)` runner to remaining duplicated hidden/shown editable event-gate specs (`assertEditableLegendEventGateNoOpByVisibilityShiftAndMode`) to trim per-key test duplication while preserving dispatch+render parity.
