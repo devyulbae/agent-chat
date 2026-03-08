@@ -1,3 +1,15 @@
+## 2026-03-09 06:12 KST — hidden modifier no-op key-specific callsites collapsed to across-keys helper (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove key-specific hidden modifier helper callsite duplication.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode(...)` helper to route hidden modifier no-op assertions through shared `Escape`/`Esc` iteration.
+    - Collapsed two key-specific hidden modifier tests into one across-keys test while preserving dispatch/render-mode coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (38/38)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop key-specific helper callsites where `Escape`/`Esc` parity can be expressed via shared across-keys helpers without splitting tests by key.
+
 ## 2026-03-09 06:03 KST — inline hidden modifier across-modes wrapper callsites (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one-hop hidden modifier across-modes wrapper indirection.
 - Change:
