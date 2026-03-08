@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-09 01:12 KST — Agent Chat parallel offset cycle
+- Delta: Consolidated hidden-editable legend event-gate no-op assertion entrypoints into a shared mode-based helper path in frontend lifecycle tests.
+  - Frontend tests: added `assertHiddenEditableLegendEventGateNoOpByMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
+  - Frontend tests: rewired hidden editable `Escape`/`Esc` defaultPrevented/repeat no-op cases (dispatch+render and render-state wording variants) to consume the shared helper instead of duplicating inline input-base blocks.
+  - Scope kept frontend-only (test helper consolidation; no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: `28f739b` (pushed to `main`)
+- Next action: collapse remaining shown-editable event-gate no-op input-base test entrypoints behind the same mode-based helper path to keep lifecycle no-op coverage uniformly DRY.
+
 ## 2026-03-08 22:31 KST — Agent Chat parallel offset cycle
 - Delta: Collapsed duplicated shown-editable legend event-gate no-op assertion entrypoints in frontend lifecycle tests to keep dispatch/render parity checks centralized.
   - Frontend tests: refactored `frontend/src/main.threadShortcutLegendLifecycle.test.ts` to route shown-editable event-gate cases through shared mode-based helper (`assertShownEditableLegendNoOpByModeCase`) instead of separate dispatch/render wrappers.
