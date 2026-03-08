@@ -8,7 +8,7 @@
 - Quality gates:
   - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (34 passed)
   - `cd frontend && npm run build` ✅
-- Commit: pending
+- Commit: `fba58fd` (pushed to `main`)
 - Next action: collapse remaining hidden shown/hidden lifecycle no-op assertions that still call visibility/mode variants separately into one visibility+mode loop helper for final lifecycle DRY parity.
 
 ## 2026-03-09 06:44 KST — Agent Chat implementation cycle
