@@ -105,11 +105,16 @@ const assertShownEditableLegendNoOpRenderState = (
 }
 
 
+const shownEventGateCases = [
+  { defaultPrevented: true, repeat: false },
+  { defaultPrevented: false, repeat: true },
+] as const
+
 const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownEditableLegendNoOpDispatch(key, false, true, false)
-  assertShownEditableLegendNoOpDispatch(key, false, false, true)
-  assertShownEditableLegendNoOpRenderState(key, false, true, false)
-  assertShownEditableLegendNoOpRenderState(key, false, false, true)
+  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+    assertShownEditableLegendNoOpDispatch(key, false, defaultPrevented, repeat)
+    assertShownEditableLegendNoOpRenderState(key, false, defaultPrevented, repeat)
+  })
 }
 
 const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
@@ -118,11 +123,10 @@ const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownEditableLegendNoOpDispatch(key, true, true, false)
-  assertShownEditableLegendNoOpDispatch(key, true, false, true)
-
-  assertShownEditableLegendNoOpRenderState(key, true, true, false)
-  assertShownEditableLegendNoOpRenderState(key, true, false, true)
+  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+    assertShownEditableLegendNoOpDispatch(key, true, defaultPrevented, repeat)
+    assertShownEditableLegendNoOpRenderState(key, true, defaultPrevented, repeat)
+  })
 }
 
 const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {
@@ -328,12 +332,7 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  const eventGateCases = [
-    { defaultPrevented: true, repeat: false },
-    { defaultPrevented: false, repeat: true },
-  ]
-
-  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
       key,
@@ -354,12 +353,7 @@ const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  const eventGateCases = [
-    { defaultPrevented: true, repeat: false },
-    { defaultPrevented: false, repeat: true },
-  ]
-
-  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,
       key,
