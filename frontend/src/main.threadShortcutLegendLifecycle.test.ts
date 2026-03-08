@@ -54,13 +54,14 @@ const assertShownLegendNoOpDispatch = (key: 'Escape' | 'Esc', shiftKey: boolean)
 
 const assertShownEditableLegendNoOpDispatch = (
   key: 'Escape' | 'Esc',
+  shiftKey: boolean,
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
   const shownEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
     isVisible: true,
     key,
-    shiftKey: true,
+    shiftKey,
     metaKey: false,
     ctrlKey: false,
     altKey: false,
@@ -77,13 +78,14 @@ const assertShownEditableLegendNoOpDispatch = (
 
 const assertShownEditableLegendNoOpRenderState = (
   key: 'Escape' | 'Esc',
+  shiftKey: boolean,
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
   const shownEditableNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
     isVisible: true,
     key,
-    shiftKey: true,
+    shiftKey,
     metaKey: false,
     ctrlKey: false,
     altKey: false,
@@ -104,10 +106,10 @@ const assertShownEditableLegendNoOpRenderState = (
 
 
 const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownEditableLegendNoOpDispatch(key, true, false)
-  assertShownEditableLegendNoOpDispatch(key, false, true)
-  assertShownEditableLegendNoOpRenderState(key, true, false)
-  assertShownEditableLegendNoOpRenderState(key, false, true)
+  assertShownEditableLegendNoOpDispatch(key, false, true, false)
+  assertShownEditableLegendNoOpDispatch(key, false, false, true)
+  assertShownEditableLegendNoOpRenderState(key, false, true, false)
+  assertShownEditableLegendNoOpRenderState(key, false, false, true)
 }
 
 const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
@@ -151,11 +153,11 @@ const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownEditableLegendNoOpDispatch(key, true, false)
-  assertShownEditableLegendNoOpDispatch(key, false, true)
+  assertShownEditableLegendNoOpDispatch(key, true, true, false)
+  assertShownEditableLegendNoOpDispatch(key, true, false, true)
 
-  assertShownEditableLegendNoOpRenderState(key, true, false)
-  assertShownEditableLegendNoOpRenderState(key, false, true)
+  assertShownEditableLegendNoOpRenderState(key, true, true, false)
+  assertShownEditableLegendNoOpRenderState(key, true, false, true)
 }
 
 const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {

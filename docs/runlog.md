@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-08 14:23 KST — shown editable event-gate helper shift-key parameterization lock (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only increment to restore explicit non-shift vs shift editable-target event-gate coverage in shared no-op helpers.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Parameterized `assertShownEditableLegendNoOpDispatch(...)` and `assertShownEditableLegendNoOpRenderState(...)` with `shiftKey`.
+    - Updated `assertShownEditableNonShiftLegendEventGateNoOp(...)` to pass `shiftKey=false` for `defaultPrevented`/`repeat` no-op checks.
+    - Updated `assertShownEditableShiftLegendEventGateNoOp(...)` to pass `shiftKey=true`, keeping shown editable shift event-gate coverage explicit while removing hidden hardcoding drift.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue reducing duplicated shown editable shift/non-shift no-op fixture scaffolding by extracting a shared helper for modifier/event-gate case tables with explicit `shiftKey` injection.
+
 ## 2026-03-08 14:12 KST — shown shift editable no-op helper dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up to collapse duplicated shown editable-target `shiftKey=true` no-op fixtures across canonical `Escape` and alias `Esc`.
 - Change:
