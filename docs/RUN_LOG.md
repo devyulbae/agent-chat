@@ -1,5 +1,16 @@
 # Run Log
 
+## 2026-03-08 18:06 KST — Agent Chat implementation cycle
+- Delta: Added wrapped vertical `Control` alias extraction parity coverage for downward navigation in frontend thread hint parser tests.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Moved to next visible thread (key: [Control+ArrowDown]).` → `Control+ArrowDown` extraction assertion.
+  - Scope kept frontend-only (chat thread UX parser regression coverage; no backend/API schema changes).
+- Quality gates:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Commit: pending
+- Next action: add complementary wrapped extraction coverage for `key: [Control+ArrowRight]`/`key: [Control+ArrowLeft]` parity in one-step movement hint copy if product copy starts emitting mixed direction variants.
+
 ## 2026-03-08 13:51 KST — Agent Chat parallel offset cycle
 - Delta: Added explicit `Control+ArrowUp` chip-mapping regression coverage in frontend thread hint parser tests so wrapped vertical `Control` alias extraction remains contract-synced with badge/tooltip presentation.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `getThreadShortcutBadge('Control+ArrowUp')` → `Control+↑` assertion.
