@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-08 10:45 KST — shown Shift+Escape editable modifier/event-gate helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated shown editable-target `Shift+Escape`/`Shift+Esc` modifier+event-gate no-op fixtures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableShiftLegendModifierEventGateNoOp(key)` helper encapsulating repeated dispatch/render assertions for:
+      - `metaKey=true + defaultPrevented=true`
+      - `ctrlKey=true + repeat=true`
+      - render parity checks for nullish aria + stable `ariaExpanded`.
+    - Replaced duplicated canonical/alias fixture bodies with compact helper-driven tests for `Escape` and `Esc`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `1bea231` — `[test] dedupe shown shift editable modifier+event-gate no-op fixtures`
+  - Push: `main -> origin/main` ✅
+- Next action: continue helper/table extraction for remaining shown editable-target no-op fixtures (non-shift lanes) to reduce repetitive dispatch/render assertions while preserving guard parity.
+
 ## 2026-03-08 10:23 KST — shown Shift+Escape non-editable modifier/event-gate helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to shrink duplicated shown non-editable `Shift+Escape`/`Shift+Esc` modifier+event-gate no-op fixtures.
 - Change:
