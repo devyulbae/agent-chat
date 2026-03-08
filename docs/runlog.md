@@ -1,3 +1,17 @@
+## 2026-03-08 20:43 KST — shown shift modifier+event-gate case mode helper unification (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse duplicated shown shift modifier+event-gate dispatch/render case input wiring.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added typed `ShownShiftModifierEventGateNoOpCase` shape and applied `satisfies` to dispatch/render case tables.
+    - Replaced separate dispatch/render case executors with unified `assertShownShiftLegendModifierEventGateNoOpCase(...)` helper that builds one canonical input payload and routes by mode.
+    - Preserved shown-state no-op presentation parity assertion (`ariaExpanded === true`) for all shift modifier+event-gate case paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing remaining shown shift helper wrappers where editable/non-editable entrypoints still fan out through separate wrapper functions before hitting identical mode/case loops.
+
 ## 2026-03-08 20:31 KST — shown modifier no-op helper mode-unification for dispatch/render lanes (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown modifier no-op helper loops split by dispatch vs render-state modes.
 - Change:

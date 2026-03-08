@@ -204,15 +204,23 @@ const legendEventGateCases = [
   { defaultPrevented: false, repeat: true },
 ] as const
 
+type ShownShiftModifierEventGateNoOpCase = {
+  metaKey: boolean
+  ctrlKey: boolean
+  altKey: boolean
+  defaultPrevented: boolean
+  repeat: boolean
+}
+
 const shownShiftModifierEventGateDispatchNoOpCases = [
   { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: true, repeat: false },
   { metaKey: false, ctrlKey: true, altKey: false, defaultPrevented: false, repeat: true },
-] as const
+] as const satisfies readonly ShownShiftModifierEventGateNoOpCase[]
 
 const shownShiftModifierEventGateRenderStateNoOpCases = [
   { metaKey: false, ctrlKey: false, altKey: true, defaultPrevented: true, repeat: false },
   { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
-] as const
+] as const satisfies readonly ShownShiftModifierEventGateNoOpCase[]
 
 const assertShownEditableLegendEventGateNoOpByShift = (
   key: 'Escape' | 'Esc',
@@ -456,19 +464,14 @@ const assertShownEditableShiftLegendModifierNoOp = (key: 'Escape' | 'Esc') => {
   assertShownEditableLegendModifierNoOpByShift(key, true)
 }
 
-const assertShownShiftLegendModifierEventGateNoOpDispatchCase = (
+const assertShownShiftLegendModifierEventGateNoOpCase = (
   key: 'Escape' | 'Esc',
   isEditableTarget: boolean,
-  caseInput: {
-    metaKey: boolean
-    ctrlKey: boolean
-    altKey: boolean
-    defaultPrevented: boolean
-    repeat: boolean
-  },
+  caseInput: ShownShiftModifierEventGateNoOpCase,
+  includeRenderState: boolean,
 ) => {
   const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
-  const noOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+  const input = {
     isVisible: true,
     key,
     shiftKey: true,
@@ -478,34 +481,14 @@ const assertShownShiftLegendModifierEventGateNoOpDispatchCase = (
     defaultPrevented,
     repeat,
     isEditableTarget,
-  })
-  assertLegendNoOpDispatchOutcome(noOpDispatch, true)
-}
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-const assertShownShiftLegendModifierEventGateNoOpRenderStateCase = (
-  key: 'Escape' | 'Esc',
-  isEditableTarget: boolean,
-  caseInput: {
-    metaKey: boolean
-    ctrlKey: boolean
-    altKey: boolean
-    defaultPrevented: boolean
-    repeat: boolean
-  },
-) => {
-  const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
-  const noOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey,
-    ctrlKey,
-    altKey,
-    defaultPrevented,
-    repeat,
-    isEditableTarget,
-  })
-  assertLegendNoOpRenderStateOutcome(noOpRenderState, true)
+  if (includeRenderState) {
+    assertLegendNoOpRenderStateForInput(input, true)
+    return
+  }
+
+  assertLegendNoOpDispatchForInput(input, true)
 }
 
 const assertShownShiftLegendModifierEventGateNoOp = (
@@ -513,11 +496,11 @@ const assertShownShiftLegendModifierEventGateNoOp = (
   isEditableTarget: boolean,
 ) => {
   shownShiftModifierEventGateDispatchNoOpCases.forEach((caseInput) => {
-    assertShownShiftLegendModifierEventGateNoOpDispatchCase(key, isEditableTarget, caseInput)
+    assertShownShiftLegendModifierEventGateNoOpCase(key, isEditableTarget, caseInput, false)
   })
 
   shownShiftModifierEventGateRenderStateNoOpCases.forEach((caseInput) => {
-    assertShownShiftLegendModifierEventGateNoOpRenderStateCase(key, isEditableTarget, caseInput)
+    assertShownShiftLegendModifierEventGateNoOpCase(key, isEditableTarget, caseInput, true)
   })
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
