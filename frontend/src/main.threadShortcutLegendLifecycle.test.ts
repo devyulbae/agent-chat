@@ -485,13 +485,6 @@ const assertShownShiftLegendModifierEventGateNoOp = (
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
-const assertShownEditableShiftLegendModifierEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownShiftLegendModifierEventGateNoOp(key, true)
-}
-
-const assertShownShiftLegendNonEditableModifierEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  assertShownShiftLegendModifierEventGateNoOp(key, false)
-}
 
 const assertPlainSlashNoOp = (isVisible: boolean) => {
   const plainSlashNoOpInput = {
@@ -1022,16 +1015,16 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertShownEditableShiftLegendModifierNoOp('Esc')
   })
   it('keeps shown Escape with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertShownEditableShiftLegendModifierEventGateNoOp('Escape')
+    assertShownShiftLegendModifierEventGateNoOp('Escape', true)
   })
 
   it('keeps shown Esc alias with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertShownEditableShiftLegendModifierEventGateNoOp('Esc')
+    assertShownShiftLegendModifierEventGateNoOp('Esc', true)
   })
 
   it('keeps shown Escape/Esc with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertShownShiftLegendNonEditableModifierEventGateNoOp('Escape')
-    assertShownShiftLegendNonEditableModifierEventGateNoOp('Esc')
+    assertShownShiftLegendModifierEventGateNoOp('Escape', false)
+    assertShownShiftLegendModifierEventGateNoOp('Esc', false)
   })
 
   it('keeps plain Slash (without Shift) as a no-op for hidden and shown legend states', () => {
