@@ -1,3 +1,15 @@
+## 2026-03-09 07:31 KST — inline shown modifier across-escape-keys mode wrapper callsite (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown modifier wrapper that only iterated dispatch/render modes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditable(...)` one-hop wrapper.
+    - Inlined `forEachLegendNoOpAssertionMode(...)` at the modifier no-op test callsite to invoke `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(...)` directly per mode.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (32/32)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop across-escape-keys wrappers where mode iteration can be expressed directly at lifecycle test callsites.
+
 ## 2026-03-09 07:10 KST — inline shown modifier across-modes wrappers at lifecycle test callsites (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown modifier across-modes wrappers by inlining mode iteration at callsites.
 - Change:
