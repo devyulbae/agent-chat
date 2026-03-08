@@ -284,15 +284,6 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
   assertShownLegendNoOpAriaExpanded()
 }
 
-const assertShownLegendModifierNoOpByShiftAndEditableAcrossModes = (
-  key: 'Escape' | 'Esc',
-  shiftKey: boolean,
-  isEditableTarget: boolean,
-) => {
-  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'dispatch')
-  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'render')
-}
-
 const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   shiftKey: boolean,
   isEditableTarget: boolean,
@@ -811,9 +802,8 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    forEachLegendEscapeKey((key) => {
-      assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(key, false, true)
-    })
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(false, true, 'dispatch')
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(false, true, 'render')
   })
 
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
@@ -872,9 +862,8 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps shown Escape/Esc with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
-    forEachLegendEscapeKey((key) => {
-      assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(key, true, true)
-    })
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(true, true, 'dispatch')
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode(true, true, 'render')
   })
   it('keeps shown Escape/Esc with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
     assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(
