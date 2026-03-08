@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 16:31 KST — shown editable modifier no-op helper shift-parameter dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to remove duplicated shown editable modifier no-op scaffolding between non-shift and shift helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertShownEditableLegendModifierNoOpByShift(key, shiftKey)` helper.
+    - Refactored `assertShownEditableLegendModifierNoOp(...)` and `assertShownEditableShiftLegendModifierNoOp(...)` to reuse the shared helper while preserving existing modifier-case coverage and `ariaExpanded` parity assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing repeated shown/hidden modifier + event-gate no-op helper scaffolding where shift/non-shift branches still mirror the same assertion structure.
+
 ## 2026-03-08 16:12 KST — shown shift modifier+event-gate case-table constants reuse (offset lane)
 - Scope: frontend integration + API contract sync follow-up to remove inline shown `shiftKey=true` modifier+event-gate fixture tables that were still nested inside helper flow.
 - Change:
