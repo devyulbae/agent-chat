@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 18:52 KST — render-state show/hide lifecycle helper reuse for transition aria/status parity (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline show/hide lifecycle assertion scaffolding in render-state transition tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendRenderStateShowHideLifecycle(showKey, showShiftKey, hideKey)` helper for canonical show (`?`/`Shift+/`) then hide (`Escape`/`Esc`) render-state lifecycle assertions.
+    - Refactored two render-state lifecycle regressions to reuse the helper while preserving existing status-hint and status-aria parity expectations.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining inline transition assertion scaffolding where lifecycle tests still restate identical handled/visibility/status parity contracts.
+
 ## 2026-03-08 18:31 KST — lifecycle no-op assertion helper reuse for dispatch/render parity follow-up (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline no-op assertion scaffolding in lifecycle integration tests.
 - Change:
