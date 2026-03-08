@@ -3266,3 +3266,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: extract a shared shown-state shift modifier+event-gate helper that parameterizes `isEditableTarget` to dedupe editable/non-editable case-table scaffolding while preserving parity assertions.
+
+## 2026-03-08 15:05 KST — shared shown shift modifier+event-gate helper extraction (thread legend UX lane)
+- Scope: frontend thread UX wiring regression hygiene with strict no-behavior-change refactor in lifecycle integration tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownShiftLegendModifierEventGateNoOp(key, isEditableTarget)` as a shared helper for shown `shiftKey=true` modifier+event-gate no-op assertions.
+    - Rewired existing wrappers to call the shared helper:
+      - `assertShownEditableShiftLegendModifierEventGateNoOp(key)`
+      - `assertShownShiftLegendNonEditableModifierEventGateNoOp(key)`
+    - Preserved all dispatch/render parity expectations and `ariaExpanded` synchronization checks.
+- Verification:
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18/18)
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+- Next action: unify shown-state shift modifier-only helper assertions (`assertShownEditableShiftLegendModifierNoOp`) across editable/non-editable paths into a single parameterized helper to continue reducing duplicate lifecycle fixtures.
