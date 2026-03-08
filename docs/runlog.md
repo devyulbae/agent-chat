@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 19:11 KST — hidden Esc render-state no-op helper extraction for lifecycle test dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe on remaining inline hidden no-op render-state assertion scaffolding.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertHiddenLegendNoOpRenderState(key)` helper for canonical hidden no-op render-state input (`shiftKey=false`, no modifiers/event gates, non-editable target).
+    - Refactored the hidden `Esc` alias render-state no-op regression to reuse the helper, removing duplicated inline input scaffolding while preserving nullish-aria no-op assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining inline no-op input scaffolding in lifecycle tests where hidden/shown canonical keyboard inputs are structurally identical.
+
 ## 2026-03-08 18:52 KST — render-state show/hide lifecycle helper reuse for transition aria/status parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline show/hide lifecycle assertion scaffolding in render-state transition tests.
 - Change:
