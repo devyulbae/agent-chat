@@ -1,3 +1,16 @@
+## 2026-03-08 19:31 KST — event-gate no-op input-base helper reuse for hidden/shown non-editable lanes (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated hidden/shown non-editable event-gate input scaffolding across dispatch/render helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendEventGateNoOpForInputBase(...)` helper to table-drive `defaultPrevented`/`repeat` event-gate inputs from a single base payload.
+    - Refactored hidden non-editable event-gate no-op dispatch/render helpers to reuse the new helper.
+    - Refactored shown non-editable event-gate no-op dispatch/render helpers to reuse the new helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing duplicated no-op input scaffolding in lifecycle helper paths that still instantiate matching dispatch/render payload bases separately.
+
 # Runlog
 
 ## 2026-03-08 19:23 KST — plain Slash no-op input helper consolidation (boost lane)
