@@ -135,24 +135,6 @@ const assertShownLegendNoOpByShiftAndEditable = (
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
-const getShownEditableLegendNoOpInput = (
-  key: 'Escape' | 'Esc',
-  shiftKey: boolean,
-  defaultPrevented: boolean,
-  repeat: boolean,
-) =>
-  ({
-    isVisible: true,
-    key,
-    shiftKey,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented,
-    repeat,
-    isEditableTarget: true,
-  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
-
 type LegendNoOpAssertionMode = 'dispatch' | 'render'
 
 
