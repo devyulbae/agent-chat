@@ -344,13 +344,6 @@ const assertLegendEventGateNoOpByVisibilityAndMode = (
   )
 }
 
-const assertHiddenLegendEventGateNoOp = (
-  key: 'Escape' | 'Esc',
-  mode: LegendEventGateAssertionMode,
-) => {
-  assertLegendEventGateNoOpByVisibilityAndMode(key, false, mode)
-}
-
 const assertShownLegendModifierNoOpByShiftAndEditable = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
@@ -833,11 +826,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertHiddenLegendEventGateNoOp('Esc', false)
+    assertLegendEventGateNoOpByVisibilityAndMode('Esc', false, 'dispatch')
   })
 
   it('keeps hidden Escape as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertHiddenLegendEventGateNoOp('Escape', false)
+    assertLegendEventGateNoOpByVisibilityAndMode('Escape', false, 'dispatch')
   })
 
   it('keeps hidden Escape as no-op dispatch when target is editable', () => {
@@ -922,11 +915,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape as no-op render-state when event is defaultPrevented or repeat', () => {
-    assertHiddenLegendEventGateNoOp('Escape', true)
+    assertLegendEventGateNoOpByVisibilityAndMode('Escape', false, 'dispatch+render')
   })
 
   it('keeps hidden Esc alias as no-op render-state when event is defaultPrevented or repeat', () => {
-    assertHiddenLegendEventGateNoOp('Esc', true)
+    assertLegendEventGateNoOpByVisibilityAndMode('Esc', false, 'dispatch+render')
   })
 
   it('keeps hidden Escape as no-op render-state when target is editable', () => {
