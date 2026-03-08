@@ -458,11 +458,7 @@ const assertPlainSlashNoOp = (isVisible: boolean) => {
     repeat: false,
     isEditableTarget: false,
   })
-  expect(slashDispatch).toEqual({
-    handled: false,
-    nextVisibility: isVisible,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(slashDispatch, isVisible)
 
   const slashRenderState = getThreadShortcutLegendKeyboardRenderState({
     isVisible,
@@ -475,10 +471,10 @@ const assertPlainSlashNoOp = (isVisible: boolean) => {
     repeat: false,
     isEditableTarget: false,
   })
-  expect(slashRenderState.handled).toBe(false)
-  expect(slashRenderState.nextVisibility).toBe(isVisible)
-  expect(slashRenderState.statusHint).toBeNull()
-  expect(slashRenderState.statusAriaLabel ?? null).toBeNull()
+  assertLegendNoOpRenderStateOutcome(slashRenderState, isVisible)
+
+  const noOpPresentation = getThreadShortcutLegendPresentation(slashRenderState.nextVisibility)
+  expect(noOpPresentation.ariaExpanded).toBe(slashRenderState.nextVisibility)
 }
 
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {

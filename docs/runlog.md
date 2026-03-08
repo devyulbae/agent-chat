@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 17:50 KST — plain Slash no-op helper now reuses shared no-op outcome assertions (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe for plain Slash (`key='/'`, `shiftKey=false`) no-op helper coverage in hidden/shown visibility states.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertPlainSlashNoOp(isVisible)` to reuse shared `assertLegendNoOpDispatchOutcome(...)`.
+    - Refactored `assertPlainSlashNoOp(isVisible)` to reuse shared `assertLegendNoOpRenderStateOutcome(...)`.
+    - Added explicit no-op presentation parity assertion that `ariaExpanded` remains synchronized with no-op `nextVisibility` for plain Slash hidden/shown paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing repetitive no-op helper scaffolding where hidden/shown guard wrappers still instantiate identical dispatch/render-state input objects inline.
+
 ## 2026-03-08 17:30 KST — shown shift modifier+event-gate no-op helpers reuse shared outcome assertions (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining inline no-op expectation scaffolding in shown `shiftKey=true` modifier+event-gate case helpers.
 - Change:
