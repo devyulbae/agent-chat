@@ -250,6 +250,8 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/right[\s-]?arrow/gu, 'arrowright')
     .replace(/\b(?:return|enter)[\s-]+symbol\s*\/\s*(?:return|enter)[\s-]+symbol\b/gu, 'enter')
     .replace(/\b(?:return|enter)\s*\/\s*(?:return|enter)\b/gu, 'enter')
+    .replace(/\b(?:num\s*pad|numpad)[\s-]*(?:enter|return)\b/gu, 'enter')
+    .replace(/\bnumpad(?:enter|return)\b/gu, 'enter')
     .replace(/\b(return|enter)[\s-]+symbol\b/gu, '$1')
     .replace(/\b(return|enter)[\s-]+key\b/gu, '$1')
     .replace(/\breturn\b/gu, 'enter')
@@ -602,6 +604,7 @@ export function getThreadShortcutBadge(shortcut: string | null): string | null {
     arrowleft: '←',
     arrowright: '→',
     enter: '↵',
+    numpadenter: '↵',
     escape: 'Esc',
     slash: '/',
     g: 'G',
@@ -717,6 +720,7 @@ export function getThreadShortcutTooltip(shortcut: string | null): string | null
     arrowleft: 'Arrow Left',
     arrowright: 'Arrow Right',
     enter: 'Enter',
+    numpadenter: 'Numpad Enter',
     escape: 'Escape',
     slash: 'Slash',
     g: 'G',
