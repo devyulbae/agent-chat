@@ -9,6 +9,28 @@ import {
 } from './main'
 import { getShortcutChipPropsFromHint, getStatusAriaLabelWithShortcutChip } from './threadHintChips'
 
+
+const assertLegendNoOpDispatchOutcome = (
+  outcome: ReturnType<typeof getThreadShortcutLegendKeyboardDispatchOutcome>,
+  nextVisibility: boolean,
+) => {
+  expect(outcome).toEqual({
+    handled: false,
+    nextVisibility,
+    statusHint: null,
+  })
+}
+
+const assertLegendNoOpRenderStateOutcome = (
+  outcome: ReturnType<typeof getThreadShortcutLegendKeyboardRenderState>,
+  nextVisibility: boolean,
+) => {
+  expect(outcome.handled).toBe(false)
+  expect(outcome.nextVisibility).toBe(nextVisibility)
+  expect(outcome.statusHint).toBeNull()
+  expect(outcome.statusAriaLabel ?? null).toBeNull()
+}
+
 const assertShownLegendNoOpRenderState = (key: 'Escape' | 'Esc', shiftKey: boolean) => {
   const shownNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
     isVisible: true,
@@ -21,10 +43,7 @@ const assertShownLegendNoOpRenderState = (key: 'Escape' | 'Esc', shiftKey: boole
     repeat: false,
     isEditableTarget: false,
   })
-  expect(shownNoOpRenderState.handled).toBe(false)
-  expect(shownNoOpRenderState.nextVisibility).toBe(true)
-  expect(shownNoOpRenderState.statusHint).toBeNull()
-  expect(shownNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+  assertLegendNoOpRenderStateOutcome(shownNoOpRenderState, true)
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(shownNoOpRenderState.nextVisibility)
   expect(shownNoOpPresentation.ariaExpanded).toBe(shownNoOpRenderState.nextVisibility)
@@ -42,11 +61,7 @@ const assertShownLegendNoOpDispatch = (key: 'Escape' | 'Esc', shiftKey: boolean)
     repeat: false,
     isEditableTarget: false,
   })
-  expect(ignoredShownDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(ignoredShownDispatch, true)
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(ignoredShownDispatch.nextVisibility)
   expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownDispatch.nextVisibility)
@@ -256,10 +271,7 @@ const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
       repeat: false,
       isEditableTarget: false,
     })
-    expect(ignoredHiddenRenderState.handled).toBe(false)
-    expect(ignoredHiddenRenderState.nextVisibility).toBe(false)
-    expect(ignoredHiddenRenderState.statusHint).toBeNull()
-    expect(ignoredHiddenRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredHiddenRenderState, false)
   })
 }
 
@@ -276,11 +288,7 @@ const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
       repeat,
       isEditableTarget: false,
     })
-    expect(ignoredHiddenDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertLegendNoOpDispatchOutcome(ignoredHiddenDispatch, false)
   })
 }
 
@@ -297,10 +305,7 @@ const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
       repeat,
       isEditableTarget: false,
     })
-    expect(ignoredHiddenRenderState.handled).toBe(false)
-    expect(ignoredHiddenRenderState.nextVisibility).toBe(false)
-    expect(ignoredHiddenRenderState.statusHint).toBeNull()
-    expect(ignoredHiddenRenderState.statusAriaLabel ?? null).toBeNull()
+    assertLegendNoOpRenderStateOutcome(ignoredHiddenRenderState, false)
   })
 }
 

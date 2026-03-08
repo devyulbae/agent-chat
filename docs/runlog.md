@@ -1,5 +1,20 @@
 # Runlog
 
+## 2026-03-08 17:05 KST — legend no-op assertion helper reuse for dispatch/render parity (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to reduce repeated no-op assertion scaffolding in legend lifecycle helper tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendNoOpDispatchOutcome(...)` helper for canonical no-op dispatch expectations.
+    - Added shared `assertLegendNoOpRenderStateOutcome(...)` helper for canonical no-op render-state expectations.
+    - Reused the helpers in shown no-op (`assertShownLegendNoOpDispatch`, `assertShownLegendNoOpRenderState`) and hidden event-gate no-op loops to remove duplicated handled/visibility/status/nullish-aria assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing duplicated no-op assertions in shown-state event-gate/modifier helper bodies where dispatch/render checks still repeat identical handled/visibility/status/nullish-aria expectations.
+
 ## 2026-03-08 16:52 KST — shown shift modifier+event-gate case assertion helper split (offset lane)
 - Scope: frontend integration + API contract sync follow-up to reduce repeated assertion scaffolding inside shown `shiftKey=true` modifier+event-gate no-op helper lanes.
 - Change:
