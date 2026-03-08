@@ -326,10 +326,13 @@ const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   })
 }
 
-const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
+const assertLegendEventGateNoOpDispatchByVisibility = (
+  key: 'Escape' | 'Esc',
+  isVisible: boolean,
+) => {
   assertLegendEventGateNoOpForInputBase(
     {
-      isVisible: false,
+      isVisible,
       key,
       shiftKey: false,
       metaKey: false,
@@ -337,15 +340,18 @@ const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
       altKey: false,
       isEditableTarget: false,
     },
-    false,
+    isVisible,
     false,
   )
 }
 
-const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
+const assertLegendEventGateNoOpRenderStateByVisibility = (
+  key: 'Escape' | 'Esc',
+  isVisible: boolean,
+) => {
   assertLegendEventGateNoOpForInputBase(
     {
-      isVisible: false,
+      isVisible,
       key,
       shiftKey: false,
       metaKey: false,
@@ -353,9 +359,17 @@ const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
       altKey: false,
       isEditableTarget: false,
     },
-    false,
+    isVisible,
     true,
   )
+}
+
+const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
+  assertLegendEventGateNoOpDispatchByVisibility(key, false)
+}
+
+const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
+  assertLegendEventGateNoOpRenderStateByVisibility(key, false)
 }
 
 const assertShownLegendModifierNoOpDispatchByShiftAndEditable = (
@@ -415,35 +429,11 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  assertLegendEventGateNoOpForInputBase(
-    {
-      isVisible: true,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      isEditableTarget: false,
-    },
-    true,
-    false,
-  )
+  assertLegendEventGateNoOpDispatchByVisibility(key, true)
 }
 
 const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  assertLegendEventGateNoOpForInputBase(
-    {
-      isVisible: true,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      isEditableTarget: false,
-    },
-    true,
-    true,
-  )
+  assertLegendEventGateNoOpRenderStateByVisibility(key, true)
 }
 
 const assertLegendEventGateNoOpForInputBase = (

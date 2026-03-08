@@ -1,3 +1,19 @@
+## 2026-03-08 20:05 KST — event-gate visibility helper reuse for hidden/shown non-editable lanes (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated hidden/shown event-gate non-editable input-base scaffolding.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendEventGateNoOpDispatchByVisibility(key, isVisible)` helper.
+    - Added shared `assertLegendEventGateNoOpRenderStateByVisibility(key, isVisible)` helper.
+    - Refactored hidden/shown event-gate no-op dispatch helpers to reuse the visibility helper pair instead of duplicating input-base payload scaffolding.
+    - Refactored hidden/shown event-gate no-op render-state helpers to reuse the same visibility helper pair.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing duplicated no-op helper scaffolding where shown/hidden modifier guards still construct parallel dispatch/render wrappers with identical visibility-derived expectations.
+
 ## 2026-03-08 19:31 KST — event-gate no-op input-base helper reuse for hidden/shown non-editable lanes (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated hidden/shown non-editable event-gate input scaffolding across dispatch/render helper paths.
 - Change:
