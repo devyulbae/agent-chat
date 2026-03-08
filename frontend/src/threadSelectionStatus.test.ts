@@ -4,6 +4,7 @@ import {
   getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
+  getSelectedVisibleThreadPositionTitle,
   getSelectedVisibleThreadShortcutRecoveryHint,
   isSelectedVisibleThreadHiddenByFilter,
 } from './threadSelectionStatus'
@@ -41,6 +42,18 @@ describe('getSelectedVisibleThreadPositionLabel', () => {
 
   it('returns 0/total when no selection exists and nothing is hidden', () => {
     expect(getSelectedVisibleThreadPositionLabel(false, -1, 2)).toBe('0/2')
+  })
+})
+
+describe('getSelectedVisibleThreadPositionTitle', () => {
+  it('returns hidden-selection recovery title when selection is filtered out', () => {
+    expect(getSelectedVisibleThreadPositionTitle(true)).toBe(
+      'Selection is hidden by current filters. Use "Jump to first/last visible" to recover to the visible list.',
+    )
+  })
+
+  it('returns undefined when selection is visible', () => {
+    expect(getSelectedVisibleThreadPositionTitle(false)).toBeUndefined()
   })
 })
 

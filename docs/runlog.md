@@ -2826,3 +2826,19 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: add compact shown-state `Esc` alias + `shiftKey=true` editable-target no-op parity coverage for modifier-key guard paths (`Meta`/`Ctrl`/`Alt`) to complete alias symmetry with canonical `Escape` guard rails.
+
+## 2026-03-08 09:08 KST — hidden-selection position title wiring extraction (chat thread UX)
+- Scope: chat thread UX wiring (selection-hidden recovery copy consistency).
+- Change:
+  - `frontend/src/threadSelectionStatus.ts`
+    - Added `getSelectedVisibleThreadPositionTitle(selectedVisibleThreadHiddenByFilter)` to centralize hidden-selection title copy.
+  - `frontend/src/main.tsx`
+    - Replaced inline `selectedVisibleThreadPositionTitle` string with the new helper.
+  - `frontend/src/threadSelectionStatus.test.ts`
+    - Added regression tests for hidden/visible title behavior.
+- Verification:
+  - `cd frontend && npm test -- src/threadSelectionStatus.test.ts` ✅ (18 passed)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: wire `selectedVisibleThreadPositionTitle` onto hidden-selection recovery buttons (`Jump to first/last visible`) for consistent hover/help text across selection status + recovery controls.

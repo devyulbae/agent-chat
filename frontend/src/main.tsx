@@ -40,6 +40,7 @@ import {
   getSelectedVisibleThreadButtonRecoveryHint,
   getSelectedVisibleThreadInlineRecoveryHint,
   getSelectedVisibleThreadPositionLabel,
+  getSelectedVisibleThreadPositionTitle,
   getSelectedVisibleThreadShortcutRecoveryHint,
   isSelectedVisibleThreadHiddenByFilter,
 } from './threadSelectionStatus'
@@ -1765,9 +1766,9 @@ function App() {
     selectedVisibleThreadIndex,
     visibleThreadIds.length,
   )
-  const selectedVisibleThreadPositionTitle = selectedVisibleThreadHiddenByFilter
-    ? 'Selection is hidden by current filters. Use "Jump to first visible" to recover to the visible list.'
-    : undefined
+  const selectedVisibleThreadPositionTitle = getSelectedVisibleThreadPositionTitle(
+    selectedVisibleThreadHiddenByFilter,
+  )
   const selectedVisibleThreadRecoveryHint = getSelectedVisibleThreadButtonRecoveryHint(
     selectedVisibleThreadHiddenByFilter,
     selectedVisibleThreadPositionLabel,

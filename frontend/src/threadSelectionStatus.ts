@@ -18,6 +18,16 @@ export function getSelectedVisibleThreadPositionLabel(
   return `${selectedVisibleThreadIndex >= 0 ? selectedVisibleThreadIndex + 1 : 0}/${visibleThreadCount}`
 }
 
+export function getSelectedVisibleThreadPositionTitle(
+  selectedVisibleThreadHiddenByFilter: boolean,
+): string | undefined {
+  if (!selectedVisibleThreadHiddenByFilter) {
+    return undefined
+  }
+
+  return 'Selection is hidden by current filters. Use "Jump to first/last visible" to recover to the visible list.'
+}
+
 export function getSelectedVisibleThreadInlineRecoveryHint(
   selectedVisibleThreadHiddenByFilter: boolean,
   selectedVisibleThreadPositionLabel: string,
