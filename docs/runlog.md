@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 18:12 KST — legend no-op input helper extraction for event-gate + editable hidden paths (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to reduce repeated no-op dispatch/render-state input scaffolding across hidden/shown event-gate and hidden editable helpers.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendNoOpDispatchForInput(...)` helper.
+    - Added shared `assertLegendNoOpRenderStateForInput(...)` helper.
+    - Refactored hidden editable no-op dispatch/render helpers to reuse the shared input helpers.
+    - Refactored hidden/shown event-gate no-op dispatch/render helpers to reuse the shared input helpers.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining helper wrappers that still instantiate identical dispatch/render no-op inputs inline (modifier + shift/event-gate cross-product lanes).
+
 ## 2026-03-08 17:50 KST — plain Slash no-op helper now reuses shared no-op outcome assertions (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe for plain Slash (`key='/'`, `shiftKey=false`) no-op helper coverage in hidden/shown visibility states.
 - Change:

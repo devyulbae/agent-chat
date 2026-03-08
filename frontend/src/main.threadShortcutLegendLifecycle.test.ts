@@ -31,6 +31,22 @@ const assertLegendNoOpRenderStateOutcome = (
   expect(outcome.statusAriaLabel ?? null).toBeNull()
 }
 
+const assertLegendNoOpDispatchForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
+  nextVisibility: boolean,
+) => {
+  const outcome = getThreadShortcutLegendKeyboardDispatchOutcome(input)
+  assertLegendNoOpDispatchOutcome(outcome, nextVisibility)
+}
+
+const assertLegendNoOpRenderStateForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardRenderState>[0],
+  nextVisibility: boolean,
+) => {
+  const outcome = getThreadShortcutLegendKeyboardRenderState(input)
+  assertLegendNoOpRenderStateOutcome(outcome, nextVisibility)
+}
+
 const assertShownLegendNoOpRenderState = (key: 'Escape' | 'Esc', shiftKey: boolean) => {
   const shownNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
     isVisible: true,
@@ -162,18 +178,20 @@ const assertHiddenEditableLegendNoOpDispatch = (
   defaultPrevented = false,
   repeat = false,
 ) => {
-  const hiddenEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-    isVisible: false,
-    key,
-    shiftKey: false,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented,
-    repeat,
-    isEditableTarget: true,
-  })
-  assertLegendNoOpDispatchOutcome(hiddenEditableNoOpDispatch, false)
+  assertLegendNoOpDispatchForInput(
+    {
+      isVisible: false,
+      key,
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: true,
+    },
+    false,
+  )
 }
 
 const assertHiddenEditableLegendNoOpRenderState = (
@@ -181,19 +199,20 @@ const assertHiddenEditableLegendNoOpRenderState = (
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
-  const hiddenEditableNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: false,
-    key,
-    shiftKey: false,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented,
-    repeat,
-    isEditableTarget: true,
-  })
-
-  assertLegendNoOpRenderStateOutcome(hiddenEditableNoOpRenderState, false)
+  assertLegendNoOpRenderStateForInput(
+    {
+      isVisible: false,
+      key,
+      shiftKey: false,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: true,
+    },
+    false,
+  )
 }
 
 const assertHiddenEditableLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
@@ -248,35 +267,39 @@ const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
 
 const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    const ignoredHiddenDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpDispatchOutcome(ignoredHiddenDispatch, false)
+    assertLegendNoOpDispatchForInput(
+      {
+        isVisible: false,
+        key,
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented,
+        repeat,
+        isEditableTarget: false,
+      },
+      false,
+    )
   })
 }
 
 const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpRenderStateOutcome(ignoredHiddenRenderState, false)
+    assertLegendNoOpRenderStateForInput(
+      {
+        isVisible: false,
+        key,
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented,
+        repeat,
+        isEditableTarget: false,
+      },
+      false,
+    )
   })
 }
 
@@ -323,35 +346,39 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
 
 const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpDispatchOutcome(ignoredDispatch, true)
+    assertLegendNoOpDispatchForInput(
+      {
+        isVisible: true,
+        key,
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented,
+        repeat,
+        isEditableTarget: false,
+      },
+      true,
+    )
   })
 }
 
 const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    const ignoredRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpRenderStateOutcome(ignoredRenderState, true)
+    assertLegendNoOpRenderStateForInput(
+      {
+        isVisible: true,
+        key,
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented,
+        repeat,
+        isEditableTarget: false,
+      },
+      true,
+    )
   })
 }
 
