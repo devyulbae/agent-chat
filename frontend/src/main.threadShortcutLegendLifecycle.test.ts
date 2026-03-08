@@ -153,21 +153,23 @@ const getShownEditableLegendNoOpInput = (
     isEditableTarget: true,
   } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
 
+type LegendNoOpAssertionMode = 'dispatch' | 'render'
+
 const assertShownEditableLegendNoOpByMode = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
   defaultPrevented: boolean,
   repeat: boolean,
-  includeRenderState: boolean,
+  mode: LegendNoOpAssertionMode,
 ) => {
   const input = getShownEditableLegendNoOpInput(key, shiftKey, defaultPrevented, repeat)
 
-  if (!includeRenderState) {
+  if (mode === 'dispatch') {
     assertLegendNoOpDispatchForInput(input, true)
-    return
+  } else {
+    assertLegendNoOpRenderStateForInput(input, true)
   }
 
-  assertLegendNoOpRenderStateForInput(input, true)
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
@@ -178,7 +180,7 @@ const assertShownEditableLegendNoOpDispatch = (
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
-  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, false)
+  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, 'dispatch')
 }
 
 const assertShownEditableLegendNoOpRenderState = (
@@ -187,7 +189,7 @@ const assertShownEditableLegendNoOpRenderState = (
   defaultPrevented: boolean,
   repeat: boolean,
 ) => {
-  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, true)
+  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, 'render')
 }
 
 

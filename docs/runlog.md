@@ -1,3 +1,17 @@
+## 2026-03-08 22:03 KST — shown editable no-op mode helper enum unification (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse boolean mode branching in shown editable no-op helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added typed `LegendNoOpAssertionMode = 'dispatch' | 'render'`.
+    - Refactored `assertShownEditableLegendNoOpByMode(...)` to use explicit mode dispatch instead of `includeRenderState` boolean branching.
+    - Kept shown-state no-op presentation parity assertion (`ariaExpanded === true`) in one shared path for both modes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing remaining no-op helpers that still dual-route dispatch/render through wrapper pairs before shared assertion bodies.
+
 ## 2026-03-08 21:51 KST — shown editable no-op mode helper unification (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove duplicated shown editable no-op input construction across dispatch/render helper paths.
 - Change:
