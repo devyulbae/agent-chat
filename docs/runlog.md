@@ -1,5 +1,21 @@
 # Runlog
 
+## 2026-03-08 11:06 KST — shown editable non-shift modifier no-op helper dedupe (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only refactor to reduce duplicated shown editable-target non-shift (`shiftKey=false`) modifier no-op assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableLegendModifierNoOp(key)` helper to consolidate repeated dispatch + render-state no-op assertions for shown editable `Escape`/`Esc` with modifier guards (`meta`/`ctrl`/`alt`).
+    - Replaced duplicated inline assertion blocks in both dispatch and render-state tests with helper calls for canonical and alias keys.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Git:
+  - Commit: `e8a9711` — `[test] dedupe shown editable modifier no-op assertions`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing remaining shown non-shift non-editable modifier no-op render/dispatch fixtures into shared helper/table assertions to trim repeated guard-rail blocks.
+
 ## 2026-03-08 10:45 KST — shown Shift+Escape editable modifier/event-gate helper dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only refactor to collapse duplicated shown editable-target `Shift+Escape`/`Shift+Esc` modifier+event-gate no-op fixtures.
 - Change:
@@ -3010,3 +3026,15 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `cd frontend && npm run build` ✅
 - API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
 - Next action: extract the same case-table helper style for shown non-editable `shiftKey=true` modifier+event-gate no-op parity to further trim duplicate fixture setup.
+
+## 2026-03-08 11:11 KST — shown non-editable shift modifier+event-gate helper dedupe parity (offset lane)
+- Scope: frontend integration + API contract sync lane (continue case-table helper extraction for shown `shiftKey=true` modifier+event-gate no-op parity in non-editable paths).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownShiftLegendNonEditableModifierEventGateNoOp(key)` to use compact dispatch/render case tables matching editable helper style.
+    - Preserved no-op parity assertions (`handled=false`, `nextVisibility=true`, `statusHint=null`, nullish `statusAriaLabel`) and explicit `ariaExpanded` synchronization check.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (52/52)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: extract a shared shown-state shift modifier+event-gate helper that parameterizes `isEditableTarget` to dedupe editable/non-editable case-table scaffolding while preserving parity assertions.

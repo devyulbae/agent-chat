@@ -310,76 +310,55 @@ const assertShownEditableShiftLegendModifierEventGateNoOp = (key: 'Escape' | 'Es
 }
 
 const assertShownShiftLegendNonEditableModifierEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  const ignoredShownMetaDefaultPreventedShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: true,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: true,
-    repeat: false,
-    isEditableTarget: false,
-  })
-  expect(ignoredShownMetaDefaultPreventedShiftDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
+  const dispatchNoOpCases = [
+    { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: true, repeat: false },
+    { metaKey: false, ctrlKey: true, altKey: false, defaultPrevented: false, repeat: true },
+  ]
+
+  dispatchNoOpCases.forEach(({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
+    const noOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
+      isVisible: true,
+      key,
+      shiftKey: true,
+      metaKey,
+      ctrlKey,
+      altKey,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: false,
+    })
+    expect(noOpDispatch).toEqual({
+      handled: false,
+      nextVisibility: true,
+      statusHint: null,
+    })
   })
 
-  const ignoredShownCtrlRepeatShiftDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: false,
-    ctrlKey: true,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: true,
-    isEditableTarget: false,
-  })
-  expect(ignoredShownCtrlRepeatShiftDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
+  const renderStateNoOpCases = [
+    { metaKey: false, ctrlKey: false, altKey: true, defaultPrevented: true, repeat: false },
+    { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
+  ]
+
+  renderStateNoOpCases.forEach(({ metaKey, ctrlKey, altKey, defaultPrevented, repeat }) => {
+    const noOpRenderState = getThreadShortcutLegendKeyboardRenderState({
+      isVisible: true,
+      key,
+      shiftKey: true,
+      metaKey,
+      ctrlKey,
+      altKey,
+      defaultPrevented,
+      repeat,
+      isEditableTarget: false,
+    })
+    expect(noOpRenderState.handled).toBe(false)
+    expect(noOpRenderState.nextVisibility).toBe(true)
+    expect(noOpRenderState.statusHint).toBeNull()
+    expect(noOpRenderState.statusAriaLabel ?? null).toBeNull()
   })
 
-  const ignoredShownAltDefaultPreventedShiftRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: false,
-    ctrlKey: false,
-    altKey: true,
-    defaultPrevented: true,
-    repeat: false,
-    isEditableTarget: false,
-  })
-  expect(ignoredShownAltDefaultPreventedShiftRenderState.handled).toBe(false)
-  expect(ignoredShownAltDefaultPreventedShiftRenderState.nextVisibility).toBe(true)
-  expect(ignoredShownAltDefaultPreventedShiftRenderState.statusHint).toBeNull()
-  expect(ignoredShownAltDefaultPreventedShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-  const ignoredShownMetaRepeatShiftRenderState = getThreadShortcutLegendKeyboardRenderState({
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey: true,
-    ctrlKey: false,
-    altKey: false,
-    defaultPrevented: false,
-    repeat: true,
-    isEditableTarget: false,
-  })
-  expect(ignoredShownMetaRepeatShiftRenderState.handled).toBe(false)
-  expect(ignoredShownMetaRepeatShiftRenderState.nextVisibility).toBe(true)
-  expect(ignoredShownMetaRepeatShiftRenderState.statusHint).toBeNull()
-  expect(ignoredShownMetaRepeatShiftRenderState.statusAriaLabel ?? null).toBeNull()
-
-  const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-    ignoredShownMetaRepeatShiftRenderState.nextVisibility,
-  )
-  expect(shownNoOpPresentation.ariaExpanded).toBe(ignoredShownMetaRepeatShiftRenderState.nextVisibility)
+  const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
+  expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
 describe('thread shortcut legend lifecycle presentation (main integration)', () => {
