@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-08 19:23 KST — plain Slash no-op input helper consolidation (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe on remaining inline no-op input scaffolding for plain Slash hidden/shown paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendNoOpDispatchAndRenderStateForInput(...)` helper to execute both dispatch/render no-op assertions from one canonical keyboard input payload.
+    - Refactored `assertPlainSlashNoOp(isVisible)` to build one typed `plainSlashNoOpInput` object and reuse the combined helper, removing duplicate inline payload + outcome scaffolding.
+    - Kept no-op presentation parity assertion explicit (`ariaExpanded` remains synchronized with stable visibility state).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `f59b542` — `[test] dedupe plain slash no-op input scaffolding`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing duplicated no-op input scaffolding in helper paths that still instantiate identical dispatch/render keyboard payload objects separately.
+
 ## 2026-03-08 19:11 KST — hidden Esc render-state no-op helper extraction for lifecycle test dedupe (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe on remaining inline hidden no-op render-state assertion scaffolding.
 - Change:
