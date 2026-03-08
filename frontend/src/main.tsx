@@ -96,6 +96,7 @@ type AuditEvent = {
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
 const ROOT_THREAD_KEY = '__root__'
+const MESSAGE_PAGE_LIMIT = 200
 
 function buildWebSocketChannelUrl(channelId: string): string {
   const encodedChannelId = encodeURIComponent(channelId)
@@ -664,6 +665,7 @@ function App() {
       if (selectedThreadId) {
         params.set('thread_id', selectedThreadId)
       }
+      params.set('limit', String(MESSAGE_PAGE_LIMIT))
 
       const query = params.toString()
       const url = `${API_BASE}/channels/${encodeURIComponent(channelId)}/messages${query ? `?${query}` : ''}`

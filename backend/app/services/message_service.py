@@ -12,9 +12,9 @@ class MessageService:
         return self._repository.create(payload)
 
     def list_messages(
-        self, channel_id: str, thread_id: str | None = None
+        self, channel_id: str, thread_id: str | None = None, limit: int | None = None
     ) -> Sequence[object]:
-        return self._repository.list_by_channel(channel_id, thread_id)
+        return self._repository.list_by_channel(channel_id, thread_id, limit)
 
     def list_threads(self, channel_id: str) -> Sequence[ThreadSummary]:
         return self._repository.list_threads_by_channel(channel_id)

@@ -18,11 +18,23 @@ class FakeMessageRepo:
         self.items.append(item)
         return item
 
-    def list_by_channel(self, channel_id: str, thread_id: str | None = None):
+    def list_by_channel(
+        self,
+        channel_id: str,
+        thread_id: str | None = None,
+        limit: int | None = None,
+    ):
         result = [item for item in self.items if item.channel_id == channel_id]
         if thread_id is None:
-            return [item for item in result if item.thread_id is None]
-        return [item for item in result if item.thread_id == thread_id]
+            scoped = [item for item in result if item.thread_id is None]
+        else:
+            scoped = [item for item in result if item.thread_id == thread_id]
+
+        if limit is None:
+            return scoped
+
+        bounded_limit = max(1, int(limit))
+        return scoped[-bounded_limit:]
 
     def list_threads_by_channel(self, channel_id: str):
         root_count = 0
@@ -124,6 +136,45 @@ def test_message_service_list_by_thread_id() -> None:
     listed = service.list_messages("chan-1", "thread-1")
 
     assert [item.id for item in listed] == ["msg-2"]
+
+
+def test_message_service_list_with_limit_returns_latest_messages_in_ascending_order() -> (
+    None
+):
+    repo = FakeMessageRepo()
+    service = MessageService(repository=repo)
+
+    repo.create(
+        MessageCreate(
+            id="msg-1",
+            channel_id="chan-1",
+            sender_agent_id="agent-1",
+            thread_id="thread-1",
+            body="one",
+        )
+    )
+    repo.create(
+        MessageCreate(
+            id="msg-2",
+            channel_id="chan-1",
+            sender_agent_id="agent-1",
+            thread_id="thread-1",
+            body="two",
+        )
+    )
+    repo.create(
+        MessageCreate(
+            id="msg-3",
+            channel_id="chan-1",
+            sender_agent_id="agent-1",
+            thread_id="thread-1",
+            body="three",
+        )
+    )
+
+    listed = service.list_messages("chan-1", "thread-1", limit=2)
+
+    assert [item.id for item in listed] == ["msg-2", "msg-3"]
 
 
 def test_message_service_list_threads_returns_recently_active_first() -> None:

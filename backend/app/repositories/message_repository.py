@@ -26,7 +26,7 @@ class MessageRepository(ABC):
 
     @abstractmethod
     def list_by_channel(
-        self, channel_id: str, thread_id: str | None = None
+        self, channel_id: str, thread_id: str | None = None, limit: int | None = None
     ) -> Sequence[Message]:
         raise NotImplementedError
 
@@ -53,13 +53,25 @@ class SQLMessageRepository(MessageRepository):
         return row
 
     def list_by_channel(
-        self, channel_id: str, thread_id: str | None = None
+        self, channel_id: str, thread_id: str | None = None, limit: int | None = None
     ) -> Sequence[Message]:
         stmt = select(Message).where(Message.channel_id == channel_id)
         if thread_id is None:
             stmt = stmt.where(Message.thread_id.is_(None))
         else:
             stmt = stmt.where(Message.thread_id == thread_id)
+
+        bounded_limit = None if limit is None else max(1, int(limit))
+        if bounded_limit is not None:
+            latest_stmt = stmt.order_by(
+                Message.created_at.desc(), Message.id.desc()
+            ).limit(bounded_limit)
+            latest_messages = self._session.execute(latest_stmt).scalars().all()
+            return sorted(
+                latest_messages,
+                key=lambda message: (message.created_at, message.id),
+            )
+
         stmt = stmt.order_by(Message.created_at.asc(), Message.id.asc())
         return self._session.execute(stmt).scalars().all()
 

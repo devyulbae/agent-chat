@@ -237,11 +237,12 @@ def list_threads(
 def list_messages(
     channel_id: str,
     thread_id: str | None = None,
+    limit: int | None = Query(default=None, ge=1, le=500),
     service: MessageService = Depends(Provide[AppContainer.message_service]),
 ):
     return [
         MessageRead.from_entity(item)
-        for item in service.list_messages(channel_id, thread_id)
+        for item in service.list_messages(channel_id, thread_id, limit)
     ]
 
 
