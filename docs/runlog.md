@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 15:11 KST — hidden editable event-gate render-state helper reuse (offset lane)
+- Scope: frontend integration + API contract sync follow-up to remove duplicated hidden editable-target event-gate render-state fixture calls.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `hiddenEditableEventGateCases` table.
+    - Added `assertHiddenEditableLegendEventGateNoOpRenderState(key)` helper.
+    - Reused the new helper in hidden `Escape`/`Esc` editable-target `defaultPrevented`/`repeat` render-state tests.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue extracting shared event-gate case tables for shown-state no-op helpers where `defaultPrevented`/`repeat` fixtures are still duplicated.
+
 ## 2026-03-08 14:50 KST — hidden Esc editable event-gate render-state parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to close a remaining hidden editable-target render-state parity gap for the `Esc` alias under event-gate paths.
 - Change:
