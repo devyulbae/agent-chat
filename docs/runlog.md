@@ -1,5 +1,23 @@
 # Runlog
 
+## 2026-03-08 09:12 KST — shown canonical Escape+Shift non-editable modifier+event-gate no-op parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to mirror the existing shown `Esc` alias `shiftKey=true` non-editable modifier+event-gate no-op lane with canonical `Escape` parity.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused dispatch+render regression for shown canonical `Escape` with `shiftKey=true` and `isEditableTarget=false` across mixed guard paths.
+    - Locked dispatch no-op parity for representative combinations:
+      - `metaKey=true` + `defaultPrevented=true`
+      - `ctrlKey=true` + `repeat=true`
+    - Locked render-state nullish-aria parity for complementary combinations:
+      - `altKey=true` + `defaultPrevented=true`
+      - `metaKey=true` + `repeat=true`
+    - Preserved presentation parity by asserting `ariaExpanded` remains synchronized with stable `nextVisibility=true` on these shown no-op paths.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: consider collapsing duplicated shown-state shift+escape guard fixtures into a small table-driven helper to reduce repetitive test surface while retaining parity assertions.
+
 ## 2026-03-08 08:52 KST — shown Esc alias+Shift non-editable modifier+event-gate no-op parity lock (offset lane)
 - Scope: frontend integration + API contract sync follow-up to close the shown-state `Esc` alias + `shiftKey=true` cross-guard no-op gap for non-editable targets.
 - Change:
