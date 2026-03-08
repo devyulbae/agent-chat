@@ -32,6 +32,7 @@ import {
   AUDIT_EVENTS_LIMIT_MAX,
   buildChannelMessagesQueryParams,
   buildCredentialAuditEventsQueryParams,
+  buildCredentialsQueryParams,
   clampAuditEventLimit,
   clampCredentialExpiringWindowHours,
   normalizeAuditOffset,
@@ -954,13 +955,10 @@ function App() {
       setCredentialLoading(true)
       setCredentialError(null)
 
-      const params = new URLSearchParams()
-      if (credentialFilter !== 'all') {
-        params.set('token_status', credentialFilter)
-      }
-      params.set('expiring_within_hours', String(clampCredentialExpiringWindowHours(expiringWithinHours)))
-
-      const query = params.toString()
+      const query = buildCredentialsQueryParams({
+        tokenStatus: credentialFilter,
+        expiringWithinHours,
+      }).toString()
       const url = `${API_BASE}/credentials${query ? `?${query}` : ''}`
 
       try {

@@ -50,6 +50,24 @@ export function clampChannelMessagesLimit(value: number, fallback = 200): number
   )
 }
 
+export type CredentialsQueryParamsInput = {
+  tokenStatus: string
+  expiringWithinHours: number
+}
+
+export function buildCredentialsQueryParams(input: CredentialsQueryParamsInput): URLSearchParams {
+  const params = new URLSearchParams({
+    expiring_within_hours: String(clampCredentialExpiringWindowHours(input.expiringWithinHours)),
+  })
+
+  const normalizedTokenStatus = normalizeOptionalAuditFilter(input.tokenStatus)
+  if (normalizedTokenStatus) {
+    params.set('token_status', normalizedTokenStatus)
+  }
+
+  return params
+}
+
 export type ChannelMessagesQueryParamsInput = {
   threadId: string | null
   limit: number

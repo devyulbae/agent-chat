@@ -5,6 +5,7 @@ import {
   CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX,
   buildChannelMessagesQueryParams,
   buildCredentialAuditEventsQueryParams,
+  buildCredentialsQueryParams,
   clampAuditEventLimit,
   clampChannelMessagesLimit,
   clampCredentialExpiringWindowHours,
@@ -37,6 +38,23 @@ describe('apiContracts helpers', () => {
     expect(clampChannelMessagesLimit(0)).toBe(1)
     expect(clampChannelMessagesLimit(CHANNEL_MESSAGES_LIMIT_MAX + 5)).toBe(CHANNEL_MESSAGES_LIMIT_MAX)
     expect(clampChannelMessagesLimit(Number.NaN, 999)).toBe(CHANNEL_MESSAGES_LIMIT_MAX)
+  })
+
+  it('builds credentials params with bounded expiring window and optional token status', () => {
+    const params = buildCredentialsQueryParams({
+      tokenStatus: '  ALL ',
+      expiringWithinHours: CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX + 100,
+    })
+    const filteredParams = buildCredentialsQueryParams({
+      tokenStatus: ' expiring_soon ',
+      expiringWithinHours: Number.NaN,
+    })
+
+    expect(params.get('expiring_within_hours')).toBe(String(CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX))
+    expect(params.has('token_status')).toBe(false)
+
+    expect(filteredParams.get('expiring_within_hours')).toBe('24')
+    expect(filteredParams.get('token_status')).toBe('expiring_soon')
   })
 
   it('builds channel messages params with bounded limit and optional trimmed thread id', () => {
