@@ -1,3 +1,15 @@
+## 2026-03-08 22:11 KST — shown modifier no-op mode enum helper unification (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining boolean mode branching in shown modifier no-op helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownLegendModifierNoOpByShiftAndEditable(...)` to use explicit `LegendNoOpAssertionMode` (`'dispatch' | 'render'`) instead of `includeRenderState` boolean routing.
+    - Updated shown non-editable and shown editable modifier no-op wrapper calls to pass explicit mode values while preserving shown-state `ariaExpanded` parity assertion.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining no-op helpers that still branch dispatch/render via boolean flags (`includeRenderState`) before shared assertion bodies.
+
 ## 2026-03-08 22:03 KST — shown editable no-op mode helper enum unification (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse boolean mode branching in shown editable no-op helper paths.
 - Change:

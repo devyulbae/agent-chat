@@ -390,7 +390,7 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
   isEditableTarget: boolean,
-  includeRenderState: boolean,
+  mode: LegendNoOpAssertionMode,
 ) => {
   legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const input = {
@@ -405,7 +405,7 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
       isEditableTarget,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-    if (includeRenderState) {
+    if (mode === 'render') {
       assertLegendNoOpRenderStateForInput(input, true)
       return
     }
@@ -418,11 +418,11 @@ const assertShownLegendModifierNoOpByShiftAndEditable = (
 }
 
 const assertShownLegendModifierNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  assertShownLegendModifierNoOpByShiftAndEditable(key, false, false, false)
+  assertShownLegendModifierNoOpByShiftAndEditable(key, false, false, 'dispatch')
 }
 
 const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  assertShownLegendModifierNoOpByShiftAndEditable(key, false, false, true)
+  assertShownLegendModifierNoOpByShiftAndEditable(key, false, false, 'render')
 }
 
 const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
@@ -458,8 +458,8 @@ const assertShownEditableLegendModifierNoOpByShift = (
   key: 'Escape' | 'Esc',
   shiftKey: boolean,
 ) => {
-  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, true, false)
-  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, true, true)
+  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, true, 'dispatch')
+  assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, true, 'render')
 }
 
 const assertShownEditableLegendModifierNoOp = (key: 'Escape' | 'Esc') => {
