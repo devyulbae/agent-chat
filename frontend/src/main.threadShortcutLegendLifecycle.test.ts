@@ -139,6 +139,15 @@ const assertShownLegendNoOpByShiftAndEditable = (
   assertShownLegendNoOpAriaExpanded()
 }
 
+const assertShownLegendNoOpByShiftAndEditableAcrossEscapeKeys = (
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  forEachLegendEscapeKey((key) => {
+    assertShownLegendNoOpByShiftAndEditable(key, shiftKey, isEditableTarget)
+  })
+}
+
 type LegendNoOpAssertionMode = 'dispatch' | 'render'
 
 const assertLegendNoOpByModeForInput = (
@@ -756,20 +765,12 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(true, 'dispatch')
   })
 
-  it('keeps shown Escape with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
-    assertShownLegendNoOpByShiftAndEditable('Escape', true, false)
+  it('keeps shown Escape/Esc with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
+    assertShownLegendNoOpByShiftAndEditableAcrossEscapeKeys(true, false)
   })
 
-  it('keeps shown Esc alias with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
-    assertShownLegendNoOpByShiftAndEditable('Esc', true, false)
-  })
-
-  it('keeps shown Escape with shiftKey=true as no-op dispatch/render-state when target is editable', () => {
-    assertShownLegendNoOpByShiftAndEditable('Escape', true, true)
-  })
-
-  it('keeps shown Esc alias with shiftKey=true as no-op dispatch/render-state when target is editable', () => {
-    assertShownLegendNoOpByShiftAndEditable('Esc', true, true)
+  it('keeps shown Escape/Esc with shiftKey=true as no-op dispatch/render-state when target is editable', () => {
+    assertShownLegendNoOpByShiftAndEditableAcrossEscapeKeys(true, true)
   })
 
   it('keeps shown Escape/Esc with shiftKey=true as no-op for editable target when event is defaultPrevented or repeat', () => {
