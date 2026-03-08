@@ -1,3 +1,20 @@
+## 2026-03-08 22:24 KST — event-gate no-op mode enum unification for lifecycle helpers (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove remaining boolean mode flags (`includeRenderState`) from legend lifecycle no-op helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added explicit `LegendEventGateAssertionMode = 'dispatch' | 'dispatch+render'` and replaced boolean mode routing in hidden/shown event-gate helper wrappers.
+    - Updated event-gate input-base helper to branch on explicit mode token instead of `includeRenderState`.
+    - Replaced shown shift modifier+event-gate case helper boolean mode flag with `LegendNoOpAssertionMode` (`'dispatch' | 'render'`) for clearer dispatch/render intent.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `a9fd527` — `[test] replace event-gate no-op boolean flags with explicit modes`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing wrapper-only helper indirection by unifying shown editable event-gate helper entrypoints (`non-shift`/`shift`) behind one explicit mode-aware helper path.
+
 ## 2026-03-08 22:11 KST — shown modifier no-op mode enum helper unification (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining boolean mode branching in shown modifier no-op helper paths.
 - Change:
