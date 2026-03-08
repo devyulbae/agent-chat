@@ -338,6 +338,27 @@ const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode = (
   }
 }
 
+const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes = (
+  key: 'Escape' | 'Esc',
+  isVisible: boolean,
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
+    key,
+    isVisible,
+    shiftKey,
+    isEditableTarget,
+    'dispatch',
+  )
+  assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(
+    key,
+    isVisible,
+    shiftKey,
+    isEditableTarget,
+    'render',
+  )
+}
 
 const assertPlainSlashNoOp = (isVisible: boolean) => {
   const plainSlashNoOpInput = {
@@ -870,20 +891,16 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', true, true)
   })
   it('keeps shown Escape with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Escape', true, true, true, 'dispatch')
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Escape', true, true, true, 'render')
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes('Escape', true, true, true)
   })
 
   it('keeps shown Esc alias with shiftKey=true editable-target modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Esc', true, true, true, 'dispatch')
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Esc', true, true, true, 'render')
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes('Esc', true, true, true)
   })
 
   it('keeps shown Escape/Esc with shiftKey=true non-editable modifier+event-gate paths as no-op dispatch/render-state outcomes', () => {
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Escape', true, true, false, 'dispatch')
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Escape', true, true, false, 'render')
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Esc', true, true, false, 'dispatch')
-    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode('Esc', true, true, false, 'render')
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes('Escape', true, true, false)
+    assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes('Esc', true, true, false)
   })
 
   it('keeps plain Slash (without Shift) as a no-op for hidden and shown legend states', () => {

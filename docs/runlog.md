@@ -1,3 +1,18 @@
+## 2026-03-09 03:32 KST — shown shift modifier+event-gate across-modes helper reuse (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to collapse repeated dispatch/render call pairs in shown `shiftKey=true` modifier+event-gate no-op lifecycle lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared helper `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossModes(...)`.
+    - Refactored repeated callsites to route fixed dispatch+render pairs through the helper for:
+      - shown `Escape` editable `shiftKey=true` modifier+event-gate no-op lanes
+      - shown `Esc` editable `shiftKey=true` modifier+event-gate no-op lanes
+      - shown `Escape`/`Esc` non-editable `shiftKey=true` modifier+event-gate no-op lanes
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (51/51)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming repeated dispatch/render helper call pairs in lifecycle tests where key/visibility/editable inputs are fixed and only mode differs.
+
 ## 2026-03-09 03:22 KST — shown modifier across-modes helper reuse (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse repeated shown modifier no-op dispatch/render call pairs in lifecycle tests.
 - Change:
