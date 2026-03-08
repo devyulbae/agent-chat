@@ -165,6 +165,11 @@ const legendEventGateCases = [
   { defaultPrevented: false, repeat: true },
 ] as const
 
+const legendEscapeKeys = ['Escape', 'Esc'] as const
+
+const forEachLegendEscapeKey = (assertion: (key: (typeof legendEscapeKeys)[number]) => void) => {
+  legendEscapeKeys.forEach(assertion)
+}
 
 const assertHiddenEditableLegendNoOpByMode = (
   key: 'Escape' | 'Esc',
@@ -736,12 +741,10 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertHiddenLegendModifierNoOpByMode('Esc', 'dispatch')
   })
 
-  it('keeps hidden Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpByVisibilityAndMode('Esc', false, 'dispatch')
-  })
-
-  it('keeps hidden Escape as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpByVisibilityAndMode('Escape', false, 'dispatch')
+  it('keeps hidden Escape/Esc as no-op dispatch when event is defaultPrevented or repeat', () => {
+    forEachLegendEscapeKey((key) => {
+      assertLegendEventGateNoOpByVisibilityAndMode(key, false, 'dispatch')
+    })
   })
 
   it('keeps hidden Escape/Esc as no-op dispatch when target is editable', () => {
@@ -762,12 +765,10 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertEditableLegendEventGateNoOpByVisibilityShiftAndMode('Esc', true, false, 'dispatch+render')
   })
 
-  it('keeps shown Escape as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpByVisibilityAndMode('Escape', true, 'dispatch')
-  })
-
-  it('keeps shown Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpByVisibilityAndMode('Esc', true, 'dispatch')
+  it('keeps shown Escape/Esc as no-op dispatch when event is defaultPrevented or repeat', () => {
+    forEachLegendEscapeKey((key) => {
+      assertLegendEventGateNoOpByVisibilityAndMode(key, true, 'dispatch')
+    })
   })
 
   it('keeps shown Escape with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
