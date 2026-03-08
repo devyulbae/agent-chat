@@ -1,3 +1,34 @@
+## 2026-03-09 00:32 KST — shown editable mode/shift wrapper alias removal (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining wrapper-only shown editable helper entrypoints.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed wrapper-only aliases:
+      - `assertShownEditableLegendEventGateNoOpByShift(...)`
+      - `assertShownEditableLegendModifierNoOpByShift(...)`
+    - Updated shown editable event-gate callsites to invoke `assertLegendEventGateNoOpForInputBase(...)` directly with explicit editable input base and `'dispatch+render'` mode.
+    - Updated shown editable modifier callsites to invoke `assertShownLegendModifierNoOpByShiftAndEditable(..., true, mode)` directly for dispatch/render lanes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming wrapper-only helper entrypoints that still forward fixed inputs/modes before shared no-op assertion helpers.
+
+## 2026-03-09 00:23 KST — hidden event-gate wrapper alias removal in lifecycle tests (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove one wrapper-only hidden event-gate helper entrypoint.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertHiddenLegendEventGateNoOp(...)` wrapper alias.
+    - Updated hidden event-gate no-op dispatch/render callsites to invoke `assertLegendEventGateNoOpByVisibilityAndMode(..., false, mode)` directly with explicit modes (`'dispatch'`, `'dispatch+render'`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `b651f23` — `[test] remove hidden event-gate wrapper alias in lifecycle tests`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing wrapper-only helper aliases in lifecycle tests by replacing remaining one-hop helper entrypoints with direct mode-aware helper calls.
+
 ## 2026-03-09 00:12 KST — shown/hidden modifier+event-gate wrapper entrypoint trim (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining wrapper-only shown/hidden helper entrypoints around modifier and event-gate no-op lanes.
 - Change:
