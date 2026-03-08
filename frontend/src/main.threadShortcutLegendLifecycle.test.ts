@@ -584,7 +584,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     expect(hiddenBeforeToggle.ariaExpanded).toBe(false)
     expect(hiddenBeforeToggle.buttonAriaKeyshortcuts).toBe('Question Shift+Slash')
     expect(hiddenBeforeToggle.regionAriaKeyshortcuts).toBe(
-      'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+G Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+      'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+G Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Question Shift+Slash Slash C Y Escape Esc',
     )
     expect(hiddenBeforeToggle.statusHint).toBe('Thread shortcut legend hidden (Esc).')
 
@@ -614,7 +614,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       role: 'region',
       ariaLabel: 'Thread keyboard shortcuts',
       ariaKeyshortcuts:
-        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+G Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Slash C Y Escape Esc',
+        'J K ArrowUp ArrowDown Home End PageUp PageDown Shift+G Shift+End Shift+PageDown U N P Shift+U Z Shift+Home Shift+R Question Shift+Slash Slash C Y Escape Esc',
     })
   })
 
