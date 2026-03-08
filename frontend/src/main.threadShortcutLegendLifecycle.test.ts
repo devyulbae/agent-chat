@@ -771,7 +771,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps shown Escape/Esc as no-op dispatch when target is editable and event is defaultPrevented or repeat', () => {
+  it('keeps shown Escape/Esc as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
     assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(
       true,
       false,
@@ -849,22 +849,6 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
   it('keeps hidden Escape/Esc as no-op render-state when target is editable', () => {
     assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('render')
-  })
-
-  it('keeps hidden Escape/Esc as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
-    assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(
-      false,
-      false,
-      'dispatch+render',
-    )
-  })
-
-  it('keeps shown Escape/Esc as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
-    assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(
-      true,
-      false,
-      'dispatch+render',
-    )
   })
 
   it('keeps shown Escape/Esc with modifier keys as no-op dispatch outcomes', () => {

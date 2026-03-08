@@ -4202,3 +4202,16 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
 - Commit: `5e92951` (pushed to `main`)
 - Next action: apply the same `forEachLegendEscapeKey(...)` runner to remaining duplicated hidden/shown editable event-gate specs (`assertEditableLegendEventGateNoOpByVisibilityShiftAndMode`) to trim per-key test duplication while preserving dispatch+render parity.
+
+## 2026-03-09 05:02 KST — editable event-gate duplicate spec trim (boost cycle)
+- Scope: chat thread UX wiring (test-only, strict no-behavior-change dedupe).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed duplicate hidden/shown editable event-gate render-state-only specs that already exercised dispatch+render through `assertEditableLegendEventGateNoOpAcrossEscapeKeysByVisibilityShiftAndMode(..., 'dispatch+render')`.
+    - Kept one hidden and one shown editable event-gate spec each with accurate `dispatch/render-state` naming.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (40/40)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
+- Next action: dedupe remaining shown editable modifier no-op spec pair by consolidating dispatch/render assertions into a single table-driven helper-backed test while preserving explicit aria parity coverage.
