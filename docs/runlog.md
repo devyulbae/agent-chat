@@ -3769,3 +3769,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
 - No trigger burst (`incident`/`approval_overdue`/`test_fail`) detected; no temporary 10~20m override.
 - Cron unchanged: `agentchat-build-cycle-40m=*/20`, `agentchat-build-cycle-20m-offset=10-59/20`; `startup-loop-day-30m` untouched (bridge notes-only).
 - Result: no-op sync; blocker persisted on fallback backend.
+
+## 2026-03-08 22:51 KST — hidden editable event-gate helper consolidation (offset lane)
+- Scope: frontend integration/API-contract-sync lane, test-only incremental dedupe in thread shortcut legend lifecycle coverage (no backend/API contract changes).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced split hidden editable event-gate wrappers with one shared helper: `assertHiddenEditableLegendEventGateNoOp(key, mode)`.
+    - Removed duplicate render-state-only helper and routed both dispatch/render assertions through the shared parameterized lane.
+    - Updated hidden editable event-gate specs (`Escape`/`Esc`) to call the consolidated helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (19/19)
+- Commit: `d6064b8` (pushed to `main`)
+- Next action: consolidate remaining hidden editable non-event-gate wrapper duplication by introducing a shared mode-parameterized helper for base no-op dispatch vs render-state assertions.
