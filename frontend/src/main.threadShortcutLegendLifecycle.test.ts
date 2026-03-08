@@ -174,16 +174,6 @@ const assertShownEditableLegendNoOpByMode = (
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
-const assertShownEditableLegendNoOpByModeCase = (
-  key: 'Escape' | 'Esc',
-  shiftKey: boolean,
-  defaultPrevented: boolean,
-  repeat: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, mode)
-}
-
 
 const legendModifierCases = [
   { metaKey: true, ctrlKey: false, altKey: false },
@@ -219,14 +209,8 @@ const assertShownEditableLegendEventGateNoOpByShift = (
   shiftKey: boolean,
 ) => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    assertShownEditableLegendNoOpByModeCase(
-      key,
-      shiftKey,
-      defaultPrevented,
-      repeat,
-      'dispatch',
-    )
-    assertShownEditableLegendNoOpByModeCase(key, shiftKey, defaultPrevented, repeat, 'render')
+    assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, 'dispatch')
+    assertShownEditableLegendNoOpByMode(key, shiftKey, defaultPrevented, repeat, 'render')
   })
 }
 

@@ -1,3 +1,16 @@
+## 2026-03-08 22:43 KST — shown editable event-gate wrapper indirection trim (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove wrapper-only helper indirection in shown editable event-gate no-op paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertShownEditableLegendNoOpByModeCase(...)` wrapper that only forwarded arguments.
+    - Updated shown editable event-gate helper to call `assertShownEditableLegendNoOpByMode(...)` directly for both `dispatch` and `render` modes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming wrapper-only no-op helpers by collapsing single-call alias functions in shown/hidden event-gate lanes into direct mode-aware helper usage.
+
 ## 2026-03-08 22:24 KST — event-gate no-op mode enum unification for lifecycle helpers (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove remaining boolean mode flags (`includeRenderState`) from legend lifecycle no-op helper paths.
 - Change:
@@ -3749,3 +3762,10 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
 - Next action: collapse hidden editable event-gate wrapper split (`assertHiddenEditableLegendEventGateNoOp` + `assertHiddenEditableLegendEventGateNoOpRenderState`) into one shared parameterized helper to keep editable hidden guard assertions in a single lane.
+
+## 2026-03-08 22:24 KST — cadence sync (project-controls)
+- Source probe: primary :50004 ✅ 200 (`[]`, BasicAuth from `.env`), fallback :8000 ❌ 500.
+- No project control rows; no level→cadence remap applied.
+- No trigger burst (`incident`/`approval_overdue`/`test_fail`) detected; no temporary 10~20m override.
+- Cron unchanged: `agentchat-build-cycle-40m=*/20`, `agentchat-build-cycle-20m-offset=10-59/20`; `startup-loop-day-30m` untouched (bridge notes-only).
+- Result: no-op sync; blocker persisted on fallback backend.
