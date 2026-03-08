@@ -254,13 +254,13 @@ const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   })
 }
 
-const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  const eventGateCases = [
-    { defaultPrevented: true, repeat: false },
-    { defaultPrevented: false, repeat: true },
-  ]
+const hiddenEventGateCases = [
+  { defaultPrevented: true, repeat: false },
+  { defaultPrevented: false, repeat: true },
+] as const
 
-  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
+  hiddenEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredHiddenDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
       key,
@@ -281,12 +281,7 @@ const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
 }
 
 const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  const eventGateCases = [
-    { defaultPrevented: true, repeat: false },
-    { defaultPrevented: false, repeat: true },
-  ]
-
-  eventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  hiddenEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
       key,

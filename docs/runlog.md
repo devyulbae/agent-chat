@@ -1,5 +1,18 @@
 # Runlog
 
+## 2026-03-08 15:50 KST — hidden event-gate case-table reuse across non-editable helpers (offset lane)
+- Scope: frontend integration + API contract sync follow-up to remove duplicated hidden non-editable `defaultPrevented`/`repeat` case tables still defined inline across dispatch/render no-op helpers.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `hiddenEventGateCases` table for hidden-state event-gate scenarios.
+    - Refactored `assertHiddenLegendEventGateNoOpDispatch(...)` and `assertHiddenLegendEventGateNoOpRenderState(...)` to iterate the shared case table.
+    - Removed duplicated inline hidden event-gate case arrays while preserving no-op contract assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing repeated modifier/event-gate case lists by extracting a shared modifier-case table for hidden/shown no-op helper paths where `meta`/`ctrl`/`alt` arrays remain duplicated inline.
+
 ## 2026-03-08 15:31 KST — shown event-gate case-table reuse across no-op helpers (offset lane)
 - Scope: frontend integration + API contract sync follow-up to remove repeated shown-state `defaultPrevented`/`repeat` fixture tables across non-editable + editable no-op helper lanes.
 - Change:
