@@ -1,3 +1,23 @@
+## 2026-03-09 02:44 KST — shown no-op aria-expanded helper reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated shown-state `ariaExpanded` no-op assertions across lifecycle helpers.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertShownLegendNoOpAriaExpanded()` helper.
+    - Replaced duplicated shown no-op `ariaExpanded === true` assertions in:
+      - `assertShownLegendNoOpByShiftAndEditable(...)`
+      - `assertShownLegendModifierNoOpByShiftAndEditable(...)`
+      - `assertShownShiftLegendModifierEventGateNoOp(...)`
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `200746f` — `[test] reuse shown aria-expanded no-op assertion helper`
+  - Push: `main -> origin/main` ✅
+- Next action: continue collapsing one-hop wrapper helpers in `main.threadShortcutLegendLifecycle.test.ts`, starting with shown shift modifier/event-gate callsites that can route directly through the existing mode-aware case helper.
+
 ## 2026-03-09 02:32 KST — no-op mode router helper reuse across lifecycle case helpers (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated dispatch/render mode branching across no-op helper paths.
 - Change:
