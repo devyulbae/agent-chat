@@ -293,6 +293,15 @@ const assertShownLegendModifierNoOpByShiftAndEditableAcrossModes = (
   assertShownLegendModifierNoOpByShiftAndEditable(key, shiftKey, isEditableTarget, 'render')
 }
 
+const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftAndEditableAcrossModes = (
+  shiftKey: boolean,
+  isEditableTarget: boolean,
+) => {
+  forEachLegendEscapeKey((key) => {
+    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes(key, shiftKey, isEditableTarget)
+  })
+}
+
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
   nextVisibility: boolean,
@@ -800,9 +809,8 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', false, true)
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', false, true)
+  it('keeps shown Escape/Esc editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
+    assertShownLegendModifierNoOpAcrossEscapeKeysByShiftAndEditableAcrossModes(false, true)
   })
 
   it('keeps legend visibility transition and live status chip aria synchronized on keyboard render-state path', () => {
@@ -860,11 +868,6 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   it('keeps shown Escape/Esc with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded', () => {
     assertShownLegendNoOpByShiftAndEditable('Escape', true, false)
     assertShownLegendNoOpByShiftAndEditable('Esc', true, false)
-  })
-
-  it('keeps shown Escape/Esc editable-target modifier-key paths as no-op render-state outcomes', () => {
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Escape', false, true)
-    assertShownLegendModifierNoOpByShiftAndEditableAcrossModes('Esc', false, true)
   })
 
   it('keeps shown Escape/Esc with shiftKey=true editable-target modifier-key paths as no-op dispatch/render-state outcomes', () => {
