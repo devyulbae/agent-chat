@@ -226,23 +226,30 @@ const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
   assertShownEditableLegendEventGateNoOpByShift(key, true)
 }
 
+const getHiddenEditableLegendNoOpInput = (
+  key: 'Escape' | 'Esc',
+  defaultPrevented: boolean,
+  repeat: boolean,
+) =>
+  ({
+    isVisible: false,
+    key,
+    shiftKey: false,
+    metaKey: false,
+    ctrlKey: false,
+    altKey: false,
+    defaultPrevented,
+    repeat,
+    isEditableTarget: true,
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
+
 const assertHiddenEditableLegendNoOpDispatch = (
   key: 'Escape' | 'Esc',
   defaultPrevented = false,
   repeat = false,
 ) => {
   assertLegendNoOpDispatchForInput(
-    {
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: true,
-    },
+    getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat),
     false,
   )
 }
@@ -253,17 +260,7 @@ const assertHiddenEditableLegendNoOpRenderState = (
   repeat: boolean,
 ) => {
   assertLegendNoOpRenderStateForInput(
-    {
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: true,
-    },
+    getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat),
     false,
   )
 }
