@@ -358,43 +358,42 @@ const assertLegendEventGateNoOpForInputBase = (
 }
 
 
-const assertShownShiftLegendModifierEventGateNoOpCase = (
-  key: 'Escape' | 'Esc',
-  isEditableTarget: boolean,
-  caseInput: ShownShiftModifierEventGateNoOpCase,
-  mode: LegendNoOpAssertionMode,
-) => {
-  const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
-  const input = {
-    isVisible: true,
-    key,
-    shiftKey: true,
-    metaKey,
-    ctrlKey,
-    altKey,
-    defaultPrevented,
-    repeat,
-    isEditableTarget,
-  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-  if (mode === 'render') {
-    assertLegendNoOpRenderStateForInput(input, true)
-    return
-  }
-
-  assertLegendNoOpDispatchForInput(input, true)
-}
-
 const assertShownShiftLegendModifierEventGateNoOp = (
   key: 'Escape' | 'Esc',
   isEditableTarget: boolean,
 ) => {
   shownShiftModifierEventGateDispatchNoOpCases.forEach((caseInput) => {
-    assertShownShiftLegendModifierEventGateNoOpCase(key, isEditableTarget, caseInput, 'dispatch')
+    const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
+    const input = {
+      isVisible: true,
+      key,
+      shiftKey: true,
+      metaKey,
+      ctrlKey,
+      altKey,
+      defaultPrevented,
+      repeat,
+      isEditableTarget,
+    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+    assertLegendNoOpDispatchForInput(input, true)
   })
 
   shownShiftModifierEventGateRenderStateNoOpCases.forEach((caseInput) => {
-    assertShownShiftLegendModifierEventGateNoOpCase(key, isEditableTarget, caseInput, 'render')
+    const { metaKey, ctrlKey, altKey, defaultPrevented, repeat } = caseInput
+    const input = {
+      isVisible: true,
+      key,
+      shiftKey: true,
+      metaKey,
+      ctrlKey,
+      altKey,
+      defaultPrevented,
+      repeat,
+      isEditableTarget,
+    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
+
+    assertLegendNoOpRenderStateForInput(input, true)
   })
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(true)
