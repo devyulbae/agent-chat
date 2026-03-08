@@ -1,3 +1,15 @@
+## 2026-03-09 01:51 KST — inline hidden editable no-op input helper (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove a single-use hidden editable no-op input helper alias.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed single-use helper `getHiddenEditableLegendNoOpInput(...)`.
+    - Inlined canonical hidden editable no-op input construction directly in `assertHiddenEditableLegendNoOpByMode(...)` while preserving explicit typed input contract (`satisfies`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming single-use input/entrypoint helpers in `main.threadShortcutLegendLifecycle.test.ts` where direct shared no-op helper calls keep dispatch/render intent explicit.
+
 ## 2026-03-09 01:44 KST — remove dead shown editable no-op input helper (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only cleanup to remove an unused helper alias in lifecycle tests.
 - Change:

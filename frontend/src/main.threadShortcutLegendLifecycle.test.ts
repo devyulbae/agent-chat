@@ -167,12 +167,13 @@ const shownShiftModifierEventGateRenderStateNoOpCases = [
   { metaKey: true, ctrlKey: false, altKey: false, defaultPrevented: false, repeat: true },
 ] as const satisfies readonly ShownShiftModifierEventGateNoOpCase[]
 
-const getHiddenEditableLegendNoOpInput = (
+const assertHiddenEditableLegendNoOpByMode = (
   key: 'Escape' | 'Esc',
   defaultPrevented: boolean,
   repeat: boolean,
-) =>
-  ({
+  mode: LegendNoOpAssertionMode,
+) => {
+  const input = {
     isVisible: false,
     key,
     shiftKey: false,
@@ -182,15 +183,7 @@ const getHiddenEditableLegendNoOpInput = (
     defaultPrevented,
     repeat,
     isEditableTarget: true,
-  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0])
-
-const assertHiddenEditableLegendNoOpByMode = (
-  key: 'Escape' | 'Esc',
-  defaultPrevented: boolean,
-  repeat: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  const input = getHiddenEditableLegendNoOpInput(key, defaultPrevented, repeat)
+  } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
   if (mode === 'render') {
     assertLegendNoOpRenderStateForInput(input, false)
