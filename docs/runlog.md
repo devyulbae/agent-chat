@@ -1,3 +1,18 @@
+## 2026-03-09 06:22 KST — event-gate across-escape-keys helper reuse in legend lifecycle tests (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated Escape/Esc event-gate no-op call loops in lifecycle coverage.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(...)` helper.
+    - Reused the helper in hidden/shown event-gate no-op tests for both `dispatch` and `dispatch+render` modes.
+    - Collapsed key-specific hidden render-state event-gate tests into one across-keys test while preserving coverage semantics.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (37/37)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming one-hop helper callsites in legend lifecycle tests where Escape/Esc parity can be expressed through existing across-keys helpers.
+
 ## 2026-03-09 06:12 KST — hidden modifier no-op key-specific callsites collapsed to across-keys helper (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove key-specific hidden modifier helper callsite duplication.
 - Change:
