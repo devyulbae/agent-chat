@@ -3354,3 +3354,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18/18)
   - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
 - Next action: unify shown-state shift modifier-only helper assertions (`assertShownEditableShiftLegendModifierNoOp`) across editable/non-editable paths into a single parameterized helper to continue reducing duplicate lifecycle fixtures.
+
+## 2026-03-08 16:23 KST — unified legend event-gate case table reuse (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated identical event-gate case constants across shown/hidden + editable/non-editable helper lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Consolidated duplicate `shownEventGateCases` / `hiddenEventGateCases` / `hiddenEditableEventGateCases` into one shared `legendEventGateCases` table.
+    - Rewired all event-gate helper assertions to iterate the shared table while preserving existing no-op dispatch/render-state assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: collapse remaining duplicated shown editable/non-editable modifier no-op helper scaffolding by introducing a shared assertion helper that parameterizes `isEditableTarget` + `shiftKey`.

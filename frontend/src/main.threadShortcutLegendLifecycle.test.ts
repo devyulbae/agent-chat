@@ -111,7 +111,7 @@ const legendModifierCases = [
   { metaKey: false, ctrlKey: false, altKey: true },
 ] as const
 
-const shownEventGateCases = [
+const legendEventGateCases = [
   { defaultPrevented: true, repeat: false },
   { defaultPrevented: false, repeat: true },
 ] as const
@@ -127,7 +127,7 @@ const shownShiftModifierEventGateRenderStateNoOpCases = [
 ] as const
 
 const assertShownEditableNonShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     assertShownEditableLegendNoOpDispatch(key, false, defaultPrevented, repeat)
     assertShownEditableLegendNoOpRenderState(key, false, defaultPrevented, repeat)
   })
@@ -139,7 +139,7 @@ const assertShownEditableShiftLegendNoOp = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     assertShownEditableLegendNoOpDispatch(key, true, defaultPrevented, repeat)
     assertShownEditableLegendNoOpRenderState(key, true, defaultPrevented, repeat)
   })
@@ -187,19 +187,14 @@ const assertHiddenEditableLegendNoOpRenderState = (
   expect(hiddenEditableNoOpRenderState.statusAriaLabel ?? null).toBeNull()
 }
 
-const hiddenEditableEventGateCases = [
-  { defaultPrevented: true, repeat: false },
-  { defaultPrevented: false, repeat: true },
-] as const
-
 const assertHiddenEditableLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  hiddenEditableEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     assertHiddenEditableLegendNoOpRenderState(key, defaultPrevented, repeat)
   })
 }
 
 const assertHiddenEditableLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
-  hiddenEditableEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const hiddenEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
       key,
@@ -264,13 +259,8 @@ const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   })
 }
 
-const hiddenEventGateCases = [
-  { defaultPrevented: true, repeat: false },
-  { defaultPrevented: false, repeat: true },
-] as const
-
 const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  hiddenEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredHiddenDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: false,
       key,
@@ -291,7 +281,7 @@ const assertHiddenLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
 }
 
 const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  hiddenEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
       key,
@@ -331,7 +321,7 @@ const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
-  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
       key,
@@ -352,7 +342,7 @@ const assertShownLegendEventGateNoOpDispatch = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  shownEventGateCases.forEach(({ defaultPrevented, repeat }) => {
+  legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const ignoredRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,
       key,
