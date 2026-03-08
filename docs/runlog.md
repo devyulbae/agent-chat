@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 14:50 KST — hidden Esc editable event-gate render-state parity lock (offset lane)
+- Scope: frontend integration + API contract sync follow-up to close a remaining hidden editable-target render-state parity gap for the `Esc` alias under event-gate paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added focused render-state no-op assertions for hidden `Esc` alias with `isEditableTarget=true` when:
+      - `defaultPrevented=true`
+      - `repeat=true`
+    - Locks parity with existing canonical `Escape` editable-target event-gate render-state coverage.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining no-op fixture duplication where canonical `Escape` and alias `Esc` assertions are structurally identical while preserving explicit guard-path parity.
+
 ## 2026-03-08 14:42 KST — shown editable shift no-op helper reuse (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe on shown editable `shiftKey=true` no-op fixture path.
 - Change:
