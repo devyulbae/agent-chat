@@ -1,3 +1,17 @@
+## 2026-03-08 20:13 KST — no-op presentation parity helper extraction for Esc/Shift+Escape lanes (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated no-op dispatch/render-state presentation parity scaffolding for hidden `Esc` and shown `Shift+Escape` paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `assertLegendNoOpDispatchPresentationParityForInput(...)` helper.
+    - Added shared `assertLegendNoOpRenderStatePresentationParityForInput(...)` helper.
+    - Refactored hidden `Esc` + shown `Shift+Escape` no-op dispatch presentation parity test to reuse the dispatch helper.
+    - Refactored hidden `Esc` + shown `Shift+Escape` no-op render-state presentation parity test to reuse the render-state helper.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue consolidating remaining no-op helper wrappers that still pair identical keyboard input payload literals with one-off presentation parity assertions.
+
 ## 2026-03-08 20:05 KST — event-gate visibility helper reuse for hidden/shown non-editable lanes (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated hidden/shown event-gate non-editable input-base scaffolding.
 - Change:

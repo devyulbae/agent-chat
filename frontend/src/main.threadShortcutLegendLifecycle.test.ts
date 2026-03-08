@@ -55,6 +55,25 @@ const assertLegendNoOpDispatchAndRenderStateForInput = (
   assertLegendNoOpRenderStateForInput(input, nextVisibility)
 }
 
+const assertLegendNoOpDispatchPresentationParityForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0],
+  nextVisibility: boolean,
+) => {
+  assertLegendNoOpDispatchForInput(input, nextVisibility)
+  const presentation = getThreadShortcutLegendPresentation(nextVisibility)
+  expect(presentation.ariaExpanded).toBe(nextVisibility)
+}
+
+const assertLegendNoOpRenderStatePresentationParityForInput = (
+  input: Parameters<typeof getThreadShortcutLegendKeyboardRenderState>[0],
+  nextVisibility: boolean,
+) => {
+  const renderState = getThreadShortcutLegendKeyboardRenderState(input)
+  assertLegendNoOpRenderStateOutcome(renderState, nextVisibility)
+  const presentation = getThreadShortcutLegendPresentation(renderState.nextVisibility)
+  expect(presentation.ariaExpanded).toBe(renderState.nextVisibility)
+}
+
 const assertLegendRenderStateShowHideLifecycle = (
   showKey: '?' | '/',
   showShiftKey: boolean,
@@ -854,77 +873,67 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps aria-expanded presentation stable across no-op dispatch paths for hidden Esc and shown Shift+Escape', () => {
-    const hiddenEscNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpDispatchOutcome(hiddenEscNoOpDispatch, false)
-
-    const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(hiddenEscNoOpDispatch.nextVisibility)
-    expect(hiddenNoOpPresentation.ariaExpanded).toBe(false)
-
-    const shownShiftEscapeNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: true,
-      key: 'Escape',
-      shiftKey: true,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpDispatchOutcome(shownShiftEscapeNoOpDispatch, true)
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      shownShiftEscapeNoOpDispatch.nextVisibility,
+    assertLegendNoOpDispatchPresentationParityForInput(
+      {
+        isVisible: false,
+        key: 'Esc',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      },
+      false,
     )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(true)
+
+    assertLegendNoOpDispatchPresentationParityForInput(
+      {
+        isVisible: true,
+        key: 'Escape',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      },
+      true,
+    )
   })
 
   it('keeps no-op render-state nullish aria synchronized with aria-expanded for hidden Esc and shown Shift+Escape', () => {
-    const hiddenEscNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: false,
-      key: 'Esc',
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpRenderStateOutcome(hiddenEscNoOpRenderState, false)
-
-    const hiddenNoOpPresentation = getThreadShortcutLegendPresentation(
-      hiddenEscNoOpRenderState.nextVisibility,
+    assertLegendNoOpRenderStatePresentationParityForInput(
+      {
+        isVisible: false,
+        key: 'Esc',
+        shiftKey: false,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      },
+      false,
     )
-    expect(hiddenNoOpPresentation.ariaExpanded).toBe(hiddenEscNoOpRenderState.nextVisibility)
 
-    const shownShiftEscapeNoOpRenderState = getThreadShortcutLegendKeyboardRenderState({
-      isVisible: true,
-      key: 'Escape',
-      shiftKey: true,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: false,
-    })
-    assertLegendNoOpRenderStateOutcome(shownShiftEscapeNoOpRenderState, true)
-
-    const shownNoOpPresentation = getThreadShortcutLegendPresentation(
-      shownShiftEscapeNoOpRenderState.nextVisibility,
+    assertLegendNoOpRenderStatePresentationParityForInput(
+      {
+        isVisible: true,
+        key: 'Escape',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: false,
+        isEditableTarget: false,
+      },
+      true,
     )
-    expect(shownNoOpPresentation.ariaExpanded).toBe(shownShiftEscapeNoOpRenderState.nextVisibility)
   })
 
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
