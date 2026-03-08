@@ -84,11 +84,7 @@ const assertShownEditableLegendNoOpDispatch = (
     repeat,
     isEditableTarget: true,
   })
-  expect(shownEditableNoOpDispatch).toEqual({
-    handled: false,
-    nextVisibility: true,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(shownEditableNoOpDispatch, true)
 }
 
 const assertShownEditableLegendNoOpRenderState = (
@@ -108,10 +104,7 @@ const assertShownEditableLegendNoOpRenderState = (
     repeat,
     isEditableTarget: true,
   })
-  expect(shownEditableNoOpRenderState.handled).toBe(false)
-  expect(shownEditableNoOpRenderState.nextVisibility).toBe(true)
-  expect(shownEditableNoOpRenderState.statusHint).toBeNull()
-  expect(shownEditableNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+  assertLegendNoOpRenderStateOutcome(shownEditableNoOpRenderState, true)
 
   const shownNoOpPresentation = getThreadShortcutLegendPresentation(
     shownEditableNoOpRenderState.nextVisibility,
@@ -164,7 +157,11 @@ const assertShownEditableShiftLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
   assertShownEditableLegendEventGateNoOpByShift(key, true)
 }
 
-const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {
+const assertHiddenEditableLegendNoOpDispatch = (
+  key: 'Escape' | 'Esc',
+  defaultPrevented = false,
+  repeat = false,
+) => {
   const hiddenEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
     isVisible: false,
     key,
@@ -172,15 +169,11 @@ const assertHiddenEditableLegendNoOpDispatch = (key: 'Escape' | 'Esc') => {
     metaKey: false,
     ctrlKey: false,
     altKey: false,
-    defaultPrevented: false,
-    repeat: false,
+    defaultPrevented,
+    repeat,
     isEditableTarget: true,
   })
-  expect(hiddenEditableNoOpDispatch).toEqual({
-    handled: false,
-    nextVisibility: false,
-    statusHint: null,
-  })
+  assertLegendNoOpDispatchOutcome(hiddenEditableNoOpDispatch, false)
 }
 
 const assertHiddenEditableLegendNoOpRenderState = (
@@ -200,10 +193,7 @@ const assertHiddenEditableLegendNoOpRenderState = (
     isEditableTarget: true,
   })
 
-  expect(hiddenEditableNoOpRenderState.handled).toBe(false)
-  expect(hiddenEditableNoOpRenderState.nextVisibility).toBe(false)
-  expect(hiddenEditableNoOpRenderState.statusHint).toBeNull()
-  expect(hiddenEditableNoOpRenderState.statusAriaLabel ?? null).toBeNull()
+  assertLegendNoOpRenderStateOutcome(hiddenEditableNoOpRenderState, false)
 }
 
 const assertHiddenEditableLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
@@ -214,22 +204,7 @@ const assertHiddenEditableLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc
 
 const assertHiddenEditableLegendEventGateNoOp = (key: 'Escape' | 'Esc') => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
-    const hiddenEditableNoOpDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented,
-      repeat,
-      isEditableTarget: true,
-    })
-    expect(hiddenEditableNoOpDispatch).toEqual({
-      handled: false,
-      nextVisibility: false,
-      statusHint: null,
-    })
+    assertHiddenEditableLegendNoOpDispatch(key, defaultPrevented, repeat)
   })
 
   assertHiddenEditableLegendEventGateNoOpRenderState(key)

@@ -1,5 +1,19 @@
 # Runlog
 
+## 2026-03-08 17:12 KST — legend no-op expectation helper reuse for shown/hidden editable lanes (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to reduce repeated no-op expectation scaffolding in editable legend helper paths.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Refactored `assertShownEditableLegendNoOpDispatch(...)` to reuse shared `assertLegendNoOpDispatchOutcome(...)`.
+    - Refactored `assertShownEditableLegendNoOpRenderState(...)` to reuse shared `assertLegendNoOpRenderStateOutcome(...)` while preserving shown-state `ariaExpanded` parity assertion.
+    - Parameterized `assertHiddenEditableLegendNoOpDispatch(...)` for event-gate flags and reused it inside `assertHiddenEditableLegendEventGateNoOp(...)`.
+    - Refactored `assertHiddenEditableLegendNoOpRenderState(...)` to reuse shared `assertLegendNoOpRenderStateOutcome(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing repeated shown/hidden editable no-op helper scaffolding where dispatch/render wrappers still duplicate the same visibility + aria parity follow-up assertions.
+
 ## 2026-03-08 17:05 KST — legend no-op assertion helper reuse for dispatch/render parity (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to reduce repeated no-op assertion scaffolding in legend lifecycle helper tests.
 - Change:
