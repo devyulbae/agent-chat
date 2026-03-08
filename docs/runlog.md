@@ -1,3 +1,17 @@
+## 2026-03-09 00:45 KST — hidden editable event-gate wrapper alias removal (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove a wrapper-only hidden editable event-gate helper entrypoint.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed wrapper helper `assertHiddenEditableLegendEventGateNoOp(...)`.
+    - Updated hidden editable event-gate callsites (`Escape`/`Esc`) to call shared `assertLegendEventGateNoOpForInputBase(...)` directly with explicit hidden editable input base and `'dispatch+render'` mode.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue collapsing remaining wrapper-style hidden/shown no-op helper entrypoints by routing callsites directly through shared mode-aware assertion helpers.
+
 ## 2026-03-09 00:32 KST — shown editable mode/shift wrapper alias removal (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining wrapper-only shown editable helper entrypoints.
 - Change:
