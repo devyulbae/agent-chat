@@ -1,5 +1,17 @@
 # Runlog
 
+## 2026-03-08 09:32 KST — shown Shift+Escape editable no-op render helper dedupe (offset lane)
+- Scope: frontend integration + API contract sync follow-up to trim duplicated shown-state `Shift+Escape`/`Shift+Esc` editable-target event-gate render assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownEditableLegendNoOpRenderState(key, defaultPrevented, repeat)` helper for shown editable-target `shiftKey=true` render no-op checks (`handled=false`, `nextVisibility=true`, nullish status/aria, stable `ariaExpanded` parity).
+    - Replaced duplicated inline render-state assertions in both canonical `Escape` and alias `Esc` editable-target event-gate tests with helper calls.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (53/53)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining repeated shown-state `Shift+Escape` editable-target dispatch fixtures into shared helper/table style where safe.
+
 ## 2026-03-08 09:24 KST — shown Shift+Escape alias no-op render parity helper extraction (boost lane)
 - Scope: chat thread UX wiring follow-up to reduce duplicated shown-state `Shift+Escape`/`Shift+Esc` non-editable no-op render assertions with strict test-only scope.
 - Change:
