@@ -1,3 +1,18 @@
+## 2026-03-09 02:14 KST — editable event-gate helper unification across hidden/shown lanes (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to merge hidden/shown editable event-gate wrapper helpers into one visibility+shift-aware helper path.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed two wrapper helpers:
+      - `assertHiddenEditableLegendEventGateNoOpByMode(...)`
+      - `assertShownEditableLegendEventGateNoOpByShiftAndMode(...)`
+    - Added unified helper `assertEditableLegendEventGateNoOpByVisibilityShiftAndMode(...)` that routes editable event-gate no-op cases through one shared visibility/shift/mode input-base path.
+    - Updated hidden/shown editable event-gate dispatch/render callsites (`Escape`/`Esc`, `shiftKey=false/true`) to use the unified helper directly.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop helper aliases in lifecycle tests where dispatch/render branches can call shared mode-aware helper paths directly without visibility-specific wrappers.
+
 ## 2026-03-09 02:03 KST — shown editable render-state event-gate helper callsite dedupe (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove duplicated inline shown editable event-gate input-base payloads in render-state assertions.
 - Change:
