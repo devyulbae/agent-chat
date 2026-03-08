@@ -1,5 +1,24 @@
 # Runlog
 
+## 2026-03-08 16:04 KST — shared modifier-case table reuse across legend no-op helpers (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only dedupe to remove repeated `meta/ctrl/alt` modifier fixture arrays across shown/hidden no-op helper lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added shared `legendModifierCases` table for modifier guard scenarios.
+    - Reused the shared table in:
+      - `assertHiddenLegendModifierNoOpRenderState(...)`
+      - `assertShownLegendModifierNoOpRenderState(...)`
+      - `assertShownEditableLegendModifierNoOp(...)`
+      - `assertShownEditableShiftLegendModifierNoOp(...)`
+    - Removed duplicated inline modifier-case arrays while preserving dispatch/render no-op assertions.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (54/54)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (18 passed)
+- Next action: continue collapsing repeated shown shift modifier+event-gate fixture tables (`dispatchNoOpCases` / `renderStateNoOpCases`) into shared case constants to reduce no-op helper duplication while preserving explicit guard-path parity.
+
 ## 2026-03-08 15:50 KST — hidden event-gate case-table reuse across non-editable helpers (offset lane)
 - Scope: frontend integration + API contract sync follow-up to remove duplicated hidden non-editable `defaultPrevented`/`repeat` case tables still defined inline across dispatch/render no-op helpers.
 - Change:

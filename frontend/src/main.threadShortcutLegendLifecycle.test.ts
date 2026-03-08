@@ -105,6 +105,12 @@ const assertShownEditableLegendNoOpRenderState = (
 }
 
 
+const legendModifierCases = [
+  { metaKey: true, ctrlKey: false, altKey: false },
+  { metaKey: false, ctrlKey: true, altKey: false },
+  { metaKey: false, ctrlKey: false, altKey: true },
+] as const
+
 const shownEventGateCases = [
   { defaultPrevented: true, repeat: false },
   { defaultPrevented: false, repeat: true },
@@ -229,13 +235,7 @@ const assertHiddenLegendNoOpDispatch = (
 }
 
 const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  const modifierCases = [
-    { metaKey: true, ctrlKey: false, altKey: false },
-    { metaKey: false, ctrlKey: true, altKey: false },
-    { metaKey: false, ctrlKey: false, altKey: true },
-  ]
-
-  modifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: false,
       key,
@@ -301,13 +301,7 @@ const assertHiddenLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
-  const modifierCases = [
-    { metaKey: true, ctrlKey: false, altKey: false },
-    { metaKey: false, ctrlKey: true, altKey: false },
-    { metaKey: false, ctrlKey: false, altKey: true },
-  ]
-
-  modifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const ignoredRenderState = getThreadShortcutLegendKeyboardRenderState({
       isVisible: true,
       key,
@@ -368,13 +362,7 @@ const assertShownLegendEventGateNoOpRenderState = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableLegendModifierNoOp = (key: 'Escape' | 'Esc') => {
-  const modifierCases = [
-    { metaKey: true, ctrlKey: false, altKey: false },
-    { metaKey: false, ctrlKey: true, altKey: false },
-    { metaKey: false, ctrlKey: false, altKey: true },
-  ]
-
-  modifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
       key,
@@ -414,13 +402,7 @@ const assertShownEditableLegendModifierNoOp = (key: 'Escape' | 'Esc') => {
 }
 
 const assertShownEditableShiftLegendModifierNoOp = (key: 'Escape' | 'Esc') => {
-  const modifierCases = [
-    { metaKey: true, ctrlKey: false, altKey: false },
-    { metaKey: false, ctrlKey: true, altKey: false },
-    { metaKey: false, ctrlKey: false, altKey: true },
-  ]
-
-  modifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const ignoredDispatch = getThreadShortcutLegendKeyboardDispatchOutcome({
       isVisible: true,
       key,
