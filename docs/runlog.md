@@ -1,3 +1,16 @@
+## 2026-03-08 21:12 KST — hidden modifier dispatch helper reuse for Escape/Esc no-op coverage (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove repeated hidden modifier dispatch fixtures across canonical `Escape` and alias `Esc` no-op tests.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertHiddenLegendModifierNoOpDispatch(...)` helper that iterates shared `legendModifierCases` and reuses `assertHiddenLegendNoOpDispatch(...)`.
+    - Refactored hidden `Escape` and `Esc` modifier-dispatch no-op tests to call the shared helper instead of repeating inline `meta/ctrl/alt` dispatch assertions.
+    - Preserved hidden-state no-op dispatch contract and keyboard-guard coverage semantics.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (55/55)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue collapsing remaining helper wrappers where hidden no-op dispatch/render-state paths still duplicate wrapper-only indirection before reaching identical shared case loops.
+
 ## 2026-03-08 20:43 KST — shown shift modifier+event-gate case mode helper unification (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only dedupe to collapse duplicated shown shift modifier+event-gate dispatch/render case input wiring.
 - Change:

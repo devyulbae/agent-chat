@@ -336,6 +336,12 @@ const assertHiddenLegendNoOpRenderState = (key: 'Escape' | 'Esc') => {
   )
 }
 
+const assertHiddenLegendModifierNoOpDispatch = (key: 'Escape' | 'Esc') => {
+  legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+    assertHiddenLegendNoOpDispatch(key, { metaKey, ctrlKey, altKey })
+  })
+}
+
 const assertHiddenLegendModifierNoOpRenderState = (key: 'Escape' | 'Esc') => {
   legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
     const ignoredHiddenRenderState = getThreadShortcutLegendKeyboardRenderState({
@@ -884,15 +890,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape with modifier keys as no-op dispatch outcomes matching keyboard guard rails', () => {
-    assertHiddenLegendNoOpDispatch('Escape', { metaKey: true, ctrlKey: false, altKey: false })
-    assertHiddenLegendNoOpDispatch('Escape', { metaKey: false, ctrlKey: true, altKey: false })
-    assertHiddenLegendNoOpDispatch('Escape', { metaKey: false, ctrlKey: false, altKey: true })
+    assertHiddenLegendModifierNoOpDispatch('Escape')
   })
 
   it('keeps hidden Esc alias with modifier keys as no-op dispatch outcomes', () => {
-    assertHiddenLegendNoOpDispatch('Esc', { metaKey: true, ctrlKey: false, altKey: false })
-    assertHiddenLegendNoOpDispatch('Esc', { metaKey: false, ctrlKey: true, altKey: false })
-    assertHiddenLegendNoOpDispatch('Esc', { metaKey: false, ctrlKey: false, altKey: true })
+    assertHiddenLegendModifierNoOpDispatch('Esc')
   })
 
   it('keeps hidden Esc alias as no-op dispatch when event is defaultPrevented or repeat', () => {
