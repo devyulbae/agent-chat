@@ -1,3 +1,15 @@
+## 2026-03-09 07:51 KST — inline shown shift modifier+event-gate across-escape-keys mode wrapper callsite (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop across-escape-keys+mode wrapper indirection in shown shift modifier/event-gate lifecycle coverage.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAcrossEscapeKeysAcrossModes(...)` one-hop wrapper helper.
+    - Inlined `forEachLegendEscapeKey(...)` + `forEachLegendNoOpAssertionMode(...)` iteration directly at the shown shift modifier+event-gate test callsite while continuing to route assertions through `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(...)`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming one-hop wrappers where across-escape-keys and mode iteration can be expressed directly at lifecycle test callsites.
+
 ## 2026-03-09 07:31 KST — inline shown modifier across-escape-keys mode wrapper callsite (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop shown modifier wrapper that only iterated dispatch/render modes.
 - Change:
