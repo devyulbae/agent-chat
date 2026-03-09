@@ -347,14 +347,8 @@ const assertLegendModifierEventGateNoOpAcrossEscapeKeysByVisibilityShiftEditable
   })
 }
 
-const assertShownLegendEventGateNoOpAcrossEditableAndMode = (
-  isEditableTarget: boolean,
-  mode: LegendNoOpAssertionMode,
-) => {
-  assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(true, isEditableTarget, mode)
-}
-
-const assertShownLegendShiftEscapeEventGateNoOpAcrossEditableAndMode = (
+const assertShownLegendEventGateNoOpAcrossShiftEditableAndMode = (
+  shiftKey: boolean,
   isEditableTarget: boolean,
   mode: LegendNoOpAssertionMode,
 ) => {
@@ -363,7 +357,7 @@ const assertShownLegendShiftEscapeEventGateNoOpAcrossEditableAndMode = (
       {
         isVisible: true,
         key,
-        shiftKey: true,
+        shiftKey,
         metaKey: false,
         ctrlKey: false,
         altKey: false,
@@ -372,7 +366,16 @@ const assertShownLegendShiftEscapeEventGateNoOpAcrossEditableAndMode = (
       true,
       mode,
     )
+
+    assertShownLegendNoOpAriaExpanded()
   })
+}
+
+const assertShownLegendEventGateNoOpAcrossEditableAndMode = (
+  isEditableTarget: boolean,
+  mode: LegendNoOpAssertionMode,
+) => {
+  assertShownLegendEventGateNoOpAcrossShiftEditableAndMode(false, isEditableTarget, mode)
 }
 
 const assertPlainSlashNoOp = (isVisible: boolean) => {
@@ -777,9 +780,11 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
-  it('keeps shown Escape/Esc with shiftKey=true as no-op for editable target when event is defaultPrevented or repeat', () => {
-    forEachLegendNoOpAssertionMode((mode) => {
-      assertShownLegendShiftEscapeEventGateNoOpAcrossEditableAndMode(true, mode)
+  it('keeps shown Escape/Esc with shiftKey=true as no-op per-mode parity when event is defaultPrevented or repeat across editable states', () => {
+    ;([false, true] as const).forEach((isEditableTarget) => {
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertShownLegendEventGateNoOpAcrossShiftEditableAndMode(true, isEditableTarget, mode)
+      })
     })
   })
 
