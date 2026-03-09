@@ -418,7 +418,14 @@ export type ThreadFilterInputKeyboardDispatchInput = {
 
 export type ThreadFilterInputKeyboardDispatchOutcome = {
   handled: boolean
-  action: 'none' | 'clearFilter' | 'resetView' | 'jumpFirstVisible' | 'jumpLastVisible' | 'toggleUnreadOnly'
+  action:
+    | 'none'
+    | 'clearFilter'
+    | 'resetView'
+    | 'jumpFirstVisible'
+    | 'jumpLastVisible'
+    | 'toggleUnreadOnly'
+    | 'toggleIncludeRootInUnreadOnly'
 }
 
 export function getThreadFilterInputKeyboardDispatchOutcome(
@@ -456,6 +463,13 @@ export function getThreadFilterInputKeyboardDispatchOutcome(
     return {
       handled: true,
       action: 'toggleUnreadOnly',
+    }
+  }
+
+  if (input.shiftKey && (input.key === 'I' || input.key === 'i')) {
+    return {
+      handled: true,
+      action: 'toggleIncludeRootInUnreadOnly',
     }
   }
 
@@ -950,6 +964,18 @@ function App() {
           const next = !current
           setThreadFilterJumpHint(
             `Unread-only filter ${next ? 'enabled' : 'disabled'} from filter input (Shift+U).`
+          )
+          return next
+        })
+        return
+      }
+
+      if (dispatchOutcome.action === 'toggleIncludeRootInUnreadOnly') {
+        setShowUnreadOnlyThreads(true)
+        setIncludeRootInUnreadOnly((current) => {
+          const next = !current
+          setThreadFilterJumpHint(
+            `Unread-only root inclusion ${next ? 'enabled' : 'disabled'} from filter input (Shift+I).`
           )
           return next
         })
@@ -2060,6 +2086,7 @@ function App() {
       getShortcutChipPropsFromSource('Shift+Enter', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('Escape', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('Shift+Escape', 'filter jump', 'filter-jump'),
+      getShortcutChipPropsFromSource('Shift+I', 'filter jump', 'filter-jump'),
       getShortcutChipPropsFromSource('J', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('K', 'boundary jump', 'thread-jump'),
       getShortcutChipPropsFromSource('ArrowUp', 'boundary jump', 'thread-jump'),
@@ -3169,7 +3196,7 @@ function App() {
             </button>
             <small id="thread-filter-hint" style={{ color: '#666' }}>
               {threadFilterHintShortcutChipPresentations.map((chip) => renderShortcutChipPresentation(chip))}
-              focus/jump/reset shortcuts · Shift+U toggles unread-only · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries (Shift+End/Shift+PgDn hard-jump last) · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
+              focus/jump/reset shortcuts · Shift+U toggles unread-only · Shift+I toggles include-root for unread-only · Enter/Shift+Enter jump first/last visible result · Home/End/PgUp/PgDn jump boundaries (Shift+End/Shift+PgDn hard-jump last) · J/K/↑/↓ move selection (recovers hidden selection to first/last visible)
             </small>
             <label style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 13 }}>
               <input

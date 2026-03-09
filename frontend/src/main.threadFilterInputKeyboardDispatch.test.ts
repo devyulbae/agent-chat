@@ -97,6 +97,38 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
     })
   })
 
+  it('maps Shift+I to unread include-root toggle from filter input', () => {
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'i',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: true,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'toggleIncludeRootInUnreadOnly',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'I',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        hasThreadFilter: false,
+      })
+    ).toEqual({
+      handled: true,
+      action: 'toggleIncludeRootInUnreadOnly',
+    })
+  })
+
   it('preserves existing enter/escape behavior', () => {
     expect(
       getThreadFilterInputKeyboardDispatchOutcome({

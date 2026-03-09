@@ -1,3 +1,42 @@
+## 2026-03-09 14:44 KST — add Shift+I filter-input wiring for unread include-root toggle (boost lane)
+- Scope: chat thread UX wiring increment with strict keyboard-dispatch + UI hint update for unread include-root control directly from the thread filter input.
+- Change:
+  - `frontend/src/main.tsx`
+    - Extended `getThreadFilterInputKeyboardDispatchOutcome` action union with `toggleIncludeRootInUnreadOnly`.
+    - Wired `Shift+I` / `Shift+i` to dispatch `toggleIncludeRootInUnreadOnly`.
+    - Added handler branch in `handleThreadFilterKeyDown`:
+      - forces unread-only mode on,
+      - toggles include-root flag,
+      - emits status hint: `Unread-only root inclusion enabled/disabled ... (Shift+I)`.
+    - Added Shift+I shortcut chip and updated filter hint copy.
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Added regression test covering both lowercase/uppercase `Shift+I` mapping to `toggleIncludeRootInUnreadOnly`.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (5/5)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: add a compact UI interaction test proving `Shift+I` from filter input surfaces the new status hint and updates unread-only/include-root toggle state together.
+
+## 2026-03-09 14:27 KST — lock uppercase canonical + mixed alias legend-hide parser/chip parity (boost lane)
+- Scope: chat thread UX wiring follow-up with strict parser/chip regression lock for uppercase canonical escape token + mixed-case alias delimiter normalization.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added shortcut-source extraction regression:
+      - `Thread shortcut legend hidden (ESCAPE key / eSC).` → `Escape`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added matching status-row/chip rendering regression for the same uppercase+mixed alias.
+    - Locked aria + chip parity (`badge=Esc`, `title=Escape`) for `ESCAPE key / eSC` hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (115/115)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `b335e01` — `[test] lock uppercase escape-key mixed alias parser-chip parity`
+  - Push: `main -> origin/main` ✅
+- Next action: add a compact mixed legend-show delimiter regression for uppercase canonical token + mixed alias (`SLASH key / shIFT+/`) to keep hide/show delimiter symmetry locked.
+
 ## 2026-03-09 13:44 KST — lock uppercase mixed delimiter legend-show alias parser/chip parity (boost lane)
 - Scope: chat thread UX wiring follow-up with strict parser/chip regression lock for uppercase slash token + mixed-case shift delimiter normalization.
 - Change:
