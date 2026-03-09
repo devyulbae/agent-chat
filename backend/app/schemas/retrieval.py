@@ -1,15 +1,15 @@
 from pydantic import BaseModel
 from typing import Literal
 
-RetrievalMode = Literal['structured', 'bm25', 'hybrid_rag']
+RetrievalMode = Literal["structured", "bm25", "hybrid_rag"]
 
 
 class RetrievalConfig(BaseModel):
-    mode: RetrievalMode = 'structured'
+    mode: RetrievalMode = "structured"
     bm25_enabled: bool = True
     vector_enabled: bool = False
     reranker_enabled: bool = False
-    notes: str = ''
+    notes: str = ""
 
 
 class RetrievalEvalReport(BaseModel):

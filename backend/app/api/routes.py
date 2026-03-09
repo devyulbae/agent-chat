@@ -309,6 +309,19 @@ def update_project_control(
         entity, service.recommended_cron(entity.level)
     )
 
+
+@router.get("/run-logs", response_model=list[dict])
+def list_run_logs():
+    # Compatibility endpoint for automation probes; persistence wiring is pending.
+    return []
+
+
+@router.get("/inbox", response_model=list[dict])
+def list_inbox():
+    # Compatibility endpoint for automation probes; inbox store wiring is pending.
+    return []
+
+
 WORKFLOW_PATTERNS: list[WorkflowPattern] = [
     WorkflowPattern(
         id="prompt_chaining",
