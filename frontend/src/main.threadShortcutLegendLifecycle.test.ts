@@ -146,32 +146,13 @@ const forEachLegendEscapeKey = (assertion: (key: LegendEscapeKey) => void) => {
   legendEscapeKeys.forEach(assertion)
 }
 
-const assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAssertionMode) => {
+const assertHiddenLegendNoOpAcrossEscapeKeysByEditableModifierAndMode = (
+  isEditableTarget: boolean,
+  modifierCases: readonly { metaKey: boolean; ctrlKey: boolean; altKey: boolean }[],
+  mode: LegendNoOpAssertionMode,
+) => {
   forEachLegendEscapeKey((key) => {
-    const input = {
-      isVisible: false,
-      key,
-      shiftKey: false,
-      metaKey: false,
-      ctrlKey: false,
-      altKey: false,
-      defaultPrevented: false,
-      repeat: false,
-      isEditableTarget: true,
-    } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    if (mode === 'render') {
-      assertLegendNoOpRenderStateForInput(input, false)
-      return
-    }
-
-    assertLegendNoOpDispatchForInput(input, false)
-  })
-}
-
-const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAssertionMode) => {
-  forEachLegendEscapeKey((key) => {
-    legendModifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
+    modifierCases.forEach(({ metaKey, ctrlKey, altKey }) => {
       const input = {
         isVisible: false,
         key,
@@ -181,7 +162,7 @@ const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
         altKey,
         defaultPrevented: false,
         repeat: false,
-        isEditableTarget: false,
+        isEditableTarget,
       } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
       if (mode === 'render') {
@@ -747,8 +728,9 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape/Esc with modifier keys as no-op per-mode parity outcomes matching keyboard guard rails', () => {
-    assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode('dispatch')
-    assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode('render')
+    forEachLegendNoOpAssertionMode((mode) => {
+      assertHiddenLegendNoOpAcrossEscapeKeysByEditableModifierAndMode(false, legendModifierCases, mode)
+    })
   })
 
   it('keeps hidden Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat across editable states', () => {
@@ -764,8 +746,9 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
   })
 
   it('keeps hidden Escape/Esc as no-op per-mode parity when target is editable', () => {
+    const noModifierCase = [{ metaKey: false, ctrlKey: false, altKey: false }] as const
     forEachLegendNoOpAssertionMode((mode) => {
-      assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode(mode)
+      assertHiddenLegendNoOpAcrossEscapeKeysByEditableModifierAndMode(true, noModifierCase, mode)
     })
   })
 
