@@ -1062,6 +1062,18 @@
 
 # Runlog
 
+## 2026-03-09 15:50 KST — lock Shift+i defaultPrevented guard no-op parity in filter dispatch (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete lowercase/uppercase prevented-path symmetry for the Shift+I unread include-root toggle shortcut.
+- Change:
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Extended the guarded/default-prevented no-op lane to assert lowercase `Shift+i` with `defaultPrevented=true` remains no-op.
+    - Locks explicit parity with existing uppercase `Shift+I` prevented-path behavior (`{ handled: false, action: 'none' }`).
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact guard-lane regression for `Shift+i` with `repeat=true` to keep prevented/repeat symmetry explicit for lowercase/uppercase include-root toggle routing.
+
 ## 2026-03-09 15:41 KST — lock Shift+I defaultPrevented guard no-op parity in filter dispatch (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete explicit guard-path symmetry for the Shift+I unread include-root toggle shortcut.
 - Change:
