@@ -98,7 +98,16 @@ type AuditEvent = {
   metadata: Record<string, unknown>
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api'
+function resolveApiBase(): string {
+  const configured = import.meta.env.VITE_API_BASE_URL ?? '/api'
+  if (/^https?:\/\//i.test(configured)) {
+    return configured.replace(/\/+$/, '')
+  }
+  const normalizedPath = configured.startsWith('/') ? configured : `/${configured}`
+  return `${window.location.origin}${normalizedPath}`
+}
+
+const API_BASE = resolveApiBase()
 const ROOT_THREAD_KEY = '__root__'
 const MESSAGE_PAGE_LIMIT = 200
 
