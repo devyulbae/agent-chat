@@ -1,3 +1,17 @@
+## 2026-03-09 11:25 KST — rename residual shown no-op test titles to per-mode parity wording (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only wording cleanup to remove final `dispatch+render parity` title phrasing where assertions already execute through explicit per-mode loops.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Renamed two shown no-op lifecycle test titles from `dispatch+render parity` to `per-mode parity` wording.
+    - No assertion/body logic changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: continue trimming any remaining lifecycle test titles/labels that still imply combined-mode execution where assertions already run explicit `'dispatch' | 'render'` lanes.
+
 ## 2026-03-09 11:12 KST — rename shown event-gate no-op title to per-mode parity wording (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only wording cleanup to reduce residual combined-mode phrasing in explicit per-mode lifecycle lanes.
 - Change:
