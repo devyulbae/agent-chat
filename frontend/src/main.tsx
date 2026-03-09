@@ -4097,6 +4097,43 @@ function App() {
 
 const rootElement = typeof document !== 'undefined' ? document.getElementById('root') : null
 
+class RootErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; message: string }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false, message: '' }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, message: error?.message ?? 'Unknown UI error' }
+  }
+
+  componentDidCatch(error: Error) {
+    // eslint-disable-next-line no-console
+    console.error('RootErrorBoundary caught UI error:', error)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
+          <h2>Agent Chat Control Tower</h2>
+          <p style={{ color: 'crimson' }}>UI render error: {this.state.message}</p>
+          <p>페이지 렌더링 중 오류가 발생했습니다. 새로고침 후 동일하면 개발 로그를 확인합니다.</p>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
 if (rootElement) {
-  createRoot(rootElement).render(<App />)
+  createRoot(rootElement).render(
+    <RootErrorBoundary>
+      <App />
+    </RootErrorBoundary>,
+  )
 }

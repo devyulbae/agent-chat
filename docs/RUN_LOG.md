@@ -2525,3 +2525,14 @@
   - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (19 passed)
 - Blocker: none.
 - Next action: normalize slash-pair parsing for mixed labels like `Return key / Enter symbol` in modifier combos (e.g., `Shift+Return key / Enter symbol`).
+
+## 2026-03-09 16:30 KST — Agent Chat implementation cycle (offset lane)
+- Delta: Added a root-level React error boundary around `App` to prevent blank-screen failures and surface a fallback message when unexpected render exceptions occur.
+  - Frontend integration: introduced `RootErrorBoundary` in `frontend/src/main.tsx` and wrapped `<App />` at the root render call.
+  - Runtime behavior: uncaught render errors now display a recovery panel and log the error via `console.error` for easier diagnosis.
+  - Scope: frontend bootstrap/runtime safety only (no backend/API contract changes).
+- Quality gates:
+  - `cd frontend && npm run build` ✅
+  - `cd frontend && npm test -- --run src/apiContracts.test.ts src/main.auditRequestUrl.test.ts src/main.credentialAuditRequestUrl.test.ts` ✅ (19 passed)
+- Blocker: none.
+- Next action: add a lightweight smoke test that asserts root bootstrap wiring keeps rendering `App` through the boundary on non-error path.
