@@ -41,8 +41,11 @@ services:
     environment:
       AGENTCHAT_BASIC_AUTH_USER: ${AGENTCHAT_BASIC_AUTH_USER:?set_in_env}
       AGENTCHAT_BASIC_AUTH_PASS: ${AGENTCHAT_BASIC_AUTH_PASS:?set_in_env}
+      AGENTCHAT_TLS_DOMAIN: ${AGENTCHAT_TLS_DOMAIN:-sybae.duckdns.org}
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs
     ports:
-      - "50004:80"
+      - "50004:443"
     depends_on:
       - frontend
       - backend
