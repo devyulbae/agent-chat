@@ -21,6 +21,10 @@ from app.schemas.project_control import (
     ProjectControlRead,
     ProjectControlUpdate,
 )
+from app.schemas.workflow import (
+    OrchestrationCanvas,
+    WorkflowPattern,
+)
 from app.services.agent_service import AgentService
 from app.services.audit_service import AuditService
 from app.services.channel_service import ChannelService
@@ -303,3 +307,86 @@ def update_project_control(
     return ProjectControlRead.from_entity(
         entity, service.recommended_cron(entity.level)
     )
+
+WORKFLOW_PATTERNS: list[WorkflowPattern] = [
+    WorkflowPattern(
+        id="prompt_chaining",
+        name="Prompt Chaining",
+        description="Split tasks into sequential LLM steps.",
+        best_for=["Chat workflows", "Tool-assisted agent steps"],
+    ),
+    WorkflowPattern(
+        id="parallelization",
+        name="Parallelization",
+        description="Run independent branches and aggregate outputs.",
+        best_for=["Evals", "Guardrails", "Batch analysis"],
+    ),
+    WorkflowPattern(
+        id="orchestrator_worker",
+        name="Orchestrator-Worker",
+        description="Central planner delegates to specialized workers.",
+        best_for=["Coding agents", "Agentic retrieval"],
+    ),
+    WorkflowPattern(
+        id="evaluator_optimizer",
+        name="Evaluator-Optimizer",
+        description="Generator output is evaluated and iteratively refined.",
+        best_for=["Quality loops", "Monitoring insights"],
+    ),
+    WorkflowPattern(
+        id="router",
+        name="Router",
+        description="Classify input and dispatch to best agent/tool path.",
+        best_for=["Support routing", "Multi-agent dispatch"],
+    ),
+    WorkflowPattern(
+        id="autonomous_workflow",
+        name="Autonomous Workflow",
+        description="Agent acts based on environment feedback loops.",
+        best_for=["Long-running ops", "Computer-use agents"],
+    ),
+    WorkflowPattern(
+        id="reflexion",
+        name="Reflexion",
+        description="Self-critique and revise loop over intermediate outputs.",
+        best_for=["Complex reasoning", "Adaptive correction"],
+    ),
+    WorkflowPattern(
+        id="rewoo",
+        name="ReWOO",
+        description="Plan first, solve with workers, update tasks iteratively.",
+        best_for=["Research", "Multi-step QA"],
+    ),
+    WorkflowPattern(
+        id="plan_execute",
+        name="Plan and Execute",
+        description="Planner creates subtasks, executors run and report.",
+        best_for=["Business automation", "Pipelines"],
+    ),
+]
+
+ORCHESTRATION_CANVASES: dict[str, OrchestrationCanvas] = {}
+
+
+@router.get("/workflow-patterns", response_model=list[WorkflowPattern])
+def list_workflow_patterns():
+    return WORKFLOW_PATTERNS
+
+
+@router.get("/orchestration-canvases", response_model=list[OrchestrationCanvas])
+def list_orchestration_canvases():
+    return list(ORCHESTRATION_CANVASES.values())
+
+
+@router.post("/orchestration-canvases", response_model=OrchestrationCanvas)
+def upsert_orchestration_canvas(payload: OrchestrationCanvas):
+    ORCHESTRATION_CANVASES[payload.id] = payload
+    return payload
+
+
+@router.get("/orchestration-canvases/{canvas_id}", response_model=OrchestrationCanvas)
+def get_orchestration_canvas(canvas_id: str):
+    canvas = ORCHESTRATION_CANVASES.get(canvas_id)
+    if canvas is None:
+        raise HTTPException(status_code=404, detail="Canvas not found")
+    return canvas

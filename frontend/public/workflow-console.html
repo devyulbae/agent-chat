@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Workflow Console</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:0;display:flex;height:100vh}
+    #left{width:320px;border-right:1px solid #ddd;padding:12px;overflow:auto}
+    #canvas{flex:1;position:relative;background:#f8fafc}
+    .pattern{padding:8px;margin:6px 0;background:#fff;border:1px solid #ddd;border-radius:8px;cursor:grab}
+    .node{position:absolute;min-width:200px;background:#fff;border:2px solid #2563eb;border-radius:10px;padding:8px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+    .small{font-size:12px;color:#555}
+    textarea,input{width:100%;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div id="left">
+    <h3>9 Workflow Patterns</h3>
+    <div id="patterns"></div>
+    <hr/>
+    <button id="saveBtn">Save Canvas</button>
+    <div class="small" id="status"></div>
+  </div>
+  <div id="canvas"></div>
+
+<script>
+const API='/api';
+const patternsDiv=document.getElementById('patterns');
+const canvas=document.getElementById('canvas');
+const status=document.getElementById('status');
+let nodes=[];
+
+async function loadPatterns(){
+  const res=await fetch(`${API}/workflow-patterns`);
+  const patterns=await res.json();
+  patternsDiv.innerHTML='';
+  patterns.forEach(p=>{
+    const el=document.createElement('div');
+    el.className='pattern';
+    el.draggable=true;
+    el.dataset.patternId=p.id;
+    el.innerHTML=`<b>${p.name}</b><div class='small'>${p.description}</div>`;
+    el.addEventListener('dragstart',e=>e.dataTransfer.setData('pattern',JSON.stringify(p)));
+    patternsDiv.appendChild(el);
+  });
+}
+
+canvas.addEventListener('dragover',e=>e.preventDefault());
+canvas.addEventListener('drop',e=>{
+  e.preventDefault();
+  const p=JSON.parse(e.dataTransfer.getData('pattern'));
+  const id=`node-${Date.now()}`;
+  const node={id,pattern_id:p.id,title:p.name,x:e.offsetX,y:e.offsetY,prompt:'',capabilities:[]};
+  nodes.push(node); renderNode(node);
+});
+
+function renderNode(n){
+  const el=document.createElement('div');
+  el.className='node'; el.style.left=n.x+'px'; el.style.top=n.y+'px'; el.id=n.id;
+  el.innerHTML=`<b>${n.title}</b><div class='small'>${n.pattern_id}</div>
+    <label class='small'>Prompt</label><textarea rows='3'></textarea>
+    <label class='small'>Capabilities(,)</label><input placeholder='search,tool,use'/>`;
+  const ta=el.querySelector('textarea');
+  const inp=el.querySelector('input');
+  ta.addEventListener('input',()=>n.prompt=ta.value);
+  inp.addEventListener('input',()=>n.capabilities=inp.value.split(',').map(x=>x.trim()).filter(Boolean));
+  let dx=0,dy=0,drag=false;
+  el.addEventListener('mousedown',ev=>{drag=true;dx=ev.offsetX;dy=ev.offsetY});
+  window.addEventListener('mousemove',ev=>{if(!drag)return;const r=canvas.getBoundingClientRect();n.x=ev.clientX-r.left-dx;n.y=ev.clientY-r.top-dy;el.style.left=n.x+'px';el.style.top=n.y+'px';});
+  window.addEventListener('mouseup',()=>drag=false);
+  canvas.appendChild(el);
+}
+
+document.getElementById('saveBtn').addEventListener('click',async()=>{
+  const payload={id:'default-canvas',name:'Default Canvas',nodes,edges:[]};
+  const res=await fetch(`${API}/orchestration-canvases`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  status.textContent = res.ok ? 'saved ✅' : `save failed (${res.status})`;
+});
+
+loadPatterns();
+</script>
+</body>
+</html>

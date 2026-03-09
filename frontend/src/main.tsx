@@ -874,6 +874,9 @@ function App() {
     }
   }, [credentialAuditPaging])
 
+  const filteredChildThreadsRef = useRef<ThreadSummary[]>([])
+  const visibleThreadIdsRef = useRef<(string | null)[]>([])
+
   const handleComposerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Escape' && !event.shiftKey && !event.metaKey && !event.ctrlKey && !event.altKey) {
@@ -895,17 +898,22 @@ function App() {
 
   const recoverToVisibleBoundaryThread = useCallback(
     (source: 'Enter' | 'Shift+Enter' | 'button', boundary: 'first' | 'last') => {
-      if (!visibleThreadIds.length) {
+      const currentVisibleThreadIds = visibleThreadIdsRef.current
+      const currentFilteredChildThreads = filteredChildThreadsRef.current
+
+      if (!currentVisibleThreadIds.length) {
         setThreadFilterJumpHint(null)
         return
       }
 
-      const boundaryIndex = boundary === 'first' ? 0 : visibleThreadIds.length - 1
-      const boundaryVisibleThreadId = visibleThreadIds[boundaryIndex] ?? null
+      const boundaryIndex = boundary === 'first' ? 0 : currentVisibleThreadIds.length - 1
+      const boundaryVisibleThreadId = currentVisibleThreadIds[boundaryIndex] ?? null
       const boundaryLabel = boundary === 'first' ? 'first' : 'last'
-      const positionHint = `${boundaryIndex + 1}/${visibleThreadIds.length}`
+      const positionHint = `${boundaryIndex + 1}/${currentVisibleThreadIds.length}`
       const targetLabel = boundaryVisibleThreadId === null ? 'Root' : boundaryVisibleThreadId
-      const selectedWasHiddenByFilter = !visibleThreadIds.some((threadId) => threadId === selectedThreadId)
+      const selectedWasHiddenByFilter = !currentVisibleThreadIds.some(
+        (threadId) => threadId === selectedThreadId,
+      )
       const alreadyAtBoundaryVisible = selectedThreadId === boundaryVisibleThreadId
 
       selectThread(boundaryVisibleThreadId)
@@ -926,16 +934,16 @@ function App() {
         return
       }
 
-      if (boundaryVisibleThreadId === null && filteredChildThreads.length > 0) {
+      if (boundaryVisibleThreadId === null && currentFilteredChildThreads.length > 0) {
         setThreadFilterJumpHint(
-          'Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.'
+          'Jumped to Root first (include root is enabled). Press J/K, ↑/↓, or End for child results.',
         )
         return
       }
 
       setThreadFilterJumpHint(null)
     },
-    [filteredChildThreads.length, selectThread, selectedThreadId, visibleThreadIds]
+    [selectThread, selectedThreadId],
   )
 
   const recoverToFirstVisibleThread = useCallback(
@@ -1899,6 +1907,11 @@ function App() {
     }
     return ids.concat(filteredChildThreads.map((thread) => thread.thread_id))
   }, [filteredChildThreads, showRootThreadInList])
+
+  useEffect(() => {
+    filteredChildThreadsRef.current = filteredChildThreads
+    visibleThreadIdsRef.current = visibleThreadIds
+  }, [filteredChildThreads, visibleThreadIds])
 
   const selectedVisibleThreadIndex = visibleThreadIds.findIndex((threadId) => threadId === selectedThreadId)
   const selectedVisibleThreadHiddenByFilter = isSelectedVisibleThreadHiddenByFilter(
