@@ -3014,7 +3014,7 @@ function App() {
   }, [graph])
 
   return (
-    <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
+    <div style={{ padding: 20, fontFamily: 'sans-serif', maxWidth: '100%', overflowX: 'hidden' }}>
       <h2>Agent Chat Control Tower</h2>
       <p>Port 50004 / Stack: React+TS+Vite + FastAPI + Postgres + Redis + Nginx</p>
 
@@ -3173,7 +3173,7 @@ function App() {
 
       {chatError && <p style={{ color: 'crimson' }}>Error: {chatError}</p>}
 
-      <div style={{ display: 'flex', gap: 16, marginTop: 12, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: 16, marginTop: 12, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div>
           <h4>Threads</h4>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
@@ -3411,6 +3411,10 @@ function App() {
                     style={{
                       fontWeight: selectedThreadId === null ? 700 : 400,
                       cursor: 'pointer',
+                      maxWidth: 'min(90vw, 420px)',
+                      overflowWrap: 'anywhere',
+                      wordBreak: 'break-word',
+                      textAlign: 'left',
                     }}
                   >
                     Root messages ({rootThreadSummary?.message_count ?? 0})
@@ -3430,6 +3434,10 @@ function App() {
                     style={{
                       fontWeight: selectedThreadId === thread.thread_id ? 700 : 400,
                       cursor: 'pointer',
+                      maxWidth: 'min(90vw, 420px)',
+                      overflowWrap: 'anywhere',
+                      wordBreak: 'break-word',
+                      textAlign: 'left',
                     }}
                   >
                     {thread.thread_id} ({thread.message_count})
@@ -3454,7 +3462,10 @@ function App() {
             (messages.length ? (
               <ul>
                 {messages.map((message) => (
-                  <li key={message.id}>
+                  <li
+                    key={message.id}
+                    style={{ maxWidth: 'min(92vw, 760px)', overflowWrap: 'anywhere', wordBreak: 'break-word' }}
+                  >
                     <code>{message.sender_agent_id}</code> ·{' '}
                     <small>{formatTimestamp(message.created_at)}</small>: {message.body}
                   </li>
