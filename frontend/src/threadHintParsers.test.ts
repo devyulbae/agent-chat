@@ -817,6 +817,16 @@ describe('threadHintParsers', () => {
       expect(
         getHintShortcutSource('Recovered to first visible thread (Shift+Enter / Return symbol confirmed).'),
       ).toBe('Shift+Enter')
+      expect(
+        getHintShortcutSource(
+          'Recovered to first visible thread (Shift+Return key / Enter symbol confirmed).',
+        ),
+      ).toBe('Shift+Enter')
+      expect(
+        getHintShortcutSource(
+          'Recovered to first visible thread (Ctrl+Enter symbol / Return key confirmed).',
+        ),
+      ).toBe('Ctrl+Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Shift Return/Enter confirmed).')).toBe(
         'Shift+Enter',
       )

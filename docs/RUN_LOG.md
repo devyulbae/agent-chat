@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-09 14:51 KST — Agent Chat parallel offset cycle
+- Delta: Added mixed `Return key`/`Enter symbol` modifier-combo parser regression coverage so slash-pair wording variants stay canonical for frontend shortcut-chip contract sync.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+Return key / Enter symbol` and `Ctrl+Enter symbol / Return key` extraction assertions, canonicalizing to `Shift+Enter` and `Ctrl+Enter` respectively.
+  - Scope kept frontend-only (parser regression coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add mirrored mixed key/symbol slash-variant coverage for `Cmd+Return key / Enter symbol` to keep modifier parity explicit across Cmd/Ctrl/Shift aliases.
+
 ## 2026-03-09 14:13 KST — Agent Chat parallel offset cycle
 - Delta: Added Ctrl+Return symbol mixed slash-variant parser regression coverage so non-Cmd modifier parity stays explicit with existing Shift/Cmd return-symbol alias tests.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Ctrl+Return symbol / Enter` and `Ctrl+Enter / Return symbol` extraction assertions, both canonicalizing to `Ctrl+Enter`.
