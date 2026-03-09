@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import './index.css'
 import {
   getBoundaryDirectionChipPresentation,
   getBoundaryDirectionChipPresentationFromHint,
@@ -97,7 +98,7 @@ type AuditEvent = {
   metadata: Record<string, unknown>
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api/v1'
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api'
 const ROOT_THREAD_KEY = '__root__'
 const MESSAGE_PAGE_LIMIT = 200
 
