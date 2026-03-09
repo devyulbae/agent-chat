@@ -4842,3 +4842,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (19/19)
 - Next action: continue chat thread UX wiring dedupe by consolidating the remaining hidden/editable split tests into existing visibility+mode matrix helpers to reduce residual one-off scaffolding without reducing explicit guard-rail coverage.
+
+## 2026-03-09 15:23 KST — hidden Escape/Esc editable + event-gate matrix consolidation (boost cycle)
+- Scope: chat thread UX wiring (test-only, strict no-behavior-change dedupe).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Consolidated hidden Escape/Esc `defaultPrevented/repeat` no-op coverage into a single editable-state (`false/true`) matrix across both dispatch/render modes.
+    - Unified hidden editable-target no-op assertions into one per-mode parity test (`dispatch` + `render`) and removed the trailing one-off duplicate render-only spec.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (24/24)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (19/19)
+- Commit: `f6f29a7` (pushed to `main`)
+- Next action: continue chat thread UX wiring dedupe by folding remaining shown modifier-path one-off matrices into the shared visibility+shift+editable helper path while preserving explicit aria-expanded parity checks.
