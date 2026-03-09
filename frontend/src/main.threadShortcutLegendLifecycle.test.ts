@@ -192,8 +192,6 @@ const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
   })
 }
 
-type LegendEventGateAssertionMode = 'dispatch' | 'render'
-
 const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   shiftKey: boolean,
   isEditableTarget: boolean,
@@ -255,7 +253,7 @@ const assertShownLegendShiftEscapeNoOpAcrossEscapeKeysByEditableAndMode = (
 const assertLegendEventGateNoOpForInputBase = (
   inputBase: Omit<Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0], 'defaultPrevented' | 'repeat'>,
   nextVisibility: boolean,
-  mode: LegendEventGateAssertionMode,
+  mode: LegendNoOpAssertionMode,
 ) => {
   legendEventGateCases.forEach(({ defaultPrevented, repeat }) => {
     const input = {
@@ -275,7 +273,7 @@ const assertLegendEventGateNoOpForInputBase = (
 
 const assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode = (
   isVisible: boolean,
-  mode: LegendEventGateAssertionMode,
+  mode: LegendNoOpAssertionMode,
 ) => {
   forEachLegendEscapeKey((key) => {
     assertLegendEventGateNoOpForInputBase(
