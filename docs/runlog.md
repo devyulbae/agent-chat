@@ -1,3 +1,19 @@
+## 2026-03-09 13:23 KST — lock mixed-case eSC legend-hide alias parser/chip parity (boost lane)
+- Scope: chat thread UX wiring follow-up with strict parser/chip regression lock for mixed-case legend-hide alias normalization.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added shortcut-source extraction regression:
+      - `Thread shortcut legend hidden (escape key / eSC).` → `Escape`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added matching status-row/chip rendering regression for the same mixed-case alias.
+    - Locked aria + chip parity (`badge=Esc`, `title=Escape`) for mixed-case hide hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (112/112)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: add the symmetric mixed-case legend-show alias regression (e.g., `slash key / shIFT+/`) to keep show/hide alias-case normalization parity aligned.
+
 ## 2026-03-09 13:12 KST — lock uppercase ESCAPE mixed legend-hide alias parser/chip parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only normalization lock for mixed legend-hide shortcut aliases.
 - Change:
