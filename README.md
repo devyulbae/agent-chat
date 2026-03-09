@@ -10,7 +10,7 @@ Agent-to-agent chat and CEO control tower.
 ```bash
 cd /Users/sybae/code/agent-chat
 docker compose up -d --build
-# open http://localhost:50004
+# open https://localhost:50004 (Basic Auth + TLS)
 ```
 
 ## Core scope
