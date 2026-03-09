@@ -1062,6 +1062,18 @@
 
 # Runlog
 
+## 2026-03-09 15:31 KST — lock Shift+I modified-key guard no-op parity in filter dispatch (offset lane)
+- Scope: frontend integration + API contract sync follow-up to pin modifier-guard precedence for the Shift+I include-root toggle shortcut in filter-input keyboard dispatch.
+- Change:
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Extended the guard regression lane to assert `Shift+I` with an active modifier (`ctrlKey=true`) remains a no-op.
+    - Locks contract precedence that modified shortcuts return `{ handled: false, action: 'none' }` before include-root toggle routing.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact dispatch regression for `Shift+I` when `defaultPrevented=true` to complete explicit guard-path symmetry for include-root toggle routing.
+
 ## 2026-03-09 15:15 KST — lock Shift+I filter-input interaction outcome parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up to cover the filter-input interaction contract behind the Shift+I include-root toggle (state + status hint) on one shared path.
 - Change:
