@@ -697,7 +697,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     )
   })
 
-  it('keeps hidden Escape/Esc with modifier keys as no-op dispatch+render parity outcomes matching keyboard guard rails', () => {
+  it('keeps hidden Escape/Esc with modifier keys as no-op per-mode parity outcomes matching keyboard guard rails', () => {
     assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode('dispatch')
     assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode('render')
   })

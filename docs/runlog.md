@@ -1,3 +1,18 @@
+## 2026-03-09 10:43 KST — rename hidden modifier no-op title to per-mode parity wording (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only wording cleanup to reduce residual combined-mode phrasing in explicit per-mode lifecycle lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Renamed one hidden modifier no-op lifecycle test title from `dispatch+render parity` to `per-mode parity` wording.
+    - No assertion/body logic changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming remaining lifecycle test titles that still use `dispatch+render parity` phrasing where assertions are already executed through explicit per-mode loops.
+
 ## 2026-03-09 10:22 KST — normalize lifecycle test labels from dispatch/render-state to dispatch+render parity wording (offset lane)
 - Scope: chat thread UX wiring follow-up with strict test-only wording cleanup to match explicit mode-routing helpers and remove slash-style mode ambiguity in test names.
 - Change:
