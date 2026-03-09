@@ -751,17 +751,22 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode('render')
   })
 
-  it('keeps hidden Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(false, false, 'dispatch')
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(false, false, 'render')
+  it('keeps hidden Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat across editable states', () => {
+    ;([false, true] as const).forEach((isEditableTarget) => {
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(
+          false,
+          isEditableTarget,
+          mode,
+        )
+      })
+    })
   })
 
-  it('keeps hidden Escape/Esc as no-op dispatch when target is editable', () => {
-    assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('dispatch')
-  })
-
-  it('keeps hidden Escape/Esc as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(false, true, 'render')
+  it('keeps hidden Escape/Esc as no-op per-mode parity when target is editable', () => {
+    forEachLegendNoOpAssertionMode((mode) => {
+      assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode(mode)
+    })
   })
 
   it('keeps shown Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat across editable states', () => {
@@ -827,10 +832,6 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
       },
       false,
     )
-  })
-
-  it('keeps hidden Escape/Esc as no-op render-state when target is editable', () => {
-    assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('render')
   })
 
   it('keeps shown Escape/Esc with shiftKey=true modifier+event-gate paths as no-op per-mode parity outcomes across editable states', () => {
