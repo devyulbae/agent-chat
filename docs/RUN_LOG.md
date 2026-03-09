@@ -2492,3 +2492,16 @@
   - `agentchat-build-cycle-20m-offset` = `10-59/20`
   - `startup-loop-day-30m` core loop untouched (bridge lane notes-only policy).
 - Result: no-op sync completed; blocker only on fallback backend (`:8000` 500).
+
+## 2026-03-09 14:03 KST — Agent Chat implementation cycle
+- Delta: Hardened thread hint shortcut parsing for return/enter slash-pair wording that explicitly includes `key` labels.
+  - Frontend parser: widened slash-pair normalization to treat `Return key / Enter key` (and inverse ordering) as canonical `Enter`.
+  - Frontend tests: added extraction coverage for `(Return key / Enter key)` and `(Enter key / Return key)` in `getHintShortcutSource(...)` assertions.
+  - Scope: chat thread UX shortcut-chip parser only (no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `/Users/sybae/code/agent-chat/venv/bin/black .` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pre-commit run --all-files` ✅
+  - `/Users/sybae/code/agent-chat/venv/bin/pytest -q` ✅ (19 passed)
+- Blocker: none.
+- Next action: normalize slash-pair parsing for mixed labels like `Return key / Enter symbol` in modifier combos (e.g., `Shift+Return key / Enter symbol`).

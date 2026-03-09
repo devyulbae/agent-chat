@@ -734,6 +734,12 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Enter/Return).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Return / Enter).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (Enter / Return).')).toBe('Enter')
+      expect(getHintShortcutSource('Recovered to first visible thread (Return key / Enter key).')).toBe(
+        'Enter',
+      )
+      expect(getHintShortcutSource('Recovered to first visible thread (Enter key / Return key).')).toBe(
+        'Enter',
+      )
       expect(getHintShortcutSource('Recovered to first visible thread ([Return]).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread ([Enter] confirmed).')).toBe('Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (key Enter).')).toBe('Enter')

@@ -249,7 +249,7 @@ function normalizeShortcutAlias(shortcut: string): string {
     .replace(/arrow[\s-]?right/gu, 'arrowright')
     .replace(/right[\s-]?arrow/gu, 'arrowright')
     .replace(
-      /\b(?:return|enter)(?:[\s-]+symbol)?\s*\/\s*(?:return|enter)(?:[\s-]+symbol)?\b/gu,
+      /\b(?:return|enter)(?:[\s-]+(?:symbol|key))?\s*\/\s*(?:return|enter)(?:[\s-]+(?:symbol|key))?\b/gu,
       'enter',
     )
     .replace(/\b(?:num\s*pad|numpad)[\s-]*(?:enter|return)\b/gu, 'enter')
