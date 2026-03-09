@@ -45,6 +45,7 @@ import {
   getSelectedVisibleThreadPositionLabel,
   getSelectedVisibleThreadPositionTitle,
   getSelectedVisibleThreadShortcutRecoveryHint,
+  getThreadSelectionButtonAriaCurrent,
   isSelectedVisibleThreadHiddenByFilter,
 } from './threadSelectionStatus'
 
@@ -3390,6 +3391,7 @@ function App() {
                   <button
                     type="button"
                     onClick={() => selectThread(null)}
+                    aria-current={getThreadSelectionButtonAriaCurrent(selectedThreadId, null)}
                     style={{
                       fontWeight: selectedThreadId === null ? 700 : 400,
                       cursor: 'pointer',
@@ -3408,6 +3410,7 @@ function App() {
                   <button
                     type="button"
                     onClick={() => selectThread(thread.thread_id)}
+                    aria-current={getThreadSelectionButtonAriaCurrent(selectedThreadId, thread.thread_id)}
                     style={{
                       fontWeight: selectedThreadId === thread.thread_id ? 700 : 400,
                       cursor: 'pointer',

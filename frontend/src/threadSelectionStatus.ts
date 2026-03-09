@@ -75,3 +75,10 @@ export function getSelectedVisibleThreadButtonRecoveryHint(
 
   return `Selection hidden (${selectedVisibleThreadPositionLabel}) → use “Jump to first/last visible”.`
 }
+
+export function getThreadSelectionButtonAriaCurrent(
+  selectedThreadId: string | null,
+  threadId: string | null,
+): 'true' | undefined {
+  return selectedThreadId === threadId ? 'true' : undefined
+}

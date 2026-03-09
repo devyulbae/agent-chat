@@ -7,6 +7,7 @@ import {
   getSelectedVisibleThreadPositionLabel,
   getSelectedVisibleThreadPositionTitle,
   getSelectedVisibleThreadShortcutRecoveryHint,
+  getThreadSelectionButtonAriaCurrent,
   isSelectedVisibleThreadHiddenByFilter,
 } from './threadSelectionStatus'
 
@@ -86,6 +87,20 @@ describe('getSelectedVisibleThreadBoundaryRecoveryButtonTitle', () => {
     expect(getSelectedVisibleThreadBoundaryRecoveryButtonTitle(false, 'first')).toBe(
       'Selected thread is hidden by filters. Jump to first visible result.',
     )
+  })
+})
+
+describe('getThreadSelectionButtonAriaCurrent', () => {
+  it('returns aria-current=true for selected root thread button', () => {
+    expect(getThreadSelectionButtonAriaCurrent(null, null)).toBe('true')
+  })
+
+  it('returns aria-current=true for selected child thread button', () => {
+    expect(getThreadSelectionButtonAriaCurrent('thread-123', 'thread-123')).toBe('true')
+  })
+
+  it('returns undefined for non-selected thread button', () => {
+    expect(getThreadSelectionButtonAriaCurrent('thread-123', 'thread-456')).toBeUndefined()
   })
 })
 
