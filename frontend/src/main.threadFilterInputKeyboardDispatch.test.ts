@@ -257,6 +257,21 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
 
     expect(
       getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'I',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: true,
+        hasThreadFilter: true,
+      })
+    ).toEqual({
+      handled: false,
+      action: 'none',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
         key: 'Escape',
         shiftKey: false,
         metaKey: false,

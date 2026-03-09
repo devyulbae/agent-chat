@@ -1062,6 +1062,20 @@
 
 # Runlog
 
+## 2026-03-09 15:41 KST — lock Shift+I defaultPrevented guard no-op parity in filter dispatch (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete explicit guard-path symmetry for the Shift+I unread include-root toggle shortcut.
+- Change:
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Extended the modified/default-prevented guard regression lane to assert `Shift+I` with `defaultPrevented=true` remains a no-op.
+    - Locks precedence that prevented events return `{ handled: false, action: 'none' }` before include-root toggle routing.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: add a compact filter-input dispatch regression proving lowercase `Shift+i` with `defaultPrevented=true` also stays no-op to keep uppercase/lowercase prevented-path parity explicit.
+
 ## 2026-03-09 15:31 KST — lock Shift+I modified-key guard no-op parity in filter dispatch (offset lane)
 - Scope: frontend integration + API contract sync follow-up to pin modifier-guard precedence for the Shift+I include-root toggle shortcut in filter-input keyboard dispatch.
 - Change:
