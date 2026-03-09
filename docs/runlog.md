@@ -1,3 +1,15 @@
+## 2026-03-09 09:51 KST — align hidden editable event-gate test scope label with render-only assertion lane (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only contract-label cleanup to match the actual assertion mode and avoid dispatch/render wording drift.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Updated one test title to reflect render-only coverage:
+      - from `dispatch/render-state` to `render-state` for hidden editable target event-gate no-op (`defaultPrevented`/`repeat`) lane.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (29/29)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming adjacent shown editable event-gate lanes where `dispatch+render` can be split into explicit `dispatch` and `render` calls to keep assertion intent single-mode per lane.
+
 ## 2026-03-09 09:31 KST — add render-only event-gate mode to avoid duplicate shown dispatch assertions (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to keep shown event-gate parity coverage explicit without repeating dispatch checks in mixed mode calls.
 - Change:

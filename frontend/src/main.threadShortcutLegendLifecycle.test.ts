@@ -689,7 +689,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('dispatch')
   })
 
-  it('keeps hidden Escape/Esc as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
+  it('keeps hidden Escape/Esc as no-op render-state when target is editable and event is defaultPrevented or repeat', () => {
     forEachLegendEscapeKey((key) => {
       assertLegendEventGateNoOpForInputBase(
         {
