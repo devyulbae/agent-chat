@@ -25,6 +25,7 @@ from app.schemas.workflow import (
     OrchestrationCanvas,
     WorkflowPattern,
 )
+from app.schemas.retrieval import RetrievalConfig, RetrievalEvalReport
 from app.services.agent_service import AgentService
 from app.services.audit_service import AuditService
 from app.services.channel_service import ChannelService
@@ -390,3 +391,34 @@ def get_orchestration_canvas(canvas_id: str):
     if canvas is None:
         raise HTTPException(status_code=404, detail="Canvas not found")
     return canvas
+
+
+RETRIEVAL_CONFIG = RetrievalConfig()
+
+
+@router.get("/retrieval/config", response_model=RetrievalConfig)
+def get_retrieval_config():
+    return RETRIEVAL_CONFIG
+
+
+@router.put("/retrieval/config", response_model=RetrievalConfig)
+def update_retrieval_config(payload: RetrievalConfig):
+    global RETRIEVAL_CONFIG
+    RETRIEVAL_CONFIG = payload
+    return RETRIEVAL_CONFIG
+
+
+@router.get("/retrieval/eval-report", response_model=RetrievalEvalReport)
+def get_retrieval_eval_report():
+    # 초기 버전: 하네스 리포트 전까지 기본 비교값 제공
+    return RetrievalEvalReport(
+        strategy_a="structured",
+        strategy_b="hybrid_rag",
+        quality_score_a=0.78,
+        quality_score_b=0.81,
+        avg_latency_ms_a=420,
+        avg_latency_ms_b=930,
+        avg_tokens_a=1800,
+        avg_tokens_b=4200,
+        recommended="structured",
+    )
