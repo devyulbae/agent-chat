@@ -345,6 +345,7 @@ export type ThreadShortcutLegendKeyboardDispatchInput = {
   defaultPrevented: boolean
   repeat: boolean
   isEditableTarget: boolean
+  isComposing?: boolean
 }
 
 export type ThreadShortcutLegendKeyboardDispatchOutcome = {
@@ -359,6 +360,7 @@ export function getThreadShortcutLegendKeyboardDispatchOutcome(
   if (
     input.defaultPrevented ||
     input.repeat ||
+    input.isComposing ||
     input.metaKey ||
     input.ctrlKey ||
     input.altKey ||
@@ -2419,6 +2421,7 @@ function App() {
         defaultPrevented: event.defaultPrevented,
         repeat: event.repeat,
         isEditableTarget: isEditableElement(event.target),
+        isComposing: event.isComposing,
       })
 
       if (!dispatchOutcome.handled) {
