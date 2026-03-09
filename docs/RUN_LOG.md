@@ -1,5 +1,18 @@
 # Run Log
 
+## 2026-03-09 12:06 KST — Agent Chat implementation cycle
+- Delta: Consolidated remaining Escape/Esc editable event-gate no-op lifecycle assertions behind a shared visibility+editable helper in frontend legend lifecycle tests.
+  - Frontend tests: replaced duplicated inline shown/hidden editable `defaultPrevented/repeat` loops with `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
+  - Frontend tests: rewired non-editable event-gate parity callsites to the same helper path to keep visibility/editable permutations contract-synced.
+  - Scope kept frontend-only (chat thread UX lifecycle regression coverage refactor; no backend/API changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27 passed)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Commit: pending
+- Next action: collapse remaining shown `shiftKey=true` modifier+event-gate editable-state wrappers into one helper-level visibility/editable mode matrix to finish no-op parity DRYness.
+
 ## 2026-03-09 06:51 KST — Agent Chat parallel offset cycle
 - Delta: Collapsed remaining shown `shiftKey=true` Escape/Esc render-state parity specs into shared escape-key and mode-loop helpers in frontend lifecycle tests.
   - Frontend tests: added `legendNoOpAssertionModes` + `forEachLegendNoOpAssertionMode(...)` and `assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAcrossModes(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
