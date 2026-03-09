@@ -38,6 +38,8 @@ services:
 
   frontend:
     build: ./frontend
+    volumes:
+      - ./frontend/public/workflow-console.html:/app/dist/workflow-console.html:ro
     depends_on:
       - backend
 
