@@ -413,6 +413,7 @@ export type ThreadFilterInputKeyboardDispatchInput = {
   ctrlKey: boolean
   altKey: boolean
   defaultPrevented: boolean
+  repeat?: boolean
   hasThreadFilter: boolean
 }
 
@@ -431,7 +432,7 @@ export type ThreadFilterInputKeyboardDispatchOutcome = {
 export function getThreadFilterInputKeyboardDispatchOutcome(
   input: ThreadFilterInputKeyboardDispatchInput,
 ): ThreadFilterInputKeyboardDispatchOutcome {
-  if (input.defaultPrevented || input.metaKey || input.ctrlKey || input.altKey) {
+  if (input.defaultPrevented || input.repeat || input.metaKey || input.ctrlKey || input.altKey) {
     return {
       handled: false,
       action: 'none',
@@ -956,6 +957,7 @@ function App() {
         ctrlKey: event.ctrlKey,
         altKey: event.altKey,
         defaultPrevented: event.defaultPrevented,
+        repeat: event.repeat,
         hasThreadFilter: Boolean(threadFilterText),
       })
 

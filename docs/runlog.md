@@ -1062,6 +1062,21 @@
 
 # Runlog
 
+## 2026-03-09 16:12 KST — lock Shift+i repeat guard no-op parity in filter dispatch (offset lane)
+- Scope: frontend integration + API contract sync follow-up to complete lowercase/uppercase repeat-path symmetry for the Shift+I unread include-root toggle shortcut.
+- Change:
+  - `frontend/src/main.tsx`
+    - Extended `ThreadFilterInputKeyboardDispatchInput` with optional `repeat`.
+    - Guarded filter-input dispatch by treating repeated keydown events as no-op (`handled=false`, `action='none'`) before shortcut routing.
+    - Wired `event.repeat` through `handleThreadFilterKeyDown` into dispatch input.
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Extended guard regression lane to assert both uppercase `Shift+I` and lowercase `Shift+i` with `repeat=true` remain no-op.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact no-op guard regression for repeated `Shift+U` to keep unread-toggle repeat-path symmetry aligned with `Shift+I`.
+
 ## 2026-03-09 15:50 KST — lock Shift+i defaultPrevented guard no-op parity in filter dispatch (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete lowercase/uppercase prevented-path symmetry for the Shift+I unread include-root toggle shortcut.
 - Change:
@@ -4894,3 +4909,17 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest -q` ✅ (19/19)
 - Commit: `f6f29a7` (pushed to `main`)
 - Next action: continue chat thread UX wiring dedupe by folding remaining shown modifier-path one-off matrices into the shared visibility+shift+editable helper path while preserving explicit aria-expanded parity checks.
+
+## 2026-03-09 16:04 KST — hidden Escape no-op helper dedupe (boost cycle)
+- Scope: chat thread UX wiring (test-only refactor, no behavior change).
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Replaced separate hidden editable/modifier no-op helpers with `assertHiddenLegendNoOpAcrossEscapeKeysByEditableModifierAndMode(...)`.
+    - Rewired hidden modifier and hidden editable tests to use the shared helper with table-driven modifier inputs.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (24/24)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
+- Commit: `871d76a` (pushed to `main`)
+- Next action: fold shown `shiftKey=true` no-op + event-gate coverage into one shared matrix helper to remove the remaining duplicated shown-path scaffolding while preserving aria-expanded parity assertions.
