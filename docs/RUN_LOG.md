@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-09 12:51 KST — Agent Chat parallel offset cycle
+- Delta: Added mixed Return/Enter symbol modifier-combo regression coverage in frontend thread hint parser tests so API/UI shortcut-chip contract stays stable when copy uses slash variants.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Shift+Return symbol / Enter` and `Shift+Enter / Return symbol` extraction assertions, both canonicalizing to `Shift+Enter`.
+  - Scope kept frontend-only (contract sync via parser test coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add mirrored mixed slash-variant regression coverage for `Cmd+Return symbol / Enter` so non-shift modifier parity remains explicit.
+
 ## 2026-03-09 12:06 KST — Agent Chat implementation cycle
 - Delta: Consolidated remaining Escape/Esc editable event-gate no-op lifecycle assertions behind a shared visibility+editable helper in frontend legend lifecycle tests.
   - Frontend tests: replaced duplicated inline shown/hidden editable `defaultPrevented/repeat` loops with `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(...)` in `frontend/src/main.threadShortcutLegendLifecycle.test.ts`.
