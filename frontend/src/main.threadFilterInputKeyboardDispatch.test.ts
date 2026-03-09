@@ -319,6 +319,38 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
 
     expect(
       getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'U',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: true,
+        hasThreadFilter: true,
+      })
+    ).toEqual({
+      handled: false,
+      action: 'none',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
+        key: 'u',
+        shiftKey: true,
+        metaKey: false,
+        ctrlKey: false,
+        altKey: false,
+        defaultPrevented: false,
+        repeat: true,
+        hasThreadFilter: true,
+      })
+    ).toEqual({
+      handled: false,
+      action: 'none',
+    })
+
+    expect(
+      getThreadFilterInputKeyboardDispatchOutcome({
         key: 'Escape',
         shiftKey: false,
         metaKey: false,

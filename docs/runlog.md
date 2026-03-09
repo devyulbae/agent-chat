@@ -1,3 +1,21 @@
+## 2026-03-09 16:44 KST — add Shift+I filter-input interaction wiring regression (boost lane)
+- Scope: chat thread UX wiring increment with strict interaction-level regression coverage for filter-input Shift+I path.
+- Change:
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Added compact integration-style regression that chains:
+      1) `getThreadFilterInputKeyboardDispatchOutcome` for `Shift+I` from filter input,
+      2) `getThreadFilterInputToggleIncludeRootOutcome` state transitions for both disabled/enabled include-root states.
+    - Locked combined behavior in one test: dispatch action + unread-only enforcement + include-root toggle + status hint copy.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (8/8)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `6c7d24d` — `[test] add Shift+I filter-input interaction wiring regression`
+  - Push: `main -> origin/main` ✅
+- Next action: add a focused thread filter input handler regression for `Shift+I` repeat-key guard parity (`repeat=true`) to ensure no status-hint/state toggle side effects fire under key-repeat.
+
 ## 2026-03-09 14:44 KST — add Shift+I filter-input wiring for unread include-root toggle (boost lane)
 - Scope: chat thread UX wiring increment with strict keyboard-dispatch + UI hint update for unread include-root control directly from the thread filter input.
 - Change:
@@ -1061,6 +1079,25 @@
 - Next action: continue collapsing duplicated no-op input scaffolding in lifecycle helper paths that still instantiate matching dispatch/render payload bases separately.
 
 # Runlog
+
+## 2026-03-09 17:16 KST — lock Shift+u repeat guard no-op parity in filter dispatch (offset lane)
+- Scope: frontend UX follow-up to mirror include-root repeat-key guard behavior for unread-only toggle shortcut from thread filter input.
+- Change:
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Extended modified/default-prevented/repeat guard lane with explicit `repeat=true` no-op assertions for both `Shift+U` and `Shift+u`.
+    - Locks parity with existing `Shift+I` uppercase/lowercase repeat guard behavior (`{ handled: false, action: 'none' }`).
+- Browser-first verification:
+  - Blocker: OpenClaw browser control unavailable (`Can't reach the OpenClaw browser control service`), so compact aria snapshot verification could not run this cycle.
+  - Fallback API probes (explicit):
+    - `curl -sk -u 'admin:***' https://localhost:50004/` ✅ `200`
+    - `curl -sk -u 'admin:***' https://localhost:50004/src/main.tsx | grep -nE 'Shift\+I|Shift\+U|toggleIncludeRootInUnreadOnly|repeat'` ✅ confirms deployed source contains expected shortcut + repeat guard paths.
+- Verification / gates:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ❌
+  - `cd frontend && npm run build` ❌
+  - Frontend gate blocker: PostCSS/Tailwind toolchain error (`tailwindcss` PostCSS plugin moved to `@tailwindcss/postcss`) in current environment; unrelated to this test-only change.
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: once frontend PostCSS/Tailwind plugin config is repaired, rerun targeted frontend test/build gates and continue with next unblocked filter-input shortcut guard parity increment.
 
 ## 2026-03-09 16:12 KST — lock Shift+i repeat guard no-op parity in filter dispatch (offset lane)
 - Scope: frontend integration + API contract sync follow-up to complete lowercase/uppercase repeat-path symmetry for the Shift+I unread include-root toggle shortcut.
@@ -4923,3 +4960,23 @@ Backend API contract checks are currently blocked by missing backend dependencie
   - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19/19)
 - Commit: `871d76a` (pushed to `main`)
 - Next action: fold shown `shiftKey=true` no-op + event-gate coverage into one shared matrix helper to remove the remaining duplicated shown-path scaffolding while preserving aria-expanded parity assertions.
+
+## 2026-03-09 16:52 KST — shown shift/event-gate helper-path consolidation (offset cycle)
+- Scope: frontend integration test dedupe (thread shortcut legend no-op/event-gate matrix coverage), no runtime behavior changes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Added `assertShownLegendNoOpAcrossEscapeKeysByShiftEventGateEditableAndMode(...)` to unify shown Escape/Esc no-op assertions across both shift states and event-gate inputs.
+    - Removed redundant shown event-gate wrapper helpers and folded three separate shown tests into one matrix-driven parity spec over `{shiftKey in [false,true]} × {eventGate in [none, defaultPrevented, repeat]} × {isEditableTarget in [false,true]} × {mode in [dispatch,render]}`.
+- Verification attempted:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ❌ blocked before suite execution.
+  - `cd frontend && npm run build` ⏭️ not reached due prior failure.
+- Blocker:
+  - Frontend test runner fails during CSS pipeline bootstrap with PostCSS/Tailwind plugin mismatch:
+    - Error: `It looks like you're trying to use tailwindcss directly as a PostCSS plugin... install @tailwindcss/postcss and update your PostCSS configuration.`
+- Exact remedy:
+  1. In `frontend/`, install the new plugin package: `npm i -D @tailwindcss/postcss`.
+  2. Update PostCSS config to use `@tailwindcss/postcss` in the plugin list instead of `tailwindcss`.
+  3. Re-run:
+     - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts`
+     - `cd frontend && npm run build`
+- Next action: after PostCSS plugin migration lands, rerun frontend test/build gates and then continue remaining shown modifier+event-gate dedupe path if still present.
