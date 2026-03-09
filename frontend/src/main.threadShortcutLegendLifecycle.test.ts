@@ -347,6 +347,13 @@ const assertLegendModifierEventGateNoOpAcrossEscapeKeysByVisibilityShiftEditable
   })
 }
 
+const assertShownLegendEventGateNoOpAcrossEditableAndMode = (
+  isEditableTarget: boolean,
+  mode: LegendNoOpAssertionMode,
+) => {
+  assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(true, isEditableTarget, mode)
+}
+
 const assertShownLegendShiftEscapeEventGateNoOpAcrossEditableAndMode = (
   isEditableTarget: boolean,
   mode: LegendNoOpAssertionMode,
@@ -754,15 +761,12 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(false, true, 'render')
   })
 
-  it('keeps shown Escape/Esc as no-op per-mode parity when target is editable and event is defaultPrevented or repeat', () => {
-    forEachLegendNoOpAssertionMode((mode) => {
-      assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(true, true, mode)
+  it('keeps shown Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat across editable states', () => {
+    ;([false, true] as const).forEach((isEditableTarget) => {
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertShownLegendEventGateNoOpAcrossEditableAndMode(isEditableTarget, mode)
+      })
     })
-  })
-
-  it('keeps shown Escape/Esc as no-op per-mode parity when event is defaultPrevented or repeat', () => {
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(true, false, 'dispatch')
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityEditableAndMode(true, false, 'render')
   })
 
   it('keeps shown Escape/Esc with shiftKey=true as no-op per-mode parity across editable states', () => {
