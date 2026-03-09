@@ -1,3 +1,16 @@
+## 2026-03-09 09:31 KST — add render-only event-gate mode to avoid duplicate shown dispatch assertions (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to keep shown event-gate parity coverage explicit without repeating dispatch checks in mixed mode calls.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Extended `LegendEventGateAssertionMode` to include `'render'`.
+    - Updated `assertLegendEventGateNoOpForInputBase(...)` to route `'render'` mode directly through `assertLegendNoOpRenderStateForInput(...)`.
+    - Adjusted shown non-editable event-gate parity test to call `'dispatch'` + `'render'` modes (instead of `'dispatch'` + `'dispatch+render'`) so render-state assertions no longer re-assert dispatch in the same lane.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (29/29)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: trim adjacent hidden event-gate parity lane that still pairs `'dispatch'` with `'dispatch+render'` where render-only mode can preserve coverage without duplicate dispatch assertions.
+
 ## 2026-03-09 09:12 KST — trim duplicate dispatch assertion from shown shift render-state parity test (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to keep render-state parity lane focused on render assertions only.
 - Change:

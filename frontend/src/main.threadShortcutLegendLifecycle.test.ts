@@ -192,7 +192,7 @@ const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
   })
 }
 
-type LegendEventGateAssertionMode = 'dispatch' | 'dispatch+render'
+type LegendEventGateAssertionMode = 'dispatch' | 'render' | 'dispatch+render'
 
 const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   shiftKey: boolean,
@@ -239,6 +239,11 @@ const assertLegendEventGateNoOpForInputBase = (
 
     if (mode === 'dispatch+render') {
       assertLegendNoOpDispatchAndRenderStateForInput(input, nextVisibility)
+      return
+    }
+
+    if (mode === 'render') {
+      assertLegendNoOpRenderStateForInput(input, nextVisibility)
       return
     }
 
@@ -722,7 +727,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
   it('keeps shown Escape/Esc as no-op dispatch/render-state when event is defaultPrevented or repeat', () => {
     assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(true, 'dispatch')
-    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(true, 'dispatch+render')
+    assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(true, 'render')
   })
 
   it('keeps shown Escape/Esc with shiftKey=true as no-op dispatch outcome with stable aria-expanded presentation parity', () => {
