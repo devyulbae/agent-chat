@@ -792,6 +792,16 @@ describe('getShortcutChipPropsFromHint', () => {
     expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>Esc<')
   })
 
+  it('composes shortcut-legend hide status-row aria + chip rendering from uppercase/lowercase mixed escape-key alias variants', () => {
+    const legendHint = 'Thread shortcut legend hidden (ESCAPE key / eSC).'
+    const legendChip = getShortcutChipPropsFromHint(legendHint, 'filter jump', 'thread-jump')
+
+    expect(getStatusAriaLabelWithShortcutChip(legendHint, legendChip)).toBe(
+      'Thread shortcut legend hidden (ESCAPE key / eSC). Shortcut badge Esc: Escape (filter jump).',
+    )
+    expect(renderToStaticMarkup(<>{renderShortcutChipPresentation(legendChip)}</>)).toContain('>Esc<')
+  })
+
   it('composes shortcut-legend show status-row aria + chip rendering from lowercase shift+/ alias', () => {
     const legendHint = 'Thread shortcut legend shown (shift+/).'
     const legendChip = getShortcutChipPropsFromHint(legendHint, 'filter jump', 'thread-jump')
