@@ -1,3 +1,19 @@
+## 2026-03-09 13:44 KST — lock uppercase mixed delimiter legend-show alias parser/chip parity (boost lane)
+- Scope: chat thread UX wiring follow-up with strict parser/chip regression lock for uppercase slash token + mixed-case shift delimiter normalization.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added shortcut-source extraction regression:
+      - `Thread shortcut legend shown (SLASH key / shIFT+/).` → `Slash`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added matching status-row/chip rendering regression for the same uppercase+mixed alias.
+    - Locked aria + chip parity (`badge=/`, `title=Slash`) for `SLASH key / shIFT+/` hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (114/114)
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Next action: add a compact mixed legend-hide delimiter regression for uppercase canonical token + mixed alias (`ESCAPE key / eSC`) to keep hide/show case-insensitive delimiter symmetry aligned.
+
 ## 2026-03-09 13:31 KST — lock mixed-case shIFT+/ legend-show alias parser/chip parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict parser/chip regression lock for mixed-case legend-show alias normalization.
 - Change:
