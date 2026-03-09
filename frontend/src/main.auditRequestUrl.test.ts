@@ -14,7 +14,7 @@ describe('credential audit request URL integration', () => {
       offset: 0,
     })
 
-    expect(url).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=0')
+    expect(url).toBe('/api/audit-events?entity_type=credential&limit=20&offset=0')
   })
 
   it('trims event_type and preserves bounded contract params in request URL', () => {
@@ -29,7 +29,7 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(url).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=100&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
+      '/api/audit-events?entity_type=credential&limit=100&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
     )
   })
 
@@ -53,10 +53,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&action=updated&event_type=credential.updated&provider=openai_api&label=primary',
     )
   })
 
@@ -79,8 +79,8 @@ describe('credential audit request URL integration', () => {
       offset: 20,
     })
 
-    expect(refreshUrl).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=0')
-    expect(olderPageUrl).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=20')
+    expect(refreshUrl).toBe('/api/audit-events?entity_type=credential&limit=20&offset=0')
+    expect(olderPageUrl).toBe('/api/audit-events?entity_type=credential&limit=20&offset=20')
   })
 
   it('keeps scoped credential id while omitting whitespace event_type across paging offsets', () => {
@@ -103,10 +103,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123',
     )
   })
 
@@ -130,10 +130,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated',
     )
   })
 
@@ -157,10 +157,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated&provider=openai_api',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated&provider=openai_api',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated&provider=openai_api',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated&provider=openai_api',
     )
   })
 
@@ -184,10 +184,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&event_type=credential.updated',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&action=updated&event_type=credential.updated',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&action=updated&event_type=credential.updated',
     )
   })
 
@@ -211,10 +211,10 @@ describe('credential audit request URL integration', () => {
     })
 
     expect(refreshUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated&label=primary',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&event_type=credential.updated&label=primary',
     )
     expect(olderPageUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated&label=primary',
+      '/api/audit-events?entity_type=credential&limit=20&offset=20&entity_id=cred-123&event_type=credential.updated&label=primary',
     )
   })
 })

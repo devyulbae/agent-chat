@@ -14,7 +14,7 @@ describe('credential audit request URL contract (main integration)', () => {
       offset: 0,
     })
 
-    expect(allFiltersUrl).toBe('/api/v1/audit-events?entity_type=credential&limit=20&offset=0')
+    expect(allFiltersUrl).toBe('/api/audit-events?entity_type=credential&limit=20&offset=0')
 
     const trimmedEventTypeUrl = buildCredentialAuditEventsRequestUrl({
       credentialId: null,
@@ -27,7 +27,7 @@ describe('credential audit request URL contract (main integration)', () => {
     })
 
     expect(trimmedEventTypeUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&event_type=credential.updated',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&event_type=credential.updated',
     )
 
     const scopedFiltersUrl = buildCredentialAuditEventsRequestUrl({
@@ -41,7 +41,7 @@ describe('credential audit request URL contract (main integration)', () => {
     })
 
     expect(scopedFiltersUrl).toBe(
-      '/api/v1/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&provider=openai_api&label=primary',
+      '/api/audit-events?entity_type=credential&limit=20&offset=0&entity_id=cred-123&action=updated&provider=openai_api&label=primary',
     )
   })
 })
