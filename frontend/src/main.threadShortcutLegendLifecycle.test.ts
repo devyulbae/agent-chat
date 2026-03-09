@@ -729,7 +729,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     })
   })
 
-  it('keeps shown Escape/Esc as no-op dispatch+render parity when target is editable and event is defaultPrevented or repeat', () => {
+  it('keeps shown Escape/Esc as no-op per-mode parity when target is editable and event is defaultPrevented or repeat', () => {
     forEachLegendEscapeKey((key) => {
       forEachLegendNoOpAssertionMode((mode) => {
         assertLegendEventGateNoOpForInputBase(
