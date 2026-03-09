@@ -3018,7 +3018,39 @@ function App() {
       <h2>Agent Chat Control Tower</h2>
       <p>Port 50004 / Stack: React+TS+Vite + FastAPI + Postgres + Redis + Nginx</p>
 
-      <h3>Organization Graph</h3>
+      <div
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 30,
+          display: 'flex',
+          gap: 8,
+          flexWrap: 'wrap',
+          padding: '10px 0',
+          background: 'rgba(2, 6, 23, 0.92)',
+          backdropFilter: 'blur(6px)',
+          borderBottom: '1px solid rgba(148, 163, 184, 0.25)',
+          marginBottom: 12,
+        }}
+      >
+        <a href="#overview" style={{ textDecoration: 'none' }}>
+          <button type="button">Overview</button>
+        </a>
+        <a href="#chat" style={{ textDecoration: 'none' }}>
+          <button type="button">Chat</button>
+        </a>
+        <a href="#credentials" style={{ textDecoration: 'none' }}>
+          <button type="button">Credentials</button>
+        </a>
+        <a href="#audit" style={{ textDecoration: 'none' }}>
+          <button type="button">Audit</button>
+        </a>
+        <a href="/workflow-console.html" style={{ textDecoration: 'none' }}>
+          <button type="button">Workflow</button>
+        </a>
+      </div>
+
+      <h3 id="overview">Organization Graph</h3>
       {loading && <p>Loading organization graph…</p>}
       {error && <p style={{ color: 'crimson' }}>Error: {error}</p>}
 
@@ -3049,7 +3081,7 @@ function App() {
 
       <hr style={{ margin: '24px 0' }} />
 
-      <h3>Chat Thread Explorer</h3>
+      <h3 id="chat">Chat Thread Explorer</h3>
       <label htmlFor="channel-id">Channel ID:</label>{' '}
       <input
         id="channel-id"
@@ -3480,7 +3512,7 @@ function App() {
 
       <hr style={{ margin: '24px 0' }} />
 
-      <h3>Credential Token Lifecycle</h3>
+      <h3 id="credentials">Credential Token Lifecycle</h3>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
         <label htmlFor="credential-status">Status:</label>
         <select
@@ -4083,7 +4115,7 @@ function App() {
           <p>No credentials in selected lifecycle view.</p>
         ))}
 
-      <h4>Credential Audit Trail</h4>
+      <h4 id="audit">Credential Audit Trail</h4>
       {credentialAuditError && <p style={{ color: 'crimson' }}>Error: {credentialAuditError}</p>}
       {credentialAuditLoading && <p>Loading audit trail…</p>}
       {!credentialAuditLoading &&
