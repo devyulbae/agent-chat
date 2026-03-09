@@ -765,6 +765,16 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Recovered to first visible thread (Cmd+⏎ confirmed).')).toBe(
         'Cmd+Enter',
       )
+      expect(
+        getHintShortcutSource(
+          'Recovered to first visible thread (Cmd+Return symbol / Enter confirmed).',
+        ),
+      ).toBe('Cmd+Enter')
+      expect(
+        getHintShortcutSource(
+          'Recovered to first visible thread (Cmd+Enter / Return symbol confirmed).',
+        ),
+      ).toBe('Cmd+Enter')
       expect(getHintShortcutSource('Recovered to first visible thread (CmdEnter confirmed).')).toBe(
         'Cmd+Enter',
       )
