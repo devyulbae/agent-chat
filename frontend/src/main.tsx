@@ -507,6 +507,26 @@ export function getThreadFilterInputKeyboardDispatchOutcome(
   }
 }
 
+export type ThreadFilterInputToggleIncludeRootOutcome = {
+  nextShowUnreadOnlyThreads: boolean
+  nextIncludeRootInUnreadOnly: boolean
+  statusHint: string
+}
+
+export function getThreadFilterInputToggleIncludeRootOutcome(
+  currentIncludeRootInUnreadOnly: boolean,
+): ThreadFilterInputToggleIncludeRootOutcome {
+  const nextIncludeRootInUnreadOnly = !currentIncludeRootInUnreadOnly
+
+  return {
+    nextShowUnreadOnlyThreads: true,
+    nextIncludeRootInUnreadOnly,
+    statusHint: `Unread-only root inclusion ${
+      nextIncludeRootInUnreadOnly ? 'enabled' : 'disabled'
+    } from filter input (Shift+I).`,
+  }
+}
+
 function isEditableElement(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) {
     return false
@@ -973,11 +993,10 @@ function App() {
       if (dispatchOutcome.action === 'toggleIncludeRootInUnreadOnly') {
         setShowUnreadOnlyThreads(true)
         setIncludeRootInUnreadOnly((current) => {
-          const next = !current
-          setThreadFilterJumpHint(
-            `Unread-only root inclusion ${next ? 'enabled' : 'disabled'} from filter input (Shift+I).`
-          )
-          return next
+          const outcome = getThreadFilterInputToggleIncludeRootOutcome(current)
+          setShowUnreadOnlyThreads(outcome.nextShowUnreadOnlyThreads)
+          setThreadFilterJumpHint(outcome.statusHint)
+          return outcome.nextIncludeRootInUnreadOnly
         })
         return
       }

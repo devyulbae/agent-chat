@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { getThreadFilterInputKeyboardDispatchOutcome } from './main'
+import {
+  getThreadFilterInputKeyboardDispatchOutcome,
+  getThreadFilterInputToggleIncludeRootOutcome,
+} from './main'
 
 describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
   it('maps Shift+Home/PageUp and Shift+End/PageDown to first/last visible jumps', () => {
@@ -250,6 +253,24 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
     ).toEqual({
       handled: false,
       action: 'none',
+    })
+  })
+})
+
+describe('getThreadFilterInputToggleIncludeRootOutcome', () => {
+  it('enables unread-only mode and root inclusion when currently disabled', () => {
+    expect(getThreadFilterInputToggleIncludeRootOutcome(false)).toEqual({
+      nextShowUnreadOnlyThreads: true,
+      nextIncludeRootInUnreadOnly: true,
+      statusHint: 'Unread-only root inclusion enabled from filter input (Shift+I).',
+    })
+  })
+
+  it('keeps unread-only mode on and disables root inclusion when currently enabled', () => {
+    expect(getThreadFilterInputToggleIncludeRootOutcome(true)).toEqual({
+      nextShowUnreadOnlyThreads: true,
+      nextIncludeRootInUnreadOnly: false,
+      statusHint: 'Unread-only root inclusion disabled from filter input (Shift+I).',
     })
   })
 })

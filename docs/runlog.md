@@ -1062,6 +1062,26 @@
 
 # Runlog
 
+## 2026-03-09 15:15 KST — lock Shift+I filter-input interaction outcome parity (offset lane)
+- Scope: frontend integration + API contract sync follow-up to cover the filter-input interaction contract behind the Shift+I include-root toggle (state + status hint) on one shared path.
+- Change:
+  - `frontend/src/main.tsx`
+    - Added exported `getThreadFilterInputToggleIncludeRootOutcome(currentIncludeRootInUnreadOnly)` helper.
+    - Centralized Shift+I interaction outcome contract:
+      - always enables unread-only mode,
+      - toggles include-root flag,
+      - emits canonical status hint (`Unread-only root inclusion enabled/disabled ... (Shift+I)`).
+    - Updated `handleThreadFilterKeyDown` Shift+I branch to consume the shared helper outcome.
+  - `frontend/src/main.threadFilterInputKeyboardDispatch.test.ts`
+    - Added focused interaction-outcome regressions for both current states (`false`/`true`) to lock:
+      - `nextShowUnreadOnlyThreads=true`,
+      - include-root toggle parity,
+      - status-hint text parity.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadFilterInputKeyboardDispatch.test.ts` ✅ (7/7)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+
 ## 2026-03-09 14:31 KST — lock uppercase SLASH + uppercase SHIFT+/ legend-show alias parser/chip parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict parser/chip regression lock for fully uppercase mixed legend-show alias normalization.
 - Change:
