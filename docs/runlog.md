@@ -1,3 +1,18 @@
+## 2026-03-09 13:12 KST — lock uppercase ESCAPE mixed legend-hide alias parser/chip parity (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only normalization lock for mixed legend-hide shortcut aliases.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added parser regression asserting uppercase mixed alias canonicalizes to escape source:
+      - `Thread shortcut legend hidden (ESCAPE key / Esc).` → `Escape`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added status-row/chip regression for the same uppercase mixed alias.
+    - Locked canonical escape chip semantics (`badge=Esc`, `title=Escape`, escape badge render token) and aria composition parity.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (111/111)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact mixed legend-hide alias regression for uppercase delimiter variants (e.g., `escape key / eSC`) to keep case-insensitive alias normalization parity symmetric.
+
 ## 2026-03-09 12:12 KST — lock uppercase SLASH mixed legend-show alias parser/chip parity (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only normalization lock for mixed legend-show shortcut aliases.
 - Change:

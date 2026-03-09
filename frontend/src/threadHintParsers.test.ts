@@ -184,6 +184,7 @@ describe('threadHintParsers', () => {
       expect(getHintShortcutSource('Thread shortcut legend hidden (escape key).')).toBe('Escape')
       expect(getHintShortcutSource('Thread shortcut legend hidden (escape key / Esc).')).toBe('Escape')
       expect(getHintShortcutSource('Thread shortcut legend hidden (escape key / ESC).')).toBe('Escape')
+      expect(getHintShortcutSource('Thread shortcut legend hidden (ESCAPE key / Esc).')).toBe('Escape')
     })
   })
 
