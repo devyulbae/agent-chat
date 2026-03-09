@@ -1,3 +1,18 @@
+## 2026-03-09 13:31 KST — lock mixed-case shIFT+/ legend-show alias parser/chip parity (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict parser/chip regression lock for mixed-case legend-show alias normalization.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added shortcut-source extraction regression:
+      - `Thread shortcut legend shown (slash key / shIFT+/).` → `Slash`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added matching status-row/chip rendering regression for the same mixed-case alias.
+    - Locked aria + chip parity (`badge=/`, `title=Slash`) for mixed-case show hints.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (113/113)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact mixed legend-show alias regression for uppercase delimiter variants (e.g., `SLASH key / shIFT+/`) to keep case-insensitive show-alias normalization parity symmetric.
+
 ## 2026-03-09 13:23 KST — lock mixed-case eSC legend-hide alias parser/chip parity (boost lane)
 - Scope: chat thread UX wiring follow-up with strict parser/chip regression lock for mixed-case legend-hide alias normalization.
 - Change:
