@@ -335,6 +335,37 @@ describe('getThreadFilterInputKeyboardDispatchOutcome', () => {
 })
 
 describe('getThreadFilterInputToggleIncludeRootOutcome', () => {
+  it('wires Shift+I dispatch to unread-only + include-root state/status update from filter input', () => {
+    const dispatchOutcome = getThreadFilterInputKeyboardDispatchOutcome({
+      key: 'I',
+      shiftKey: true,
+      metaKey: false,
+      ctrlKey: false,
+      altKey: false,
+      defaultPrevented: false,
+      hasThreadFilter: true,
+    })
+
+    expect(dispatchOutcome).toEqual({
+      handled: true,
+      action: 'toggleIncludeRootInUnreadOnly',
+    })
+
+    const toggleFromDisabled = getThreadFilterInputToggleIncludeRootOutcome(false)
+    expect(toggleFromDisabled).toEqual({
+      nextShowUnreadOnlyThreads: true,
+      nextIncludeRootInUnreadOnly: true,
+      statusHint: 'Unread-only root inclusion enabled from filter input (Shift+I).',
+    })
+
+    const toggleFromEnabled = getThreadFilterInputToggleIncludeRootOutcome(true)
+    expect(toggleFromEnabled).toEqual({
+      nextShowUnreadOnlyThreads: true,
+      nextIncludeRootInUnreadOnly: false,
+      statusHint: 'Unread-only root inclusion disabled from filter input (Shift+I).',
+    })
+  })
+
   it('enables unread-only mode and root inclusion when currently disabled', () => {
     expect(getThreadFilterInputToggleIncludeRootOutcome(false)).toEqual({
       nextShowUnreadOnlyThreads: true,
