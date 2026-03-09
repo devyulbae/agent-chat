@@ -1,5 +1,15 @@
 # Run Log
 
+## 2026-03-09 14:13 KST — Agent Chat parallel offset cycle
+- Delta: Added Ctrl+Return symbol mixed slash-variant parser regression coverage so non-Cmd modifier parity stays explicit with existing Shift/Cmd return-symbol alias tests.
+  - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Ctrl+Return symbol / Enter` and `Ctrl+Enter / Return symbol` extraction assertions, both canonicalizing to `Ctrl+Enter`.
+  - Scope kept frontend-only (parser regression coverage; no backend/API schema changes).
+- Quality gates:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts` ✅ (56 passed)
+  - `cd frontend && npm run build` ✅
+- Commit: pending
+- Next action: add mirrored mixed slash-variant regression coverage for `Control+Return symbol / Enter` to lock Control-label parity on return-symbol alias normalization.
+
 ## 2026-03-09 13:51 KST — Agent Chat parallel offset cycle
 - Delta: Added Cmd+Return symbol mixed slash-variant parser regression coverage so non-shift modifier parity stays explicit with existing Shift+Return symbol/Enter tests.
   - Frontend tests: extended `frontend/src/threadHintParsers.test.ts` with `Cmd+Return symbol / Enter` and `Cmd+Enter / Return symbol` extraction assertions, both canonicalizing to `Cmd+Enter`.
