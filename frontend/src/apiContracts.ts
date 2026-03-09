@@ -53,6 +53,8 @@ export function clampChannelMessagesLimit(value: number, fallback = 200): number
 export type CredentialsQueryParamsInput = {
   tokenStatus: string
   expiringWithinHours: number
+  provider?: string
+  ownerAgentId?: string
 }
 
 export function buildCredentialsQueryParams(input: CredentialsQueryParamsInput): URLSearchParams {
@@ -63,6 +65,16 @@ export function buildCredentialsQueryParams(input: CredentialsQueryParamsInput):
   const normalizedTokenStatus = normalizeOptionalAuditFilter(input.tokenStatus)
   if (normalizedTokenStatus) {
     params.set('token_status', normalizedTokenStatus)
+  }
+
+  const normalizedProvider = normalizeOptionalAuditFilter(input.provider ?? '')
+  if (normalizedProvider) {
+    params.set('provider', normalizedProvider)
+  }
+
+  const trimmedOwnerAgentId = input.ownerAgentId?.trim()
+  if (trimmedOwnerAgentId) {
+    params.set('owner_agent_id', trimmedOwnerAgentId)
   }
 
   return params

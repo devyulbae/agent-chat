@@ -40,21 +40,29 @@ describe('apiContracts helpers', () => {
     expect(clampChannelMessagesLimit(Number.NaN, 999)).toBe(CHANNEL_MESSAGES_LIMIT_MAX)
   })
 
-  it('builds credentials params with bounded expiring window and optional token status', () => {
+  it('builds credentials params with bounded expiring window and optional filters', () => {
     const params = buildCredentialsQueryParams({
       tokenStatus: '  ALL ',
       expiringWithinHours: CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX + 100,
+      provider: ' all ',
+      ownerAgentId: '   ',
     })
     const filteredParams = buildCredentialsQueryParams({
       tokenStatus: ' expiring_soon ',
       expiringWithinHours: Number.NaN,
+      provider: ' openai_api ',
+      ownerAgentId: '  agent-123  ',
     })
 
     expect(params.get('expiring_within_hours')).toBe(String(CREDENTIAL_EXPIRING_WINDOW_HOURS_MAX))
     expect(params.has('token_status')).toBe(false)
+    expect(params.has('provider')).toBe(false)
+    expect(params.has('owner_agent_id')).toBe(false)
 
     expect(filteredParams.get('expiring_within_hours')).toBe('24')
     expect(filteredParams.get('token_status')).toBe('expiring_soon')
+    expect(filteredParams.get('provider')).toBe('openai_api')
+    expect(filteredParams.get('owner_agent_id')).toBe('agent-123')
   })
 
   it('builds channel messages params with bounded limit and optional trimmed thread id', () => {
