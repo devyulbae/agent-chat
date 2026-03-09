@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import (
     APIRouter,
@@ -314,9 +316,14 @@ RUN_LOGS: list[dict] = []
 
 
 @router.get("/run-logs", response_model=list[dict])
-def list_run_logs():
+def list_run_logs(
+    limit: Annotated[int, Query(ge=1, le=500)] = 200,
+    offset: Annotated[int, Query(ge=0)] = 0,
+):
     # Compatibility endpoint for automation probes; persistence wiring is pending.
-    return RUN_LOGS
+    # Return most recent entries first with bounded pagination to keep desktop UI responsive.
+    newest_first = list(reversed(RUN_LOGS))
+    return newest_first[offset : offset + limit]
 
 
 @router.post("/run-logs", response_model=dict, status_code=201)
