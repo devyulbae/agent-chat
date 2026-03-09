@@ -1,3 +1,20 @@
+## 2026-03-09 11:52 KST — dedupe escape-key literal unions via shared alias (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only type cleanup to remove repeated `'Escape' | 'Esc'` literal unions in lifecycle helper signatures.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Derived `LegendNoOpAssertionMode` from canonical `legendNoOpAssertionModes` tuple to avoid duplicate mode literal declarations.
+    - Added `LegendEscapeKey` alias derived from `legendEscapeKeys` tuple.
+    - Reused `LegendEscapeKey` in helper signatures:
+      - `assertLegendRenderStateShowHideLifecycle(...)`
+      - `forEachLegendEscapeKey(...)`
+      - `assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode(...)`
+    - No assertion/body logic changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming small lifecycle type redundancies where helper signatures can derive unions from canonical tuples instead of restating literals.
+
 ## 2026-03-09 11:43 KST — unify legend event-gate/no-op assertion mode aliases (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only cleanup to remove redundant per-mode type aliasing in lifecycle assertions.
 - Change:

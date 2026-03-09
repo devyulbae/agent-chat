@@ -77,7 +77,7 @@ const assertLegendNoOpRenderStatePresentationParityForInput = (
 const assertLegendRenderStateShowHideLifecycle = (
   showKey: '?' | '/',
   showShiftKey: boolean,
-  hideKey: 'Escape' | 'Esc',
+  hideKey: LegendEscapeKey,
 ) => {
   const shownRenderState = getThreadShortcutLegendKeyboardRenderState({
     isVisible: false,
@@ -117,9 +117,13 @@ const assertShownLegendNoOpAriaExpanded = () => {
   expect(shownNoOpPresentation.ariaExpanded).toBe(true)
 }
 
-type LegendNoOpAssertionMode = 'dispatch' | 'render'
-
 const legendNoOpAssertionModes = ['dispatch', 'render'] as const
+
+type LegendNoOpAssertionMode = (typeof legendNoOpAssertionModes)[number]
+
+const legendEscapeKeys = ['Escape', 'Esc'] as const
+
+type LegendEscapeKey = (typeof legendEscapeKeys)[number]
 
 const forEachLegendNoOpAssertionMode = (
   assertion: (mode: (typeof legendNoOpAssertionModes)[number]) => void,
@@ -138,9 +142,7 @@ const legendEventGateCases = [
   { defaultPrevented: false, repeat: true },
 ] as const
 
-const legendEscapeKeys = ['Escape', 'Esc'] as const
-
-const forEachLegendEscapeKey = (assertion: (key: (typeof legendEscapeKeys)[number]) => void) => {
+const forEachLegendEscapeKey = (assertion: (key: LegendEscapeKey) => void) => {
   legendEscapeKeys.forEach(assertion)
 }
 
@@ -293,7 +295,7 @@ const assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode = (
 }
 
 const assertLegendModifierEventGateNoOpByVisibilityShiftEditableAndMode = (
-  key: 'Escape' | 'Esc',
+  key: LegendEscapeKey,
   isVisible: boolean,
   shiftKey: boolean,
   isEditableTarget: boolean,
