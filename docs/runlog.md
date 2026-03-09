@@ -1,3 +1,23 @@
+## 2026-03-09 11:43 KST — unify legend event-gate/no-op assertion mode aliases (boost lane)
+- Scope: chat thread UX wiring follow-up with strict test-only cleanup to remove redundant per-mode type aliasing in lifecycle assertions.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Removed redundant `LegendEventGateAssertionMode` alias (`'dispatch' | 'render'`).
+    - Reused canonical `LegendNoOpAssertionMode` for event-gate helper signatures:
+      - `assertLegendEventGateNoOpForInputBase(...)`
+      - `assertLegendEventGateNoOpAcrossEscapeKeysByVisibilityAndMode(...)`
+    - No assertion/body behavior changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- Git:
+  - Commit: `65a0fc3` — `[test] unify legend no-op assertion mode type aliases`
+  - Push: `main -> origin/main` ✅
+- Next action: trim remaining lifecycle helper type duplication (e.g., escape-key literal unions) by reusing canonical shared aliases where signatures are structurally identical.
+
 ## 2026-03-09 11:31 KST — rename shown shift modifier+event-gate no-op title to per-mode parity wording (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only wording cleanup to remove remaining combined-mode phrasing in explicit per-mode lifecycle lanes.
 - Change:
