@@ -1,3 +1,16 @@
+## 2026-03-09 10:13 KST — split shown editable event-gate lanes into explicit dispatch/render mode loops (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining mixed `dispatch+render` mode usage in shown editable event-gate no-op lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Narrowed `LegendEventGateAssertionMode` to `'dispatch' | 'render'`.
+    - Removed the `dispatch+render` branch from `assertLegendEventGateNoOpForInputBase(...)`.
+    - Updated two shown editable event-gate tests (non-shift + `shiftKey=true`) to iterate `forEachLegendNoOpAssertionMode(...)` and call `assertLegendEventGateNoOpForInputBase(...)` once per explicit mode.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: trim any remaining event-gate helper naming/labels that still imply combined dispatch+render execution now that mode routing is explicit-only.
+
 ## 2026-03-09 09:51 KST — align hidden editable event-gate test scope label with render-only assertion lane (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only contract-label cleanup to match the actual assertion mode and avoid dispatch/render wording drift.
 - Change:

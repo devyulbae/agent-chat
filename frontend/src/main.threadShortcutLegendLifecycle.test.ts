@@ -192,7 +192,7 @@ const assertHiddenLegendModifierNoOpAcrossEscapeKeysByMode = (mode: LegendNoOpAs
   })
 }
 
-type LegendEventGateAssertionMode = 'dispatch' | 'render' | 'dispatch+render'
+type LegendEventGateAssertionMode = 'dispatch' | 'render'
 
 const assertShownLegendModifierNoOpAcrossEscapeKeysByShiftEditableAndMode = (
   shiftKey: boolean,
@@ -263,11 +263,6 @@ const assertLegendEventGateNoOpForInputBase = (
       defaultPrevented,
       repeat,
     } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
-
-    if (mode === 'dispatch+render') {
-      assertLegendNoOpDispatchAndRenderStateForInput(input, nextVisibility)
-      return
-    }
 
     if (mode === 'render') {
       assertLegendNoOpRenderStateForInput(input, nextVisibility)
@@ -736,19 +731,21 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
   it('keeps shown Escape/Esc as no-op dispatch/render-state when target is editable and event is defaultPrevented or repeat', () => {
     forEachLegendEscapeKey((key) => {
-      assertLegendEventGateNoOpForInputBase(
-        {
-          isVisible: true,
-          key,
-          shiftKey: false,
-          metaKey: false,
-          ctrlKey: false,
-          altKey: false,
-          isEditableTarget: true,
-        },
-        true,
-        'dispatch+render',
-      )
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertLegendEventGateNoOpForInputBase(
+          {
+            isVisible: true,
+            key,
+            shiftKey: false,
+            metaKey: false,
+            ctrlKey: false,
+            altKey: false,
+            isEditableTarget: true,
+          },
+          true,
+          mode,
+        )
+      })
     })
   })
 
@@ -767,19 +764,21 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
 
   it('keeps shown Escape/Esc with shiftKey=true as no-op for editable target when event is defaultPrevented or repeat', () => {
     forEachLegendEscapeKey((key) => {
-      assertLegendEventGateNoOpForInputBase(
-        {
-          isVisible: true,
-          key,
-          shiftKey: true,
-          metaKey: false,
-          ctrlKey: false,
-          altKey: false,
-          isEditableTarget: true,
-        },
-        true,
-        'dispatch+render',
-      )
+      forEachLegendNoOpAssertionMode((mode) => {
+        assertLegendEventGateNoOpForInputBase(
+          {
+            isVisible: true,
+            key,
+            shiftKey: true,
+            metaKey: false,
+            ctrlKey: false,
+            altKey: false,
+            isEditableTarget: true,
+          },
+          true,
+          mode,
+        )
+      })
     })
   })
 
