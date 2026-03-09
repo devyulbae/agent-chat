@@ -1,3 +1,15 @@
+## 2026-03-09 09:12 KST — trim duplicate dispatch assertion from shown shift render-state parity test (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to keep render-state parity lane focused on render assertions only.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Updated `keeps shown Escape/Esc with shiftKey=true as no-op render-state parity with nullish aria and stable aria-expanded` test to call `assertLegendNoOpRenderStateForInput(...)` directly instead of `assertLegendNoOpDispatchAndRenderStateForInput(...)`.
+    - Removed redundant dispatch assertion overlap with the adjacent dispatch-focused shift no-op lifecycle test while preserving shown-state `ariaExpanded` parity checks.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (31/31)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming adjacent lifecycle test overlap where render-state-only lanes still indirectly assert dispatch contracts already covered by neighboring tests.
+
 ## 2026-03-09 08:52 KST — inline editable event-gate input-base assembly at lifecycle callsites (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove one-hop editable event-gate across-keys wrapper indirection.
 - Change:
