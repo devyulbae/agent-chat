@@ -1,3 +1,18 @@
+## 2026-03-09 12:12 KST — lock uppercase SLASH mixed legend-show alias parser/chip parity (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only normalization lock for mixed legend-show shortcut aliases.
+- Change:
+  - `frontend/src/threadHintParsers.test.ts`
+    - Added parser regression asserting uppercase mixed alias canonicalizes to slash source:
+      - `Thread shortcut legend shown (SLASH key / Shift+/).` → `Slash`.
+  - `frontend/src/threadHintChips.test.tsx`
+    - Added status-row/chip regression for the same uppercase mixed alias.
+    - Locked canonical slash chip semantics (`badge=/`, `title=Slash`, slash badge render token) and aria composition parity.
+- Verification:
+  - `cd frontend && npm test -- --run src/threadHintParsers.test.ts src/threadHintChips.test.tsx` ✅ (110/110)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: add a compact mixed legend-hide alias regression for uppercase canonical token variants (e.g., `ESCAPE key / Esc`) to keep case-insensitive alias normalization parity symmetric.
+
 ## 2026-03-09 11:52 KST — dedupe escape-key literal unions via shared alias (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only type cleanup to remove repeated `'Escape' | 'Esc'` literal unions in lifecycle helper signatures.
 - Change:
