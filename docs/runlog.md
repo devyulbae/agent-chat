@@ -1,3 +1,18 @@
+## 2026-03-09 10:22 KST — normalize lifecycle test labels from dispatch/render-state to dispatch+render parity wording (offset lane)
+- Scope: chat thread UX wiring follow-up with strict test-only wording cleanup to match explicit mode-routing helpers and remove slash-style mode ambiguity in test names.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Updated no-op lifecycle test titles that used `dispatch/render-state` phrasing to `dispatch+render parity` wording.
+    - No assertion/body logic changes; this is naming-only clarity aligned with explicit `'dispatch' | 'render'` helper routing.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && black --check .` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pre-commit run --all-files` ✅
+  - `source /Users/sybae/code/agent-chat/venv/bin/activate && pytest` ✅ (19 passed)
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: trim remaining lifecycle title/description text that still implies combined mode execution where tests now run explicit per-mode loops.
+
 ## 2026-03-09 10:13 KST — split shown editable event-gate lanes into explicit dispatch/render mode loops (offset lane)
 - Scope: frontend integration + API contract sync follow-up with strict test-only dedupe to remove remaining mixed `dispatch+render` mode usage in shown editable event-gate no-op lanes.
 - Change:
