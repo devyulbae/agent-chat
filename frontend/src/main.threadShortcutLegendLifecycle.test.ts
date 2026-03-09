@@ -827,7 +827,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
     assertHiddenEditableLegendNoOpAcrossEscapeKeysByMode('render')
   })
 
-  it('keeps shown Escape/Esc with shiftKey=true modifier+event-gate paths as no-op dispatch+render parity outcomes across editable states', () => {
+  it('keeps shown Escape/Esc with shiftKey=true modifier+event-gate paths as no-op per-mode parity outcomes across editable states', () => {
     ;([true, false] as const).forEach((isEditableTarget) => {
       forEachLegendEscapeKey((key) => {
         forEachLegendNoOpAssertionMode((mode) => {

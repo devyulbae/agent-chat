@@ -1,3 +1,15 @@
+## 2026-03-09 11:31 KST — rename shown shift modifier+event-gate no-op title to per-mode parity wording (offset lane)
+- Scope: frontend integration + API contract sync follow-up with strict test-only wording cleanup to remove remaining combined-mode phrasing in explicit per-mode lifecycle lanes.
+- Change:
+  - `frontend/src/main.threadShortcutLegendLifecycle.test.ts`
+    - Renamed one shown `shiftKey=true` modifier+event-gate no-op lifecycle test title from `dispatch+render parity` to `per-mode parity` wording.
+    - No assertion/body logic changes.
+- Verification:
+  - `cd frontend && npm test -- --run src/main.threadShortcutLegendLifecycle.test.ts` ✅ (27/27)
+  - `cd frontend && npm run build` ✅
+- API contract checks: backend contract suite not required this cycle (backend files/contracts unchanged).
+- Next action: continue trimming any remaining lifecycle labels that imply combined-mode execution where assertions already run explicit `'dispatch' | 'render'` lanes.
+
 ## 2026-03-09 11:25 KST — rename residual shown no-op test titles to per-mode parity wording (boost lane)
 - Scope: chat thread UX wiring follow-up with strict test-only wording cleanup to remove final `dispatch+render parity` title phrasing where assertions already execute through explicit per-mode loops.
 - Change:
