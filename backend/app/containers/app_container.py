@@ -28,7 +28,7 @@ class AppContainer(containers.DeclarativeContainer):
         create_session_factory,
         database_url=config.database_url,
     )
-    db_session = providers.Factory(session_factory.provided.__call__)
+    db_session = providers.Factory(lambda sf: sf(), sf=session_factory)
 
     encryption_service = providers.Singleton(
         EncryptionService,
