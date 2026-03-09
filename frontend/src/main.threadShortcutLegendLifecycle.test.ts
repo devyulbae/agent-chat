@@ -745,7 +745,7 @@ describe('thread shortcut legend lifecycle presentation (main integration)', () 
         isEditableTarget: false,
       } satisfies Parameters<typeof getThreadShortcutLegendKeyboardDispatchOutcome>[0]
 
-      assertLegendNoOpDispatchAndRenderStateForInput(input, true)
+      assertLegendNoOpDispatchForInput(input, true)
       assertShownLegendNoOpAriaExpanded()
     })
   })
