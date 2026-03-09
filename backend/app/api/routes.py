@@ -310,10 +310,20 @@ def update_project_control(
     )
 
 
+RUN_LOGS: list[dict] = []
+
+
 @router.get("/run-logs", response_model=list[dict])
 def list_run_logs():
     # Compatibility endpoint for automation probes; persistence wiring is pending.
-    return []
+    return RUN_LOGS
+
+
+@router.post("/run-logs", response_model=dict, status_code=201)
+def append_run_log(payload: dict):
+    # Temporary compatibility writer so cadence sync can persist delta evidence.
+    RUN_LOGS.append(payload)
+    return payload
 
 
 @router.get("/inbox", response_model=list[dict])
