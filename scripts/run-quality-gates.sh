@@ -48,11 +48,45 @@ probe_code_with_retry() {
 }
 
 echo "[runtime] probing agent-chat endpoints @ $AGENTCHAT_BASE_URL"
-for path in /api/project-controls /api/agents /api/run-logs /api/inbox /workflow-console.html; do
+for path in /api/project-controls /api/agents /api/run-logs /api/inbox /workflow-console.html /rag-lab.html; do
   code=$(probe_code_with_retry "${AGENTCHAT_BASE_URL}${path}" 3 1)
   echo "  ${path} -> ${code}"
   [[ "$code" == "200" ]] || { echo "runtime probe failed: ${path} => ${code}" >&2; exit 1; }
 done
+
+root_html=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" "${AGENTCHAT_BASE_URL}/")
+if [[ "$root_html" != *"Agent Chat Control"* ]] || [[ "$root_html" != *"id=\"root\""* ]]; then
+  echo "control tower shell marker check failed: expected root app markers not found" >&2
+  exit 1
+fi
+
+bundle_path=$(printf '%s' "$root_html" | sed -n 's#.*src="\(/assets/index-[^"]*\.js\)".*#\1#p' | head -n1)
+if [[ -z "$bundle_path" ]]; then
+  echo "control tower bundle marker check failed: unable to resolve compiled index bundle path" >&2
+  exit 1
+fi
+
+bundle_js=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" "${AGENTCHAT_BASE_URL}${bundle_path}")
+if [[ "$bundle_js" != *"Agent Chat Control Tower"* ]] || [[ "$bundle_js" != *"Workflow"* ]]; then
+  echo "control tower bundle marker check failed: expected desktop control tower markers not found" >&2
+  exit 1
+fi
+
+workflow_html=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" "${AGENTCHAT_BASE_URL}/workflow-console.html")
+if [[ "$workflow_html" != *"9 Workflow Patterns"* ]] || [[ "$workflow_html" != *"Save Canvas"* ]]; then
+  echo "workflow console marker check failed: expected desktop canvas markers not found" >&2
+  exit 1
+fi
+if [[ "$workflow_html" != *"id=\"canvas\""* ]] || [[ "$workflow_html" != *"workflow-patterns"* ]] || [[ "$workflow_html" != *"orchestration-canvases"* ]]; then
+  echo "workflow console integration check failed: expected canvas + core route API hooks not found" >&2
+  exit 1
+fi
+
+rag_lab_html=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" "${AGENTCHAT_BASE_URL}/rag-lab.html")
+if [[ "$rag_lab_html" != *"RAG Lab Console"* ]] || [[ "$rag_lab_html" != *"Comparison Hook"* ]] || [[ "$rag_lab_html" != *"AGENTCHAT_RAGLAB_COMPARE_HOOK_URL"* ]]; then
+  echo "rag lab marker check failed: expected experimentation interface markers not found" >&2
+  exit 1
+fi
 
 echo "[runtime] probing bridge endpoints @ $AGENTCHAT_BRIDGE_BASE_URL"
 bridge_health=$(curl -sS --max-time 8 -o /tmp/bridge_health.out -w "%{http_code}" "${AGENTCHAT_BRIDGE_BASE_URL}/api/ai-bridge/health" || echo "000")

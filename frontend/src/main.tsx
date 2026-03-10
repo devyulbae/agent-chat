@@ -3057,6 +3057,9 @@ function App() {
         <a href="/workflow-console.html" style={{ textDecoration: 'none' }}>
           <button type="button">Workflow</button>
         </a>
+        <a href="/rag-lab.html" style={{ textDecoration: 'none' }}>
+          <button type="button">RAG Lab</button>
+        </a>
       </div>
 
       <h3 id="overview">Organization Graph</h3>

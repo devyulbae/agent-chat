@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAG Lab Console</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      body {
+        margin: 0;
+        background: #020617;
+        color: #e2e8f0;
+        padding: 24px;
+      }
+      main {
+        max-width: 980px;
+      }
+      .card {
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 16px;
+        margin-top: 12px;
+        background: #0b1220;
+      }
+      code {
+        background: #111827;
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      a {
+        color: #7dd3fc;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>RAG Lab Console</h1>
+      <p>Retrieval/RAG experimentation interface for Agent Chat product-mode validation.</p>
+
+      <div class="card" id="comparison-hook">
+        <h2>Comparison Hook</h2>
+        <p>Set <code>AGENTCHAT_RAGLAB_COMPARE_HOOK_URL</code> to enable runtime compare checks.</p>
+        <p>Expected contract: non-404/non-000 health response for configured compare endpoint.</p>
+      </div>
+
+      <div class="card" id="evaluation-lane">
+        <h2>Evaluation Lane</h2>
+        <ul>
+          <li>Golden set replay</li>
+          <li>Latency + token cost tracking</li>
+          <li>Relevance/rerank delta review</li>
+        </ul>
+      </div>
+
+      <p><a href="/">Back to Agent Chat Control Tower</a></p>
+    </main>
+  </body>
+</html>
