@@ -10,6 +10,9 @@ PRE_COMMIT_BIN="${PRE_COMMIT_BIN:-./venv/bin/pre-commit}"
 
 AGENTCHAT_BASE_URL="${AGENTCHAT_BASE_URL:-https://127.0.0.1:50004}"
 AGENTCHAT_BRIDGE_BASE_URL="${AGENTCHAT_BRIDGE_BASE_URL:-http://127.0.0.1:50005}"
+AGENTCHAT_RAGLAB_COMPARE_HOOK_URL="${AGENTCHAT_RAGLAB_COMPARE_HOOK_URL:-}"
+AGENTCHAT_RAGLAB_COMPARE_HOOK_PATH="${AGENTCHAT_RAGLAB_COMPARE_HOOK_PATH:-/api/rag-lab/compare}"
+AGENTCHAT_RAGLAB_COMPARE_HOOK_PROBE="${AGENTCHAT_RAGLAB_COMPARE_HOOK_PROBE:-0}"
 
 if [[ -f .env ]]; then
   # shellcheck disable=SC1091
@@ -32,6 +35,12 @@ echo "[quality] pre-commit --all-files"
 echo "[quality] pytest -q"
 "$PYTHON_BIN" -m pytest -q
 
+PROBE_TMP_DIR="$(mktemp -d /tmp/agentchat-qg.XXXXXX)"
+cleanup_probe_tmp() {
+  rm -rf "$PROBE_TMP_DIR"
+}
+trap cleanup_probe_tmp EXIT
+
 probe_code_with_retry() {
   local url="$1"
   local attempts="${2:-3}"
@@ -39,7 +48,7 @@ probe_code_with_retry() {
   local code="000"
 
   for ((i = 1; i <= attempts; i++)); do
-    code=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" -o /tmp/agentchat_probe.out -w "%{http_code}" "$url" || true)
+    code=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" -o "$PROBE_TMP_DIR/agentchat_probe.out" -w "%{http_code}" "$url" || true)
     [[ "$code" == "200" ]] && break
     sleep "$delay"
   done
@@ -88,12 +97,36 @@ if [[ "$rag_lab_html" != *"RAG Lab Console"* ]] || [[ "$rag_lab_html" != *"Compa
   exit 1
 fi
 
+resolve_rag_compare_hook_url() {
+  if [[ -n "$AGENTCHAT_RAGLAB_COMPARE_HOOK_URL" ]]; then
+    printf '%s' "$AGENTCHAT_RAGLAB_COMPARE_HOOK_URL"
+    return
+  fi
+
+  if [[ "$AGENTCHAT_RAGLAB_COMPARE_HOOK_PATH" =~ ^https?:// ]]; then
+    printf '%s' "$AGENTCHAT_RAGLAB_COMPARE_HOOK_PATH"
+    return
+  fi
+
+  printf '%s%s' "$AGENTCHAT_BASE_URL" "$AGENTCHAT_RAGLAB_COMPARE_HOOK_PATH"
+}
+
+if [[ "$AGENTCHAT_RAGLAB_COMPARE_HOOK_PROBE" == "1" || -n "$AGENTCHAT_RAGLAB_COMPARE_HOOK_URL" ]]; then
+  rag_compare_url="$(resolve_rag_compare_hook_url)"
+  rag_compare_code=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" -o "$PROBE_TMP_DIR/rag_compare_probe.out" -w "%{http_code}" "$rag_compare_url" || echo "000")
+  echo "  rag compare hook (${rag_compare_url}) -> ${rag_compare_code}"
+  if [[ "$rag_compare_code" == "000" || "$rag_compare_code" == "404" ]]; then
+    echo "rag compare hook probe failed: expected reachable configured hook endpoint" >&2
+    exit 1
+  fi
+fi
+
 echo "[runtime] probing bridge endpoints @ $AGENTCHAT_BRIDGE_BASE_URL"
-bridge_health=$(curl -sS --max-time 8 -o /tmp/bridge_health.out -w "%{http_code}" "${AGENTCHAT_BRIDGE_BASE_URL}/api/ai-bridge/health" || echo "000")
+bridge_health=$(curl -sS --max-time 8 -o "$PROBE_TMP_DIR/bridge_health.out" -w "%{http_code}" "${AGENTCHAT_BRIDGE_BASE_URL}/api/ai-bridge/health" || echo "000")
 echo "  /api/ai-bridge/health -> ${bridge_health}"
 [[ "$bridge_health" == "200" ]] || { echo "bridge health probe failed: ${bridge_health}" >&2; exit 1; }
 
-bridge_callback=$(curl -sS --max-time 8 -o /tmp/bridge_callback.out -w "%{http_code}" "${AGENTCHAT_BRIDGE_BASE_URL}/api/ai-bridge/callback?code=test" || echo "000")
+bridge_callback=$(curl -sS --max-time 8 -o "$PROBE_TMP_DIR/bridge_callback.out" -w "%{http_code}" "${AGENTCHAT_BRIDGE_BASE_URL}/api/ai-bridge/callback?code=test" || echo "000")
 echo "  /api/ai-bridge/callback?code=test -> ${bridge_callback} (informational)"
 
 echo "[ok] quality + runtime probes passed"
