@@ -80,6 +80,14 @@ if [[ "$bundle_js" != *"Agent Chat Control Tower"* ]] || [[ "$bundle_js" != *"Wo
   echo "control tower bundle marker check failed: expected desktop control tower markers not found" >&2
   exit 1
 fi
+if [[ "$bundle_js" != *"/workflow-console.html"* ]] || [[ "$bundle_js" != *"/rag-lab.html"* ]]; then
+  echo "control tower IA hook check failed: expected workflow + rag-lab entry links not found" >&2
+  exit 1
+fi
+if [[ "$bundle_js" != *"Workflow"* ]] || [[ "$bundle_js" != *"RAG Lab"* ]]; then
+  echo "control tower IA label check failed: expected workflow + rag-lab nav labels not found" >&2
+  exit 1
+fi
 
 workflow_html=$(curl -k -sS --max-time 8 "${AUTH_ARGS[@]}" "${AGENTCHAT_BASE_URL}/workflow-console.html")
 if [[ "$workflow_html" != *"9 Workflow Patterns"* ]] || [[ "$workflow_html" != *"Save Canvas"* ]]; then
