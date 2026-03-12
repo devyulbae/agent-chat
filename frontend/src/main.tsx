@@ -3022,6 +3022,38 @@ function App() {
     }
   }, [graph])
 
+  type SpaPage = 'overview' | 'chat' | 'credentials'
+
+  function resolvePageFromHash(hash: string): SpaPage {
+    const normalized = hash.replace('#', '').trim().toLowerCase()
+    if (normalized === 'chat') {
+      return 'chat'
+    }
+    if (normalized === 'credentials' || normalized === 'audit') {
+      return 'credentials'
+    }
+    return 'overview'
+  }
+
+  const [activePage, setActivePage] = useState<SpaPage>(() =>
+    typeof window !== 'undefined' ? resolvePageFromHash(window.location.hash) : 'overview',
+  )
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActivePage(resolvePageFromHash(window.location.hash))
+    }
+
+    handleHashChange()
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
+
+  const tabButtonStyle = (page: SpaPage): React.CSSProperties => ({
+    fontWeight: activePage === page ? 700 : 500,
+    borderColor: activePage === page ? '#7c3aed' : undefined,
+  })
+
   return (
     <div style={{ padding: 20, fontFamily: 'sans-serif', maxWidth: '100%', overflowX: 'hidden' }}>
       <h2>Agent Chat Control Tower</h2>
@@ -3043,16 +3075,13 @@ function App() {
         }}
       >
         <a href="#overview" style={{ textDecoration: 'none' }}>
-          <button type="button">Overview</button>
+          <button type="button" style={tabButtonStyle('overview')}>Overview</button>
         </a>
         <a href="#chat" style={{ textDecoration: 'none' }}>
-          <button type="button">Chat</button>
+          <button type="button" style={tabButtonStyle('chat')}>Chat</button>
         </a>
         <a href="#credentials" style={{ textDecoration: 'none' }}>
-          <button type="button">Credentials</button>
-        </a>
-        <a href="#audit" style={{ textDecoration: 'none' }}>
-          <button type="button">Audit</button>
+          <button type="button" style={tabButtonStyle('credentials')}>Credentials</button>
         </a>
         <a href="/workflow-console.html" style={{ textDecoration: 'none' }}>
           <button type="button">Workflow</button>
@@ -3062,38 +3091,42 @@ function App() {
         </a>
       </div>
 
-      <h3 id="overview">Organization Graph</h3>
-      {loading && <p>Loading organization graph…</p>}
-      {error && <p style={{ color: 'crimson' }}>Error: {error}</p>}
+      {activePage === 'overview' && (
+        <section id="overview">
+          <h3>Organization Graph</h3>
+          {loading && <p>Loading organization graph…</p>}
+          {error && <p style={{ color: 'crimson' }}>Error: {error}</p>}
 
-      {!loading && !error && (
-        <>
-          <ul>
-            <li>Freeform: {typeCounts.freeform}</li>
-            <li>Department: {typeCounts.department}</li>
-            <li>Squad: {typeCounts.squad}</li>
-            <li>Total: {graph?.items.length ?? 0}</li>
-          </ul>
+          {!loading && !error && (
+            <>
+              <ul>
+                <li>Freeform: {typeCounts.freeform}</li>
+                <li>Department: {typeCounts.department}</li>
+                <li>Squad: {typeCounts.squad}</li>
+                <li>Total: {graph?.items.length ?? 0}</li>
+              </ul>
 
-          <h4>Nodes</h4>
-          {graph?.items.length ? (
-            <ul>
-              {graph.items.map((org) => (
-                <li key={org.id}>
-                  <strong>{org.name}</strong> ({org.org_type})
-                  {org.parent_id ? ` → parent: ${org.parent_id}` : ''}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No organizations yet.</p>
+              <h4>Nodes</h4>
+              {graph?.items.length ? (
+                <ul>
+                  {graph.items.map((org) => (
+                    <li key={org.id}>
+                      <strong>{org.name}</strong> ({org.org_type})
+                      {org.parent_id ? ` → parent: ${org.parent_id}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No organizations yet.</p>
+              )}
+            </>
           )}
-        </>
+        </section>
       )}
 
-      <hr style={{ margin: '24px 0' }} />
-
-      <h3 id="chat">Chat Thread Explorer</h3>
+      {activePage === 'chat' && (
+        <section id="chat">
+          <h3>Chat Thread Explorer</h3>
       <label htmlFor="channel-id">Channel ID:</label>{' '}
       <input
         id="channel-id"
@@ -3522,9 +3555,12 @@ function App() {
         </div>
       </div>
 
-      <hr style={{ margin: '24px 0' }} />
+        </section>
+      )}
 
-      <h3 id="credentials">Credential Token Lifecycle</h3>
+      {activePage === 'credentials' && (
+        <section id="credentials">
+          <h3>Credential Token Lifecycle</h3>
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
         <label htmlFor="credential-status">Status:</label>
         <select
@@ -4162,6 +4198,8 @@ function App() {
         ) : (
           <p>No audit events for current filters.</p>
         ))}
+        </section>
+      )}
     </div>
   )
 }
